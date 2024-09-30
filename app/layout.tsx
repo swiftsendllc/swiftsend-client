@@ -1,17 +1,10 @@
-import { ApolloWrapper } from "@/lib/ApolloWrapper";
-import { authCookieKey, authenticatedPathRegex } from "@/lib/constants";
-
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import type { Metadata, Viewport } from "next";
 import { Kanit } from "next/font/google";
-import { cookies, headers } from "next/headers";
 import { Toaster } from "react-hot-toast";
 
-import { ContextWrapper } from "@/hooks/useContext";
-import { UserProfilesEntity } from "@/lib/generated/graphql";
 import theme from "@/util/theme";
-import { redirect } from "next/navigation";
 import "./globals.css";
 
 const inter = Kanit({
@@ -27,7 +20,7 @@ export const metadata = {
   keywords: ["nextjs", "nextjs14", "next14", "pwa", "next-pwa"],
   icons: [
     { rel: "apple-touch-icon", url: "icons/icon-192x192.png" },
-    { rel: "icon", url: "icons/icon-192x192.png" },
+    { rel: "icon", url: "icons/instagram-symbol.png" },
   ],
 } satisfies Metadata;
 
@@ -35,37 +28,11 @@ export const viewport: Viewport = {
   themeColor: "black",
 };
 
-const validateAuth = async () => {
-  const headersList = headers();
-  const pathname = headersList.get("x-pathname") ?? "/";
-  const accessToken = cookies().get(authCookieKey)?.value;
-
-  const isAuthenticatedPath = authenticatedPathRegex.test(pathname);
-  if (!isAuthenticatedPath) return null;
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (res.status === 401 || res.status === 403) {
-    return redirect("/");
-  }
-
-  const user = await res.json();
-  return user as UserProfilesEntity;
-};
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await validateAuth();
-
   return (
     <html lang="en">
       <head>
@@ -80,7 +47,6 @@ export default async function RootLayout({
       </head>
 
       <body className={inter.className}>
-        <ApolloWrapper>
           <Toaster
             position="top-center"
             reverseOrder={false}
@@ -103,10 +69,9 @@ export default async function RootLayout({
           />
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
-              <ContextWrapper user={user}>{children}</ContextWrapper>
+                {children}
             </ThemeProvider>
           </AppRouterCacheProvider>
-        </ApolloWrapper>
       </body>
     </html>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { Container, Paper, Stack, Typography } from "@mui/material";
 
 export default function TopNav() {
@@ -17,7 +19,7 @@ export default function TopNav() {
         maxWidth="xs"
         style={{ padding: "0", alignContent: "center", alignItems: "center" }}
       >
-        <Stack direction='row' justifyContent='space-between'>
+        <Stack direction="row" justifyContent="space-between">
           <Typography padding={1} fontWeight={600} variant="h5">
             Instagram
           </Typography>

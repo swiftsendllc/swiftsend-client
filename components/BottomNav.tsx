@@ -1,3 +1,5 @@
+"use client";
+
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 import AddIcon from "@mui/icons-material/Add";
 import HomeIcon from "@mui/icons-material/Home";
