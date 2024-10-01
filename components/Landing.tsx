@@ -26,7 +26,7 @@ export default function LandingPage() {
           Sign up
         </Button>
 
-        <Button fullWidth variant="contained" href="/login">
+        <Button fullWidth variant="outlined" href="/login">
           Login
         </Button>
         <Button
@@ -35,11 +35,11 @@ export default function LandingPage() {
           startIcon={<GoogleIcon />}
           href="/groups"
         >
-          Login with Google
+          Continue with Google
         </Button>
       </Stack>
       <Typography variant="body2" align="center" color="text.secondary">
-        By signing up, you agree to our Terms of Service and Privacy Policy
+        By signing up, you agree to our <a href="/terms">Terms of Service</a> and <a href="/policy">Privacy Policy</a>
       </Typography>
     </Container>
   );
