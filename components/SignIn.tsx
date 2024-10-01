@@ -72,13 +72,12 @@ export default function SignInPage() {
             type="date"
             value={dateOfBirth}
             focused
-            autoFocus
             onChange={(e) => setDateOfBirth(e.target.value)}
           />
           <TextField
             required
             id="gender-required"
-            label="gender"
+            label="Gender"
             type="gender"
             value={gender}
             onChange={(e) => setGender(e.target.value)}

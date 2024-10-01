@@ -2,6 +2,8 @@
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
@@ -12,12 +14,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
 import { useState } from "react";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -32,7 +37,6 @@ export default function LoginPage() {
       maxWidth="xs"
       sx={{
         minHeight: "100vh",
-        alignContent: "center",
         alignItems: "center",
       }}
     >
@@ -64,7 +68,7 @@ export default function LoginPage() {
           return onSubmit();
         }}
       >
-        <Stack direction="column" spacing={1}>
+        <Stack direction="column" spacing={2}>
           <TextField
             required
             id="email-required"
@@ -76,14 +80,26 @@ export default function LoginPage() {
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <TextField
-            required
             id="password-required"
             label="Password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type={showPassword ? "text" : "password"}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+            }}
           />
           <Stack direction="row" spacing={15}>
             <Typography variant="body2" color="text.secondary" textAlign="left">

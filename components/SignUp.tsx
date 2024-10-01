@@ -1,5 +1,6 @@
 "use client";
 
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { LoadingButton } from "@mui/lab";
@@ -7,6 +8,7 @@ import {
   Box,
   Container,
   FormControl,
+  InputAdornment,
   Stack,
   TextField,
   Typography,
@@ -17,9 +19,10 @@ import { useState } from "react";
 export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -33,7 +36,7 @@ export default function SignUpPage() {
       maxWidth="xs"
       sx={{
         minHeight: "100vh",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
@@ -85,14 +88,26 @@ export default function SignUpPage() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
-            required
             id="password-required"
             label="Password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type={showPassword ? "text" : "password"}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+            }}
           />
+
           <Typography variant="body2" color="text.secondary" textAlign="left">
             <a
               href="/login"
