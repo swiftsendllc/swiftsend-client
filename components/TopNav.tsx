@@ -9,8 +9,8 @@ export default function TopNav() {
         position: "fixed",
         top: 0,
         left: 0,
-        height: 50,
         right: 0,
+        height: 50,
         zIndex: 4,
       }}
       elevation={2}

@@ -3,7 +3,6 @@
 import BottomNav from "@/components/BottomNav";
 import TopNav from "@/components/TopNav";
 import { Container } from "@mui/material";
-
 import { useParams, usePathname } from "next/navigation";
 
 export default function RootTemplate({
