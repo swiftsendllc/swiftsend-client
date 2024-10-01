@@ -1,20 +1,20 @@
 "use client";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Container,
   FormControl,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 
 export default function LoginPage() {
-  const [, startTransition] = useTransition();
-
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,10 +32,21 @@ export default function LoginPage() {
       maxWidth="xs"
       sx={{
         minHeight: "100vh",
+        alignContent: "center",
         alignItems: "center",
       }}
     >
-      <Box width="100%" textAlign="left" alignContent="center" mb={20}>
+      <Box mt={{ md: 2, sm: 2 }} mb={2}>
+        <IconButton
+          aria-label="back-button"
+          color="inherit"
+          sx={{ padding: 0, py: 1 }}
+          href="/"
+        >
+          <ArrowBackIcon sx={{ width: 30, height: 30 }} />
+        </IconButton>
+      </Box>
+      <Box width="100%" textAlign="right" alignContent="center" mb={10}>
         <InstagramIcon sx={{ height: 100, width: 100 }} />
         <Typography variant="h5" fontWeight={300}>
           instagram
@@ -80,7 +91,6 @@ export default function LoginPage() {
                 style={{
                   textDecoration: "none",
                   color: "currentcolor",
-
                 }}
                 href="/forgot-password"
               >

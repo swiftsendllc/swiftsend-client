@@ -1,25 +1,24 @@
 "use client";
-
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { LoadingButton } from "@mui/lab";
+
 import {
   Box,
   Container,
   FormControl,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 
-export default function SignUpPage() {
+export default function SignInPage() {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [gender, setGender] = useState("");
+  const [region, setRegion] = useState("");
 
   const onSubmit = async () => {
     setLoading(true);
@@ -28,12 +27,13 @@ export default function SignUpPage() {
       setLoading(false);
     }
   };
+
   return (
     <Container
       maxWidth="xs"
       sx={{
         minHeight: "100vh",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
@@ -47,7 +47,7 @@ export default function SignUpPage() {
         </IconButton>
       </Box>
       <Box width="100%" textAlign="right" alignContent="center" mb={10}>
-        <InstagramIcon sx={{ height: 100, width: 100 }} />
+        <InstagramIcon sx={{ width: 100, height: 100 }} />
         <Typography variant="h5" fontWeight={300}>
           instagram
         </Typography>
@@ -67,52 +67,39 @@ export default function SignUpPage() {
         <Stack direction="column" spacing={2}>
           <TextField
             required
-            id="fullName-required"
-            label="Full Name"
-            type="fullName"
-            value={fullName}
+            id="date-of-birth-required"
+            label="Date of birth"
+            type="date"
+            value={dateOfBirth}
             focused
             autoFocus
-            onChange={(e) => setFullName(e.target.value)}
+            onChange={(e) => setDateOfBirth(e.target.value)}
           />
           <TextField
             required
-            id="email-required"
-            label="Email"
-            type="email"
-            autoComplete="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            id="gender-required"
+            label="gender"
+            type="gender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
           />
           <TextField
             required
-            id="password-required"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            id="region-required"
+            label="Region"
+            type="region"
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
           />
-          <Typography variant="body2" color="text.secondary" textAlign="left">
-            <a
-              href="/login"
-              style={{
-                textDecoration: "none",
-                color: "currentcolor",
-              }}
-            >
-              Already have an account? Login
-            </a>
-          </Typography>
           <LoadingButton
             loading={loading}
             loadingPosition="start"
             startIcon={null}
             variant="contained"
             type="submit"
-            href="/signin"
+            href="/"
           >
-            Continue
+            Sign In
           </LoadingButton>
         </Stack>
       </FormControl>
