@@ -1,5 +1,6 @@
 "use client";
 
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { LoadingButton } from "@mui/lab";
@@ -49,9 +50,15 @@ export default function ForgotPasswordPage() {
         <Typography variant="h5" fontWeight={300}>
           instagram
         </Typography>
+        <Box width="100%" alignContent="center" textAlign="center">
+          <Typography variant="h6" fontWeight={200} mt={6}>
+            This extra step shows it&apos;s really you trying to sign in{" "}
+          </Typography>
+          <AccountCircleIcon sx={{ width: 25, height: 25, marginTop: 2 }}  />
+        </Box>
       </Box>
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
-        <Typography variant="h5"> Send OTP to email</Typography>
+        <Typography variant="h5"> Verify email</Typography>
       </Box>
       <FormControl
         variant="standard"
@@ -80,8 +87,9 @@ export default function ForgotPasswordPage() {
             startIcon={null}
             variant="contained"
             type="submit"
+            href="/verify-otp"
           >
-            Send OTP
+            verify
           </LoadingButton>
         </Stack>
       </FormControl>

@@ -2,6 +2,7 @@
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -54,6 +55,9 @@ export default function SignUpPage() {
         <Typography variant="h5" fontWeight={300}>
           instagram
         </Typography>
+      </Box>
+      <Box width="100%" alignContent="center" textAlign="center" mt={10}>
+        <AccountCircleIcon sx={{ width: 25, height: 25 }} />
       </Box>
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
         <Typography variant="h5">Sign in with Instagram</Typography>

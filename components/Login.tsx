@@ -1,5 +1,6 @@
 "use client";
 
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import Visibility from "@mui/icons-material/Visibility";
@@ -56,6 +57,9 @@ export default function LoginPage() {
           instagram
         </Typography>
       </Box>
+      <Box width="100%" alignContent="center" textAlign="center" mt={10} >
+        <AccountCircleIcon sx={{ width: 25, height: 25 }} />
+      </Box>
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
         <Typography variant="h5"> Login with Instagram</Typography>
       </Box>
@@ -98,7 +102,7 @@ export default function LoginPage() {
                     </IconButton>
                   </InputAdornment>
                 ),
-              }
+              },
             }}
           />
           <Stack direction="row" spacing={15}>

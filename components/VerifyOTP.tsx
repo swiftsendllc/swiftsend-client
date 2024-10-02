@@ -2,6 +2,7 @@
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import { LoadingButton } from "@mui/lab";
 
 import {
   Box,
@@ -9,22 +10,45 @@ import {
   FormControl,
   IconButton,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function VerifyOTPPage() {
   const [loading, setLoading] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [canSend, setCanResend] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setCanResend(true);
+      return;
+    }
+
+    // set a timer to allow resend after 1 minute
+    const interval = setInterval(() => {
+      setTimeLeft((previous) => previous - 1);
+    }, 1000);
+    //cleanup the timeout if the component unmounts
+    return () => clearTimeout(interval);
+  } ,[timeLeft]);
 
   const onSubmit = async () => {
+    if (!canSend) return;
+    setCanResend(false);
     setLoading(true);
+    setTimeLeft(60);
     try {
+      console.log("Resending email");
     } finally {
       setLoading(false);
     }
+    const timer = setTimeout(() => {
+      setCanResend(true);
+    }, 60000);
+    return () => clearTimeout(timer);
   };
+  //Reset the timeout after another 1 minute
 
   return (
     <Container
@@ -52,7 +76,7 @@ export default function VerifyOTPPage() {
       </Box>
 
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
-        <Typography variant="h5"> Verify OTP</Typography>
+        <Typography variant="h5"> Verify your account</Typography>
       </Box>
       <FormControl
         variant="standard"
@@ -63,16 +87,24 @@ export default function VerifyOTPPage() {
           return onSubmit();
         }}
       >
-        <Stack direction='column' spacing={2}>
-          <TextField
-          required
-          id="otp-required"
-          label='Enter OTP'
-          type="number"
-          focused
-          autoFocus
-          
-          />
+        <Stack direction="column" spacing={2}>
+          <Typography variant="h6" fontWeight={200}>
+            This extra step shows it&apos;s really you trying to sign in{" "}
+          </Typography>
+          <Typography variant="h6" fontWeight={200}>
+            Please check your email and confirm your account by clicking on the
+            link
+          </Typography>
+          <LoadingButton
+            loading={loading}
+            loadingPosition="start"
+            startIcon={null}
+            variant="contained"
+            type="submit"
+            disabled={!canSend}
+          >
+            {canSend ? "Resend Email" : `Resend email in ${timeLeft} seconds`}
+          </LoadingButton>
         </Stack>
       </FormControl>
     </Container>
