@@ -2,18 +2,18 @@
 
 import BottomNav from "@/components/BottomNav";
 import TopNav from "@/components/TopNav";
+import { authenticatedPaths } from "@/library/constants";
 import { Container } from "@mui/material";
-import { useParams, usePathname } from "next/navigation";
+import {  usePathname } from "next/navigation";
 
 export default function RootTemplate({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { id: groupId } = useParams();
-  const pathName = usePathname();
+  const pathname = usePathname();
 
-  if (![`/groups/${groupId}`].includes(pathName)) {
+  if (![...authenticatedPaths, ].includes(pathname)) {
     return <>{children}</>;
   }
 

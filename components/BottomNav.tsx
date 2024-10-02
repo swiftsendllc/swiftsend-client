@@ -6,10 +6,13 @@ import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  BottomNavigation,
-  BottomNavigationAction,
+  Card,
+  CardActionArea,
   Container,
+  Icon,
   Paper,
+  Stack,
+  Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -60,18 +63,39 @@ export default function BottomNav() {
       elevation={2}
     >
       <Container maxWidth="xs" style={{ padding: 0 }}>
-        <BottomNavigation showLabels value={pathName}>
+        <Stack direction="row" spacing={1} justifyContent="space-between">
           {navigationItems.map((item, idx) => (
-            <BottomNavigationAction
+            <Card
               key={idx}
-              value={item.value}
-              label={item.label}
-              href={item.value}
-              LinkComponent={Link}
-              icon={item.icon}
-            />
+              sx={{
+                backgroundColor: "transparent",
+                boxShadow: "none",
+              }}
+            >
+              <CardActionArea href={item.value} LinkComponent={Link}>
+                <Stack
+                  direction="column"
+                  alignItems="center"
+                  alignContent="center"
+                  spacing={0}
+                  p={1}
+                >
+                  <Icon color={pathName === item.value ? "primary" : "action"}>
+                    {item.icon}
+                  </Icon>
+                  <Typography
+                    variant="body2"
+                    color={
+                      pathName === item.value ? "primary" : "textSecondary"
+                    }
+                  >
+                    {item.label}
+                  </Typography>
+                </Stack>
+              </CardActionArea>
+            </Card>
           ))}
-        </BottomNavigation>
+        </Stack>
       </Container>
     </Paper>
   );
