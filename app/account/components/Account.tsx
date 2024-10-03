@@ -3,21 +3,25 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import GestureIcon from "@mui/icons-material/Gesture";
 import MenuIcon from "@mui/icons-material/Menu";
+
 import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 
-import { useState } from "react";
+const stats = [
+  {
+    title: "Posts",
+    count: 1,
+  },
+  {
+    title: "Followers",
+    count: 1,
+  },
+  {
+    title: "Following",
+    count: 1,
+  },
+];
 
 export default function AccountPage() {
-  const [loading, setLoading] = useState(false);
-
-  const handleUpload = async () => {
-    setLoading(true);
-    try {
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
@@ -32,7 +36,7 @@ export default function AccountPage() {
           <Box display="flex" gap={0} width="50%">
             <Typography
               variant="h5"
-              fontWeight={400}
+              fontWeight={50}
               color="inherit"
               textAlign="left"
               sx={{
@@ -42,7 +46,7 @@ export default function AccountPage() {
                 whiteSpace: "nowrap",
               }}
             >
-              Arijit Chhatui
+              arijitchhatui
             </Typography>
             <IconButton edge="end">
               <ExpandMoreOutlinedIcon />
@@ -51,7 +55,7 @@ export default function AccountPage() {
 
           <Stack direction="row" spacing={1}>
             <IconButton color="inherit">
-              <GestureIcon  />
+              <GestureIcon />
             </IconButton>
             <IconButton color="inherit">
               <AddBoxOutlinedIcon />
@@ -63,11 +67,34 @@ export default function AccountPage() {
         </Stack>
         <Box display="flex" alignItems="center">
           <Stack direction="column" spacing={2}>
-            <Avatar
-              src="https://example.com/profile.jpg"
-              alt="Profile Picture"
-              sx={{ width: 80, height: 80 }}
-            />
+            <Stack
+              direction="row"
+              spacing={1}
+              justifyContent="space-between"
+              alignContent="center"
+              alignItems="center"
+            >
+              <Avatar
+                src="https://example.com/profile.jpg"
+                alt="Profile Picture"
+                sx={{ width: 80, height: 80 }}
+              />
+
+              <Stack direction="row" spacing={2}>
+                {stats.map((item, idx) => (
+                  <Stack
+                    direction="column"
+                    key={idx}
+                    alignContent="center"
+                    alignItems="center"
+                  >
+                    <Typography variant="h6">{item.count}</Typography>
+                    <Typography variant="body2">{item.title}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Stack>
+
             {/* Button to add vibe */}
             <Typography variant="h6" fontWeight={200}>
               Arijit Chhatui

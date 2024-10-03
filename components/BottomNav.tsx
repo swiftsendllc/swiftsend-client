@@ -45,6 +45,8 @@ const navigationItems = [
   },
 ];
 
+
+
 export default function BottomNav() {
   const _pathName = usePathname();
   const { id } = useParams();
