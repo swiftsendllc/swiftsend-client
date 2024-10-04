@@ -2,7 +2,6 @@
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
-import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import GestureIcon from "@mui/icons-material/Gesture";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
@@ -47,7 +46,7 @@ const stats = [
 const grid = [
   {
     value: "/account",
-    icon: <GridOnSharpIcon color="inherit" />,
+    icon: <GridOnSharpIcon />,
   },
   {
     value: "/account/subscribers",
@@ -55,7 +54,7 @@ const grid = [
   },
   {
     value: "/account/reels",
-    icon: <MovieSharpIcon />,
+    icon: <MovieSharpIcon color="inherit" />,
   },
   {
     value: "/account/tags",
@@ -63,7 +62,7 @@ const grid = [
   },
 ];
 
-export default function AccountPage() {
+export default function TagPage() {
   const _pathName = usePathname();
   const { id } = useParams();
 
@@ -174,6 +173,7 @@ export default function AccountPage() {
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
+
             </Stack>
             <Stack direction="row" spacing={1} justifyContent="space-between">
               {grid.map((item, idx) => (
@@ -207,12 +207,12 @@ export default function AccountPage() {
               alignItems="center"
               justifyContent="center"
             >
-              <CameraAltSharpIcon sx={{ width: 60, height: 60 }} />
+              <PersonPinOutLinedIcon sx={{ width: 60, height: 60 }} />
               <Typography variant="h5" fontWeight="100">
-                Photos of yours
+                Tagged photos of yours
               </Typography>
               <Typography variant="h6" fontWeight="50">
-                Your photos, they&apos;ll appear here.
+                Your tagged content, they&apos;ll appear here.
               </Typography>
             </Stack>
           </Stack>
