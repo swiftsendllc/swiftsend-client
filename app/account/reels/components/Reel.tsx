@@ -2,13 +2,13 @@
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
-import PlayCircleOutlineSharpIcon from '@mui/icons-material/PlayCircleOutlineSharp';
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import GestureIcon from "@mui/icons-material/Gesture";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import MenuIcon from "@mui/icons-material/Menu";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import PersonPinOutLinedIcon from "@mui/icons-material/PersonPinOutLined";
+import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
+import PlayCircleOutlineSharpIcon from "@mui/icons-material/PlayCircleOutlineSharp";
 import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 
 import {
@@ -59,7 +59,7 @@ const grid = [
   },
   {
     value: "/account/tags",
-    icon: <PersonPinOutLinedIcon />,
+    icon: <PersonPinRoundedIcon />,
   },
 ];
 
@@ -174,7 +174,6 @@ export default function ReelPage() {
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
-
             </Stack>
             <Stack direction="row" spacing={1} justifyContent="space-between">
               {grid.map((item, idx) => (

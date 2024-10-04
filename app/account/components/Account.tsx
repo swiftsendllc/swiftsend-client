@@ -8,7 +8,7 @@ import GestureIcon from "@mui/icons-material/Gesture";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import MenuIcon from "@mui/icons-material/Menu";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import PersonPinOutLinedIcon from "@mui/icons-material/PersonPinOutLined";
+import PersonPinOutlinedIcon from '@mui/icons-material/PersonPinOutlined';
 import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 
 import {
@@ -59,7 +59,7 @@ const grid = [
   },
   {
     value: "/account/tags",
-    icon: <PersonPinOutLinedIcon />,
+    icon: <PersonPinOutlinedIcon />,
   },
 ];
 

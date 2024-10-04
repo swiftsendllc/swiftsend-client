@@ -7,7 +7,7 @@ import GestureIcon from "@mui/icons-material/Gesture";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import MenuIcon from "@mui/icons-material/Menu";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import PersonPinOutLinedIcon from "@mui/icons-material/PersonPinOutLined";
+import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 
 import {
@@ -58,7 +58,7 @@ const grid = [
   },
   {
     value: "/account/tags",
-    icon: <PersonPinOutLinedIcon />,
+    icon: <PersonPinRoundedIcon />,
   },
 ];
 
@@ -173,7 +173,6 @@ export default function TagPage() {
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
-
             </Stack>
             <Stack direction="row" spacing={1} justifyContent="space-between">
               {grid.map((item, idx) => (
@@ -207,7 +206,7 @@ export default function TagPage() {
               alignItems="center"
               justifyContent="center"
             >
-              <PersonPinOutLinedIcon sx={{ width: 60, height: 60 }} />
+              <PersonPinRoundedIcon sx={{ width: 60, height: 60 }} />
               <Typography variant="h5" fontWeight="100">
                 Tagged photos of yours
               </Typography>
