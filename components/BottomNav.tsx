@@ -29,7 +29,7 @@ const navigationItems = [
     icon: <SearchIcon />,
   },
   {
-    value: "/post",
+    value: "/post-",
     label: "Post",
     icon: <AddIcon />,
   },

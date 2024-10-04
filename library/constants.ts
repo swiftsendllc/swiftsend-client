@@ -1,9 +1,14 @@
+export const authCookieKey = "_accessToken";
+
 export const authenticatedPaths = [
   "/home",
   "/search",
   "/posts",
   "/reels",
   "/account",
+  "/account/reels",
+  "/account/subscribers",
+  "/account/tags"
 ];
 
 export const authenticatedPathsRegex = [
