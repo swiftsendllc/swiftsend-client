@@ -47,31 +47,29 @@ export default async function RootLayout({
       </head>
 
       <body className={inter.className}>
-          <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName="toaster-wrapper"
-            toastOptions={{
-              className: "single-toaster",
-              duration: 5000,
-              icon: null,
-              style: {
-                background: "#000",
-                color: "#fff",
-                padding: "5px 5px",
-                borderRadius: "3px",
-                fontSize: "14px",
-              },
-              success: { style: { background: "#000", color: "#fff" } },
-              error: { style: { background: "#b33234", color: "#fff" } },
-            }}
-          />
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-                {children}
-            </ThemeProvider>
-          </AppRouterCacheProvider>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName="toaster-wrapper"
+          toastOptions={{
+            className: "single-toaster",
+            duration: 5000,
+            icon: null,
+            style: {
+              background: "#000",
+              color: "#fff",
+              padding: "5px 5px",
+              borderRadius: "3px",
+              fontSize: "14px",
+            },
+            success: { style: { background: "#000", color: "#fff" } },
+            error: { style: { background: "#b33234", color: "#fff" } },
+          }}
+        />
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

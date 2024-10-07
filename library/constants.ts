@@ -8,7 +8,8 @@ export const authenticatedPaths = [
   "/account",
   "/account/reels",
   "/account/subscribers",
-  "/account/tags"
+  "/account/tags",
+  "/account/settings"
 ];
 
 export const authenticatedPathsRegex = [

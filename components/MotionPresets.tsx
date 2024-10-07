@@ -9,18 +9,18 @@ export type AnimationType =
   | "SlideBottomUp";
 
 export const effects: Record<AnimationType, MotionProps> = {
-  SlideLeftToRight: {
+  SlideRightToLeft: {
     initial: { x: "100vw" },
     animate: { x: 0 },
     transition: { ease: "easeIn", duration: 0.3 },
   },
-  SlideRightToLeft: {
+  SlideLeftToRight: {
     initial: { x: "-100vw", minHeight: "100vh" },
     animate: { x: 0 },
     transition: { ease: "easeIn", duration: 0.3 },
   },
   SlideBottomUp: {
-    initial: { y: "100vw", position: "fixed" },
+    initial: { y: "100vh", position: "fixed" },
     animate: { y: 0, position: "static" },
     transition: { ease: "easeIn", duration: 0.3 },
   },
