@@ -2,6 +2,7 @@
 
 import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddToPhotosOutlinedIcon from "@mui/icons-material/AddToPhotosOutlined";
 import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
@@ -38,6 +39,15 @@ import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+
+export const yourAccounts = [
+  {
+    label: "Accounts",
+    leftIcon: <AccountCircleIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "Passwords, security, personal details, ad preferences",
+  },
+];
 
 export const howToUseInstagram = [
   {

@@ -2,7 +2,7 @@
 
 import BottomNav from "@/components/BottomNav";
 import TopNav from "@/components/TopNav";
-import { authenticatedPaths } from "@/library/constants";
+import { authenticated, authenticatedPaths } from "@/library/constants";
 import { Container } from "@mui/material";
 import { usePathname } from "next/navigation";
 
@@ -13,6 +13,15 @@ export default function RootTemplate({
 }) {
   const pathname = usePathname();
 
+
+  if ([...authenticated].includes(pathname)) {
+    return (
+      <Container maxWidth="xs" style={{ padding: 5 }}>
+        {children}
+        <BottomNav />
+      </Container>
+    );
+  }
   if (![...authenticatedPaths].includes(pathname)) {
     return <>{children}</>;
   }
@@ -24,4 +33,5 @@ export default function RootTemplate({
       <BottomNav />
     </Container>
   );
+
 }

@@ -8,13 +8,15 @@ import {
   moreInfoAndSupport,
   whatYouSee,
   whoCanSeeYourContent,
+  yourAccounts,
   yourAppAndMedia,
   yourOrdersAndFundraisers,
 } from "@/components/SearchComponents";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Autocomplete,
   Divider,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
@@ -23,6 +25,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useState } from "react";
 
 const minWidth = 35;
@@ -30,6 +33,7 @@ const minWidth = 35;
 export default function SettingsPage() {
   const [query, setQuery] = useState("");
   const settingsPage = [
+    ...yourAccounts,
     ...howToUseInstagram,
     ...forProfessionals,
     ...whoCanSeeYourContent,
@@ -43,8 +47,24 @@ export default function SettingsPage() {
 
   return (
     <>
-      <Stack mt={5} mb={2} alignItems="center">
+      <Stack mt={1} mb={3}>
+        <Stack
+          spacing={1}
+          direction="row"
+          alignContent="center"
+          alignItems="center"
+          mb={2}
+        >
+          <IconButton>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography alignContent="center" alignItems="center" variant="h6">
+            Settings and privacy
+          </Typography>
+        </Stack>
+
         <Autocomplete
+          freeSolo
           onInputChange={(_, value) => {
             setQuery(value);
           }}
@@ -52,16 +72,62 @@ export default function SettingsPage() {
           disablePortal
           options={settingsPage}
           sx={{ width: "100%" }}
-          renderInput={(params) => <TextField {...params} label="Search" />}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              slotProps={{ input: { sx: { borderRadius: "30px" } }, }}
+              label="Search"
+            />
+          )}
+
         />
       </Stack>
-      <Typography fontWeight={400} variant="h6" color="text.secondary" mt={5}>
+      <Divider />
+      <Typography fontWeight={400} variant="h6" color="text.secondary" mt={2}>
         Your accounts{" "}
       </Typography>
-      <Stack direction="row" alignItems="center">
-        <AccountCircleIcon />
-        <Typography>Accounts</Typography>
-      </Stack>
+      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+        {yourAccounts.map((option, idx) => (
+          <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
+            <ListItemIcon sx={{ pr: 1, minWidth }}>
+              {option.leftIcon}
+            </ListItemIcon>
+            {option.leftIcon ? (
+              <ListItemText disableTypography>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignContent="center"
+                  alignItems="center"
+                >
+                  <Stack
+                    direction="column"
+                    alignContent="center"
+                    alignItems="left"
+                  >
+                    <Typography variant="body1">{option.label}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {option.text}
+                    </Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary">
+                    {option.rightIcon}
+                  </Typography>
+                </Stack>
+              </ListItemText>
+            ) : (
+              <ListItemText primary={option.label} />
+            )}
+          </ListItemButton>
+        ))}
+        <Typography variant="body2" color="text.secondary">
+          Manage your connected experiences and account settings across Meta
+          technologies.
+          <Link color="primary" href="#">
+            Learn more
+          </Link>
+        </Typography>
+      </List>
       <Divider />
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         How to use instagram
@@ -351,14 +417,14 @@ export default function SettingsPage() {
         </Typography>
         <Typography variant="body1" color="text.secondary" textAlign="center">
           {" "}
-          {new Date().getFullYear()} All rights reserved
+          © {new Date().getFullYear()} All rights reserved
         </Typography>
         <Typography
           variant="body2"
           color="text.secondary"
           textAlign="center"
           mt={1}
-          mb={2}
+          mb={6}
         >
           v1.0.0
         </Typography>
