@@ -72,7 +72,6 @@ export default function TagPage() {
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
         {/* Profile Header */}
         <Stack
-          mt={5}
           mb={2}
           direction="row"
           justifyContent="space-between"

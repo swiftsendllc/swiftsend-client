@@ -73,7 +73,6 @@ export default function AccountPage() {
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
         {/* Profile Header */}
         <Stack
-          mt={5}
           mb={2}
           direction="row"
           justifyContent="space-between"
@@ -170,7 +169,7 @@ export default function AccountPage() {
               </IconButton>
             </Box>
             <Stack direction="row" spacing={0} justifyContent="space-between">
-              <Button variant="outlined">Profile </Button>
+              <Button variant="outlined" href="/account/profile">Profile </Button>
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>

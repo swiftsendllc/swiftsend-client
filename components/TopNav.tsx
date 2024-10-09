@@ -20,8 +20,8 @@ export default function TopNav() {
         style={{ padding: "0", alignContent: "center", alignItems: "center" }}
       >
         <Stack direction="row" justifyContent="space-between">
-          <Typography padding={1} fontWeight={600} variant="h5">
-            Instagram
+          <Typography padding={1} fontWeight={100} variant="h5">
+            INSTAGRAM
           </Typography>
         </Stack>
       </Container>

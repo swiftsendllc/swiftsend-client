@@ -55,7 +55,7 @@ export default function SettingsPage() {
           alignItems="center"
           mb={2}
         >
-          <IconButton>
+          <IconButton href="/account">
             <ArrowBackIcon />
           </IconButton>
           <Typography alignContent="center" alignItems="center" variant="h6">

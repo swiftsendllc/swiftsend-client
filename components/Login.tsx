@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useState } from "react";
+import Animation from "./Animation";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -52,7 +53,7 @@ export default function LoginPage() {
         </IconButton>
       </Box>
       <Box width="100%" textAlign="right" alignContent="center" mb={10}>
-        <InstagramIcon sx={{ height: 100, width: 100 }} />
+        <Animation><InstagramIcon sx={{ height: 100, width: 100 }} /></Animation>
         <Typography variant="h5" fontWeight={300}>
           instagram
         </Typography>
