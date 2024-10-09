@@ -1,16 +1,14 @@
 export const authCookieKey = "_accessToken";
 
-export const authenticatedPaths = [
-  "/home",
-  "/search",
-  "/posts",
-  "/reels",
+export const authenticatedPaths = ["/home", "/search", "/posts", "/reels"];
+export const authenticated = [
+  "/account/settings",
+  "/account/profile",
   "/account",
   "/account/reels",
   "/account/subscribers",
   "/account/tags",
 ];
-export const authenticated = ["/account/settings"];
 
 export const authenticatedPathsRegex = [
   /^\/home/,
