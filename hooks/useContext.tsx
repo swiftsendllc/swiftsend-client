@@ -3,30 +3,36 @@
 import { createContext, useState } from "react";
 
 interface UserInfo {
-  fullName: string;
   userId: string;
+  fullName: string;
   username: string;
   pronouns?: string | null;
   gender?: string | null;
   bio?: string | null;
-  links?: string | null;
-  banners?: string | null;
+  websiteURL?: string | null;
+  bannerURL?: string | null;
   avatarURL?: string | null;
+  postCount: number | null;
+  followerCount: number | null;
+  followingCount: number | null;
   user: {
     email: string;
   };
 }
 const emptyUser = {
   userId: "",
-  fullName: "",
+  fullName: "Henry Cavil",
   avatarURL: "",
   user: { email: "" },
   username: "",
   pronouns: "",
   gender: "",
-  bio: "",
-  links: "",
-  banners: "",
+  bio: "Exploring and enjoying, creating cinematic events",
+  websiteURL: "",
+  bannerURL: "",
+  postCount: 0,
+  followerCount: 0,
+  followingCount: 0,
 } satisfies UserInfo;
 
 export const UserContext = createContext<
@@ -38,7 +44,7 @@ export function ContextWrapper({
   user,
 }: {
   children: React.ReactNode;
-  user: null;
+  user: UserInfo | null;
 }) {
   const [userInfo, setUserInfo] = useState<UserInfo>(user || emptyUser);
   return (

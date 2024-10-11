@@ -1,5 +1,6 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie, setCookie } from "cookies-next";
+import { UpdateUserInput } from "./types";
 
 const UseAPI = () => {
   const login = async (email: string, password: string) => {
@@ -20,10 +21,24 @@ const UseAPI = () => {
     return data;
   };
 
-  const signup = async (email: string, password: string, fullName: string) => {
+  const signup = async (
+    email: string,
+    password: string,
+    fullName: string,
+    dateOfBirth: string,
+    region: string,
+    gender: string
+  ) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
       method: "POST",
-      body: JSON.stringify({ email, password, fullName }),
+      body: JSON.stringify({
+        email,
+        password,
+        fullName,
+        dateOfBirth,
+        region,
+        gender,
+      }),
       headers: {
         "Content-Type": "application.json",
       },
@@ -69,9 +84,27 @@ const UseAPI = () => {
       throw new Error(data.message);
     }
     return {
-      url: `/${data.path}`,
+      url: `${data.url}?v=${Date.now()}`,
     };
   };
-  return { login, signup, testToken, uploadFile };
+
+  const updateUser = async (body: Partial<UpdateUserInput>) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/edit`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  return { login, signup, testToken, uploadFile, updateUser };
 };
 export default UseAPI;
