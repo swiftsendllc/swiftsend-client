@@ -12,6 +12,7 @@ import DomainAddOutlinedIcon from "@mui/icons-material/DomainAddOutlined";
 import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
+import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HealthAndSafetyOutlinedIcon from "@mui/icons-material/HealthAndSafetyOutlined";
 import HideSourceOutlinedIcon from "@mui/icons-material/HideSourceOutlined";
@@ -21,17 +22,20 @@ import InsertCommentRoundedIcon from "@mui/icons-material/InsertCommentRounded";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
+import MovieSharpIcon from "@mui/icons-material/MovieSharp";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import NotificationsOffOutlinedIcon from "@mui/icons-material/NotificationsOffOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
 import PhonelinkOutlinedIcon from "@mui/icons-material/PhonelinkOutlined";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
+import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 import SignalCellularAltOutlinedIcon from "@mui/icons-material/SignalCellularAltOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import SupportOutlinedIcon from "@mui/icons-material/SupportOutlined";
@@ -266,4 +270,62 @@ export const moreInfoAndSupport = [
     leftIcon: <InfoOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
+];
+
+export const stats = [
+  {
+    title: "posts",
+    count: 1,
+    label: "/followers",
+  },
+  {
+    title: "followers",
+    count: 1,
+    label: "/followers",
+  },
+  {
+    title: "following",
+    count: 1,
+    label: "/following",
+  },
+];
+
+export const grid = [
+  {
+    value: "/account",
+    icon: <GridOnSharpIcon color="inherit" />,
+  },
+  {
+    value: "/account/subscribers",
+    icon: <ShoppingBasketSharpIcon />,
+  },
+  {
+    value: "/account/reels",
+    icon: <MovieSharpIcon />,
+  },
+  {
+    value: "/account/tags",
+    icon: <PersonPinRoundedIcon />,
+  },
+];
+export const countries = [
+  { label: "Argentina" },
+  { label: "Brazil" },
+  { label: "China" },
+  { label: "Egypt" },
+  { label: "France" },
+  { label: "Germany" },
+  { label: "India" },
+  { label: "Indonesia" },
+  { label: "Iran" },
+  { label: "Italy" },
+  { label: "Japan" },
+  { label: "Mexico" },
+  { label: "Nigeria" },
+  { label: "Pakistan" },
+  { label: "Russia" },
+  { label: "Saudi Arabia" },
+  { label: "South Africa" },
+  { label: "South Korea" },
+  { label: "Spain" },
 ];

@@ -33,7 +33,7 @@ export default function LandingPage() {
           fullWidth
           variant="contained"
           startIcon={<GoogleIcon />}
-          href="/groups"
+          href="/account"
         >
           Continue with Google
         </Button>

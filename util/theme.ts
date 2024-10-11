@@ -10,6 +10,9 @@ const kanit = Kanit({
 });
 
 const theme = createTheme({
+  palette:{
+    mode: 'dark'
+  },
   typography: {
     fontFamily: kanit.style.fontFamily,
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import UseAPI from "@/hooks/useAPI";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -16,19 +17,31 @@ import {
   Typography,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import toast from "react-hot-toast";
 import Animation from "./Animation";
 
 export default function LoginPage() {
+  const { login } = UseAPI();
+  const [, startTransition] = useTransition();
+
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async () => {
     setLoading(true);
     try {
+      await login(email, password);
+      startTransition(() => {
+        window.location.href = "/account";
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -53,7 +66,9 @@ export default function LoginPage() {
         </IconButton>
       </Box>
       <Box width="100%" textAlign="right" alignContent="center" mb={10}>
-        <Animation><InstagramIcon sx={{ height: 100, width: 100 }} /></Animation>
+        <Animation>
+          <InstagramIcon sx={{ height: 100, width: 100 }} />
+        </Animation>
         <Typography variant="h5" fontWeight={300}>
           instagram
         </Typography>
@@ -87,9 +102,12 @@ export default function LoginPage() {
           />
 
           <TextField
+            required
             id="password-required"
             label="Password"
             type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             slotProps={{
               input: {
                 endAdornment: (
@@ -99,7 +117,7 @@ export default function LoginPage() {
                       onClick={handleClickShowPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -137,7 +155,6 @@ export default function LoginPage() {
             startIcon={null}
             variant="contained"
             type="submit"
-            href="/account"
           >
             Login
           </LoadingButton>
