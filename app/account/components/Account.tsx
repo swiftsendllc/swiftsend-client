@@ -1,16 +1,13 @@
 "use client";
+import { grid, stats } from "@/components/SearchComponents";
+import { UserContext } from "@/hooks/useContext";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
 import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import GestureIcon from "@mui/icons-material/Gesture";
-import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import MenuIcon from "@mui/icons-material/Menu";
-import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import PersonPinRoundedIcon from '@mui/icons-material/PersonPinRounded';
-import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
-
 import {
   Avatar,
   Badge,
@@ -25,47 +22,14 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-
-const stats = [
-  {
-    title: "posts",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "followers",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "following",
-    count: 1,
-    label: "/following",
-  },
-];
-
-const grid = [
-  {
-    value: "/account",
-    icon: <GridOnSharpIcon color="inherit" />,
-  },
-  {
-    value: "/account/subscribers",
-    icon: <ShoppingBasketSharpIcon />,
-  },
-  {
-    value: "/account/reels",
-    icon: <MovieSharpIcon />,
-  },
-  {
-    value: "/account/tags",
-    icon: <PersonPinRoundedIcon />,
-  },
-];
+import { useContext } from "react";
 
 export default function AccountPage() {
   const _pathName = usePathname();
+  const [user] = useContext(UserContext);
   const { id } = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const maps = [...stats, ...grid];
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
   return (
@@ -91,7 +55,7 @@ export default function AccountPage() {
                 whiteSpace: "nowrap",
               }}
             >
-              arijitchhatui
+              {user.username}
             </Typography>
             <IconButton edge="end">
               <ExpandMoreOutlinedIcon />
@@ -127,7 +91,7 @@ export default function AccountPage() {
                 badgeContent={<AddSharpIcon />}
               >
                 <Avatar
-                  src="icon-512x512.png"
+                  src={user.avatarURL!}
                   alt="Profile Picture"
                   sx={{ width: 80, height: 80 }}
                 />
@@ -158,10 +122,10 @@ export default function AccountPage() {
 
             {/* Button to add vibe */}
             <Typography variant="h6" fontWeight={200}>
-              Arijit Chhatui
+              {user.fullName}
             </Typography>
             <Typography variant="body2" fontWeight={300}>
-              Exploring and enjoying. Creating cinematic events
+              {user.bio}
             </Typography>
             <Box>
               <IconButton>
@@ -169,7 +133,9 @@ export default function AccountPage() {
               </IconButton>
             </Box>
             <Stack direction="row" spacing={0} justifyContent="space-between">
-              <Button variant="outlined" href="/account/profile">Profile </Button>
+              <Button variant="outlined" href="/account/profile">
+                Profile{" "}
+              </Button>
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
@@ -208,10 +174,11 @@ export default function AccountPage() {
             >
               <CameraAltSharpIcon sx={{ width: 60, height: 60 }} />
               <Typography variant="h5" fontWeight="100">
-                Photos of yours
+                Photos of yours {/*  needs to be fixed */}
               </Typography>
               <Typography variant="h6" fontWeight="50">
-                Your photos, they&apos;ll appear here.
+                Your photos, they&apos;ll appear here.{" "}
+                {/*  needs to be fixed */}
               </Typography>
             </Stack>
           </Stack>

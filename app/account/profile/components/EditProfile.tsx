@@ -2,7 +2,6 @@
 
 import UseAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
-import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import {
   InputAdornment,
   List,
@@ -10,6 +9,9 @@ import {
   ListItemText,
 } from "@mui/material";
 
+import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
+
+import { UpdateUserInput } from "@/hooks/types";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import {
@@ -23,43 +25,52 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function EditProfilePage() {
   const [user, setUserInfo] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const { uploadFile } = UseAPI();
+  const { uploadFile, updateUser } = UseAPI();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [formData, setFormData] = useState<Partial<UpdateUserInput>>({});
 
   const profiles = [
     {
       label: "Name",
-      value: user.fullName!,
+      key: "fullName",
+      value: user.fullName,
       disabled: true,
     },
     {
       label: "Username",
-      value: user.username!,
+      key: "username",
+      value: user.username,
     },
     {
       label: "Pronouns",
+      key: "pronouns",
       value: user.pronouns,
     },
     {
       label: "Bio",
+      key: "bio",
       value: user.bio,
     },
     {
       label: "Links",
-      value: user.links,
+      key: "links",
+      value: user.websiteURL,
       rightIcon: <KeyboardArrowRightOutlinedIcon />,
     },
     {
       label: "Banners",
-      value: user.banners,
+      key: "banners",
+      value: user.bannerURL,
       rightIcon: <KeyboardArrowRightOutlinedIcon />,
     },
     {
       label: "Gender",
+      key: "gender",
       value: user.gender,
       rightIcon: <KeyboardArrowRightOutlinedIcon />,
       disabled: true,
@@ -105,11 +116,23 @@ export default function EditProfilePage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const body = await uploadFile(formData);
+      await uploadFile(formData);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleOnChange = async () => {
+    try {
+      const data = await updateUser(formData);
+      setUserInfo(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  console.log({ formData });
+
   return (
     <>
       <Stack
@@ -158,6 +181,7 @@ export default function EditProfilePage() {
         </IconButton>
       </Stack>
       <Divider />
+
       <Stack spacing={2} mb={4}>
         {profiles.map((option, idx) => (
           <TextField
@@ -166,6 +190,13 @@ export default function EditProfilePage() {
             label={option.label}
             defaultValue={option.value}
             multiline={option.label === "Bio"}
+            onChange={(e) => {
+              setFormData((record) => ({
+                ...record,
+                [option.key]: e.target.value,
+              }));
+            }}
+            onBlur={() => handleOnChange()}
             slotProps={{
               input: {
                 endAdornment: option.rightIcon && (
@@ -179,12 +210,13 @@ export default function EditProfilePage() {
           />
         ))}
       </Stack>
+
       <Typography mt={2} variant="h6">
         Profile Information
       </Typography>
-      <List sx={{ width: " 100%"}}>
+      <List sx={{ width: " 100%" }}>
         {profileInformation.map((option, idx) => (
-          <ListItemButton key={idx} sx={{p: 0}}>
+          <ListItemButton key={idx} sx={{ p: 0 }}>
             <ListItemText disableTypography>
               <Stack
                 direction="row"
@@ -210,17 +242,16 @@ export default function EditProfilePage() {
           </ListItemButton>
         ))}
       </List>
-<Stack spacing={2} direction='column' mb={8}>
-<Divider/>
-<Typography style={{ color: "var(--success)"}}>
-  Personal information settings
-</Typography>
-<Divider/>
-<Typography style={{ color: "var(--success)"}}>
-  Show that your profile is verified
-</Typography>
-</Stack>
-
+      <Stack spacing={2} direction="column" mb={8}>
+        <Divider />
+        <Typography style={{ color: "var(--success)" }}>
+          Personal information settings
+        </Typography>
+        <Divider />
+        <Typography style={{ color: "var(--success)" }}>
+          Show that your profile is verified
+        </Typography>
+      </Stack>
     </>
   );
 }

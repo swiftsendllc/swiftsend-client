@@ -12,7 +12,10 @@ import {
   yourAppAndMedia,
   yourOrdersAndFundraisers,
 } from "@/components/SearchComponents";
+import { authCookieKey } from "@/library/constants";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LogoutIcon from "@mui/icons-material/Logout";
+
 import {
   Autocomplete,
   Divider,
@@ -25,12 +28,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { deleteCookie } from "cookies-next";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
 const minWidth = 35;
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const settingsPage = [
     ...yourAccounts,
@@ -44,7 +51,10 @@ export default function SettingsPage() {
     ...yourOrdersAndFundraisers,
     ...moreInfoAndSupport,
   ];
-
+  const handleLogout = () => {
+    deleteCookie(authCookieKey);
+    router.push("/");
+  };
   return (
     <>
       <Stack mt={1} mb={3}>
@@ -75,11 +85,10 @@ export default function SettingsPage() {
           renderInput={(params) => (
             <TextField
               {...params}
-              slotProps={{ input: { sx: { borderRadius: "30px" } }, }}
+              slotProps={{ input: { sx: { borderRadius: "30px" } } }}
               label="Search"
             />
           )}
-
         />
       </Stack>
       <Divider />
@@ -410,6 +419,20 @@ export default function SettingsPage() {
         ))}
       </List>
       <Divider />
+      <List sx={{ width: "100%", mt: 1, mb: 2 }}>
+        <ListItemButton
+          sx={{ padding: 0, py: 1, borderRadius: 2 }}
+          onClick={handleLogout}
+        >
+          <ListItemIcon sx={{ pr: 1, minWidth }}>
+            <LogoutIcon sx={{ width: 30, height: 30 }} color="error" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Logout"
+            primaryTypographyProps={{ color: "error" }}
+          />
+        </ListItemButton>
+      </List>
       <Stack width="100%">
         <Typography variant="body1" color="text.secondary" textAlign="center">
           {" "}

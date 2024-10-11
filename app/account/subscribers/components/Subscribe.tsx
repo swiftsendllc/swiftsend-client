@@ -1,4 +1,5 @@
 "use client";
+import { UserContext } from "@/hooks/useContext";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
@@ -7,7 +8,7 @@ import GestureIcon from "@mui/icons-material/Gesture";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import MenuIcon from "@mui/icons-material/Menu";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import PersonPinRoundedIcon from '@mui/icons-material/PersonPinRounded';
+import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 
 import {
@@ -24,47 +25,49 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-
-const stats = [
-  {
-    title: "posts",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "followers",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "following",
-    count: 1,
-    label: "/following",
-  },
-];
-
-const grid = [
-  {
-    value: "/account",
-    icon: <GridOnSharpIcon />,
-  },
-  {
-    value: "/account/subscribers",
-    icon: <ShoppingBasketSharpIcon color="inherit" />,
-  },
-  {
-    value: "/account/reels",
-    icon: <MovieSharpIcon />,
-  },
-  {
-    value: "/account/tags",
-    icon: <PersonPinRoundedIcon />,
-  },
-];
+import { useContext } from "react";
 
 export default function SubscribePage() {
   const _pathName = usePathname();
   const { id } = useParams();
+  const [user] = useContext(UserContext);
+
+  const stats = [
+    {
+      title: "posts",
+      count: user.postCount,
+      label: "/followers",
+    },
+    {
+      title: "followers",
+      count: user.followerCount,
+      label: "/followers",
+    },
+    {
+      title: "following",
+      count: user.followingCount,
+      label: "/following",
+    },
+  ];
+
+  const grid = [
+    {
+      value: "/account",
+      icon: <GridOnSharpIcon />,
+    },
+    {
+      value: "/account/subscribers",
+      icon: <ShoppingBasketSharpIcon color="inherit" />,
+    },
+    {
+      value: "/account/reels",
+      icon: <MovieSharpIcon />,
+    },
+    {
+      value: "/account/tags",
+      icon: <PersonPinRoundedIcon />,
+    },
+  ];
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
   return (
@@ -72,7 +75,6 @@ export default function SubscribePage() {
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
         {/* Profile Header */}
         <Stack
-
           mb={2}
           direction="row"
           justifyContent="space-between"
@@ -91,7 +93,7 @@ export default function SubscribePage() {
                 whiteSpace: "nowrap",
               }}
             >
-              arijitchhatui
+              {user.username}
             </Typography>
             <IconButton edge="end">
               <ExpandMoreOutlinedIcon />
@@ -127,7 +129,7 @@ export default function SubscribePage() {
                 badgeContent={<AddSharpIcon />}
               >
                 <Avatar
-                  src="icon-512x512.png"
+                  src={user.avatarURL!}
                   alt="Profile Picture"
                   sx={{ width: 80, height: 80 }}
                 />
@@ -158,22 +160,21 @@ export default function SubscribePage() {
 
             {/* Button to add vibe */}
             <Typography variant="h6" fontWeight={200}>
-              Arijit Chhatui
+              {user.fullName}
             </Typography>
             <Typography variant="body2" fontWeight={300}>
-              Exploring and enjoying. Creating cinematic events
+              {user.bio}
             </Typography>
             <Box>
               <IconButton>
                 <AddCircleOutlineSharpIcon sx={{ width: 30, height: 30 }} />
               </IconButton>
             </Box>
-            <Stack direction="row" spacing={0} justifyContent="space-between">
+            <Stack direction="row" spacing={1} justifyContent="space-between">
               <Button variant="outlined">Profile </Button>
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
-
             </Stack>
             <Stack direction="row" spacing={1} justifyContent="space-between">
               {grid.map((item, idx) => (

@@ -1,4 +1,5 @@
 "use client";
+import { UserContext } from "@/hooks/useContext";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
@@ -25,6 +26,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { useContext } from "react";
 
 const stats = [
   {
@@ -65,6 +67,7 @@ const grid = [
 
 export default function ReelPage() {
   const _pathName = usePathname();
+  const [user] = useContext(UserContext);
   const { id } = useParams();
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
@@ -91,7 +94,7 @@ export default function ReelPage() {
                 whiteSpace: "nowrap",
               }}
             >
-              arijitchhatui
+              {user.username}
             </Typography>
             <IconButton edge="end">
               <ExpandMoreOutlinedIcon />
@@ -127,7 +130,7 @@ export default function ReelPage() {
                 badgeContent={<AddSharpIcon />}
               >
                 <Avatar
-                  src="icon-512x512.png"
+                  src={user.avatarURL!}
                   alt="Profile Picture"
                   sx={{ width: 80, height: 80 }}
                 />
@@ -158,17 +161,17 @@ export default function ReelPage() {
 
             {/* Button to add vibe */}
             <Typography variant="h6" fontWeight={200}>
-              Arijit Chhatui
+              {user.fullName}
             </Typography>
             <Typography variant="body2" fontWeight={300}>
-              Exploring and enjoying. Creating cinematic events
+              {user.bio}
             </Typography>
             <Box>
               <IconButton>
                 <AddCircleOutlineSharpIcon sx={{ width: 30, height: 30 }} />
               </IconButton>
             </Box>
-            <Stack direction="row" spacing={0} justifyContent="space-between">
+            <Stack direction="row" spacing={1} justifyContent="space-between">
               <Button variant="outlined" href="/account/profile">
                 Profile{" "}
               </Button>

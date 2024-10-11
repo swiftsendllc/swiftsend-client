@@ -1,4 +1,5 @@
 "use client";
+import { UserContext } from "@/hooks/useContext";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
@@ -24,47 +25,49 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-
-const stats = [
-  {
-    title: "posts",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "followers",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "following",
-    count: 1,
-    label: "/following",
-  },
-];
-
-const grid = [
-  {
-    value: "/account",
-    icon: <GridOnSharpIcon />,
-  },
-  {
-    value: "/account/subscribers",
-    icon: <ShoppingBasketSharpIcon />,
-  },
-  {
-    value: "/account/reels",
-    icon: <MovieSharpIcon color="inherit" />,
-  },
-  {
-    value: "/account/tags",
-    icon: <PersonPinRoundedIcon />,
-  },
-];
+import { useContext } from "react";
 
 export default function TagPage() {
   const _pathName = usePathname();
   const { id } = useParams();
+  const [user] = useContext(UserContext);
+
+  const stats = [
+    {
+      title: "posts",
+      count: user.postCount,
+      label: "/followers",
+    },
+    {
+      title: "followers",
+      count: user.followerCount,
+      label: "/followers",
+    },
+    {
+      title: "following",
+      count: user.followingCount,
+      label: "/following",
+    },
+  ];
+
+  const grid = [
+    {
+      value: "/account",
+      icon: <GridOnSharpIcon />,
+    },
+    {
+      value: "/account/subscribers",
+      icon: <ShoppingBasketSharpIcon />,
+    },
+    {
+      value: "/account/reels",
+      icon: <MovieSharpIcon color="inherit" />,
+    },
+    {
+      value: "/account/tags",
+      icon: <PersonPinRoundedIcon />,
+    },
+  ];
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
   return (
@@ -90,7 +93,7 @@ export default function TagPage() {
                 whiteSpace: "nowrap",
               }}
             >
-              arijitchhatui
+              {user.username}
             </Typography>
             <IconButton edge="end">
               <ExpandMoreOutlinedIcon />
@@ -126,7 +129,7 @@ export default function TagPage() {
                 badgeContent={<AddSharpIcon />}
               >
                 <Avatar
-                  src="icon-512x512.png"
+                  src={user.avatarURL!}
                   alt="Profile Picture"
                   sx={{ width: 80, height: 80 }}
                 />
@@ -157,17 +160,17 @@ export default function TagPage() {
 
             {/* Button to add vibe */}
             <Typography variant="h6" fontWeight={200}>
-              Arijit Chhatui
+              {user.fullName}
             </Typography>
             <Typography variant="body2" fontWeight={300}>
-              Exploring and enjoying. Creating cinematic events
+              {user.bio}
             </Typography>
             <Box>
               <IconButton>
                 <AddCircleOutlineSharpIcon sx={{ width: 30, height: 30 }} />
               </IconButton>
             </Box>
-            <Stack direction="row" spacing={0} justifyContent="space-between">
+            <Stack direction="row" spacing={1} justifyContent="space-between">
               <Button variant="outlined">Profile </Button>
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
