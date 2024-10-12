@@ -6,12 +6,12 @@ interface UserInfo {
   userId: string;
   fullName: string;
   username: string;
-  pronouns?: string | null;
-  gender?: string | null;
-  bio?: string | null;
-  websiteURL?: string | null;
-  bannerURL?: string | null;
-  avatarURL?: string | null;
+  pronouns?: string ;
+  gender?: string ;
+  bio?: string ;
+  websiteURL?: string ;
+  bannerURL?: string ;
+  avatarURL?: string ;
   postCount: number | null;
   followerCount: number | null;
   followingCount: number | null;

@@ -21,26 +21,19 @@ const UseAPI = () => {
     return data;
   };
 
-  const signup = async (
-    email: string,
-    password: string,
-    fullName: string,
-    dateOfBirth: string,
-    region: string,
-    gender: string
-  ) => {
+  const signup = async (fullName: string, email: string, password: string, dob: Date, input: {
+  email: string;
+  password: string;
+  fullName: string;
+  dateOfBirth: Date;
+  region: "";
+  gender: "";
+}, region: { label: string; } | null) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
       method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-        fullName,
-        dateOfBirth,
-        region,
-        gender,
-      }),
+      body: JSON.stringify(input),
       headers: {
-        "Content-Type": "application.json",
+        "Content-Type": "application/json",
       },
     });
     const data = await res.json();
@@ -90,14 +83,17 @@ const UseAPI = () => {
 
   const updateUser = async (body: Partial<UpdateUserInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/edit`, {
-      method: "PATCH",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/me/edit`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);

@@ -14,6 +14,7 @@ import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRig
 import { UpdateUserInput } from "@/hooks/types";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+
 import {
   Avatar,
   Badge,
@@ -26,13 +27,16 @@ import {
 } from "@mui/material";
 import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import EditUsernameModal from "./EditUsernameModal";
 
 export default function EditProfilePage() {
   const [user, setUserInfo] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const { uploadFile, updateUser } = UseAPI();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState<Partial<UpdateUserInput>>({});
+  const [editUsernameModal, setEditUsernameModal] = useState(false);
+  const [formData] = useState<Partial<UpdateUserInput>>({});
+  const [currentField, setCurrentField] = useState<string>("");
 
   const profiles = [
     {
@@ -45,16 +49,19 @@ export default function EditProfilePage() {
       label: "Username",
       key: "username",
       value: user.username,
+      rightIcon: <KeyboardArrowRightOutlinedIcon />,
     },
     {
       label: "Pronouns",
       key: "pronouns",
       value: user.pronouns,
+      rightIcon: <KeyboardArrowRightOutlinedIcon />,
     },
     {
       label: "Bio",
       key: "bio",
       value: user.bio,
+      rightIcon: <KeyboardArrowRightOutlinedIcon />,
     },
     {
       label: "Links",
@@ -72,7 +79,7 @@ export default function EditProfilePage() {
       label: "Gender",
       key: "gender",
       value: user.gender,
-      rightIcon: <KeyboardArrowRightOutlinedIcon />,
+
       disabled: true,
     },
   ];
@@ -125,7 +132,7 @@ export default function EditProfilePage() {
   const handleOnChange = async () => {
     try {
       const data = await updateUser(formData);
-      setUserInfo(data);
+      setUserInfo(data.UpdateUserInput);
     } catch (error) {
       toast.error(error.message);
     }
@@ -165,7 +172,7 @@ export default function EditProfilePage() {
             <Avatar
               src={user.avatarURL!}
               sx={{ width: 60, height: 60 }}
-              alt="Arijit Chhatui"
+              alt="Henry Cavil"
             />
           </Badge>
           <input
@@ -190,13 +197,10 @@ export default function EditProfilePage() {
             label={option.label}
             defaultValue={option.value}
             multiline={option.label === "Bio"}
-            onChange={(e) => {
-              setFormData((record) => ({
-                ...record,
-                [option.key]: e.target.value,
-              }));
+            onClick={() =>{
+              setCurrentField(option.label)
+              setEditUsernameModal(true)
             }}
-            onBlur={() => handleOnChange()}
             slotProps={{
               input: {
                 endAdornment: option.rightIcon && (
@@ -252,6 +256,11 @@ export default function EditProfilePage() {
           Show that your profile is verified
         </Typography>
       </Stack>
+      <EditUsernameModal
+        isOpen={editUsernameModal}
+        onClose={() => setEditUsernameModal(false)}
+        currentField={currentField}
+      />
     </>
   );
 }

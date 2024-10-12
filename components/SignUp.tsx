@@ -19,6 +19,7 @@ import {
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { countries } from "./SearchComponents";
+import { label } from "framer-motion/client";
 
 const genderOption = [
   {
@@ -39,16 +40,19 @@ export default function SignUpPage() {
   const [continued, setContinued] = useState(false);
 
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState("");
-  const [region, setRegion] = useState("");
+  const [gender, setGender] = useState<{ label: string } | null>(null);
+  const [region, setRegion] = useState<{ label: string } | null>(null);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async () => {
     setLoading(true);
     try {
-      await signup(email, fullName, password, dateOfBirth, gender, region);
-      window.location.href = "/signin";
+      const dob = new Date(dateOfBirth);
+      await signup({fullName, email, password, dob, gender:gender?.label, region:region?.label});
+      window.location.href = "/account";
+    } catch (error) {
+      console.error("SigUp failed", error);
     } finally {
       setLoading(false);
     }
@@ -108,29 +112,25 @@ export default function SignUpPage() {
               <Autocomplete
                 disablePortal
                 options={genderOption}
+                value={gender}
+                onChange={(e, newGender) => setGender(newGender)}
+                isOptionEqualToValue={(option, value) =>
+                  option.label === value?.label
+                }
                 renderInput={(params) => (
-                  <TextField
-                    required
-                    label="Gender"
-                    {...params}
-                    type="gender"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                  />
+                  <TextField required label="Gender" {...params} />
                 )}
               />
               <Autocomplete
                 disablePortal
                 options={countries}
+                value={region}
+                onChange={(e, newValue) => setRegion(newValue)}
+                isOptionEqualToValue={(option, value) =>
+                  option.label === value?.label
+                }
                 renderInput={(params) => (
-                  <TextField
-                    required
-                    label="Region"
-                    type="region"
-                    {...params}
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                  />
+                  <TextField required label="Region" {...params} />
                 )}
               />
               <LoadingButton
@@ -139,7 +139,6 @@ export default function SignUpPage() {
                 startIcon={null}
                 variant="contained"
                 type="submit"
-                href="/"
               >
                 Sign In
               </LoadingButton>
