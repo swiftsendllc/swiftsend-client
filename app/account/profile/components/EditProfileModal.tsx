@@ -33,12 +33,14 @@ export default function EditUsernameModal({
 
   const [didChange, setDidChange] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Initialize formData with user data and ensure values are not undefined
   const [formData, setFormData] = useState<Partial<UpdateUserInput>>({
-    username: user.username,
-    pronouns: user.pronouns,
-    bio: user.bio,
-    websiteURL: user.websiteURL,
-    bannerURL: user.bannerURL,
+    username: user?.username || "",
+    pronouns: user?.pronouns || "",
+    bio: user?.bio || "",
+    websiteURL: user?.websiteURL || "",
+    bannerURL: user?.bannerURL || "",
   });
 
   const profiles = [
@@ -60,12 +62,12 @@ export default function EditUsernameModal({
     {
       label: "Links",
       value: formData.websiteURL,
-      key: "links",
+      key: "websiteURL",
     },
     {
       label: "Banners",
       value: formData.bannerURL,
-      key: "banners",
+      key: "bannerURL",
     },
   ];
 

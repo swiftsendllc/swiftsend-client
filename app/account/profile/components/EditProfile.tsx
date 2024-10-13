@@ -25,24 +25,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useContext, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import EditUsernameModal from "./EditUsernameModal";
+import EditUsernameModal from "./EditProfileModal";
 
 export default function EditProfilePage() {
-  const [user, setUserInfo] = useContext(UserContext);
+  const [user] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const { uploadFile, updateUser } = UseAPI();
+  const { uploadFile } = UseAPI();
   const inputRef = useRef<HTMLInputElement>(null);
   const [editUsernameModal, setEditUsernameModal] = useState(false);
   const [formData] = useState<Partial<UpdateUserInput>>({});
   const [currentField, setCurrentField] = useState<string>("");
+  console.log({ user, d: user });
 
   const profiles = [
     {
       label: "Name",
       key: "fullName",
-      value: user.fullName,
+      value: user.fullName ,
       disabled: true,
     },
     {
@@ -79,7 +80,6 @@ export default function EditProfilePage() {
       label: "Gender",
       key: "gender",
       value: user.gender,
-
       disabled: true,
     },
   ];
@@ -129,16 +129,7 @@ export default function EditProfilePage() {
     }
   };
 
-  const handleOnChange = async () => {
-    try {
-      const data = await updateUser(formData);
-      setUserInfo(data.UpdateUserInput);
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  console.log({ formData });
+  console.log({ formData, profiles });
 
   return (
     <>
@@ -149,7 +140,7 @@ export default function EditProfilePage() {
         alignItems="center"
         mb={2}
       >
-        <IconButton href="/account">
+        <IconButton href="/account" LinkComponent={Link}>
           <ArrowBackIcon />
         </IconButton>
         <Typography alignContent="center" alignItems="center" variant="h6">
@@ -194,12 +185,12 @@ export default function EditProfilePage() {
           <TextField
             key={idx}
             variant="standard"
-            label={option.label}
-            defaultValue={option.value}
+            label={option.label || ""}
             multiline={option.label === "Bio"}
-            onClick={() =>{
-              setCurrentField(option.label)
-              setEditUsernameModal(true)
+            value={option.value}
+            onClick={() => {
+              setCurrentField(option.label);
+              setEditUsernameModal(true);
             }}
             slotProps={{
               input: {

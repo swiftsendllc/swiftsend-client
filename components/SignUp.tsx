@@ -17,9 +17,9 @@ import {
   Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import Link from "next/link";
 import { useState } from "react";
 import { countries } from "./SearchComponents";
-import { label } from "framer-motion/client";
 
 const genderOption = [
   {
@@ -34,14 +34,16 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { signup } = UseAPI();
   const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [isFullNameValid, setIsFullNameValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [continued, setContinued] = useState(false);
 
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState<{ label: string } | null>(null);
-  const [region, setRegion] = useState<{ label: string } | null>(null);
+  const [gender, setGender] = useState("");
+  const [region, setRegion] = useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -49,7 +51,14 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       const dob = new Date(dateOfBirth);
-      await signup({fullName, email, password, dob, gender:gender?.label, region:region?.label});
+      await signup({
+        fullName,
+        email,
+        password,
+        gender: gender,
+        region: region,
+        dateOfBirth: dob,
+      });
       window.location.href = "/account";
     } catch (error) {
       console.error("SigUp failed", error);
@@ -73,7 +82,8 @@ export default function SignUpPage() {
               aria-label="back-button"
               color="inherit"
               sx={{ padding: 0, py: 1 }}
-              href="/"
+              href="/signup"
+              LinkComponent={Link}
             >
               <ArrowBackIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
@@ -112,8 +122,8 @@ export default function SignUpPage() {
               <Autocomplete
                 disablePortal
                 options={genderOption}
-                value={gender}
-                onChange={(e, newGender) => setGender(newGender)}
+                value={{ label: gender }}
+                onChange={(e, newGender) => setGender(newGender?.label || "")}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value?.label
                 }
@@ -124,8 +134,8 @@ export default function SignUpPage() {
               <Autocomplete
                 disablePortal
                 options={countries}
-                value={region}
-                onChange={(e, newValue) => setRegion(newValue)}
+                value={{ label: region }}
+                onChange={(e, newRegion) => setRegion(newRegion?.label || "")}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value?.label
                 }
@@ -159,6 +169,7 @@ export default function SignUpPage() {
               color="inherit"
               sx={{ padding: 0, py: 1 }}
               href="/"
+              LinkComponent={Link}
             >
               <ArrowBackIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
@@ -193,7 +204,14 @@ export default function SignUpPage() {
                 value={fullName}
                 focused
                 autoFocus
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  setIsFullNameValid(
+                    /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/.test(
+                      e.target.value
+                    )
+                  );
+                }}
               />
               <TextField
                 required
@@ -202,9 +220,22 @@ export default function SignUpPage() {
                 type="email"
                 autoComplete="username"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setIsEmailValid(
+                    /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(
+                      e.target.value
+                    )
+                  );
+                }}
+                helperText={
+                  email && !isEmailValid
+                    ? "Please enter a valid email address"
+                    : ""
+                }
               />
               <TextField
+                required
                 id="password-required"
                 label="Password"
                 value={password}
@@ -232,7 +263,7 @@ export default function SignUpPage() {
                 color="text.secondary"
                 textAlign="left"
               >
-                <a
+                <Link
                   href="/login"
                   style={{
                     textDecoration: "none",
@@ -240,12 +271,21 @@ export default function SignUpPage() {
                   }}
                 >
                   Already have an account? Login
-                </a>
+                </Link>
               </Typography>
               <LoadingButton
                 loading={loading}
                 loadingPosition="start"
                 startIcon={null}
+                disabled={
+                  !(
+                    password &&
+                    fullName &&
+                    email &&
+                    isEmailValid &&
+                    isFullNameValid
+                  )
+                }
                 variant="contained"
                 type="submit"
                 onClick={() => setContinued(true)}
