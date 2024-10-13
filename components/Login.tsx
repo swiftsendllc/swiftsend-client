@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import Animation from "./Animation";
@@ -61,6 +62,7 @@ export default function LoginPage() {
           color="inherit"
           sx={{ padding: 0, py: 1 }}
           href="/"
+          LinkComponent={Link}
         >
           <ArrowBackIcon sx={{ width: 30, height: 30 }} />
         </IconButton>
@@ -126,7 +128,7 @@ export default function LoginPage() {
           />
           <Stack direction="row" spacing={15}>
             <Typography variant="body2" color="text.secondary" textAlign="left">
-              <a
+              <Link
                 style={{
                   textDecoration: "none",
                   color: "currentcolor",
@@ -134,11 +136,11 @@ export default function LoginPage() {
                 href="/forgot-password"
               >
                 Forgot your password?
-              </a>
+              </Link>
             </Typography>
 
             <Typography color="text.secondary" textAlign="right">
-              <a
+              <Link
                 style={{
                   textDecoration: "none",
                   color: "text.secondary",
@@ -146,7 +148,7 @@ export default function LoginPage() {
                 href="/signup"
               >
                 Create account
-              </a>
+              </Link>
             </Typography>
           </Stack>
           <LoadingButton

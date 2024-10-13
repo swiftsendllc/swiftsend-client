@@ -8,10 +8,13 @@ export interface UpdateUserInput {
 }
 export interface UserProfilesEntity {
   userId: string;
+
   user: { email: string };
   fullName: string;
   username: string;
   bio: string;
+
+  gender: string;
 
   pronouns: string;
 

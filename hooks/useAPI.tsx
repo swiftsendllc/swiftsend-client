@@ -21,14 +21,14 @@ const UseAPI = () => {
     return data;
   };
 
-  const signup = async (fullName: string, email: string, password: string, dob: Date, input: {
-  email: string;
-  password: string;
-  fullName: string;
-  dateOfBirth: Date;
-  region: "";
-  gender: "";
-}, region: { label: string; } | null) => {
+  const signup = async (input: {
+    email: string;
+    password: string;
+    fullName: string;
+    dateOfBirth: Date;
+    region: string;
+    gender: string;
+  }) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
       method: "POST",
       body: JSON.stringify(input),

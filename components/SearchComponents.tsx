@@ -272,24 +272,6 @@ export const moreInfoAndSupport = [
   },
 ];
 
-export const stats = [
-  {
-    title: "posts",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "followers",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "following",
-    count: 1,
-    label: "/following",
-  },
-];
-
 export const grid = [
   {
     value: "/account",

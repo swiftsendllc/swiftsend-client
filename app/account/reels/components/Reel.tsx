@@ -28,23 +28,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useContext } from "react";
 
-const stats = [
-  {
-    title: "posts",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "followers",
-    count: 1,
-    label: "/followers",
-  },
-  {
-    title: "following",
-    count: 1,
-    label: "/following",
-  },
-];
+
 
 const grid = [
   {
@@ -69,6 +53,25 @@ export default function ReelPage() {
   const _pathName = usePathname();
   const [user] = useContext(UserContext);
   const { id } = useParams();
+
+
+  const stats = [
+    {
+      title: "posts",
+      count: user.postCount,
+      label: "/followers",
+    },
+    {
+      title: "followers",
+      count: user.followerCount,
+      label: "/followers",
+    },
+    {
+      title: "following",
+      count: user.followingCount,
+      label: "/following",
+    },
+  ];
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
   return (

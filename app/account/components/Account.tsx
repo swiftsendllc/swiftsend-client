@@ -1,5 +1,5 @@
 "use client";
-import { grid, stats } from "@/components/SearchComponents";
+import { grid } from "@/components/SearchComponents";
 import { UserContext } from "@/hooks/useContext";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
@@ -29,7 +29,24 @@ export default function AccountPage() {
   const [user] = useContext(UserContext);
   const { id } = useParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const maps = [...stats, ...grid];
+  const maps = [ ...grid];
+  const stats = [
+    {
+      title: "posts",
+      count: user.postCount,
+      label: "/followers",
+    },
+    {
+      title: "followers",
+      count: user.followerCount,
+      label: "/followers",
+    },
+    {
+      title: "following",
+      count: user.followingCount,
+      label: "/following",
+    },
+  ];
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
   return (
@@ -70,7 +87,7 @@ export default function AccountPage() {
             <IconButton color="inherit" href="/">
               <AddBoxOutlinedIcon />
             </IconButton>
-            <IconButton color="inherit" href="/account/settings">
+            <IconButton color="inherit" href="/account/settings" LinkComponent={Link}>
               <MenuIcon />
             </IconButton>
           </Stack>

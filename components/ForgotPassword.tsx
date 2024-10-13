@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ForgotPasswordPage() {
@@ -41,6 +42,7 @@ export default function ForgotPasswordPage() {
           color="inherit"
           sx={{ padding: 0, py: 1 }}
           href="/login"
+          LinkComponent={Link}
         >
           <ArrowBackIcon sx={{ height: 30, width: 30 }} />
         </IconButton>
@@ -88,6 +90,7 @@ export default function ForgotPasswordPage() {
             variant="contained"
             type="submit"
             href="/verify-otp"
+            LinkComponent={Link}
           >
             verify
           </LoadingButton>

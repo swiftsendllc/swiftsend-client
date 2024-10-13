@@ -108,7 +108,7 @@ export default function TagPage() {
             <IconButton color="inherit" href="/">
               <AddBoxOutlinedIcon />
             </IconButton>
-            <IconButton color="inherit" href="/account/settings">
+            <IconButton color="inherit" href="/account/settings" LinkComponent={Link}>
               <MenuIcon />
             </IconButton>
           </Stack>
