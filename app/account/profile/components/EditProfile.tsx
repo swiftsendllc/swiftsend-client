@@ -43,7 +43,7 @@ export default function EditProfilePage() {
     {
       label: "Name",
       key: "fullName",
-      value: user.fullName ,
+      value: user.fullName,
       disabled: true,
     },
     {

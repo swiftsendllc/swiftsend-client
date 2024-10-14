@@ -150,7 +150,7 @@ export default function AccountPage() {
               </IconButton>
             </Box>
             <Stack direction="row" spacing={0} justifyContent="space-between">
-              <Button variant="outlined" href="/account/profile">
+              <Button variant="outlined" href="/account/profile" LinkComponent={Link}>
                 Profile{" "}
               </Button>
               <Button variant="outlined">Share </Button>

@@ -19,7 +19,6 @@ import {
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import toast from "react-hot-toast";
 import Animation from "./Animation";
 
 export default function LoginPage() {
@@ -30,11 +29,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async () => {
     setLoading(true);
+    setPasswordError("")
     try {
       await login(email, password);
       startTransition(() => {
@@ -42,7 +43,7 @@ export default function LoginPage() {
       });
     } catch (err) {
       console.log(err);
-      toast.error(err.message);
+      setPasswordError("Invalid credentials")
     } finally {
       setLoading(false);
     }
@@ -110,6 +111,8 @@ export default function LoginPage() {
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!!passwordError}
+            helperText={passwordError}
             slotProps={{
               input: {
                 endAdornment: (
@@ -157,6 +160,7 @@ export default function LoginPage() {
             startIcon={null}
             variant="contained"
             type="submit"
+            disabled={!(email && password)}
           >
             Login
           </LoadingButton>

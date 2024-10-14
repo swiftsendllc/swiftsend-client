@@ -34,7 +34,7 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { signup } = UseAPI();
   const [email, setEmail] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(true);
   const [fullName, setFullName] = useState("");
   const [isFullNameValid, setIsFullNameValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +46,12 @@ export default function SignUpPage() {
   const [region, setRegion] = useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleContinue = () => {
+    if (isEmailValid && isFullNameValid && password) {
+      setContinued(true);
+    }
+  };
 
   const onSubmit = async () => {
     setLoading(true);
@@ -222,16 +228,21 @@ export default function SignUpPage() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                }}
+                onBlur={(e) => {
                   setIsEmailValid(
                     /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(
                       e.target.value
                     )
                   );
                 }}
+                error={!!email && !isEmailValid}
                 helperText={
-                  email && !isEmailValid
-                    ? "Please enter a valid email address"
-                    : ""
+                  email && !isEmailValid ? (
+                    <Typography sx={{ color: "var(--error)" }}>
+                      Please enter a valid email address
+                    </Typography>
+                  ) : null
                 }
               />
               <TextField
@@ -288,7 +299,7 @@ export default function SignUpPage() {
                 }
                 variant="contained"
                 type="submit"
-                onClick={() => setContinued(true)}
+                onClick={handleContinue}
               >
                 Continue
               </LoadingButton>

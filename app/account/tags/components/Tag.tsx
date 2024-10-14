@@ -108,7 +108,11 @@ export default function TagPage() {
             <IconButton color="inherit" href="/">
               <AddBoxOutlinedIcon />
             </IconButton>
-            <IconButton color="inherit" href="/account/settings" LinkComponent={Link}>
+            <IconButton
+              color="inherit"
+              href="/account/settings"
+              LinkComponent={Link}
+            >
               <MenuIcon />
             </IconButton>
           </Stack>
@@ -171,7 +175,13 @@ export default function TagPage() {
               </IconButton>
             </Box>
             <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Button variant="outlined">Profile </Button>
+              <Button
+                variant="outlined"
+                href="/account/profile"
+                LinkComponent={Link}
+              >
+                Profile{" "}
+              </Button>
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
