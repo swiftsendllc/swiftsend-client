@@ -65,7 +65,7 @@ export default function SettingsPage() {
           alignItems="center"
           mb={2}
         >
-          <IconButton href="/account">
+          <IconButton href="/account" LinkComponent={Link}>
             <ArrowBackIcon />
           </IconButton>
           <Typography alignContent="center" alignItems="center" variant="h6">

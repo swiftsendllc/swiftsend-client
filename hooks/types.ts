@@ -4,6 +4,7 @@ export interface UpdateUserInput {
   bannerURL: string;
   pronouns: string;
   bio: string;
+  avatarURL: string;
   websiteURL: string;
 }
 export interface UserProfilesEntity {
@@ -27,4 +28,11 @@ export interface UserProfilesEntity {
   postCount: number;
   followerCount: number;
   followingCount: number;
+}
+
+// posts
+
+export interface CreatePostInput {
+  caption: string;
+  imageURl: string;
 }

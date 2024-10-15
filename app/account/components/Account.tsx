@@ -15,21 +15,30 @@ import {
   Button,
   Card,
   CardActionArea,
+  Divider,
   Icon,
   IconButton,
+  Paper,
   Stack,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import CreateModal from "./CreateModal";
 
 export default function AccountPage() {
   const _pathName = usePathname();
   const [user] = useContext(UserContext);
   const { id } = useParams();
+
+  const [createModal, setCreateModal] = useState(false);
+  const [photoGrid, setPhotoGrid] = useState(false);
+
+  const [loading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const maps = [ ...grid];
+  const maps = [...grid];
   const stats = [
     {
       title: "posts",
@@ -47,6 +56,10 @@ export default function AccountPage() {
       label: "/following",
     },
   ];
+
+  const handlePhotoGrid = () => {
+    setPhotoGrid(true)
+  }
 
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
   return (
@@ -82,13 +95,17 @@ export default function AccountPage() {
           <Stack direction="row" spacing={1}>
             {/* add link LinkComponent */}
             <IconButton color="inherit" href="/">
-              <GestureIcon />
+              <GestureIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
-            <IconButton color="inherit" href="/">
-              <AddBoxOutlinedIcon />
+            <IconButton color="inherit" onClick={() => setCreateModal(true)}>
+              <AddBoxOutlinedIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
-            <IconButton color="inherit" href="/account/settings" LinkComponent={Link}>
-              <MenuIcon />
+            <IconButton
+              color="inherit"
+              href="/account/settings"
+              LinkComponent={Link}
+            >
+              <MenuIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
           </Stack>
         </Stack>
@@ -138,25 +155,40 @@ export default function AccountPage() {
             </Stack>
 
             {/* Button to add vibe */}
-            <Typography variant="h6" fontWeight={200}>
-              {user.fullName}
-            </Typography>
-            <Typography variant="body2" fontWeight={300}>
-              {user.bio}
-            </Typography>
+            <Stack>
+              <Typography variant="h6" fontWeight={200}>
+                {user.fullName}
+              </Typography>
+              <Link
+                href={user.websiteURL!}
+                target="_blank"
+                style={{ color: "var(--success)" }}
+              >
+                {user.websiteURL}
+              </Link>
+              <Typography variant="body1" fontWeight={300} mt={0}>
+                {user.bio}
+              </Typography>
+            </Stack>
+
             <Box>
               <IconButton>
                 <AddCircleOutlineSharpIcon sx={{ width: 30, height: 30 }} />
               </IconButton>
             </Box>
-            <Stack direction="row" spacing={0} justifyContent="space-between">
-              <Button variant="outlined" href="/account/profile" LinkComponent={Link}>
+            <Stack direction="row" spacing={0.5} justifyContent="space-between">
+              <Button
+                variant="outlined"
+                href="/account/profile"
+                LinkComponent={Link}
+              >
                 Profile{" "}
               </Button>
               <Button variant="outlined">Share </Button>
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
             </Stack>
+            <Divider />
             <Stack direction="row" spacing={1} justifyContent="space-between">
               {grid.map((item, idx) => (
                 <Card
@@ -183,24 +215,53 @@ export default function AccountPage() {
                 </Card>
               ))}
             </Stack>
-            <Stack
-              my="10"
-              alignContent="center"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <CameraAltSharpIcon sx={{ width: 60, height: 60 }} />
-              <Typography variant="h5" fontWeight="100">
-                Photos of yours {/*  needs to be fixed */}
-              </Typography>
-              <Typography variant="h6" fontWeight="50">
-                Your photos, they&apos;ll appear here.{" "}
-                {/*  needs to be fixed */}
-              </Typography>
-            </Stack>
+            <Divider sx={{ mt: 0 }} />
+            {photoGrid ? (
+              <>
+                <Grid sx={{ flexGrow: 1 }} container spacing={0}>
+                  <Grid item xs={12}>
+                    <Grid
+                      container
+                      spacing={0.5}
+                      sx={{ justifyContent: "flex-start" }}
+                    >
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((value) => (
+                        <Grid key={value} xs={4} sm={3} md={2}>
+                          <Paper
+                            sx={{
+                              height: "200px",
+                              width: "100%",
+                              backgroundColor: "#fff",
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </>
+            ) : (
+              <Stack
+                my="10"
+                alignContent="center"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <CameraAltSharpIcon sx={{ width: 60, height: 60 }} />
+                <Typography variant="h5" fontWeight="100">
+                  Photos of yours
+                </Typography>
+                <Typography variant="h6" fontWeight="50">
+                  Your photos, they&apos;ll appear here.{" "}
+                </Typography>
+              </Stack>
+            )}
           </Stack>
         </Box>
       </Box>
+      <CreateModal isOpen={createModal} onClose={() => setCreateModal(false)} />
     </>
   );
 }

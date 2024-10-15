@@ -1,6 +1,6 @@
 "use client";
 
-import UseAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
 import {
   InputAdornment,
@@ -11,7 +11,6 @@ import {
 
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 
-import { UpdateUserInput } from "@/hooks/types";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
@@ -30,14 +29,12 @@ import { useContext, useRef, useState } from "react";
 import EditUsernameModal from "./EditProfileModal";
 
 export default function EditProfilePage() {
-  const [user] = useContext(UserContext);
+  const [user, setUserInfo] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const { uploadFile } = UseAPI();
+  const { uploadFile, updateUser } = useAPI();
   const inputRef = useRef<HTMLInputElement>(null);
   const [editUsernameModal, setEditUsernameModal] = useState(false);
-  const [formData] = useState<Partial<UpdateUserInput>>({});
   const [currentField, setCurrentField] = useState<string>("");
-  console.log({ user, d: user });
 
   const profiles = [
     {
@@ -123,13 +120,14 @@ export default function EditProfilePage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      await uploadFile(formData);
+      const { url } = await uploadFile(formData);
+
+      const user = await updateUser({ avatarURL: url });
+      setUserInfo(user);
     } finally {
       setLoading(false);
     }
   };
-
-  console.log({ formData, profiles });
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import UseAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/useAPI";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -22,7 +22,7 @@ import { useState, useTransition } from "react";
 import Animation from "./Animation";
 
 export default function LoginPage() {
-  const { login } = UseAPI();
+  const { login } = useAPI();
   const [, startTransition] = useTransition();
 
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function LoginPage() {
 
   const onSubmit = async () => {
     setLoading(true);
-    setPasswordError("")
+    setPasswordError("");
     try {
       await login(email, password);
       startTransition(() => {
@@ -43,7 +43,7 @@ export default function LoginPage() {
       });
     } catch (err) {
       console.log(err);
-      setPasswordError("Invalid credentials")
+      setPasswordError("Invalid credentials");
     } finally {
       setLoading(false);
     }

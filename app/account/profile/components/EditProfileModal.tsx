@@ -2,7 +2,7 @@
 
 import Transition from "@/components/Transition";
 import { UpdateUserInput } from "@/hooks/types";
-import UseAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -21,11 +21,11 @@ import toast from "react-hot-toast";
 export default function EditUsernameModal({
   isOpen,
   onClose,
-  currentField
+  currentField,
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  currentField: string
+  currentField: string;
 }) {
   const [user, setUserInfo] = useContext(UserContext);
   const [open, setOpen] = useState(isOpen);
@@ -71,7 +71,7 @@ export default function EditUsernameModal({
     },
   ];
 
-  const { updateUser } = UseAPI();
+  const { updateUser } = useAPI();
 
   const handleClose = () => {
     setOpen(false);

@@ -1,8 +1,8 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie, setCookie } from "cookies-next";
-import { UpdateUserInput } from "./types";
+import { CreatePostInput, UpdateUserInput } from "./types";
 
-const UseAPI = () => {
+const useAPI = () => {
   const login = async (email: string, password: string) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
       method: "POST",
@@ -67,7 +67,7 @@ const UseAPI = () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/upload`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: formData,
     });
@@ -77,7 +77,8 @@ const UseAPI = () => {
       throw new Error(data.message);
     }
     return {
-      url: `${data.url}?v=${Date.now()}`,
+      path: data.path,
+      url: data.url,
     };
   };
 
@@ -101,6 +102,23 @@ const UseAPI = () => {
     return data;
   };
 
-  return { login, signup, testToken, uploadFile, updateUser };
+  const createPost = async (body: Partial<CreatePostInput>) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/create`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  return { login, signup, testToken, uploadFile, updateUser, createPost };
 };
-export default UseAPI;
+export default useAPI;

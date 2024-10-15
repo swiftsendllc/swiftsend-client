@@ -26,9 +26,8 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useContext } from "react";
-
-
+import { useContext, useState } from "react";
+import CreateModal from "../../components/CreateModal";
 
 const grid = [
   {
@@ -53,7 +52,7 @@ export default function ReelPage() {
   const _pathName = usePathname();
   const [user] = useContext(UserContext);
   const { id } = useParams();
-
+  const [createModal, setCreateModal] = useState(false);
 
   const stats = [
     {
@@ -107,13 +106,13 @@ export default function ReelPage() {
           <Stack direction="row" spacing={1}>
             {/* add link LinkComponent */}
             <IconButton color="inherit" href="/">
-              <GestureIcon />
+              <GestureIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
-            <IconButton color="inherit" href="/">
-              <AddBoxOutlinedIcon />
+            <IconButton color="inherit" onClick={() => setCreateModal(true)}>
+              <AddBoxOutlinedIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
             <IconButton color="inherit" href="/account/settings">
-              <MenuIcon />
+              <MenuIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
           </Stack>
         </Stack>
@@ -225,6 +224,7 @@ export default function ReelPage() {
           </Stack>
         </Box>
       </Box>
+      <CreateModal isOpen={createModal} onClose={() => setCreateModal(false)} />
     </>
   );
 }

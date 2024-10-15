@@ -25,12 +25,14 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import CreateModal from "../../components/CreateModal";
 
 export default function SubscribePage() {
   const _pathName = usePathname();
   const { id } = useParams();
   const [user] = useContext(UserContext);
+  const [createModal, setCreateModal] = useState(false);
 
   const stats = [
     {
@@ -103,13 +105,13 @@ export default function SubscribePage() {
           <Stack direction="row" spacing={1}>
             {/* add link LinkComponent */}
             <IconButton color="inherit" href="/">
-              <GestureIcon />
+              <GestureIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
-            <IconButton color="inherit" href="/">
-              <AddBoxOutlinedIcon />
+            <IconButton color="inherit" onClick={() => setCreateModal(true)}>
+              <AddBoxOutlinedIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
             <IconButton color="inherit" href="/account/settings">
-              <MenuIcon />
+              <MenuIcon sx={{ width: 30, height: 30 }} />
             </IconButton>
           </Stack>
         </Stack>
@@ -219,6 +221,7 @@ export default function SubscribePage() {
           </Stack>
         </Box>
       </Box>
+      <CreateModal isOpen={createModal} onClose={() => setCreateModal(false)} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import UseAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/useAPI";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -32,7 +32,7 @@ const genderOption = [
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
-  const { signup } = UseAPI();
+  const { signup } = useAPI();
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [fullName, setFullName] = useState("");
