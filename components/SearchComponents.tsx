@@ -14,6 +14,9 @@ import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
+import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
+import UpdateIcon from "@mui/icons-material/Update";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HandshakeIcon from "@mui/icons-material/Handshake";
@@ -415,5 +418,28 @@ export  const profileInformation = [
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
     text: "Category hidden",
     default: true,
+  },
+];
+
+ export const create = [
+  {
+    label: "Post",
+    icon: <GridOnSharpIcon sx={{ width: 30, height: 30 }} />,
+  },
+  {
+    label: "Reel",
+    icon: <MovieSharpIcon sx={{ width: 30, height: 30 }} />,
+  },
+  {
+    label: "Story",
+    icon: <HistoryToggleOffIcon sx={{ width: 30, height: 30 }} />,
+  },
+  {
+    label: "Story highlight",
+    icon: <UpdateIcon sx={{ width: 30, height: 30 }} />,
+  },
+  {
+    label: "Subscribe",
+    icon: <ShoppingBasketIcon sx={{ width: 30, height: 30 }} />,
   },
 ];

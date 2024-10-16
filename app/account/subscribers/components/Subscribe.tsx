@@ -18,6 +18,7 @@ import {
   Button,
   Card,
   CardActionArea,
+  Divider,
   Icon,
   IconButton,
   Stack,
@@ -164,6 +165,13 @@ export default function SubscribePage() {
             <Typography variant="h6" fontWeight={200}>
               {user.fullName}
             </Typography>
+            <Link
+                href={user.websiteURL!}
+                target="_blank"
+                style={{ color: "var(--success)" }}
+              >
+                {user.websiteURL}
+              </Link>
             <Typography variant="body2" fontWeight={300}>
               {user.bio}
             </Typography>
@@ -178,7 +186,8 @@ export default function SubscribePage() {
               <Button variant="outlined">Contact</Button>
               <Button variant="outlined">Dashboard</Button>
             </Stack>
-            <Stack direction="row" spacing={1} justifyContent="space-between">
+            <Divider/>
+            <Stack direction="row" spacing={0.5} justifyContent="space-between">
               {grid.map((item, idx) => (
                 <Card
                   key={idx}
@@ -203,7 +212,10 @@ export default function SubscribePage() {
                   </CardActionArea>
                 </Card>
               ))}
+
             </Stack>
+            <Divider/>
+
             <Stack
               my="10"
               alignContent="center"

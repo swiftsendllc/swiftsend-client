@@ -1,13 +1,9 @@
 import Transition from "@/components/Transition";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
-import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
-import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
-import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import UpdateIcon from "@mui/icons-material/Update";
 import { LoadingButton } from "@mui/lab";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { create } from "@/components/SearchComponents";
 import {
   Dialog,
   DialogTitle,
@@ -23,29 +19,6 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 
-const create = [
-  {
-    label: "Post",
-    icon: <GridOnSharpIcon sx={{ width: 30, height: 30 }} />,
-  },
-  {
-    label: "Reel",
-    icon: <MovieSharpIcon sx={{ width: 30, height: 30 }} />,
-  },
-  {
-    label: "Story",
-    icon: <HistoryToggleOffIcon sx={{ width: 30, height: 30 }} />,
-  },
-  {
-    label: "Story highlight",
-    icon: <UpdateIcon sx={{ width: 30, height: 30 }} />,
-  },
-  {
-    label: "Subscribe",
-    icon: <ShoppingBasketIcon sx={{ width: 30, height: 30 }} />,
-  },
-];
-
 export default function CreateModal({
   isOpen,
   onClose,
@@ -55,7 +28,6 @@ export default function CreateModal({
 }) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -88,7 +60,7 @@ export default function CreateModal({
           <Divider />
           <List sx={{ width: "100%", padding: 0, mb: 0 }}>
             {create.map((option, idx) => (
-              <>
+              <React.Fragment key={idx}>
                 <ListItemButton
                   key={idx}
                   sx={{ padding: 0, py: 1, borderRadius: 2 }}
@@ -115,7 +87,7 @@ export default function CreateModal({
                   )}
                 </ListItemButton>
                 <Divider />
-              </>
+              </React.Fragment>
             ))}
           </List>
           <IconButton
@@ -127,7 +99,6 @@ export default function CreateModal({
           >
             <AcUnitIcon sx={{ width: 30, height: 30 }} />
           </IconButton>
-          <LoadingButton loading={loading}></LoadingButton>
         </FormControl>
       </Dialog>
     </>

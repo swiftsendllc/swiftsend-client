@@ -23,6 +23,7 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 export default function PostPreview() {
@@ -32,6 +33,8 @@ export default function PostPreview() {
   const [file, setFile] = useState<File>();
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile, createPost } = useAPI();
+
+  const router = useRouter();
 
   const handleSubmit = async () => {
     if (!file) return;
@@ -43,6 +46,8 @@ export default function PostPreview() {
       formData.append("file", file);
       const { url } = await uploadFile(formData);
       await createPost({ caption, imageURl: url });
+
+      router.push("/account");
     } finally {
       setLoading(false);
     }
@@ -124,9 +129,8 @@ export default function PostPreview() {
         </Card>
         <List sx={{ width: "100%", padding: 0, mb: 1 }}>
           {previewGrid.map((option, idx) => (
-            <>
+            <div key={idx}>
               <ListItemButton
-                key={idx}
                 sx={{
                   padding: 0,
                   py: 1,
@@ -158,7 +162,7 @@ export default function PostPreview() {
               </ListItemButton>
 
               <Divider />
-            </>
+            </div>
           ))}
         </List>
         <Divider />
@@ -187,8 +191,6 @@ export default function PostPreview() {
             type="submit"
             disabled={!(caption && imageURL)}
             onClick={handleSubmit}
-            href="/account"
-            LinkComponent={Link}
           >
             Share
           </LoadingButton>
