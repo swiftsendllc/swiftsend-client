@@ -7,7 +7,9 @@ export default function PageTemplate({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <MotionPresets motionType="SlideLeftToRight">{children}</MotionPresets>
-  );
+  return <>{children}</>;
+
+  // return (
+  //   <MotionPresets motionType="SlideLeftToRight">{children}</MotionPresets>
+  // );
 }
