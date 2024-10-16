@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
 import EditUsernameModal from "./EditProfileModal";
+import { profileInformation } from "@/components/SearchComponents";
 
 export default function EditProfilePage() {
   const [user, setUserInfo] = useContext(UserContext);
@@ -81,38 +82,6 @@ export default function EditProfilePage() {
     },
   ];
 
-  const profileInformation = [
-    {
-      label: "Page",
-      rightIcon: <KeyboardArrowRightOutlinedIcon />,
-      text: "Connect or create",
-      default: true,
-    },
-    {
-      label: "Category",
-      rightIcon: <KeyboardArrowRightOutlinedIcon />,
-      text: "Photographer",
-      default: true,
-    },
-    {
-      label: "Contact options",
-      rightIcon: <KeyboardArrowRightOutlinedIcon />,
-      text: "Address",
-      default: true,
-    },
-    {
-      label: "Action buttons",
-      rightIcon: <KeyboardArrowRightOutlinedIcon />,
-      text: "None active",
-      default: true,
-    },
-    {
-      label: "Profile display",
-      rightIcon: <KeyboardArrowRightOutlinedIcon />,
-      text: "Category hidden",
-      default: true,
-    },
-  ];
 
   const handleUpload = async (file: File) => {
     setLoading(true);

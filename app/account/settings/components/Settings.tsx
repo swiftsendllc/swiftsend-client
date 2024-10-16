@@ -8,10 +8,12 @@ import {
   moreInfoAndSupport,
   whatYouSee,
   whoCanSeeYourContent,
-  yourAccounts,
   yourAppAndMedia,
   yourOrdersAndFundraisers,
 } from "@/components/SearchComponents";
+import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
+
+import { UserContext } from "@/hooks/useContext";
 import { authCookieKey } from "@/library/constants";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -32,13 +34,29 @@ import { deleteCookie } from "cookies-next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 const minWidth = 35;
 
 export default function SettingsPage() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [user] = useContext(UserContext);
+
+  const yourAccounts = [
+    {
+      label: "Accounts",
+      leftIcon: (
+        <img
+          src={user.avatarURL!}
+          alt="avatar"
+          style={{ width: 30, height: 30, borderRadius:"50%" }}
+        />
+      ),
+      rightIcon: <KeyboardArrowRightOutlinedIcon />,
+      text: "Passwords, security, personal details, ad preferences",
+    },
+  ];
   const settingsPage = [
     ...yourAccounts,
     ...howToUseInstagram,
@@ -51,6 +69,7 @@ export default function SettingsPage() {
     ...yourOrdersAndFundraisers,
     ...moreInfoAndSupport,
   ];
+
   const handleLogout = () => {
     deleteCookie(authCookieKey);
     router.push("/");

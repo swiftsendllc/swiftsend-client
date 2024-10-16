@@ -31,6 +31,17 @@ export interface UserProfilesEntity {
 }
 
 // posts
+export interface PostsEntity{
+  _id: string;
+   userId: string;
+  caption: string;
+  imageURL: string;
+  likeCount: number;
+  commentCount: number;
+  shareCount: number;
+  saveCount: number;
+  createdAt: Date;
+}
 
 export interface CreatePostInput {
   caption: string;

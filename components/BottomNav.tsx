@@ -1,6 +1,6 @@
 "use client";
 
-import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
+import { UserContext } from "@/hooks/useContext";
 import AddIcon from "@mui/icons-material/Add";
 import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
@@ -16,40 +16,46 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-
-const navigationItems = [
-  {
-    value: "/home",
-    label: "Home",
-    icon: <HomeIcon />,
-  },
-  {
-    value: "/search",
-    label: "Search",
-    icon: <SearchIcon />,
-  },
-  {
-    value: "/post-",
-    label: "Post",
-    icon: <AddIcon />,
-  },
-  {
-    value: "/reels",
-    label: "Reels",
-    icon: <PlayCircleSharpIcon />,
-  },
-  {
-    value: "/account",
-    label: "Account",
-    icon: <AccountCircleSharpIcon />,
-  },
-];
-
-
+import { useContext } from "react";
 
 export default function BottomNav() {
   const _pathName = usePathname();
   const { id } = useParams();
+  const [user] = useContext(UserContext);
+
+  const navigationItems = [
+    {
+      value: "/home",
+      label: "Home",
+      icon: <HomeIcon />,
+    },
+    {
+      value: "/search",
+      label: "Search",
+      icon: <SearchIcon />,
+    },
+    {
+      value: "/post-",
+      label: "Post",
+      icon: <AddIcon />,
+    },
+    {
+      value: "/reels",
+      label: "Reels",
+      icon: <PlayCircleSharpIcon />,
+    },
+    {
+      value: "/account",
+      label: "Account",
+      icon: (
+        <img
+          src={user.avatarURL!}
+          alt="avatar"
+          style={{ width: 30, height: 30, borderRadius: "50%" }}
+        />
+      ),
+    },
+  ];
 
   const pathName = _pathName === `/groups/${id}` ? "/groups" : _pathName;
 
@@ -66,7 +72,7 @@ export default function BottomNav() {
     >
       <Container maxWidth="xs" style={{ padding: 0 }}>
         <Stack direction="row" spacing={1} justifyContent="space-between">
-          {navigationItems.map((item, idx) => (
+          {navigationItems.map((option, idx) => (
             <Card
               key={idx}
               sx={{
@@ -74,7 +80,7 @@ export default function BottomNav() {
                 boxShadow: "none",
               }}
             >
-              <CardActionArea href={item.value} LinkComponent={Link}>
+              <CardActionArea href={option.value} LinkComponent={Link}>
                 <Stack
                   direction="column"
                   alignItems="center"
@@ -82,16 +88,18 @@ export default function BottomNav() {
                   spacing={0}
                   p={1}
                 >
-                  <Icon color={pathName === item.value ? "primary" : "action"}>
-                    {item.icon}
+                  <Icon
+                    color={pathName === option.value ? "primary" : "action"}
+                  >
+                    {option.icon}
                   </Icon>
                   <Typography
                     variant="body2"
                     color={
-                      pathName === item.value ? "primary" : "textSecondary"
+                      pathName === option.value ? "primary" : "textSecondary"
                     }
                   >
-                    {item.label}
+                    {option.label}
                   </Typography>
                 </Stack>
               </CardActionArea>

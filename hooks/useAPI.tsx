@@ -118,7 +118,30 @@ const useAPI = () => {
     }
     return data;
   };
+  const getPosts = async () => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
 
-  return { login, signup, testToken, uploadFile, updateUser, createPost };
+  return {
+    login,
+    signup,
+    testToken,
+    uploadFile,
+    updateUser,
+    createPost,
+    getPosts,
+  };
 };
 export default useAPI;

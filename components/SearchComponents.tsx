@@ -8,12 +8,15 @@ import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BrokenImageOutlinedIcon from "@mui/icons-material/BrokenImageOutlined";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import DomainAddOutlinedIcon from "@mui/icons-material/DomainAddOutlined";
 import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import HandshakeIcon from "@mui/icons-material/Handshake";
 import HealthAndSafetyOutlinedIcon from "@mui/icons-material/HealthAndSafetyOutlined";
 import HideSourceOutlinedIcon from "@mui/icons-material/HideSourceOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -23,6 +26,7 @@ import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRig
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import NotificationsOffOutlinedIcon from "@mui/icons-material/NotificationsOffOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
@@ -32,6 +36,8 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
 import PhonelinkOutlinedIcon from "@mui/icons-material/PhonelinkOutlined";
+import PhotoFilterOutlinedIcon from "@mui/icons-material/PhotoFilterOutlined";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
@@ -41,7 +47,9 @@ import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import SupportOutlinedIcon from "@mui/icons-material/SupportOutlined";
 import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
+import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 export const yourAccounts = [
@@ -310,4 +318,102 @@ export const countries = [
   { label: "South Africa" },
   { label: "South Korea" },
   { label: "Spain" },
+];
+export const previewGrid = [
+  {
+    label: "Tag people",
+    leftIcon: <PersonPinRoundedIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Add music",
+    leftIcon: <MusicNoteIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Add product details",
+    leftIcon: <ProductionQuantityLimitsIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Add reminder",
+    leftIcon: <CalendarMonthIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Partnership label and ads",
+    leftIcon: <HandshakeIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Audience",
+    leftIcon: <VisibilityIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Add location",
+    leftIcon: <FmdGoodOutlinedIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+  {
+    label: "Add AI label",
+    leftIcon: <PhotoFilterOutlinedIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+    text: "We require you to label certain realistic content that's made with AI.Learn more",
+  },
+  {
+    label: "Boost post",
+    leftIcon: <TrendingUpOutlinedIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: (
+      <KeyboardArrowRightOutlinedIcon sx={{ width: 30, height: 30 }} />
+    ),
+  },
+];
+export  const profileInformation = [
+  {
+    label: "Page",
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "Connect or create",
+    default: true,
+  },
+  {
+    label: "Category",
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "Photographer",
+    default: true,
+  },
+  {
+    label: "Contact options",
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "Address",
+    default: true,
+  },
+  {
+    label: "Action buttons",
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "None active",
+    default: true,
+  },
+  {
+    label: "Profile display",
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "Category hidden",
+    default: true,
+  },
 ];
