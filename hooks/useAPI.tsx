@@ -82,26 +82,6 @@ const useAPI = () => {
     };
   };
 
-  const uploadPostFile = async (formData: FormData) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/upload`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: formData,
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-    return {
-      path: data.path,
-      url: data.url,
-    };
-  };
-
   const updateUser = async (body: Partial<UpdateUserInput>) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
@@ -162,7 +142,6 @@ const useAPI = () => {
     updateUser,
     createPost,
     getPosts,
-    uploadPostFile,
   };
 };
 export default useAPI;

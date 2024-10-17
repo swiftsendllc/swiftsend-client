@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
 import { Kanit } from "next/font/google";
 
 const kanit = Kanit({
@@ -10,11 +10,12 @@ const kanit = Kanit({
 });
 
 const theme = createTheme({
-  palette:{
-    mode: 'dark'
+  palette: {
+    mode: "dark",
   },
   typography: {
     fontFamily: kanit.style.fontFamily,
+    allVariants: { color: "#fff" },
   },
   components: {
     MuiButton: {
@@ -27,4 +28,5 @@ const theme = createTheme({
     },
   },
 });
+
 export default theme;

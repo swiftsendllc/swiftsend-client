@@ -12,7 +12,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import "./globals.css";
 
-const inter = Kanit({
+const kanitFont = Kanit({
   subsets: ["latin"],
   weight: ["100", "200", "400", "500", "600"],
 });
@@ -77,7 +77,7 @@ export default async function RootLayout({
         ))}
       </head>
 
-      <body className={inter.className}>
+      <body className={kanitFont.className}>
         <Toaster
           position="top-center"
           reverseOrder={false}

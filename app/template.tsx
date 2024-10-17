@@ -2,6 +2,7 @@
 
 import BottomNav from "@/components/BottomNav";
 import TopNav from "@/components/TopNav";
+import VerifiedTopNav from "@/components/VerifiedTopNav";
 import { authenticated, authenticatedPaths } from "@/library/constants";
 import { Container } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -13,10 +14,11 @@ export default function RootTemplate({
 }) {
   const pathname = usePathname();
 
-
   if ([...authenticated].includes(pathname)) {
     return (
+      //needs to be fixed verified top nav
       <Container maxWidth="xs" style={{ padding: 5 }}>
+        <VerifiedTopNav/>
         {children}
         <BottomNav />
       </Container>
@@ -28,10 +30,8 @@ export default function RootTemplate({
 
   return (
     <Container maxWidth="xs" style={{ padding: 5 }}>
-      <TopNav />
       {children}
       <BottomNav />
     </Container>
   );
-
 }

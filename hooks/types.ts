@@ -45,5 +45,5 @@ export interface PostsEntity{
 
 export interface CreatePostInput {
   caption: string;
-  imageURl: string;
+  imageURL: string;
 }
