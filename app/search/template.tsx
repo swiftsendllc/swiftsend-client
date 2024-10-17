@@ -1,6 +1,6 @@
 "use client";
 
-import MotionPresets from "@/components/MotionPresets";
+import React from "react";
 
 export default function PageTemplate({
   children,
