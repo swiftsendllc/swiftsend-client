@@ -1,8 +1,5 @@
 "use client";
 import CreateModal from "@/app/account/components/CreateModal";
-import { grid } from "@/components/SearchComponents";
-import { PostsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
@@ -15,24 +12,25 @@ import {
   Badge,
   Box,
   Button,
+  Card,
+  CardActionArea,
   Divider,
+  Icon,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useContext, useState } from "react";
+import { grid } from "./SearchComponents";
 import { useParams, usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
 
 export default function VerifiedTopNav() {
-  const _pathName = usePathname();
   const [user] = useContext(UserContext);
-  const { id } = useParams();
-
+  const _pathName = usePathname()
+  const { id } = useParams()
   const [createModal, setCreateModal] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const maps = [...grid];
   const stats = [
     {
       title: "posts",
@@ -51,9 +49,9 @@ export default function VerifiedTopNav() {
     },
   ];
 
-
-
   const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
+
+
   return (
     <>
       {/* Profile Header */}
@@ -101,7 +99,7 @@ export default function VerifiedTopNav() {
         </Stack>
       </Stack>
       <Box display="flex" alignItems="center">
-        <Stack direction="column" spacing={2} width="100%" mb={2}>
+        <Stack direction="column" spacing={2} width="100%">
           <Stack
             direction="row"
             spacing={1}
@@ -150,13 +148,13 @@ export default function VerifiedTopNav() {
           <Typography variant="h6" fontWeight={200}>
             {user.fullName}
           </Typography>
-          <Link
+          {/* <Link
             href={user.websiteURL!}
             target="_blank"
             style={{ color: "var(--success)" }}
           >
             {user.websiteURL}
-          </Link>
+          </Link> */}
           <Typography variant="body1" fontWeight={300}>
             {user.bio}
           </Typography>
@@ -179,6 +177,37 @@ export default function VerifiedTopNav() {
             <Button variant="outlined">Dashboard</Button>
           </Stack>
           <Divider />
+          <Stack
+          direction="row"
+          spacing={1}
+          justifyContent="space-between"
+          alignContent="center"
+          alignItems="center"
+        >
+          {grid.map((item, idx) => (
+            <Card
+              key={idx}
+              sx={{
+                backgroundColor: "transparent",
+                boxShadow: "none",
+              }}
+            >
+              <CardActionArea href={item.value} LinkComponent={Link}>
+                <Stack
+                  alignItems="center"
+                  alignContent="center"
+                  spacing={0}
+                  p={1}
+                >
+                  <Icon color={pathName === item.value ? "primary" : "action"}>
+                    {item.icon}
+                  </Icon>
+                </Stack>
+              </CardActionArea>
+            </Card>
+          ))}
+        </Stack>
+        <Divider sx={{ mt: 2 }} />
         </Stack>
       </Box>
       <CreateModal isOpen={createModal} onClose={() => setCreateModal(false)} />

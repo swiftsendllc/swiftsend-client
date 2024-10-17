@@ -1,230 +1,83 @@
 "use client";
-import { UserContext } from "@/hooks/useContext";
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
-import AddSharpIcon from "@mui/icons-material/AddSharp";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import GestureIcon from "@mui/icons-material/Gesture";
-import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
-import MenuIcon from "@mui/icons-material/Menu";
-import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
-import PlayCircleOutlineSharpIcon from "@mui/icons-material/PlayCircleOutlineSharp";
-import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
-
+import { postSamples } from "@/components/SearchComponents";
+import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
-  Avatar,
-  Badge,
   Box,
-  Button,
-  Card,
-  CardActionArea,
-  Icon,
   IconButton,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
   Stack,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { useContext, useState } from "react";
-import CreateModal from "../../components/CreateModal";
 
-const grid = [
-  {
-    value: "/account",
-    icon: <GridOnSharpIcon />,
-  },
-  {
-    value: "/account/subscribers",
-    icon: <ShoppingBasketSharpIcon />,
-  },
-  {
-    value: "/account/reels",
-    icon: <MovieSharpIcon color="inherit" />,
-  },
-  {
-    value: "/account/tags",
-    icon: <PersonPinRoundedIcon />,
-  },
-];
-
-export default function ReelPage() {
-  const _pathName = usePathname();
-  const [user] = useContext(UserContext);
-  const { id } = useParams();
-  const [createModal, setCreateModal] = useState(false);
-
-  const stats = [
-    {
-      title: "posts",
-      count: user.postCount,
-      label: "/followers",
-    },
-    {
-      title: "followers",
-      count: user.followerCount,
-      label: "/followers",
-    },
-    {
-      title: "following",
-      count: user.followingCount,
-      label: "/following",
-    },
-  ];
-
-  const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
+export default function TagPage() {
   return (
     <>
-      <Box mt={{ md: 2, sm: 2 }} mb={2}>
-        {/* Profile Header */}
-        <Stack
-          mb={2}
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Box display="flex" gap={0} width="50%">
-            <Typography
-              variant="h5"
-              fontWeight={50}
-              color="inherit"
-              textAlign="left"
-              sx={{
-                display: "inline-block",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {user.username}
+      <Box mb={2}>
+        {postSamples.length === 0 ? (
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <CameraAltSharpIcon sx={{ width: 60, height: 60 }} />
+            <Typography variant="h5" fontWeight="100">
+              No videos
             </Typography>
-            <IconButton edge="end">
-              <ExpandMoreOutlinedIcon />
-            </IconButton>
-          </Box>
-
-          <Stack direction="row" spacing={1}>
-            {/* add link LinkComponent */}
-            <IconButton color="inherit" href="/">
-              <GestureIcon sx={{ width: 30, height: 30 }} />
-            </IconButton>
-            <IconButton color="inherit" onClick={() => setCreateModal(true)}>
-              <AddBoxOutlinedIcon sx={{ width: 30, height: 30 }} />
-            </IconButton>
-            <IconButton color="inherit" href="/account/settings">
-              <MenuIcon sx={{ width: 30, height: 30 }} />
-            </IconButton>
+            <Typography variant="h6" fontWeight="50">
+              This user has no video.
+            </Typography>
           </Stack>
-        </Stack>
-        <Box display="flex" alignItems="center">
-          <Stack direction="column" spacing={2} width="100%">
-            <Stack
-              direction="row"
-              spacing={1}
-              justifyContent="space-between"
-              alignContent="center"
-              alignItems="center"
-            >
-              {" "}
-              <Badge
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                badgeContent={<AddSharpIcon />}
-              >
-                <Avatar
-                  src={user.avatarURL!}
-                  alt="Profile Picture"
-                  sx={{ width: 80, height: 80 }}
-                />
-              </Badge>
-              <Stack
-                direction="row"
-                spacing={4}
-                justifyContent="flex-end"
-                flexGrow={1}
-              >
-                {stats.map((item, idx) => (
-                  <Stack
-                    direction="column"
-                    key={idx}
-                    alignContent="center"
-                    alignItems="center"
-                  >
-                    <Typography variant="h6" fontWeight={100}>
-                      {item.count}
-                    </Typography>
-                    <Typography variant="body2" fontWeight={100}>
-                      {item.title}
-                    </Typography>
-                  </Stack>
-                ))}
-              </Stack>
-            </Stack>
-
-            {/* Button to add vibe */}
-            <Typography variant="h6" fontWeight={200}>
-              {user.fullName}
-            </Typography>
-            <Typography variant="body2" fontWeight={300}>
-              {user.bio}
-            </Typography>
-            <Box>
-              <IconButton>
-                <AddCircleOutlineSharpIcon sx={{ width: 30, height: 30 }} />
-              </IconButton>
-            </Box>
-            <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Button variant="outlined" href="/account/profile">
-                Profile{" "}
-              </Button>
-              <Button variant="outlined">Share </Button>
-              <Button variant="outlined">Contact</Button>
-              <Button variant="outlined">Dashboard</Button>
-            </Stack>
-            <Stack direction="row" spacing={1} justifyContent="space-between">
-              {grid.map((item, idx) => (
-                <Card
-                  key={idx}
-                  sx={{
-                    backgroundColor: "transparent",
-                    boxShadow: "none",
+        ) : (
+          <ImageList
+            sx={{ width: "100%", height: "auto" }}
+            cols={3}
+            gap={8}
+            rowHeight={164}
+          >
+            {postSamples.map((post, idx) => (
+              <ImageListItem key={idx}>
+                <img
+                  src={post.imageURL}
+                  style={{
+                    objectFit: "cover",
+                    width: "100%",
+                    height: "100%",
                   }}
-                >
-                  <CardActionArea href={item.value} LinkComponent={Link}>
-                    <Stack
-                      alignItems="center"
-                      alignContent="center"
-                      spacing={0}
-                      p={1}
-                    >
-                      <Icon
-                        color={pathName === item.value ? "primary" : "action"}
-                      >
-                        {item.icon}
-                      </Icon>
-                    </Stack>
-                  </CardActionArea>
-                </Card>
-              ))}
-            </Stack>
-            <Stack
-              my="10"
-              alignContent="center"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <PlayCircleOutlineSharpIcon sx={{ width: 60, height: 60 }} />
-              <Typography variant="h5" fontWeight="100">
-                Reels of yours
-              </Typography>
-              <Typography variant="h6" fontWeight="50">
-                Your reels, they&apos;ll appear here.
-              </Typography>
-            </Stack>
-          </Stack>
-        </Box>
+                  alt={post.title || "image"}
+                  width={300}
+                  height={100}
+                  loading="lazy"
+                />
+                <ImageListItemBar
+                  sx={{ background: "transparent" }}
+                  position="top"
+                  actionIcon={
+                    <IconButton sx={{ color: "white" }} aria-label="star">
+                      <StarBorderIcon />
+                    </IconButton>
+                  }
+                  actionPosition="right"
+                />
+                <ImageListItemBar
+                  sx={{ background: "transparent" }}
+                  position="bottom"
+                  actionIcon={
+                    <IconButton sx={{ color: "white" }} aria-label="bookmark">
+                      <BookmarkBorderOutlinedIcon />
+                    </IconButton>
+                  }
+                  actionPosition="right"
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        )}
       </Box>
-      <CreateModal isOpen={createModal} onClose={() => setCreateModal(false)} />
     </>
   );
 }
