@@ -47,3 +47,7 @@ export interface CreatePostInput {
   caption: string;
   imageURL: string;
 }
+export interface UpdatePostInput {
+  caption: string;
+}
+

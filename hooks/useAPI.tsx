@@ -1,6 +1,6 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie, setCookie } from "cookies-next";
-import { CreatePostInput, UpdateUserInput } from "./types";
+import { CreatePostInput, UpdatePostInput, UpdateUserInput } from "./types";
 
 const useAPI = () => {
   const login = async (email: string, password: string) => {
@@ -133,6 +133,43 @@ const useAPI = () => {
     }
     return data;
   };
+  const editPost = async (body: Partial<UpdatePostInput>) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/:id/edit`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+  const deletePost = async () => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/:id/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
 
   return {
     login,
@@ -142,6 +179,8 @@ const useAPI = () => {
     updateUser,
     createPost,
     getPosts,
+    editPost,
+    deletePost
   };
 };
 export default useAPI;

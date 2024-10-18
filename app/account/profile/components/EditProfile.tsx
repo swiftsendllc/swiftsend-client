@@ -14,6 +14,7 @@ import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRig
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
+import { profileInformation } from "@/components/SearchComponents";
 import {
   Avatar,
   Badge,
@@ -26,15 +27,14 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
-import EditUsernameModal from "./EditProfileModal";
-import { profileInformation } from "@/components/SearchComponents";
+import EditProfileModal from "./EditProfileModal";
 
 export default function EditProfilePage() {
   const [user, setUserInfo] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const { uploadFile, updateUser } = useAPI();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [editUsernameModal, setEditUsernameModal] = useState(false);
+  const [editProfileModal, setEditProfileModal] = useState(false);
   const [currentField, setCurrentField] = useState<string>("");
 
   const profiles = [
@@ -81,7 +81,6 @@ export default function EditProfilePage() {
       disabled: true,
     },
   ];
-
 
   const handleUpload = async (file: File) => {
     setLoading(true);
@@ -157,7 +156,7 @@ export default function EditProfilePage() {
             value={option.value}
             onClick={() => {
               setCurrentField(option.label);
-              setEditUsernameModal(true);
+              setEditProfileModal(true);
             }}
             slotProps={{
               input: {
@@ -214,9 +213,9 @@ export default function EditProfilePage() {
           Show that your profile is verified
         </Typography>
       </Stack>
-      <EditUsernameModal
-        isOpen={editUsernameModal}
-        onClose={() => setEditUsernameModal(false)}
+      <EditProfileModal
+        isOpen={editProfileModal}
+        onClose={() => setEditProfileModal(false)}
         currentField={currentField}
       />
     </>

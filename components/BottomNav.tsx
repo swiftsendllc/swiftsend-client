@@ -1,19 +1,19 @@
 "use client";
 
 import { UserContext } from "@/hooks/useContext";
-import AddIcon from "@mui/icons-material/Add";
+import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  Card,
-  CardActionArea,
+  IconButton,
   Container,
   Icon,
   Paper,
   Stack,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useContext } from "react";
@@ -35,20 +35,22 @@ export default function BottomNav() {
       icon: <SearchIcon />,
     },
     {
-      value: "/post-",
-      label: "Post",
-      icon: <AddIcon />,
+      value: "/messages",
+      label: "Message",
+      icon: <EmailIcon />,
     },
     {
       value: "/reels",
-      label: "Reels",
+      label: "Intro",
       icon: <PlayCircleSharpIcon />,
     },
     {
       value: "/account",
       label: "Account",
       icon: (
-        <img
+        <Image
+          width="30"
+          height="30"
           src={user.avatarURL!}
           alt="avatar"
           style={{ width: 30, height: 30, borderRadius: "50%" }}
@@ -73,14 +75,14 @@ export default function BottomNav() {
       <Container maxWidth="xs" style={{ padding: 0 }}>
         <Stack direction="row" spacing={1} justifyContent="space-between">
           {navigationItems.map((option, idx) => (
-            <Card
+            <Stack
               key={idx}
               sx={{
                 backgroundColor: "transparent",
                 boxShadow: "none",
               }}
             >
-              <CardActionArea href={option.value} LinkComponent={Link}>
+              <IconButton href={option.value} LinkComponent={Link}>
                 <Stack
                   direction="column"
                   alignItems="center"
@@ -102,8 +104,8 @@ export default function BottomNav() {
                     {option.label}
                   </Typography>
                 </Stack>
-              </CardActionArea>
-            </Card>
+              </IconButton>
+            </Stack>
           ))}
         </Stack>
       </Container>

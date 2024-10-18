@@ -1,27 +1,18 @@
 "use client";
 
-import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import AddToPhotosOutlinedIcon from "@mui/icons-material/AddToPhotosOutlined";
-import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BrokenImageOutlinedIcon from "@mui/icons-material/BrokenImageOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import DomainAddOutlinedIcon from "@mui/icons-material/DomainAddOutlined";
 import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
-import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
-import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
-import UpdateIcon from "@mui/icons-material/Update";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import HealthAndSafetyOutlinedIcon from "@mui/icons-material/HealthAndSafetyOutlined";
 import HideSourceOutlinedIcon from "@mui/icons-material/HideSourceOutlined";
+import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
 import InsertCommentRoundedIcon from "@mui/icons-material/InsertCommentRounded";
@@ -31,29 +22,22 @@ import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import NotificationsOffOutlinedIcon from "@mui/icons-material/NotificationsOffOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
-import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
-import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
-import PhonelinkOutlinedIcon from "@mui/icons-material/PhonelinkOutlined";
 import PhotoFilterOutlinedIcon from "@mui/icons-material/PhotoFilterOutlined";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
-import SignalCellularAltOutlinedIcon from "@mui/icons-material/SignalCellularAltOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
-import SupportOutlinedIcon from "@mui/icons-material/SupportOutlined";
 import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
+import UpdateIcon from "@mui/icons-material/Update";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 export const yourAccounts = [
   {
@@ -84,12 +68,7 @@ export const howToUseInstagram = [
     label: "Notifications",
     leftIcon: <NotificationsNoneOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Time management",
     text: "",
-    leftIcon: <AccessTimeOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
 ];
 export const forProfessionals = [
@@ -98,11 +77,7 @@ export const forProfessionals = [
     leftIcon: <EqualizerOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-  {
-    label: "Scheduled content",
-    leftIcon: <ScheduleOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
+
   {
     label: "Creator tools and controls",
     leftIcon: <InsertChartOutlinedIcon sx={{ width: 30, height: 30 }} />,
@@ -121,16 +96,7 @@ export const whoCanSeeYourContent = [
     leftIcon: <LockOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-  {
-    label: "Close friends",
-    leftIcon: <AutoModeOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Crossposting ",
-    leftIcon: <DomainAddOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
+
   {
     label: "Blocked",
     leftIcon: <BlockOutlinedIcon sx={{ width: 30, height: 30 }} />,
@@ -158,51 +124,17 @@ export const howOthersCanInteractWithYou = [
     label: "Comments",
     leftIcon: <InsertCommentRoundedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Sharing and remixes",
-    leftIcon: <ShareRoundedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Restricted ",
-    leftIcon: <PersonOffOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Limit interactions ",
-    leftIcon: <FeedbackOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Hidden words",
-    leftIcon: <VisibilityOffOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
     text: "",
-    label: "Follow and invite friends",
-    leftIcon: <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
 ];
 export const whatYouSee = [
   {
     text: "",
-    label: "Favourites ",
+    label: "Favorites ",
     leftIcon: <StarBorderOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-  {
-    label: "Muted accounts ",
-    leftIcon: <NotificationsOffOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Suggested content ",
-    leftIcon: <AddToPhotosOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
+
   {
     label: "Like and share counts ",
     leftIcon: <HideSourceOutlinedIcon sx={{ width: 30, height: 30 }} />,
@@ -223,49 +155,21 @@ export const yourAppAndMedia = [
   },
 
   {
-    label: "Accessibility and translations ",
-    leftIcon: <AccessibilityNewOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
     label: "Language ",
     leftIcon: <TranslateOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-  {
-    label: "Media quality ",
-    leftIcon: <SignalCellularAltOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Website permissions ",
-    leftIcon: <PhonelinkOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
 ];
-export const forFamilies = [
+
+export const payments = [
   {
-    label: "Family centre ",
-    text: "",
-    leftIcon: <GroupOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-];
-export const yourOrdersAndFundraisers = [
-  {
-    label: "Orders and payments ",
+    label: " Payments ",
     text: "",
     leftIcon: <PaymentOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
 ];
 export const moreInfoAndSupport = [
-  {
-    label: "Help ",
-    text: "",
-    leftIcon: <SupportOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
   {
     label: "Privacy centre ",
     leftIcon: <HealthAndSafetyOutlinedIcon sx={{ width: 30, height: 30 }} />,
@@ -280,6 +184,7 @@ export const moreInfoAndSupport = [
     label: "About ",
     leftIcon: <InfoOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    text: "",
   },
 ];
 
@@ -388,7 +293,7 @@ export const previewGrid = [
     ),
   },
 ];
-export  const profileInformation = [
+export const profileInformation = [
   {
     label: "Page",
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
@@ -421,7 +326,7 @@ export  const profileInformation = [
   },
 ];
 
- export const create = [
+export const create = [
   {
     label: "Post",
     icon: <GridOnSharpIcon sx={{ width: 30, height: 30 }} />,
@@ -445,51 +350,178 @@ export  const profileInformation = [
 ];
 export const postSamples = [
   {
-    imageURL: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
+    imageURL: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+    title: "Breakfast",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
+    imageURL: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+    title: "Burger",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
+    imageURL: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+    title: "Camera",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
+    imageURL: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+    title: "Coffee",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
+    imageURL: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+    title: "Hats",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
+    imageURL: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+    title: "Honey",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
+    imageURL: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    title: "Basketball",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
+    imageURL: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+    title: "Fern",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
+    imageURL: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
+    title: "Mushrooms",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
+    imageURL: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
+    title: "Tomato basil",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
+    imageURL: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
+    title: "Sea star",
   },
   {
-    imageURL: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
+    imageURL: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
+    title: "Bike",
   },
+];
+
+export const top100Films = [
+  { title: 'The Shawshank Redemption', year: 1994 },
+  { title: 'The Godfather', year: 1972 },
+  { title: 'The Godfather: Part II', year: 1974 },
+  { title: 'The Dark Knight', year: 2008 },
+  { title: '12 Angry Men', year: 1957 },
+  { title: "Schindler's List", year: 1993 },
+  { title: 'Pulp Fiction', year: 1994 },
+  {
+    title: 'The Lord of the Rings: The Return of the King',
+    year: 2003,
+  },
+  { title: 'The Good, the Bad and the Ugly', year: 1966 },
+  { title: 'Fight Club', year: 1999 },
+  {
+    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    year: 2001,
+  },
+  {
+    title: 'Star Wars: Episode V - The Empire Strikes Back',
+    year: 1980,
+  },
+  { title: 'Forrest Gump', year: 1994 },
+  { title: 'Inception', year: 2010 },
+  {
+    title: 'The Lord of the Rings: The Two Towers',
+    year: 2002,
+  },
+  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
+  { title: 'Goodfellas', year: 1990 },
+  { title: 'The Matrix', year: 1999 },
+  { title: 'Seven Samurai', year: 1954 },
+  {
+    title: 'Star Wars: Episode IV - A New Hope',
+    year: 1977,
+  },
+  { title: 'City of God', year: 2002 },
+  { title: 'Se7en', year: 1995 },
+  { title: 'The Silence of the Lambs', year: 1991 },
+  { title: "It's a Wonderful Life", year: 1946 },
+  { title: 'Life Is Beautiful', year: 1997 },
+  { title: 'The Usual Suspects', year: 1995 },
+  { title: 'Léon: The Professional', year: 1994 },
+  { title: 'Spirited Away', year: 2001 },
+  { title: 'Saving Private Ryan', year: 1998 },
+  { title: 'Once Upon a Time in the West', year: 1968 },
+  { title: 'American History X', year: 1998 },
+  { title: 'Interstellar', year: 2014 },
+  { title: 'Casablanca', year: 1942 },
+  { title: 'City Lights', year: 1931 },
+  { title: 'Psycho', year: 1960 },
+  { title: 'The Green Mile', year: 1999 },
+  { title: 'The Intouchables', year: 2011 },
+  { title: 'Modern Times', year: 1936 },
+  { title: 'Raiders of the Lost Ark', year: 1981 },
+  { title: 'Rear Window', year: 1954 },
+  { title: 'The Pianist', year: 2002 },
+  { title: 'The Departed', year: 2006 },
+  { title: 'Terminator 2: Judgment Day', year: 1991 },
+  { title: 'Back to the Future', year: 1985 },
+  { title: 'Whiplash', year: 2014 },
+  { title: 'Gladiator', year: 2000 },
+  { title: 'Memento', year: 2000 },
+  { title: 'The Prestige', year: 2006 },
+  { title: 'The Lion King', year: 1994 },
+  { title: 'Apocalypse Now', year: 1979 },
+  { title: 'Alien', year: 1979 },
+  { title: 'Sunset Boulevard', year: 1950 },
+  {
+    title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
+    year: 1964,
+  },
+  { title: 'The Great Dictator', year: 1940 },
+  { title: 'Cinema Paradiso', year: 1988 },
+  { title: 'The Lives of Others', year: 2006 },
+  { title: 'Grave of the Fireflies', year: 1988 },
+  { title: 'Paths of Glory', year: 1957 },
+  { title: 'Django Unchained', year: 2012 },
+  { title: 'The Shining', year: 1980 },
+  { title: 'WALL·E', year: 2008 },
+  { title: 'American Beauty', year: 1999 },
+  { title: 'The Dark Knight Rises', year: 2012 },
+  { title: 'Princess Mononoke', year: 1997 },
+  { title: 'Aliens', year: 1986 },
+  { title: 'Oldboy', year: 2003 },
+  { title: 'Once Upon a Time in America', year: 1984 },
+  { title: 'Witness for the Prosecution', year: 1957 },
+  { title: 'Das Boot', year: 1981 },
+  { title: 'Citizen Kane', year: 1941 },
+  { title: 'North by Northwest', year: 1959 },
+  { title: 'Vertigo', year: 1958 },
+  {
+    title: 'Star Wars: Episode VI - Return of the Jedi',
+    year: 1983,
+  },
+  { title: 'Reservoir Dogs', year: 1992 },
+  { title: 'Braveheart', year: 1995 },
+  { title: 'M', year: 1931 },
+  { title: 'Requiem for a Dream', year: 2000 },
+  { title: 'Amélie', year: 2001 },
+  { title: 'A Clockwork Orange', year: 1971 },
+  { title: 'Like Stars on Earth', year: 2007 },
+  { title: 'Taxi Driver', year: 1976 },
+  { title: 'Lawrence of Arabia', year: 1962 },
+  { title: 'Double Indemnity', year: 1944 },
+  {
+    title: 'Eternal Sunshine of the Spotless Mind',
+    year: 2004,
+  },
+  { title: 'Amadeus', year: 1984 },
+  { title: 'To Kill a Mockingbird', year: 1962 },
+  { title: 'Toy Story 3', year: 2010 },
+  { title: 'Logan', year: 2017 },
+  { title: 'Full Metal Jacket', year: 1987 },
+  { title: 'Dangal', year: 2016 },
+  { title: 'The Sting', year: 1973 },
+  { title: '2001: A Space Odyssey', year: 1968 },
+  { title: "Singin' in the Rain", year: 1952 },
+  { title: 'Toy Story', year: 1995 },
+  { title: 'Bicycle Thieves', year: 1948 },
+  { title: 'The Kid', year: 1921 },
+  { title: 'Inglourious Basterds', year: 2009 },
+  { title: 'Snatch', year: 2000 },
+  { title: '3 Idiots', year: 2009 },
+  { title: 'Monty Python and the Holy Grail', year: 1975 },
 ];

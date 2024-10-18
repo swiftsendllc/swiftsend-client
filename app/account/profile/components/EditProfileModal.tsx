@@ -18,7 +18,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function EditUsernameModal({
+export default function EditProfileModal({
   isOpen,
   onClose,
   currentField,

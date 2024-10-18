@@ -10,6 +10,7 @@ const kanit = Kanit({
 });
 
 const theme = createTheme({
+  direction: "rtl",
   palette: {
     mode: "dark",
   },

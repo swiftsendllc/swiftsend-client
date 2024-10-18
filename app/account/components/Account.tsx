@@ -1,24 +1,39 @@
 "use client";
+import EditPostModal from "@/app/posts/components/EditPostModal";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Box,
   IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
+  Menu,
+  MenuItem,
   Stack,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
+
 import { useEffect, useState } from "react";
+
+const options = [
+  {
+    label: "Edit",
+  },
+  {
+    label: "Delete",
+  },
+];
 
 export default function AccountPage() {
   const { getPosts } = useAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const [editPostModal, setEditPostModal] = useState(false);
 
   const loadPosts = async () => {
     try {
@@ -33,9 +48,16 @@ export default function AccountPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleMenuItemClick = (option: string) => {
+    setAnchorEl(null);
+    if (option === "Edit") {
+      setEditPostModal(true);
+    }
+  };
+
   return (
     <>
-      <Box  mb={6}>
+      <Box mb={6}>
         {posts.length === 0 ? (
           <Stack
             my="10"
@@ -55,7 +77,7 @@ export default function AccountPage() {
           <ImageList
             sx={{ width: "100%", height: "auto" }}
             cols={3}
-            gap={8}
+            gap={4}
             rowHeight={164}
           >
             {posts.map((post) => (
@@ -76,19 +98,29 @@ export default function AccountPage() {
                   sx={{ background: "transparent" }}
                   position="top"
                   actionIcon={
-                    <IconButton sx={{ color: "white" }} aria-label="star">
-                      <StarBorderIcon />
-                    </IconButton>
-                  }
-                  actionPosition="right"
-                />
-                <ImageListItemBar
-                  sx={{ background: "transparent" }}
-                  position="bottom"
-                  actionIcon={
-                    <IconButton sx={{ color: "white" }} aria-label="bookmark">
-                      <BookmarkBorderOutlinedIcon />
-                    </IconButton>
+                    <>
+                      <IconButton
+                        sx={{ color: "white" }}
+                        aria-label="options"
+                        id="long-button"
+                        aria-haspopup="true"
+                        onClick={(e) => setAnchorEl(e.currentTarget)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={() => setAnchorEl(null)}
+                      >
+                        {options.map((option, idx) => (
+                          <MenuItem key={idx} onClick={() => handleMenuItemClick(option.label)}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </>
                   }
                   actionPosition="right"
                 />
@@ -97,6 +129,10 @@ export default function AccountPage() {
           </ImageList>
         )}
       </Box>
+      <EditPostModal
+        isOpen={editPostModal}
+        onClose={() => setEditPostModal(false)}
+      />
     </>
   );
 }

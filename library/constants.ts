@@ -3,7 +3,7 @@ export const authCookieKey = "_accessToken";
 export const authenticatedPaths = [
   "/home",
   "/search",
-  "/posts",
+  "/messages",
   "/reels",
   "/account/settings",
   "/account/profile",
