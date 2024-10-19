@@ -12,6 +12,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 
 export default function TagPage() {
   return (
@@ -41,7 +42,7 @@ export default function TagPage() {
           >
             {postSamples.map((post, idx) => (
               <ImageListItem key={idx}>
-                <img
+                <Image
                   src={post.imageURL}
                   style={{
                     objectFit: "cover",

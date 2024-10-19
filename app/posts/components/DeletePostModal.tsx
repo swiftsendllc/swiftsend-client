@@ -1,20 +1,20 @@
 "use client";
 
-import TagFacesIcon from '@mui/icons-material/TagFaces';
 import Transition from "@/components/Transition";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import DeleteIcon from "@mui/icons-material/Delete";
+import TagFacesIcon from "@mui/icons-material/TagFaces";
 import { LoadingButton } from "@mui/lab";
 import {
+  Button,
   Card,
   CardContent,
   CardMedia,
   Dialog,
   DialogActions,
   Divider,
-  Button,
   IconButton,
   Stack,
   TextField,
@@ -111,6 +111,7 @@ export default function DeletePostModal({
         <DialogActions>
           <LoadingButton
             loading={loading}
+            sx={{ width: "100%" }}
             onClick={handleDelete}
             variant="contained"
             style={{ color: "var(--error)" }}
@@ -118,8 +119,13 @@ export default function DeletePostModal({
             <DeleteIcon />
             Yes
           </LoadingButton>
-          <Button onClick={handleClose} variant="contained" color="primary">
-            <TagFacesIcon/>
+          <Button
+            onClick={handleClose}
+            variant="contained"
+            color="primary"
+            sx={{ width: "100%" }}
+          >
+            <TagFacesIcon />
             No
           </Button>
         </DialogActions>

@@ -4,6 +4,8 @@ import Transition from "@/components/Transition";
 import { PostsEntity, UpdatePostInput } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import CloseIcon from "@mui/icons-material/Close";
+import SendIcon from "@mui/icons-material/Send";
 import { LoadingButton } from "@mui/lab";
 
 import {
@@ -51,6 +53,7 @@ export default function EditPostModal({
 
   const handleClose = () => {
     setOpen(false);
+    setDidChange(false);
     onClose?.();
   };
 
@@ -123,7 +126,7 @@ export default function EditPostModal({
                 maxRows={4}
                 label="Edit your caption"
                 value={caption}
-                onChange={(e) => handleInputChange(e.target.value)}
+                onChange={(e) => handleInputChange(e.target.value.trim())}
                 focused
                 autoFocus
               />
@@ -145,15 +148,16 @@ export default function EditPostModal({
             <Button
               variant="contained"
               fullWidth
-              sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               style={{ color: "var(--warning)" }}
               onClick={handleClose}
             >
               Discard
+              <CloseIcon />
             </Button>
             <LoadingButton
               fullWidth
-              sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               loading={loading}
               variant="contained"
               type="submit"
@@ -161,6 +165,7 @@ export default function EditPostModal({
               onClick={handleOnChange}
             >
               Post
+              <SendIcon />
             </LoadingButton>
           </Stack>
         </Stack>
