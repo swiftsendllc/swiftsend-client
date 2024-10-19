@@ -1,4 +1,5 @@
 "use client";
+import DeletePostModal from "@/app/posts/components/DeletePostModal";
 import EditPostModal from "@/app/posts/components/EditPostModal";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
@@ -34,6 +35,8 @@ export default function AccountPage() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [editPostModal, setEditPostModal] = useState(false);
+  const [deletePostModal, setDeletePostModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
 
   const loadPosts = async () => {
     try {
@@ -50,8 +53,10 @@ export default function AccountPage() {
 
   const handleMenuItemClick = (option: string) => {
     setAnchorEl(null);
-    if (option === "Edit") {
+    if (option !== "Delete") {
       setEditPostModal(true);
+    } else {
+      setDeletePostModal(true);
     }
   };
 
@@ -104,7 +109,10 @@ export default function AccountPage() {
                         aria-label="options"
                         id="long-button"
                         aria-haspopup="true"
-                        onClick={(e) => setAnchorEl(e.currentTarget)}
+                        onClick={(e) => {
+                          setAnchorEl(e.currentTarget);
+                          setSelectedPost(post);
+                        }}
                       >
                         <MoreVertIcon />
                       </IconButton>
@@ -112,10 +120,16 @@ export default function AccountPage() {
                         id="long-menu"
                         anchorEl={anchorEl}
                         open={open}
-                        onClose={() => setAnchorEl(null)}
+                        onClose={() => {
+                          setAnchorEl(null);
+                          setSelectedPost(null);
+                        }}
                       >
                         {options.map((option, idx) => (
-                          <MenuItem key={idx} onClick={() => handleMenuItemClick(option.label)}>
+                          <MenuItem
+                            key={idx}
+                            onClick={() => handleMenuItemClick(option.label)}
+                          >
                             {option.label}
                           </MenuItem>
                         ))}
@@ -129,10 +143,20 @@ export default function AccountPage() {
           </ImageList>
         )}
       </Box>
-      <EditPostModal
-        isOpen={editPostModal}
-        onClose={() => setEditPostModal(false)}
-      />
+      {selectedPost && (
+        <EditPostModal
+          post={selectedPost}
+          isOpen={editPostModal}
+          onClose={() => setEditPostModal(false)}
+        />
+      )}
+      {selectedPost && (
+        <DeletePostModal
+          post={selectedPost}
+          isOpen={deletePostModal}
+          onClose={() => setDeletePostModal(false)}
+        />
+      )}
     </>
   );
 }

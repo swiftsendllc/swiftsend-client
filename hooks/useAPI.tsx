@@ -133,10 +133,10 @@ const useAPI = () => {
     }
     return data;
   };
-  const editPost = async (body: Partial<UpdatePostInput>) => {
+  const editPost = async (body: Partial<UpdatePostInput>, _id:string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/:id/edit`,
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/edit`,
       {
         method: "PATCH",
         body: JSON.stringify(body),
@@ -152,10 +152,10 @@ const useAPI = () => {
     }
     return data;
   };
-  const deletePost = async () => {
+  const deletePost = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/:id/delete`,
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/delete`,
       {
         method: "DELETE",
         headers: {

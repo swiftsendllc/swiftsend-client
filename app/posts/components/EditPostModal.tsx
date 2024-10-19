@@ -1,7 +1,7 @@
 "use client";
 
 import Transition from "@/components/Transition";
-import { UpdatePostInput } from "@/hooks/types";
+import { PostsEntity, UpdatePostInput } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { LoadingButton } from "@mui/lab";
@@ -24,41 +24,55 @@ import { useEffect, useState } from "react";
 export default function EditPostModal({
   isOpen,
   onClose,
+  post,
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
+  post: PostsEntity;
 }) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
-  const [didChange, setDidChange]= useState(false)
+  const [didChange, setDidChange] = useState(false);
 
-  const [caption, setCaption] = useState("");
-  const [imageURL] = useState("");
-  const [file] = useState<File>();
+  const [caption, setCaption] = useState(post.caption);
   const { editPost } = useAPI();
-  const [currentField, setCurrentField] = useState<string>("");
-const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
-  caption: 
-})
+  const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
+    caption: post.caption,
+  });
   const router = useRouter();
 
-  const handleSubmit = async () => {
-    if (!file) return;
+  useEffect(() => {
+    setOpen(isOpen);
+    setCaption(post.caption);
+    setFormData({ caption: post.caption });
+  }, [isOpen, post]);
 
+  const handleClose = () => {
+    setOpen(false);
+    onClose?.();
+  };
+
+  const handleOnChange = async () => {
     setLoading(true);
     try {
-      await editPost({ caption });
+      const data = await editPost(formData, post._id);
+      setCaption(data.caption);
+      handleClose();
       router.push("/account");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    onClose?.();
+  const handleInputChange = (value: string) => {
+    setFormData((previous) => ({
+      ...previous,
+      caption: value,
+    }));
+    setCaption(value);
+    setDidChange(true);
   };
 
   return (
@@ -88,14 +102,14 @@ const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
           <Divider />
         </Stack>
         <Stack>
-          <Card sx={{ padding: 0, marginTop: 5 }}>
-            {imageURL && (
+          <Card sx={{ padding: 0 }}>
+            {post.imageURL && (
               <CardMedia
                 sx={{
                   objectFit: "contain",
                 }}
                 component="img"
-                image={imageURL}
+                image={post.imageURL}
                 title="green iguana"
               />
             )}
@@ -109,10 +123,7 @@ const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
                 maxRows={4}
                 label="Edit your caption"
                 value={caption}
-                onChange={(e) => {
-                  setCaption(e.target.value);
-                  setCurrentField(caption);
-                }}
+                onChange={(e) => handleInputChange(e.target.value)}
                 focused
                 autoFocus
               />
@@ -134,6 +145,7 @@ const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
             <Button
               variant="contained"
               fullWidth
+              sx={{width: "100%"}}
               style={{ color: "var(--warning)" }}
               onClick={handleClose}
             >
@@ -141,11 +153,12 @@ const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
             </Button>
             <LoadingButton
               fullWidth
+              sx={{width: "100%"}}
               loading={loading}
               variant="contained"
               type="submit"
-              disabled={!(caption && imageURL)}
-              onClick={handleSubmit}
+              disabled={!didChange}
+              onClick={handleOnChange}
             >
               Post
             </LoadingButton>
