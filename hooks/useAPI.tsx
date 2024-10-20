@@ -1,6 +1,11 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie, setCookie } from "cookies-next";
-import { CreatePostInput, UpdatePostInput, UpdateUserInput } from "./types";
+import {
+  CommentPostInput,
+  CreatePostInput,
+  UpdatePostInput,
+  UpdateUserInput,
+} from "./types";
 
 const useAPI = () => {
   const login = async (email: string, password: string) => {
@@ -118,6 +123,26 @@ const useAPI = () => {
     }
     return data;
   };
+
+  const getPost = async (postId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const getPosts = async () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
@@ -133,7 +158,8 @@ const useAPI = () => {
     }
     return data;
   };
-  const editPost = async (body: Partial<UpdatePostInput>, _id:string) => {
+
+  const editPost = async (body: Partial<UpdatePostInput>, _id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/edit`,
@@ -152,12 +178,90 @@ const useAPI = () => {
     }
     return data;
   };
+
   const deletePost = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/delete`,
       {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const likePost = async (_id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/like`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const commentPost = async (body: Partial<CommentPostInput>, _id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/create-comment`,
+      {
+        method: "PUT",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const savePost = async (_id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/save`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const getTimelinePosts = async () => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/timeline`,
+      {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -180,7 +284,12 @@ const useAPI = () => {
     createPost,
     getPosts,
     editPost,
-    deletePost
+    deletePost,
+    likePost,
+    commentPost,
+    savePost,
+    getTimelinePosts,
+    getPost,
   };
 };
 export default useAPI;

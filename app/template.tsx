@@ -22,6 +22,7 @@ export default function RootTemplate({
       </Container>
     );
   }
+
   if (![...authenticatedPaths].includes(pathname)) {
     return <>{children}</>;
   }
