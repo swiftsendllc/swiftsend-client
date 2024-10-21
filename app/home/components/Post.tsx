@@ -16,6 +16,7 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -29,6 +30,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -72,10 +74,12 @@ export const PostCard = ({
     }
   }, 250);
 
+  const handleFollow = async () => {};
+
   return (
-    <Container maxWidth="xs" sx={{ px: 0 }}>
+    <Container maxWidth="xs" sx={{ px: 0, mb: 0.5 }}>
       {allowComments && <TopBackNav />}
-      <Card key={post._id} sx={{ mb: 0.5, width: '100%' , p: 0, m: 0}}>
+      <Card key={post._id} sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }}>
         <CardHeader
           avatar={
             <Avatar
@@ -85,29 +89,42 @@ export const PostCard = ({
             />
           }
           action={
-            <Stack>
-              <Fab sx={{ height: 20 }} aria-label="settings" variant="extended">
-                <AddIcon />
-                connect
-              </Fab>
-              <SaveButton
-                isSaved={isSaved}
-                onClick={() => handleSave(post._id)}
-              />
-            </Stack>
+            <Button sx={{ height: 20 ,fontWeight:200 }} aria-label="settings" variant="text" >
+              <AddIcon />
+              connect
+            </Button>
           }
           title={post.user.fullName}
-          subheader={new Date(post.createdAt).toLocaleString()}
+          subheader={moment(post.createdAt).format("LLL")}
         />
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {post.caption}
         </Typography>
-        <CardMedia
-          component="img"
-          height="194"
-          image={post.imageURL}
-          alt="Paella dish"
-        />
+        <Box sx={{ position: "relative" }}>
+          <CardMedia
+            component="img"
+            style={{
+              objectFit: "contain",
+              width: "100%",
+              height: "100%",
+            }}
+            src={post.imageURL}
+            alt={post.caption || "Instagram image"}
+            width={400}
+            height={400}
+          />
+
+          <Box
+            sx={{ color: "white", position: "absolute", bottom: 8, right: 8 }}
+            aria-label="save"
+          >
+            <SaveButton
+              isSaved={isSaved}
+              onClick={() => handleSave(post._id)}
+            />
+          </Box>
+        </Box>
+
         <CardContent sx={{ fontWeight: "200" }}>
           <Stack direction="row" justifyContent="space-between">
             <Box alignItems="left">{`${likeCount} ❤`}</Box>
@@ -234,7 +251,11 @@ const SaveButton = (props: SaveButtonProps) => {
         setIsSaved((isSaved) => !isSaved);
       }}
     >
-      {isSaved ? <BookmarkIcon color="primary" /> : <BookmarkBorderIcon />}
+      {isSaved ? (
+        <BookmarkIcon color="primary" />
+      ) : (
+        <BookmarkBorderIcon color="error" />
+      )}
     </IconButton>
   );
 };

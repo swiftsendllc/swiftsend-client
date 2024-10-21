@@ -53,7 +53,7 @@ export default function BottomNav() {
           height="30"
           src={user.avatarURL!}
           alt="avatar"
-          style={{ width: 30, height: 30, borderRadius: "50%" }}
+          style={{ width: 20, height: 20, borderRadius: "30px" }}
         />
       ),
     },
@@ -72,7 +72,7 @@ export default function BottomNav() {
       }}
       elevation={2}
     >
-      <Container maxWidth="xs" style={{ padding: 0 }}>
+      <Container maxWidth="xs" style={{ padding: 0 , }}>
         <Stack direction="row" spacing={1} justifyContent="space-between">
           {navigationItems.map((option, idx) => (
             <Stack
