@@ -1,13 +1,11 @@
 "use client";
 
-import { top100Films } from "@/components/SearchComponents";
 import { UserContext } from "@/hooks/useContext";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 import {
-  Autocomplete,
   Avatar,
   Button,
   Card,
@@ -18,11 +16,11 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 export default function MessagePage() {
   const [user] = useContext(UserContext);
-  const [query, setQuery] = useState("");
+
   return (
     <>
       <Container sx={{ p: 0, mt: 2 }}>
@@ -37,28 +35,17 @@ export default function MessagePage() {
             alt="Profile picture"
             sx={{ width: 40, height: 40 }}
           />
-          <Autocomplete
-            freeSolo
-            disablePortal
-            onInputChange={(_, value) => {
-              setQuery(value);
-            }}
+
+          <TextField
             sx={{ width: "60%" }}
-            open={Boolean(query)}
-            options={top100Films.map((option) => option.title)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Search"
-                slotProps={{
-                  input: {
-                    ...params.InputProps,
-                    sx: { borderRadius: "10px" },
-                  },
-                }}
-              />
-            )}
+            label="Search"
+            slotProps={{
+              input: {
+                sx: { borderRadius: "10px" },
+              },
+            }}
           />
+
           <Fab
             sx={{ width: 40, height: 40 }}
             color="primary"
@@ -93,11 +80,9 @@ export default function MessagePage() {
                 variant="text"
               >
                 <AddIcon />
-                connect
               </Button>
             }
             title={user.fullName}
-            subheader={user.bio}
           />
         </Card>
       </Container>

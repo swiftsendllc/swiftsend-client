@@ -6,7 +6,6 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import BrokenImageOutlinedIcon from "@mui/icons-material/BrokenImageOutlined";
 import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
-import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import HealthAndSafetyOutlinedIcon from "@mui/icons-material/HealthAndSafetyOutlined";
@@ -79,7 +78,7 @@ export const forProfessionals = [
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
   {
-    label: "Meta verified",
+    label: "Iota verified",
     text: "",
     leftIcon: <VerifiedOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
@@ -106,7 +105,7 @@ export const whoCanSeeYourContent = [
 ];
 export const howOthersCanInteractWithYou = [
   {
-    label: "Messages and story replies ",
+    label: "Message replies ",
     leftIcon: <MailOutlineOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
@@ -143,12 +142,6 @@ export const yourAppAndMedia = [
     leftIcon: <PhoneAndroidOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-  {
-    label: "Archiving and downloading ",
-    leftIcon: <GetAppOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-
   {
     label: "Language ",
     leftIcon: <TranslateOutlinedIcon sx={{ width: 30, height: 30 }} />,

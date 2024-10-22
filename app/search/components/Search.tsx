@@ -1,13 +1,14 @@
 "use client";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity, UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 import {
-  Autocomplete,
   Avatar,
+  Card,
+  CardHeader,
   Container,
   Divider,
   Fab,
@@ -15,14 +16,15 @@ import {
   TextField,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
 
 export default function SearchPage() {
-  const { getTimelinePosts, getUserProfile } = useAPI();
+  const { getTimelinePosts, getUserProfiles } = useAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const [query, setQuery] = useState<string>("");
-  const [options, setOptions] = useState<string[]>([]); // store fetched user names
   const [user] = useContext(UserContext);
+  const [users, setUsers] = useState<UserProfilesEntity[]>([]);
+  const [isCardOpen, setIsCardOpen] = useState(false);
 
   const loadPosts = async () => {
     try {
@@ -35,36 +37,19 @@ export default function SearchPage() {
 
   const loadUsers = async (query: string) => {
     try {
-      const searchUsers = await getUserProfile({
-        username: query,
-        fullName: query,
-      });
-      if (searchUsers && searchUsers.users) {
-        const fetchedUsers = searchUsers.users.map(
-          (user: { fullName: string; username: string }) =>
-            user.fullName || user.username
-        );
-        setOptions(fetchedUsers);
-      } else {
-        setOptions([]);
-      }
+      const searchUsers = (await getUserProfiles(
+        query
+      )) as UserProfilesEntity[];
+      setUsers(searchUsers);
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    if (query) {
-      loadUsers(query);
-    } else {
-      setOptions([]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [debouncedSearch] = useDebounce(loadUsers, 350);
 
   useEffect(() => {
     loadPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line
 
   return (
     <Container sx={{ p: 0, mt: 2 }}>
@@ -79,28 +64,21 @@ export default function SearchPage() {
           alt="Profile picture"
           sx={{ width: 40, height: 40 }}
         />
-        <Autocomplete
-          freeSolo
-          disablePortal
-          onInputChange={(_, value) => {
-            setQuery(value);
-          }}
+
+        <TextField
+          label="Search"
           sx={{ width: "60%" }}
-          open={Boolean(query)}
-          options={options}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Search"
-              slotProps={{
-                input: {
-                  ...params.InputProps,
-                  sx: { borderRadius: "10px" },
-                },
-              }}
-            />
-          )}
+          slotProps={{
+            input: {
+              sx: { borderRadius: "10px" },
+            },
+          }}
+          onFocus={() => setIsCardOpen(true)}
+          onChange={(e) => {
+            debouncedSearch(e.target.value);
+          }}
         />
+
         <Fab
           sx={{ width: 40, height: 40 }}
           color="primary"
@@ -119,7 +97,27 @@ export default function SearchPage() {
         </Fab>
       </Stack>
       <Divider sx={{ mt: 1 }} />
-      <SearchFeed post={posts} />
+
+      {isCardOpen ? (
+        <>
+          {users.map((user) => (
+            <Card sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }} key={user.userId}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    aria-label="recipe"
+                    src={user.avatarURL}
+                    alt={user.fullName}
+                  />
+                }
+                title={user.fullName}
+              />
+            </Card>
+          ))}
+        </>
+      ) : (
+        <SearchFeed post={posts} />
+      )}
     </Container>
   );
 }

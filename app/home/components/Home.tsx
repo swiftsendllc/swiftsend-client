@@ -1,14 +1,14 @@
 "use client";
 
-import { top100Films } from "@/components/SearchComponents";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
 import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
-  Autocomplete,
   Avatar,
+  Card,
+  CardHeader,
   Container,
   Divider,
   Fab,
@@ -20,9 +20,13 @@ import { PostCard } from "./Post";
 
 export default function HomePage() {
   const [user] = useContext(UserContext);
-  const [query, setQuery] = useState("");
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const { getTimelinePosts } = useAPI();
+  const [isCardOpen, setIsCardOpen] = useState(false);
+
+  const handleSearch = () => {
+    setIsCardOpen(true);
+  };
 
   // Function to load all posts
   const loadPosts = async () => {
@@ -53,27 +57,15 @@ export default function HomePage() {
             alt="Profile picture"
             sx={{ width: 40, height: 40 }}
           />
-          <Autocomplete
-            freeSolo
-            disablePortal
-            onInputChange={(_, value) => {
-              setQuery(value);
-            }}
+          <TextField
+            label="Search"
             sx={{ width: "60%" }}
-            open={Boolean(query)}
-            options={top100Films.map((option) => option.title)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Search"
-                slotProps={{
-                  input: {
-                    ...params.InputProps,
-                    sx: { borderRadius: "10px" },
-                  },
-                }}
-              />
-            )}
+            slotProps={{
+              input: {
+                sx: { borderRadius: "10px" },
+              },
+            }}
+            onClick={handleSearch}
           />
           <Fab
             sx={{ width: 40, height: 40 }}
@@ -93,9 +85,22 @@ export default function HomePage() {
           </Fab>
         </Stack>
         <Divider sx={{ mt: 1 }} />
-        {posts.map((post) => (
-          <PostCard  key={post._id} post={post} />
-        ))}
+        {isCardOpen ? (
+          <Card sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }}>
+            <CardHeader
+              avatar={
+                <Avatar
+                  aria-label="recipe"
+                  src={user.avatarURL}
+                  alt={user.fullName}
+                />
+              }
+              title={user.fullName}
+            />
+          </Card>
+        ) : (
+          posts.map((post) => <PostCard key={post._id} post={post} />)
+        )}
       </Container>
     </>
   );

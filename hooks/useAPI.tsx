@@ -107,16 +107,39 @@ const useAPI = () => {
     return data;
   };
 
-  const getUserProfile = async (input:{username:string, fullName:string}) => {
+  const getUserProfileById = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-      method: "GET",
-      body: JSON.stringify(input),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const getUserProfiles = async (query: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/search?q=${encodeURIComponent(
+        query
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -347,7 +370,8 @@ const useAPI = () => {
     getPost,
     followProfile,
     unFollowProfile,
-    getUserProfile
+    getUserProfiles,
+    getUserProfileById,
   };
 };
 export default useAPI;
