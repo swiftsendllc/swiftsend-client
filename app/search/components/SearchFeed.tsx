@@ -1,14 +1,7 @@
 "use client";
 import { PostsEntity } from "@/hooks/types";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
-import {
-  IconButton,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  Stack,
-} from "@mui/material";
+import { ImageList, ImageListItem, Stack } from "@mui/material";
 import Image from "next/image";
 import { cluster } from "radash";
 
@@ -21,12 +14,11 @@ const calculateRowCols = (idx: number, igx: number) => {
 };
 
 interface SearchFeedProps {
-  posts: PostsEntity[];
+  post: PostsEntity[];
 }
 
-export default function SearchFeed({ posts }: SearchFeedProps) {
-  const imageGroups = cluster(posts, 3);
-
+export const SearchFeed = ({ post }: SearchFeedProps) => {
+  const imageGroups = cluster(post, 3);
   return (
     <>
       <Stack>
@@ -55,20 +47,6 @@ export default function SearchFeed({ posts }: SearchFeedProps) {
                   height={400}
                   priority
                 />
-                <ImageListItemBar
-                  subtitle={`@${post.user.username}`}
-                  actionIcon={
-                    <IconButton
-                      sx={{
-                        backgroundColor: "transparent",
-                        color: "rgba(255, 255, 255, 0.54)",
-                      }}
-                      aria-label={`save ${post.imageURL} `}
-                    >
-                      <BookmarkBorderIcon />
-                    </IconButton>
-                  }
-                />
               </ImageListItem>
             ))
           )}
@@ -76,4 +54,4 @@ export default function SearchFeed({ posts }: SearchFeedProps) {
       </Stack>
     </>
   );
-}
+};

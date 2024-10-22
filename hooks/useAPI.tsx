@@ -107,6 +107,61 @@ const useAPI = () => {
     return data;
   };
 
+  const getUserProfile = async (input:{username:string, fullName:string}) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+      method: "GET",
+      body: JSON.stringify(input),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const followProfile = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/follow-user`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const unFollowProfile = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/users/${userId}/remove-follower`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const createPost = async (body: Partial<CreatePostInput>) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/create`, {
@@ -290,6 +345,9 @@ const useAPI = () => {
     savePost,
     getTimelinePosts,
     getPost,
+    followProfile,
+    unFollowProfile,
+    getUserProfile
   };
 };
 export default useAPI;

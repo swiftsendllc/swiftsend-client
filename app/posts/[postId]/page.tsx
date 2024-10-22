@@ -27,7 +27,7 @@ export default function SinglePost() {
   return (
     <>
       {post && (
-        <PostCard allowComments post={post} onMutation={() => loadPost()} />
+        <PostCard  allowComments post={post} onMutation={() => loadPost()} />
       )}
     </>
   );

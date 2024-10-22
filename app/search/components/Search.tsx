@@ -1,5 +1,4 @@
 "use client";
-import { top100Films } from "@/components/SearchComponents";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/useContext";
@@ -16,12 +15,13 @@ import {
   TextField,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import SearchFeed from "./SearchFeed";
+import { SearchFeed } from "./SearchFeed";
 
 export default function SearchPage() {
-  const { getTimelinePosts } = useAPI();
+  const { getTimelinePosts, getUserProfile } = useAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState<string>("");
+  const [options, setOptions] = useState<string[]>([]); // store fetched user names
   const [user] = useContext(UserContext);
 
   const loadPosts = async () => {
@@ -33,8 +33,37 @@ export default function SearchPage() {
     }
   };
 
+  const loadUsers = async (query: string) => {
+    try {
+      const searchUsers = await getUserProfile({
+        username: query,
+        fullName: query,
+      });
+      if (searchUsers && searchUsers.users) {
+        const fetchedUsers = searchUsers.users.map(
+          (user: { fullName: string; username: string }) =>
+            user.fullName || user.username
+        );
+        setOptions(fetchedUsers);
+      } else {
+        setOptions([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (query) {
+      loadUsers(query);
+    } else {
+      setOptions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     loadPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -58,7 +87,7 @@ export default function SearchPage() {
           }}
           sx={{ width: "60%" }}
           open={Boolean(query)}
-          options={top100Films.map((option) => option.title)}
+          options={options}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -90,7 +119,7 @@ export default function SearchPage() {
         </Fab>
       </Stack>
       <Divider sx={{ mt: 1 }} />
-      <SearchFeed posts={posts} />
+      <SearchFeed post={posts} />
     </Container>
   );
 }

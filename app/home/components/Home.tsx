@@ -94,7 +94,7 @@ export default function HomePage() {
         </Stack>
         <Divider sx={{ mt: 1 }} />
         {posts.map((post) => (
-          <PostCard key={post._id} post={post} />
+          <PostCard  key={post._id} post={post} />
         ))}
       </Container>
     </>

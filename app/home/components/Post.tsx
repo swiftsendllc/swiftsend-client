@@ -4,6 +4,7 @@ import { CommentInput } from "@/components/CommentInput";
 import TopBackNav from "@/components/TopBackNav";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
+import { UserContext } from "@/hooks/useContext";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -24,7 +25,6 @@ import {
   Container,
   debounce,
   Divider,
-  Fab,
   IconButton,
   Paper,
   Stack,
@@ -32,7 +32,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 interface PostProps {
   post: PostsEntity;
@@ -50,10 +50,12 @@ export const PostCard = ({
   allowComments = false,
   onMutation,
 }: PostProps) => {
-  const { likePost, savePost } = useAPI();
+  const { likePost, savePost, followProfile } = useAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
+  const [user] = useContext(UserContext);
+
 
   const handleLike = debounce(async (postId: string) => {
     try {
@@ -74,7 +76,13 @@ export const PostCard = ({
     }
   }, 250);
 
-  const handleFollow = async () => {};
+  const handleFollow = async (userId: string) => {
+    try {
+      await followProfile(userId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Container maxWidth="xs" sx={{ px: 0, mb: 0.5 }}>
@@ -89,10 +97,17 @@ export const PostCard = ({
             />
           }
           action={
-            <Button sx={{ height: 20 ,fontWeight:200 }} aria-label="settings" variant="text" >
-              <AddIcon />
-              connect
-            </Button>
+            post.userId !== user.userId ? (
+              <Button
+                sx={{ height: 20, fontWeight: 200 }}
+                aria-label="settings"
+                variant="text"
+                onClick={() => handleFollow(post.userId)}
+              >
+                <AddIcon />
+                connect
+              </Button>
+            ) : null
           }
           title={post.user.fullName}
           subheader={moment(post.createdAt).format("LLL")}
