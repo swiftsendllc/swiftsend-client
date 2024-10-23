@@ -45,6 +45,7 @@ export interface PostsEntity {
   createdAt: Date;
   user: UserProfilesEntity;
   comments?: CommentsEntity[];
+  saves?: SavesEntity[];
 }
 
 export interface CreatePostInput {
@@ -63,4 +64,10 @@ export interface CommentsEntity {
   _id: string;
   comment: string;
   user: UserProfilesEntity;
+}
+
+export interface SavesEntity {
+  userId: string;
+  postId: string;
+  reelsId: string;
 }

@@ -75,7 +75,7 @@ export default function EditPostModal({
       caption: value,
     }));
     setCaption(value);
-    setDidChange(true);
+    setDidChange(value.trim() !== post.caption); // enables when caption is not empty
   };
 
   return (
@@ -161,7 +161,7 @@ export default function EditPostModal({
               loading={loading}
               variant="contained"
               type="submit"
-              disabled={!didChange}
+              disabled={!didChange || caption.trim() === ""}
               onClick={handleOnChange}
             >
               Post

@@ -6,9 +6,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  IconButton,
   Container,
   Icon,
+  IconButton,
   Paper,
   Stack,
   Typography,
@@ -62,53 +62,63 @@ export default function BottomNav() {
   const pathName = _pathName === `/groups/${id}` ? "/groups" : _pathName;
 
   return (
-    <Paper
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: { sm: 65, md: 65 },
-      }}
-      elevation={2}
-    >
-      <Container maxWidth="xs" style={{ padding: 0 , }}>
-        <Stack direction="row" spacing={1} justifyContent="space-between">
-          {navigationItems.map((option, idx) => (
-            <Stack
-              key={idx}
-              sx={{
-                backgroundColor: "transparent",
-                boxShadow: "none",
-              }}
-            >
-              <IconButton href={option.value} LinkComponent={Link}>
-                <Stack
-                  direction="column"
-                  alignItems="center"
-                  alignContent="center"
-                  spacing={0}
-                  p={1}
-                >
-                  <Icon
-                    color={pathName === option.value ? "primary" : "action"}
+    <>
+      <Paper
+        sx={{
+          width: "100%",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: { sm: 65, md: 65 },
+        }}
+        elevation={2}
+      >
+        <Container maxWidth="xs" style={{ padding: 0 }}>
+          <Stack
+            direction="row"
+            spacing={0.5}
+            justifyContent="space-between"
+
+          >
+            {navigationItems.map((option, idx) => (
+              <Stack
+                key={idx}
+                sx={{
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                }}
+              >
+                <IconButton href={option.value} LinkComponent={Link}>
+                  <Stack
+                    direction="column"
+                    alignItems="center"
+                    alignContent="center"
+                    spacing={0}
+                    p={1}
                   >
-                    {option.icon}
-                  </Icon>
-                  <Typography
-                    variant="body2"
-                    color={
-                      pathName === option.value ? "primary" : "textSecondary"
-                    }
-                  >
-                    {option.label}
-                  </Typography>
-                </Stack>
-              </IconButton>
-            </Stack>
-          ))}
-        </Stack>
-      </Container>
-    </Paper>
+                    <Icon
+                      color={pathName === option.value ? "primary" : "action"}
+                    >
+                      {option.icon}
+                    </Icon>
+                    <Typography
+                      variant="body2"
+                      color={
+                        pathName === option.value ? "primary" : "textSecondary"
+                      }
+                      fontSize="0.65rem"
+                      fontWeight={200}
+                    >
+                      {option.label}
+                    </Typography>
+                  </Stack>
+                </IconButton>
+              </Stack>
+            ))}
+          </Stack>
+        </Container>
+      </Paper>
+    </>
   );
 }

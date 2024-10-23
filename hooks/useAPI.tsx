@@ -147,6 +147,25 @@ const useAPI = () => {
     return data;
   };
 
+  const getFollowers = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}//users/${userId}/followers`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const followProfile = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
@@ -224,6 +243,21 @@ const useAPI = () => {
   const getPosts = async () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+  const getSaves = async () => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/saves`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -372,6 +406,8 @@ const useAPI = () => {
     unFollowProfile,
     getUserProfiles,
     getUserProfileById,
+    getFollowers,
+    getSaves
   };
 };
 export default useAPI;

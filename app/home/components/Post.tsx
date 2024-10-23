@@ -50,12 +50,12 @@ export const PostCard = ({
   allowComments = false,
   onMutation,
 }: PostProps) => {
-  const { likePost, savePost, followProfile } = useAPI();
+  const { likePost, savePost, followProfile,  } = useAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [user] = useContext(UserContext);
-
+  // const [connections, setConnections] = useState<string[]>([]);
 
   const handleLike = debounce(async (postId: string) => {
     try {
@@ -84,6 +84,20 @@ export const PostCard = ({
     }
   };
 
+  // const handleConnections = async(userId:string) => {
+  //   try {
+  //     const connections = await getFollowers(userId);
+  //     setConnections(connections);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   handleConnections(userId)
+  // })
+
+  // const isConnected = connections.includes(post.userId)
+
   return (
     <Container maxWidth="xs" sx={{ px: 0, mb: 0.5 }}>
       {allowComments && <TopBackNav />}
@@ -97,7 +111,7 @@ export const PostCard = ({
             />
           }
           action={
-            post.userId !== user.userId ? (
+            post.userId !== user.userId   ? (
               <Button
                 sx={{ height: 20, fontWeight: 200 }}
                 aria-label="settings"

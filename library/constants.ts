@@ -5,6 +5,7 @@ export const authenticatedPaths = [
   "/search",
   "/messages",
   "/reels",
+  "/saves",
   "/account/settings",
   "/account/profile",
 ];
