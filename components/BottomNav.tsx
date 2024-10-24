@@ -6,6 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import {
+  Box,
   Container,
   Icon,
   IconButton,
@@ -62,25 +63,19 @@ export default function BottomNav() {
   const pathName = _pathName === `/groups/${id}` ? "/groups" : _pathName;
 
   return (
-    <>
-      <Paper
-        sx={{
-          width: "100%",
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: { sm: 65, md: 65 },
-        }}
-        elevation={2}
-      >
-        <Container maxWidth="xs" style={{ padding: 0 }}>
-          <Stack
-            direction="row"
-            spacing={0.5}
-            justifyContent="space-between"
-
-          >
+    <Box
+      sx={{
+        width: "100%",
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: { sm: 65, md: 65 },
+      }}
+    >
+      <Container maxWidth="xs" style={{ padding: 0 }}>
+        <Paper elevation={2}>
+          <Stack direction="row" spacing={0.5} justifyContent="space-between">
             {navigationItems.map((option, idx) => (
               <Stack
                 key={idx}
@@ -117,8 +112,8 @@ export default function BottomNav() {
               </Stack>
             ))}
           </Stack>
-        </Container>
-      </Paper>
-    </>
+        </Paper>
+      </Container>
+    </Box>
   );
 }

@@ -53,7 +53,7 @@ export default function SearchPage() {
   }, []); // eslint-disable-line
 
   return (
-    <Container sx={{ p: 0, mt: 2 }}>
+    <Container sx={{ p: 0, mt: 2, mb: 8.8 }} style={{ padding: 0 }}>
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -114,6 +114,7 @@ export default function SearchPage() {
                   />
                 }
                 title={user.fullName}
+                subheader={user.username}
               />
             </Card>
           ))}

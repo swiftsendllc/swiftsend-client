@@ -150,7 +150,26 @@ const useAPI = () => {
   const getFollowers = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}//users/${userId}/followers`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/followers`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const getFollowing = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/following`,
       {
         method: "GET",
         headers: {
@@ -188,9 +207,9 @@ const useAPI = () => {
   const unFollowProfile = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL}/users/${userId}/remove-follower`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/remove-follower`,
       {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -407,7 +426,8 @@ const useAPI = () => {
     getUserProfiles,
     getUserProfileById,
     getFollowers,
-    getSaves
+    getSaves,
+    getFollowing
   };
 };
 export default useAPI;

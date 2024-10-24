@@ -45,7 +45,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Container sx={{ p: 0, mt: 2, mb: 8 }}>
+      <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>
         <Stack
           direction="row"
           justifyContent="space-between"

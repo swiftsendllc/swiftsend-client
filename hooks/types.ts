@@ -71,3 +71,9 @@ export interface SavesEntity {
   postId: string;
   reelsId: string;
 }
+export interface FollowersEntity {
+  followingUserId: string;
+  followedUserId: string;
+  createdAt: Date;
+  deletedAt: Date;
+}

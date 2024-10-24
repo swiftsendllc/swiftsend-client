@@ -99,9 +99,9 @@ export const PostCard = ({
   // const isConnected = connections.includes(post.userId)
 
   return (
-    <Container maxWidth="xs" sx={{ px: 0, mb: 0.5 }}>
+    <>
       {allowComments && <TopBackNav />}
-      <Card key={post._id} sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }}>
+      <Card key={post._id} sx={{ mb: 0.5, width: "100%", padding: 0, }}>
         <CardHeader
           avatar={
             <Avatar
@@ -237,7 +237,7 @@ export const PostCard = ({
       {allowComments && (
         <CommentInput postId={post._id} onComment={() => onMutation?.()} />
       )}
-    </Container>
+    </>
   );
 };
 

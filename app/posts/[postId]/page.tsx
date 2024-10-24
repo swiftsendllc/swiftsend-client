@@ -3,6 +3,7 @@
 import { PostCard } from "@/app/home/components/Post";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
+import { Container } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -25,10 +26,10 @@ export default function SinglePost() {
   }, [postId]); // eslint-disable-line
 
   return (
-    <>
+    <Container maxWidth="xs">
       {post && (
         <PostCard  allowComments post={post} onMutation={() => loadPost()} />
       )}
-    </>
+    </Container>
   );
 }

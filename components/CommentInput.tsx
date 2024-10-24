@@ -48,7 +48,7 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
         zIndex: 4,
       }}
     >
-      <Container maxWidth="xs" sx={{ px: 0 }}>
+      <Container maxWidth="xs" sx={{ p: 0 }}>
         <Paper>
           <TextField
             fullWidth

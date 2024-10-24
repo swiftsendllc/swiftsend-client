@@ -8,6 +8,8 @@ export const authenticatedPaths = [
   "/saves",
   "/account/settings",
   "/account/profile",
+  "/account/connections",
+  "/account/connected",
 ];
 export const authenticated = [
   "/account",

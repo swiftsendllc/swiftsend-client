@@ -40,17 +40,16 @@ export default function VerifiedTopNav() {
     {
       title: "entries",
       count: user.postCount,
-      label: "/followers",
     },
     {
       title: "connections",
       count: user.followerCount,
-      label: "/followers",
+      value: "/account/connections",
     },
     {
       title: "connected",
       count: user.followingCount,
-      label: "/following",
+      value: "/account/connected",
     },
   ];
 
@@ -132,14 +131,23 @@ export default function VerifiedTopNav() {
               >
                 {stats.map((item, idx) => (
                   <Stack
-                    direction="column"
                     key={idx}
+                    direction="column"
                     alignContent="center"
                     alignItems="center"
                   >
-                    <Typography variant="h6" fontWeight={100}>
-                      {item.count}
-                    </Typography>
+                    {item.value ? (
+                      <Link href={item.value} >
+                        <Typography variant="h6" fontWeight={100}>
+                          {item.count}
+                        </Typography>
+                      </Link>
+                    ) : (
+                      <Typography variant="h6" fontWeight={100}>
+                        {item.count}
+                      </Typography>
+                    )}
+
                     <Typography variant="body2" fontWeight={100}>
                       {item.title}
                     </Typography>
@@ -250,16 +258,14 @@ export default function VerifiedTopNav() {
             alignItems="center"
           >
             {grid.map((item, idx) => (
-              <Stack
-                key={idx}
-              >
+              <Stack key={idx}>
                 <IconButton href={item.value} LinkComponent={Link}>
-                    <Fab
-                      variant="extended"
-                      color={pathName === item.value ? "primary" : "inherit"}
-                    >
-                      {item.icon}
-                    </Fab>
+                  <Fab
+                    variant="extended"
+                    color={pathName === item.value ? "primary" : "inherit"}
+                  >
+                    {item.icon}
+                  </Fab>
                 </IconButton>
               </Stack>
             ))}

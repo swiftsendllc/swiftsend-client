@@ -28,7 +28,7 @@ export default function RootTemplate({
   }
 
   return (
-    <Container maxWidth="xs" style={{ padding: 5 }}>
+    <Container maxWidth="xs" style={{ padding: 0 }}>
       {children}
       <BottomNav />
     </Container>
