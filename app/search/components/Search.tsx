@@ -21,7 +21,7 @@ import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
 
 export default function SearchPage() {
-  const { getTimelinePosts, getUserProfiles, getSaves } = useAPI();
+  const { getTimelinePosts, getUserProfiles } = useAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [user] = useContext(UserContext);
   const [users, setUsers] = useState<UserProfilesEntity[]>([]);

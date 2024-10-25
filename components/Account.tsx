@@ -1,5 +1,4 @@
 "use client";
-import { UserContext } from "@/hooks/useContext";
 import theme from "@/util/theme";
 import AddIcon from "@mui/icons-material/Add";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
@@ -13,6 +12,7 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import ViewListIcon from "@mui/icons-material/ViewList";
 
 import UploadModal from "@/app/account/components/UploadModal";
+import { UserProfilesEntity } from "@/hooks/types";
 import {
   Avatar,
   Badge,
@@ -27,11 +27,14 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { grid } from "./SearchComponents";
 
-export default function VerifiedTopNav() {
-  const [user] = useContext(UserContext);
+interface AccountPageProps {
+  user: UserProfilesEntity;
+}
+
+export default function AccountPage({ user }: AccountPageProps) {
   const _pathName = usePathname();
   const { id } = useParams();
   const [createModal, setCreateModal] = useState(false);
@@ -137,7 +140,7 @@ export default function VerifiedTopNav() {
                     alignItems="center"
                   >
                     {item.value ? (
-                      <Link href={item.value} >
+                      <Link href={item.value}>
                         <Typography variant="h6" fontWeight={100}>
                           {item.count}
                         </Typography>

@@ -274,6 +274,26 @@ const useAPI = () => {
     }
     return data;
   };
+
+  const getCreatorPosts = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const getSaves = async () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/saves`, {
@@ -427,7 +447,8 @@ const useAPI = () => {
     getUserProfileById,
     getFollowers,
     getSaves,
-    getFollowing
+    getFollowing,
+    getCreatorPosts
   };
 };
 export default useAPI;

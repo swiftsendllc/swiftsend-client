@@ -101,7 +101,7 @@ export const PostCard = ({
   return (
     <>
       {allowComments && <TopBackNav />}
-      <Card key={post._id} sx={{ mb: 0.5, width: "100%", padding: 0, }}>
+      <Card key={post._id} sx={{ mb: 0.5, width: "100%", padding: 0, m:0 }}>
         <CardHeader
           avatar={
             <Avatar

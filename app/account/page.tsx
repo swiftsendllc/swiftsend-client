@@ -1,5 +1,8 @@
-import AccountPage from "./components/Account";
+import { UserContext } from "@/hooks/useContext";
+import { useContext } from "react";
+import AccountPostPage from "./components/Account";
 
 export default function Account() {
-  return <AccountPage />;
+  const [user] = useContext(UserContext);
+  return <AccountPostPage user={user} />;
 }

@@ -1,7 +1,7 @@
 "use client";
 import DeletePostModal from "@/app/posts/components/DeletePostModal";
 import EditPostModal from "@/app/posts/components/EditPostModal";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity, UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -28,9 +28,12 @@ const options = [
     label: "Delete",
   },
 ];
+interface AccountPageProps {
+  user: UserProfilesEntity;
+}
 
-export default function AccountPage() {
-  const { getPosts } = useAPI();
+export default function AccountPostPage({ user }: AccountPageProps) {
+  const { getCreatorPosts } = useAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -40,7 +43,7 @@ export default function AccountPage() {
 
   const loadPosts = async () => {
     try {
-      const posts = await getPosts();
+      const posts = await getCreatorPosts(user.userId);
       setPosts(posts);
     } catch (error) {
       console.log(error);
@@ -48,8 +51,7 @@ export default function AccountPage() {
   };
   useEffect(() => {
     loadPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line
 
   const handleMenuItemClick = (option: string) => {
     setAnchorEl(null);

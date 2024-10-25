@@ -1,7 +1,7 @@
 "use client";
 
+import AccountPage from "@/components/Account";
 import BottomNav from "@/components/BottomNav";
-import VerifiedTopNav from "@/components/TopNav";
 import { authenticated, authenticatedPaths } from "@/library/constants";
 import { Container } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,7 @@ export default function RootTemplate({
   if ([...authenticated].includes(pathname)) {
     return (
       <Container maxWidth="xs" style={{ padding: 5 }}>
-        <VerifiedTopNav />
+        <AccountPage />
         {children}
         <BottomNav />
       </Container>

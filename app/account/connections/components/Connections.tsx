@@ -17,12 +17,15 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function ConnectionPage() {
-  const { getFollowers, followProfile, unFollowProfile } = useAPI();
+  const { getFollowers, followProfile, unFollowProfile, getUserProfileById } =
+    useAPI();
   const [user] = useContext(UserContext);
   const [followers, setFollowers] = useState<UserProfilesEntity[]>([]);
+  const router = useRouter();
 
   const loadConnections = async () => {
     try {
@@ -48,7 +51,15 @@ export default function ConnectionPage() {
     }
   };
 
-
+  const loadProfile = async (userId: string) => {
+    try {
+      const getUser = await getUserProfileById(userId);
+      const username = getUser.username;
+      router.push(`/users/${username}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     loadConnections();
@@ -80,9 +91,11 @@ export default function ConnectionPage() {
                 />
               }
               title={
-                <Typography fontWeight={200}>
-                  {followedUser.fullName}
-                </Typography>
+                <Button onClick={() => loadProfile(user.userId)}>
+                  <Typography fontWeight={200}>
+                    {followedUser.fullName}
+                  </Typography>
+                </Button>
               }
               subheader={
                 <Typography
