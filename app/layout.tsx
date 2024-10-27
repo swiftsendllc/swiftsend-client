@@ -5,7 +5,7 @@ import { Kanit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
 import { UserProfilesEntity } from "@/hooks/types";
-import { ContextWrapper } from "@/hooks/useContext";
+import { UserContextWrapper } from "@/hooks/user-context";
 import { authCookieKey, authenticatedPathRegex } from "@/library/constants";
 import theme from "@/util/theme";
 import { cookies, headers } from "next/headers";
@@ -38,7 +38,6 @@ const validateAuth = async () => {
   const pathname = headersList.get("x-pathname") ?? "/";
   const accessToken = cookies().get(authCookieKey)?.value;
   const isAuthenticatedPath = authenticatedPathRegex.test(pathname);
-  console.log({ isAuthenticatedPath, pathname });
   if (!isAuthenticatedPath) return null;
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
@@ -48,7 +47,6 @@ const validateAuth = async () => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  console.log(res.status);
   if (res.status === 401 || res.status === 403) {
     return redirect("/");
   }
@@ -62,7 +60,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await validateAuth();
-  console.log({ user });
 
   return (
     <html lang="en">
@@ -100,7 +97,7 @@ export default async function RootLayout({
         />
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <ContextWrapper user={user}>{children}</ContextWrapper>
+            <UserContextWrapper user={user}>{children}</UserContextWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

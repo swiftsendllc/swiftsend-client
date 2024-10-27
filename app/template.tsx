@@ -1,8 +1,7 @@
 "use client";
 
-import AccountPage from "@/components/Account";
 import BottomNav from "@/components/BottomNav";
-import { authenticated, authenticatedPaths } from "@/library/constants";
+import { authenticatedPaths } from "@/library/constants";
 import { Container } from "@mui/material";
 import { usePathname } from "next/navigation";
 
@@ -12,16 +11,6 @@ export default function RootTemplate({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
-  if ([...authenticated].includes(pathname)) {
-    return (
-      <Container maxWidth="xs" style={{ padding: 5 }}>
-        <AccountPage />
-        {children}
-        <BottomNav />
-      </Container>
-    );
-  }
 
   if (![...authenticatedPaths].includes(pathname)) {
     return <>{children}</>;
