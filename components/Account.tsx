@@ -1,4 +1,7 @@
 "use client";
+import UploadModal from "@/app/[username]/components/UploadModal";
+import { CreatorContext } from "@/hooks/creator-context";
+import { UserContext } from "@/hooks/user-context";
 import theme from "@/util/theme";
 import AddIcon from "@mui/icons-material/Add";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
@@ -10,9 +13,6 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import ViewListIcon from "@mui/icons-material/ViewList";
-
-import UploadModal from "@/app/account/components/UploadModal";
-import { UserProfilesEntity } from "@/hooks/types";
 import {
   Avatar,
   Badge,
@@ -27,36 +27,35 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { grid } from "./SearchComponents";
 
-interface AccountPageProps {
-  user: UserProfilesEntity;
-}
+export default function AccountPage() {
+  const [user] = useContext(UserContext);
+  const [creator] = useContext(CreatorContext);
 
-export default function AccountPage({ user }: AccountPageProps) {
-  const _pathName = usePathname();
+  const pathname = usePathname();
   const { id } = useParams();
   const [createModal, setCreateModal] = useState(false);
 
   const stats = [
     {
       title: "entries",
-      count: user.postCount,
+      count: creator.postCount,
     },
     {
       title: "connections",
-      count: user.followerCount,
+      count: creator.followerCount,
       value: "/account/connections",
     },
     {
       title: "connected",
-      count: user.followingCount,
+      count: creator.followingCount,
       value: "/account/connected",
     },
   ];
 
-  const pathName = _pathName === `/accounts/${id}` ? "/accounts" : _pathName;
+  const pathName = pathname === `/accounts/${id}` ? "/accounts" : pathname;
 
   return (
     <>
@@ -80,7 +79,7 @@ export default function AccountPage({ user }: AccountPageProps) {
               whiteSpace: "nowrap",
             }}
           >
-            {user.username}
+            {creator.username}
             <IconButton edge="end">
               <ExpandMoreOutlinedIcon />
             </IconButton>
@@ -120,7 +119,7 @@ export default function AccountPage({ user }: AccountPageProps) {
               badgeContent={<AddSharpIcon />}
             >
               <Avatar
-                src={user.avatarURL!}
+                src={creator.avatarURL!}
                 alt="Profile Picture"
                 sx={{ width: 80, height: 80 }}
               />
@@ -204,11 +203,11 @@ export default function AccountPage({ user }: AccountPageProps) {
 
           <Stack direction="column">
             <Typography variant="h6" fontWeight={200}>
-              {user.fullName}
+              {creator.fullName}
             </Typography>
 
             <Link
-              href={user.websiteURL!}
+              href={creator.websiteURL!}
               target="_blank"
               style={{
                 color: "var(--success)",
@@ -217,11 +216,11 @@ export default function AccountPage({ user }: AccountPageProps) {
                 whiteSpace: "nowrap",
               }}
             >
-              {user.websiteURL}
+              {creator.websiteURL}
             </Link>
 
             <Typography variant="body2" fontWeight={300}>
-              {user.bio}
+              {creator.bio}
             </Typography>
           </Stack>
 

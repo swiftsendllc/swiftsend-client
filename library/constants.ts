@@ -24,6 +24,7 @@ export const authenticatedPathsRegex = [
   /^\/posts/,
   /^\/reels/,
   /^\/account/,
+  /^\/(.*)/,
 ];
 export const authenticatedPathRegex = new RegExp(
   authenticatedPathsRegex.map((r) => r.source).join("|")

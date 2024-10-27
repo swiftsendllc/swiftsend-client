@@ -107,10 +107,10 @@ const useAPI = () => {
     return data;
   };
 
-  const getUserProfileById = async (userId: string) => {
+  const getUserProfile = async (usernameOrId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${usernameOrId}`,
       {
         method: "GET",
         headers: {
@@ -444,11 +444,11 @@ const useAPI = () => {
     followProfile,
     unFollowProfile,
     getUserProfiles,
-    getUserProfileById,
+    getUserProfile,
     getFollowers,
     getSaves,
     getFollowing,
-    getCreatorPosts
+    getCreatorPosts,
   };
 };
 export default useAPI;

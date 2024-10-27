@@ -4,7 +4,7 @@ import { CommentInput } from "@/components/CommentInput";
 import TopBackNav from "@/components/TopBackNav";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/useContext";
+import { UserContext } from "@/hooks/user-context";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -22,7 +22,6 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
-  Container,
   debounce,
   Divider,
   IconButton,
@@ -50,7 +49,7 @@ export const PostCard = ({
   allowComments = false,
   onMutation,
 }: PostProps) => {
-  const { likePost, savePost, followProfile,  } = useAPI();
+  const { likePost, savePost, followProfile } = useAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
@@ -101,7 +100,7 @@ export const PostCard = ({
   return (
     <>
       {allowComments && <TopBackNav />}
-      <Card key={post._id} sx={{ mb: 0.5, width: "100%", padding: 0, m:0 }}>
+      <Card key={post._id} sx={{ mb: 0.5, width: "100%", padding: 0, m: 0 }}>
         <CardHeader
           avatar={
             <Avatar
@@ -111,7 +110,7 @@ export const PostCard = ({
             />
           }
           action={
-            post.userId !== user.userId   ? (
+            post.userId !== user.userId ? (
               <Button
                 sx={{ height: 20, fontWeight: 200 }}
                 aria-label="settings"

@@ -1,6 +1,6 @@
 "use client";
 
-import { UserContext } from "@/hooks/useContext";
+import { UserContext } from "@/hooks/user-context";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";

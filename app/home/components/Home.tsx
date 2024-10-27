@@ -2,7 +2,7 @@
 
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/useContext";
+import { UserContext } from "@/hooks/user-context";
 import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {

@@ -1,7 +1,7 @@
 "use client";
 import { PostsEntity, UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/useContext";
+import { UserContext } from "@/hooks/user-context";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 

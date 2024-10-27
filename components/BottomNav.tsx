@@ -1,6 +1,6 @@
 "use client";
 
-import { UserContext } from "@/hooks/useContext";
+import { UserContext } from "@/hooks/user-context";
 import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
