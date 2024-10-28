@@ -26,20 +26,15 @@ const getUser = async (username: string) => {
 export default async function Layout({
   children,
   params,
-  account,
 }: Readonly<{
   children: React.ReactNode;
-  account: React.ReactNode;
   params: Record<string, string>;
 }>) {
   const user = await getUser(params.username);
 
   return (
     <>
-      <CreatorContextWrapper user={user}>
-        {account}
-        {children}
-      </CreatorContextWrapper>
+      <CreatorContextWrapper user={user}>{children}</CreatorContextWrapper>
     </>
   );
 }

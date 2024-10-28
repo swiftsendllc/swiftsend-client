@@ -51,12 +51,12 @@ export default function ConnectedPage() {
 
   useEffect(() => {
     loadConnected();
-  }, []);
+  }, []); //eslint-disable-line
 
   return (
     <>
       <Stack direction="row" mt={2} justifyContent="space-between">
-        <IconButton href="/account" LinkComponent={Link}>
+        <IconButton href={`/${user.username}`} LinkComponent={Link}>
           <ArrowBackOutlinedIcon />
         </IconButton>
         <Typography fontWeight={200} color="primary">

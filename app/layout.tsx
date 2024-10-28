@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 import { UserProfilesEntity } from "@/hooks/types";
 import { UserContextWrapper } from "@/hooks/user-context";
-import { authCookieKey, authenticatedPathRegex } from "@/library/constants";
+import { authCookieKey } from "@/library/constants";
 import theme from "@/util/theme";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -37,8 +37,6 @@ const validateAuth = async () => {
   const headersList = headers();
   const pathname = headersList.get("x-pathname") ?? "/";
   const accessToken = cookies().get(authCookieKey)?.value;
-  const isAuthenticatedPath = authenticatedPathRegex.test(pathname);
-  if (!isAuthenticatedPath) return null;
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
     method: "GET",
@@ -47,9 +45,14 @@ const validateAuth = async () => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  if (res.status === 401 || res.status === 403) {
+
+  if (
+    (res.status === 401 || res.status === 403) &&
+    !["/", "/login", "/signup"].includes(pathname)
+  ) {
     return redirect("/");
   }
+
   const user = await res.json();
   return user as UserProfilesEntity;
 };
@@ -60,6 +63,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await validateAuth();
+
+  console.log({ user });
 
   return (
     <html lang="en">

@@ -8,8 +8,15 @@ import AddSharpIcon from "@mui/icons-material/AddSharp";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
+import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+import MovieSharpIcon from "@mui/icons-material/MovieSharp";
 import NavigationIcon from "@mui/icons-material/Navigation";
+import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
+import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import ViewListIcon from "@mui/icons-material/ViewList";
@@ -28,7 +35,6 @@ import {
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useContext, useState } from "react";
-import { grid } from "./SearchComponents";
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
@@ -46,16 +52,36 @@ export default function AccountPage() {
     {
       title: "connections",
       count: creator.followerCount,
-      value: "/account/connections",
+      value: `/${creator.username}/connections`,
     },
     {
       title: "connected",
       count: creator.followingCount,
-      value: "/account/connected",
+      value: `/${creator.username}/connected`,
     },
   ];
 
-  const pathName = pathname === `/accounts/${id}` ? "/accounts" : pathname;
+  const grid = [
+    {
+      value: `/${creator.username}`,
+      icon: <GridOnSharpIcon color="inherit" />,
+    },
+    {
+      value: `/${creator.username}/subscribers`,
+      icon: <ShoppingBasketSharpIcon />,
+    },
+    {
+      value: `/${creator.username}/reels`,
+      icon: <MovieSharpIcon />,
+    },
+    {
+      value: `/${creator.username}/tags`,
+      icon: <PersonPinRoundedIcon />,
+    },
+  ];
+
+  const pathName =
+    pathname === `/${creator.username}/${id}` ? `${creator.username}` : pathname;
 
   return (
     <>
@@ -85,23 +111,37 @@ export default function AccountPage() {
             </IconButton>
           </Typography>
         </Box>
-
-        <Stack direction="row" spacing={2}>
-          {/* add link LinkComponent */}
-          <Fab color="primary" href="/" aria-label="share">
-            <NavigationIcon sx={{ width: 30, height: 30 }} />
-          </Fab>
-          <Fab
-            color="secondary"
-            aria-label="add"
-            onClick={() => setCreateModal(true)}
-          >
-            <AddIcon sx={{ width: 30, height: 30 }} />
-          </Fab>
-          <Fab color="inherit" href="/account/settings" LinkComponent={Link}>
-            <ViewListIcon sx={{ width: 30, height: 30 }} />
-          </Fab>
-        </Stack>
+        {user.userId !== creator.userId ? (
+          <Stack direction="row" spacing={1}>
+            <Fab color="primary" href="/" aria-label="share">
+              <NavigationIcon sx={{ width: 30, height: 30 }} />
+            </Fab>
+            <Fab>
+              <MoreVertOutlinedIcon />
+            </Fab>
+          </Stack>
+        ) : (
+          <Stack direction="row" spacing={2}>
+            {/* add link LinkComponent */}
+            <Fab color="primary" href="/" aria-label="share">
+              <NavigationIcon sx={{ width: 30, height: 30 }} />
+            </Fab>
+            <Fab
+              color="secondary"
+              aria-label="add"
+              onClick={() => setCreateModal(true)}
+            >
+              <AddIcon sx={{ width: 30, height: 30 }} />
+            </Fab>
+            <Fab
+              color="inherit"
+              href={`/${user.username}/settings`}
+              LinkComponent={Link}
+            >
+              <ViewListIcon sx={{ width: 30, height: 30 }} />
+            </Fab>
+          </Stack>
+        )}
       </Stack>
       <Box display="flex" alignItems="center">
         <Stack direction="column" spacing={2} width="100%">
@@ -119,7 +159,7 @@ export default function AccountPage() {
               badgeContent={<AddSharpIcon />}
             >
               <Avatar
-                src={creator.avatarURL!}
+                src={user.avatarURL!}
                 alt="Profile Picture"
                 sx={{ width: 80, height: 80 }}
               />
@@ -224,32 +264,62 @@ export default function AccountPage() {
             </Typography>
           </Stack>
 
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            alignContent="center"
-            width="100%"
-            spacing={2}
-          >
-            <Fab
-              aria-label="edit"
-              variant="extended"
-              href="/account/profile"
-              LinkComponent={Link}
-              sx={{ width: "100%", borderRadius: "30px" }}
+          {user.userId !== creator.userId ? (
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              alignContent="center"
+              width="100%"
+              spacing={2}
             >
-              <EditIcon sx={{ width: 30, height: 30 }} />
-              Profile{" "}
-            </Fab>
-            <Fab
-              variant="extended"
-              sx={{ width: "100%", borderRadius: "30px" }}
+              <Fab
+                aria-label="add"
+                variant="extended"
+                sx={{ width: "100%", borderRadius: "30px" }}
+                color="primary"
+              >
+                <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
+                Follow{" "}
+              </Fab>
+              <Fab
+                variant="extended"
+                sx={{ width: "100%", borderRadius: "30px" }}
+                color="secondary"
+              >
+                <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
+                Message
+              </Fab>
+            </Stack>
+          ) : (
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              alignContent="center"
+              width="100%"
+              spacing={2}
             >
-              <DashboardIcon sx={{ width: 20, height: 30 }} />
-              Dashboard
-            </Fab>
-          </Stack>
+              <Fab
+                aria-label="edit"
+                variant="extended"
+                href={`/${user.username}/profile`}
+                LinkComponent={Link}
+                sx={{ width: "100%", borderRadius: "30px" }}
+              >
+                <EditIcon sx={{ width: 30, height: 30 }} />
+                Profile{" "}
+              </Fab>
+              <Fab
+                variant="extended"
+                sx={{ width: "100%", borderRadius: "30px" }}
+              >
+                <DashboardIcon sx={{ width: 20, height: 30 }} />
+                Dashboard
+              </Fab>
+            </Stack>
+          )}
+
           <Divider />
 
           <Stack

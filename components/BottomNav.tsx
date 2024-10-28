@@ -24,6 +24,8 @@ export default function BottomNav() {
   const { id } = useParams();
   const [user] = useContext(UserContext);
 
+  console.log({ user });
+
   const navigationItems = [
     {
       value: "/home",
@@ -46,7 +48,7 @@ export default function BottomNav() {
       icon: <PlayCircleSharpIcon />,
     },
     {
-      value: "/account",
+      value: `/${user.username}`,
       label: "Account",
       icon: (
         <Image

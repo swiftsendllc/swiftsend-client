@@ -25,7 +25,6 @@ import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
@@ -176,24 +175,7 @@ export const moreInfoAndSupport = [
   },
 ];
 
-export const grid = [
-  {
-    value: "/account",
-    icon: <GridOnSharpIcon color="inherit" />,
-  },
-  {
-    value: "/account/subscribers",
-    icon: <ShoppingBasketSharpIcon />,
-  },
-  {
-    value: "/account/reels",
-    icon: <MovieSharpIcon />,
-  },
-  {
-    value: "/account/tags",
-    icon: <PersonPinRoundedIcon />,
-  },
-];
+
 export const countries = [
   { label: "Argentina" },
   { label: "Brazil" },
