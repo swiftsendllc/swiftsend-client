@@ -93,7 +93,7 @@ export default function AccountPage() {
   const handleFollow = async (userId: string) => {
     try {
       await followProfile(userId);
-      setCreator((previous) => ({ ...previous, isFollowing: true }));
+      setCreator((previous) => ({ ...previous, following: true }));
     } catch (error) {
       console.log(error);
     }

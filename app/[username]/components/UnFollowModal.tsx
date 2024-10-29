@@ -15,6 +15,7 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function UnFollowModal({
@@ -30,7 +31,8 @@ export default function UnFollowModal({
   const { unFollowProfile } = useAPI();
   const [loading, setLoading] = useState(false);
 
-  const [creator] = useContext(CreatorContext);
+  const [creator, setCreator] = useContext(CreatorContext);
+  const router = useRouter();
 
   const handleClose = () => {
     setOpen(false);
@@ -41,6 +43,9 @@ export default function UnFollowModal({
     setLoading(true);
     try {
       await unFollowProfile(userId);
+      setCreator((previous) => ({...previous, following: false}) )
+      router.push(`/${creator.username}`);
+      handleClose();
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +77,7 @@ export default function UnFollowModal({
             Are you sure you want to delete {creator.fullName} from your
             following list?
           </DialogTitle>
-          <Card sx={{ my: 1, width: "100%", p: 0,  }}>
+          <Card sx={{ my: 1, width: "100%", p: 0 }}>
             <CardHeader
               avatar={
                 <Avatar
@@ -104,7 +109,7 @@ export default function UnFollowModal({
             </Button>
             <LoadingButton
               loading={loading}
-              onSubmit={() => handleUnFollow(creator.userId)}
+              onClick={() => handleUnFollow(creator.userId)}
               variant="contained"
               color="error"
               sx={{ width: "100%" }}
