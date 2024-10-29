@@ -3,6 +3,7 @@
 import Transition from "@/components/Transition";
 import { PostsEntity, UpdatePostInput } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
+import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
@@ -21,7 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function EditPostModal({
   isOpen,
@@ -45,6 +46,8 @@ export default function EditPostModal({
   });
   const router = useRouter();
 
+  const [user] = useContext(UserContext);
+
   useEffect(() => {
     setOpen(isOpen);
     setCaption(post.caption);
@@ -63,7 +66,7 @@ export default function EditPostModal({
       const data = await editPost(formData, post._id);
       setCaption(data.caption);
       handleClose();
-      router.push("/account");
+      router.push(`/${user.username}`);
     } finally {
       setLoading(false);
     }

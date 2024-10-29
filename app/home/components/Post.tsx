@@ -54,6 +54,8 @@ export const PostCard = ({
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [user] = useContext(UserContext);
+const [creator] = useContext(UserContext)
+
   // const [connections, setConnections] = useState<string[]>([]);
 
   const handleLike = debounce(async (postId: string) => {
@@ -110,7 +112,7 @@ export const PostCard = ({
             />
           }
           action={
-            post.userId !== user.userId ? (
+            post.userId !== user.userId && user.following ? (
               <Button
                 sx={{ height: 20, fontWeight: 200 }}
                 aria-label="settings"

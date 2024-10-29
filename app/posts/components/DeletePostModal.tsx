@@ -3,6 +3,7 @@
 import Transition from "@/components/Transition";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
+import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
@@ -21,7 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function DeletePostModal({
   isOpen,
@@ -39,6 +40,8 @@ export default function DeletePostModal({
   const [loading, setLoading] = useState(false);
   const [caption] = useState(post.caption);
 
+  const [user] = useContext(UserContext);
+
   const handleClose = () => {
     setOpen(false);
     onClose?.();
@@ -49,7 +52,7 @@ export default function DeletePostModal({
     try {
       await deletePost(post._id);
       handleClose();
-      router.push("/account");
+      router.push(`/${user.username}`);
     } finally {
       setLoading(false);
     }

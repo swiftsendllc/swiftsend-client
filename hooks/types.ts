@@ -28,6 +28,8 @@ export interface UserProfilesEntity {
   postCount: number;
   followerCount: number;
   followingCount: number;
+
+  following: boolean;
 }
 
 // posts

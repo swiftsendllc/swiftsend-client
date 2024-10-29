@@ -1,5 +1,6 @@
 "use client";
 
+import { CreatorContext } from "@/hooks/creator-context";
 import { UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/user-context";
@@ -22,8 +23,12 @@ import { useContext, useEffect, useState } from "react";
 
 export default function ConnectionPage() {
   const { getFollowers, followProfile, getUserProfile } = useAPI();
+
   const [user] = useContext(UserContext);
+  const [creator] = useContext(CreatorContext);
+
   const [followers, setFollowers] = useState<UserProfilesEntity[]>([]);
+
   const router = useRouter();
 
   const loadConnections = async () => {
@@ -66,7 +71,7 @@ export default function ConnectionPage() {
   return (
     <>
       <Stack direction="row" mt={2} justifyContent="space-between">
-        <IconButton href={`/${user.username}`} LinkComponent={Link}>
+        <IconButton href={`/${creator.username}`} LinkComponent={Link}>
           <ArrowBackOutlinedIcon />
         </IconButton>
         <Typography fontWeight={200} color="primary">

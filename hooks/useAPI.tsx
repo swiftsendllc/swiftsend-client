@@ -278,7 +278,7 @@ const useAPI = () => {
   const getCreatorPosts = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/creators/${userId}`,
       {
         method: "GET",
         headers: {

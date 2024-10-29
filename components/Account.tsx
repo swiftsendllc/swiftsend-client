@@ -1,6 +1,8 @@
 "use client";
+import UnFollowModal from "@/app/[username]/components/UnFollowModal";
 import UploadModal from "@/app/[username]/components/UploadModal";
 import { CreatorContext } from "@/hooks/creator-context";
+import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/user-context";
 import theme from "@/util/theme";
 import AddIcon from "@mui/icons-material/Add";
@@ -38,11 +40,14 @@ import { useContext, useState } from "react";
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
-  const [creator] = useContext(CreatorContext);
+  const [creator, setCreator] = useContext(CreatorContext);
+  console.log({ creator });
+  const { followProfile } = useAPI();
 
   const pathname = usePathname();
   const { id } = useParams();
   const [createModal, setCreateModal] = useState(false);
+  const [unFollowModal, setUnFollowModal] = useState(false);
 
   const stats = [
     {
@@ -81,7 +86,18 @@ export default function AccountPage() {
   ];
 
   const pathName =
-    pathname === `/${creator.username}/${id}` ? `${creator.username}` : pathname;
+    pathname === `/${creator.username}/${id}`
+      ? `${creator.username}`
+      : pathname;
+
+  const handleFollow = async (userId: string) => {
+    try {
+      await followProfile(userId);
+      setCreator((previous) => ({ ...previous, isFollowing: true }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -152,18 +168,26 @@ export default function AccountPage() {
             alignContent="center"
             alignItems="center"
           >
-            {" "}
-            <Badge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              badgeContent={<AddSharpIcon />}
-            >
+            {user.userId !== creator.userId ? (
               <Avatar
-                src={user.avatarURL!}
+                src={creator.avatarURL!}
                 alt="Profile Picture"
                 sx={{ width: 80, height: 80 }}
               />
-            </Badge>
+            ) : (
+              <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                badgeContent={<AddSharpIcon />}
+              >
+                <Avatar
+                  src={user.avatarURL!}
+                  alt="Profile Picture"
+                  sx={{ width: 80, height: 80 }}
+                />
+              </Badge>
+            )}
+
             <Stack direction="column" spacing={1}>
               <Stack
                 direction="row"
@@ -247,7 +271,7 @@ export default function AccountPage() {
             </Typography>
 
             <Link
-              href={creator.websiteURL!}
+              href={creator.websiteURL ?? "/"}
               target="_blank"
               style={{
                 color: "var(--success)",
@@ -273,15 +297,32 @@ export default function AccountPage() {
               width="100%"
               spacing={2}
             >
-              <Fab
-                aria-label="add"
-                variant="extended"
-                sx={{ width: "100%", borderRadius: "30px" }}
-                color="primary"
-              >
-                <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
-                Follow{" "}
-              </Fab>
+              {creator.following ? (
+                <Fab
+                  aria-label="add"
+                  variant="extended"
+                  sx={{
+                    width: "100%",
+                    borderRadius: "30px",
+                  }}
+                  color="inherit"
+                  onClick={() => setUnFollowModal(true)}
+                >
+                  <Typography color="primary">Connected </Typography>
+                </Fab>
+              ) : (
+                <Fab
+                  aria-label="add"
+                  variant="extended"
+                  sx={{ width: "100%", borderRadius: "30px" }}
+                  color="primary"
+                  onClick={() => handleFollow(creator.userId)}
+                >
+                  <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
+                  Connect{" "}
+                </Fab>
+              )}
+
               <Fab
                 variant="extended"
                 sx={{ width: "100%", borderRadius: "30px" }}
@@ -345,6 +386,10 @@ export default function AccountPage() {
           <Divider />
         </Stack>
       </Box>
+      <UnFollowModal
+        isOpen={unFollowModal}
+        onClose={() => setUnFollowModal(false)}
+      />
       <UploadModal isOpen={createModal} onClose={() => setCreateModal(false)} />
     </>
   );

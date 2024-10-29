@@ -3,7 +3,8 @@
   --warning: #ed6c02;
   --success: #0288d1;
   --blurple: #5865f2;
-  --error: #FF0000;
+  --error: #ff0000;
+  --dark: #23272a;
 }
 body {
   background: #23272a;
