@@ -2,6 +2,7 @@
 
 import { previewGrid } from "@/components/SearchComponents";
 import useAPI from "@/hooks/useAPI";
+import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -25,7 +26,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 export default function PostPreview() {
   const [loading, setLoading] = useState(false);
@@ -34,6 +35,8 @@ export default function PostPreview() {
   const [file, setFile] = useState<File>();
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile, createPost } = useAPI();
+
+  const [user] = useContext(UserContext);
 
   const router = useRouter();
 
@@ -49,7 +52,7 @@ export default function PostPreview() {
       console.log("the url is:", url);
       await createPost({ caption, imageURL: url });
       setImageURL(url);
-      router.push("/account");
+      router.push(`/${user.username}`);
     } finally {
       setLoading(false);
     }
@@ -62,12 +65,14 @@ export default function PostPreview() {
 
   return (
     <>
-      <Container maxWidth='xs'
-      sx={{
-        alignContent:"center",
-        alignItems: "center",
-        mb:6
-      }}>
+      <Container
+        maxWidth="xs"
+        sx={{
+          alignContent: "center",
+          alignItems: "center",
+          mb: 6,
+        }}
+      >
         <Stack mt={2}>
           <Stack direction="row" alignContent="center" alignItems="center">
             <IconButton href="/account" LinkComponent={Link}>
