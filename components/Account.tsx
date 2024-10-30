@@ -109,23 +109,39 @@ export default function AccountPage() {
         alignItems="center"
       >
         <Box display="flex" gap={0} width="50%" marginRight={0}>
-          <Typography
-            variant="h5"
-            fontWeight={50}
-            color="inherit"
-            textAlign="left"
-            sx={{
-              display: "inline-block",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {creator.username}
-            <IconButton edge="end">
-              <ExpandMoreOutlinedIcon />
-            </IconButton>
-          </Typography>
+          {user.userId !== creator.userId ? (
+            <Typography
+              variant="h5"
+              fontWeight={50}
+              textAlign="left"
+              sx={{
+                display: "inline-block",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {creator.username}
+            </Typography>
+          ) : (
+            <Typography
+              variant="h5"
+              fontWeight={50}
+              color="inherit"
+              textAlign="left"
+              sx={{
+                display: "inline-block",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {creator.username}
+              <IconButton edge="end">
+                <ExpandMoreOutlinedIcon />
+              </IconButton>
+            </Typography>
+          )}
         </Box>
         {user.userId !== creator.userId ? (
           <Stack direction="row" spacing={1}>

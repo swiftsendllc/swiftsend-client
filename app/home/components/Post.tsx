@@ -54,7 +54,6 @@ export const PostCard = ({
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [user] = useContext(UserContext);
-const [creator] = useContext(UserContext)
 
   // const [connections, setConnections] = useState<string[]>([]);
 
