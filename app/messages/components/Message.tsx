@@ -23,7 +23,7 @@ export default function MessagePage() {
 
   return (
     <>
-      <Container sx={{ p: 0, mt: 2 }}>
+      <Container maxWidth="xs" style={{padding:0}} sx={{ mb:5, mt: 2 }}>
         <Stack
           direction="row"
           justifyContent="space-between"

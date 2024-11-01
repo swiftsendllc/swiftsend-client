@@ -2,6 +2,7 @@
 
 import Transition from "@/components/Transition";
 import { CreatorContext } from "@/hooks/creator-context";
+import { UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -15,35 +16,38 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
-export default function UnFollowModal({
+export default function ConnectedModal({
   isOpen,
   onClose,
+  user,
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
+  user: UserProfilesEntity;
 }) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-
+  const router = useRouter();
   const { unFollowProfile } = useAPI();
   const [loading, setLoading] = useState(false);
-  const [creator, setCreator] = useContext(CreatorContext);
+  const [creator] = useContext(CreatorContext);
 
   const handleClose = () => {
     setOpen(false);
     onClose?.();
   };
 
-  const handleUnFollow = async (userId: string) => {
+  const handleUnFollow = async () => {
     setLoading(true);
     try {
-      await unFollowProfile(userId);
-      setCreator((previous) => ({ ...previous, following: false }));
+      await unFollowProfile(user.userId);
       handleClose();
+      router.push(`/${creator.username}/connected`);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -77,18 +81,18 @@ export default function UnFollowModal({
               avatar={
                 <Avatar
                   aria-label="recipe"
-                  src={creator.avatarURL}
-                  alt={creator.fullName}
+                  src={user.avatarURL}
+                  alt={user.fullName}
                 />
               }
-              title={creator.fullName}
+              title={user.fullName}
               subheader={
                 <Typography
                   fontWeight={200}
                   fontSize=".75rem"
                   variant="subtitle2"
                 >
-                  {creator.username}
+                  {user.username}
                 </Typography>
               }
             />
@@ -104,7 +108,7 @@ export default function UnFollowModal({
             </Button>
             <LoadingButton
               loading={loading}
-              onClick={() => handleUnFollow(creator.userId)}
+              onClick={handleUnFollow}
               variant="contained"
               color="error"
               sx={{ width: "100%" }}

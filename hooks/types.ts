@@ -42,6 +42,7 @@ export interface PostsEntity {
   commentCount: number;
   isLiked: boolean;
   isSaved: boolean;
+  isFollowing: boolean;
   shareCount: number;
   saveCount: number;
   createdAt: Date;

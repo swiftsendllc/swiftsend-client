@@ -5,7 +5,6 @@ import TopBackNav from "@/components/TopBackNav";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/user-context";
-import AddIcon from "@mui/icons-material/Add";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
@@ -39,9 +38,19 @@ interface PostProps {
   onMutation?: () => unknown;
 }
 
+interface LikeButtonProps {
+  onClick: () => unknown;
+  isLiked: boolean;
+}
+
 interface SaveButtonProps {
   onClick: () => unknown;
   isSaved: boolean;
+}
+
+interface FollowButtonProps {
+  onClick: () => unknown;
+  isFollowing: boolean;
 }
 
 export const PostCard = ({
@@ -53,9 +62,8 @@ export const PostCard = ({
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
+  const [isFollowing, setIsFollowing] = useState(post.isFollowing);
   const [user] = useContext(UserContext);
-
-  // const [connections, setConnections] = useState<string[]>([]);
 
   const handleLike = debounce(async (postId: string) => {
     try {
@@ -78,25 +86,12 @@ export const PostCard = ({
 
   const handleFollow = async (userId: string) => {
     try {
-      await followProfile(userId);
+      const followUser = (await followProfile(userId)) as PostsEntity;
+      setIsFollowing(followUser.isFollowing);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const handleConnections = async(userId:string) => {
-  //   try {
-  //     const connections = await getFollowers(userId);
-  //     setConnections(connections);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   handleConnections(userId)
-  // })
-
-  // const isConnected = connections.includes(post.userId)
 
   return (
     <>
@@ -111,16 +106,11 @@ export const PostCard = ({
             />
           }
           action={
-            post.userId !== user.userId && user.following ? (
-              <Button
-                sx={{ height: 20, fontWeight: 200 }}
-                aria-label="settings"
-                variant="text"
+            post.userId !== user.userId ? (
+              <FollowButton
+                isFollowing={isFollowing}
                 onClick={() => handleFollow(post.userId)}
-              >
-                <AddIcon />
-                connect
-              </Button>
+              />
             ) : null
           }
           title={post.user.fullName}
@@ -241,11 +231,6 @@ export const PostCard = ({
   );
 };
 
-interface LikeButtonProps {
-  onClick: () => unknown;
-  isLiked: boolean;
-}
-
 const LikeButton = (props: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(props.isLiked);
   useEffect(() => setIsLiked(props.isLiked), [props.isLiked]);
@@ -286,5 +271,24 @@ const SaveButton = (props: SaveButtonProps) => {
         <BookmarkBorderIcon color="error" />
       )}
     </IconButton>
+  );
+};
+
+const FollowButton = (props: FollowButtonProps) => {
+  const [isFollowing, setIsFollowing] = useState(props.isFollowing);
+  useEffect(() => setIsFollowing(isFollowing), [isFollowing]);
+
+  return (
+    <Button
+      sx={{ height: 20, fontWeight: 200 }}
+      aria-label="settings"
+      variant="text"
+      onClick={() => {
+        props.onClick();
+        setIsFollowing((isFollowing) => isFollowing);
+      }}
+    >
+      {isFollowing ? null : "ℱᵒᒻᒻᵒ꒳"}
+    </Button>
   );
 };
