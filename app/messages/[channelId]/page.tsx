@@ -41,10 +41,8 @@ export default function SingleMessage() {
 
   const loadChannelMessages = async () => {
     try {
-      if (channelId) {
-        const message = await getChannelMessages(channelId as string);
-        setMessages(message);
-      }
+      const message = await getChannelMessages(channelId as string);
+      setMessages(message);
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +50,7 @@ export default function SingleMessage() {
 
   useEffect(() => {
     if (channelId) loadChannelMessages();
-  }, [channelId]);
+  }, [channelId]); // eslint-disable-line
 
   return (
     <>
