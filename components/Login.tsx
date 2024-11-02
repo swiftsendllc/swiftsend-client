@@ -19,9 +19,8 @@ import {
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Animation from "./Animation";
-import { UserContext } from "@/hooks/user-context";
 
 export default function LoginPage() {
   const { login } = useAPI();
@@ -31,8 +30,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const [user] = useContext(UserContext)
-
   const router = useRouter();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -41,7 +38,7 @@ export default function LoginPage() {
     setPasswordError("");
     try {
       await login(email, password);
-      router.push(`/${user.username}`);
+      router.push(`/home`);
     } catch (err) {
       console.log(err);
       setPasswordError("Invalid credentials");

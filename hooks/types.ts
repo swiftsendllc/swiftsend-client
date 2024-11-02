@@ -1,12 +1,5 @@
-export interface UpdateUserInput {
-  username: string;
-  website: string;
-  bannerURL: string;
-  pronouns: string;
-  bio: string;
-  avatarURL: string;
-  websiteURL: string;
-}
+//users
+
 export interface UserProfilesEntity {
   userId: string;
 
@@ -32,7 +25,18 @@ export interface UserProfilesEntity {
   following: boolean;
 }
 
+export interface UpdateUserInput {
+  username: string;
+  website: string;
+  bannerURL: string;
+  pronouns: string;
+  bio: string;
+  avatarURL: string;
+  websiteURL: string;
+}
+
 // posts
+
 export interface PostsEntity {
   _id: string;
   userId: string;
@@ -79,4 +83,34 @@ export interface FollowersEntity {
   followedUserId: string;
   createdAt: Date;
   deletedAt: Date;
+}
+
+export interface ChannelsEntity {
+  _id: string;
+  users: string[];
+  receiver: UserProfilesEntity;
+  lastMessage: {
+    _id: string;
+    message: string;
+    createdAt: string;
+  } | null;
+}
+
+export interface MessagesEntity {
+  senderId: string;
+  receiverId: string;
+  channelId: string;
+  message: string;
+  imageURL: string | null;
+  createdAt: Date;
+  user: UserProfilesEntity;
+}
+
+export interface EditMessageInput {
+  message: string;
+  imageURL: string;
+}
+export interface MessageUserInput {
+  receiverId: string;
+  message: string;
 }

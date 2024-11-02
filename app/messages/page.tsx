@@ -1,5 +1,5 @@
-import MessagePage from "./components/Message";
+import { ChannelList } from "./components/ChannelList";
 
 export default function Message() {
-  return <MessagePage />;
+  return <ChannelList />;
 }
