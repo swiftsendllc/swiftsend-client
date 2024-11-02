@@ -4,8 +4,9 @@ import MessageInput from "@/components/MessageInput";
 import { ChannelContext } from "@/hooks/channel-context";
 import { UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
-import AddIcon from "@mui/icons-material/Add";
+import { UserContext } from "@/hooks/user-context";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
   Avatar,
@@ -38,6 +39,7 @@ export default function SingleMessage() {
   const { channelId } = useParams();
   const router = useRouter();
   const [channel] = useContext(ChannelContext);
+  const [user] = useContext(UserContext);
 
   const loadChannelMessages = async () => {
     try {
@@ -54,7 +56,7 @@ export default function SingleMessage() {
 
   return (
     <>
-      <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2 }}>
+      <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mb: 8, mt: 2 }}>
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -80,20 +82,33 @@ export default function SingleMessage() {
             />
           </Card>
         </Stack>
+        <Divider />
 
         {messages.map((message, idx) => (
           <Fragment key={idx}>
-            <Divider />
-            <Stack spacing={2} mt={2}>
+            <Stack
+              spacing={1}
+              mt={1}
+              justifyContent={
+                user.userId === message.receiverId ? "flex-start" : "flex-end"
+              }
+              alignContent={
+                user.userId === message.receiverId ? "flex-start" : "flex-end"
+              }
+              alignItems={
+                user.userId === message.receiverId ? "flex-start" : "flex-end"
+              }
+            >
               <Card
                 sx={{
                   width: "50%",
+                  height: "auto",
                   borderRadius: "30px",
-                  display: "flex",
-                  flexDirection:
-                    message.senderId === message.receiver.userId
-                      ? "row-reverse"
-                      : "row",
+                  backgroundColor:
+                    user.userId === message.receiverId ? "#4a19d2" : "#1976d2",
+                  color: user.userId === message.receiverId ? "#fff" : "#000",
+                  textAlign:
+                    user.userId === message.receiverId ? "left" : "right",
                 }}
               >
                 <CardHeader
@@ -103,14 +118,22 @@ export default function SingleMessage() {
                       aria-label="settings"
                       variant="text"
                     >
-                      <AddIcon />
+                      <AutoAwesomeIcon sx={{ width: 20, height: 20 }} />
                     </Button>
                   }
-                  subheader={`${message.message} • ${new Date(
-                    message.createdAt
-                  ).toLocaleString()}`}
+                  title={
+                    <Typography fontWeight={200}>
+                      {typeof message.message === "string"
+                        ? message.message
+                        : ""}
+                    </Typography>
+                  }
+                  subheader={
+                    <Typography variant="caption" fontSize=".55rem">
+                      {new Date(message.createdAt).toLocaleString()}
+                    </Typography>
+                  }
                 />
-                <Typography variant="body2">{message.message}</Typography>
               </Card>
             </Stack>
           </Fragment>

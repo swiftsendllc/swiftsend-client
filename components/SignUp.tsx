@@ -1,7 +1,6 @@
 "use client";
 
 import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/user-context";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -20,7 +19,7 @@ import {
 import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { countries } from "./SearchComponents";
 
 const genderOption = [
@@ -47,8 +46,6 @@ export default function SignUpPage() {
   const [gender, setGender] = useState("");
   const [region, setRegion] = useState("");
 
-  const [user] = useContext(UserContext);
-
   const router = useRouter();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -72,7 +69,7 @@ export default function SignUpPage() {
         dateOfBirth: dob,
       });
 
-      router.push(`/${user.username}`);
+      router.push("/home");
     } catch (error) {
       console.error("SigUp failed", error);
     } finally {
