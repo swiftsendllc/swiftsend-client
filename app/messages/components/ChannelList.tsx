@@ -17,7 +17,9 @@ import {
   Fab,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -57,7 +59,7 @@ export function ChannelList() {
 
           <TextField
             sx={{ width: "60%" }}
-            label="Search"
+            label="𝔖𝔢𝔞𝔯𝔠𝔥"
             slotProps={{
               input: {
                 sx: { borderRadius: "10px" },
@@ -83,42 +85,77 @@ export function ChannelList() {
           </Fab>
         </Stack>
         <Divider sx={{ mt: 1 }} />
-        {channel.map((channelUser, idx) => (
-          <Card
-            key={idx}
-            sx={{ mb: 0.3, width: "100%", p: 0 }}
-            onClick={() => {
-              router.push(`/messages/${channelUser._id}`);
-            }}
+        {channel.length > 0 ? (
+          channel.map((channelUser, idx) => (
+            <Card
+              key={idx}
+              sx={{ mb: 0.3, width: "100%", p: 0 }}
+              onClick={() => {
+                router.push(`/messages/${channelUser._id}`);
+              }}
+            >
+              <CardHeader
+                avatar={
+                  <Avatar
+                    aria-label="recipe"
+                    src={channelUser.receiver.avatarURL}
+                    alt={channelUser.receiver.fullName}
+                  />
+                }
+                action={
+                  <Button
+                    sx={{ height: 20, fontWeight: 200 }}
+                    aria-label="settings"
+                    variant="text"
+                  >
+                    <AddIcon />
+                  </Button>
+                }
+                title={channelUser.receiver.fullName}
+                subheader={
+                  channelUser.lastMessage
+                    ? `${channelUser.lastMessage.message} • ${new Date(
+                        channelUser.lastMessage.createdAt
+                      ).toLocaleString()}`
+                    : "No messages"
+                }
+              />
+            </Card>
+          ))
+        ) : (
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
           >
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={channelUser.receiver.avatarURL}
-                  alt={channelUser.receiver.fullName}
-                />
-              }
-              action={
-                <Button
-                  sx={{ height: 20, fontWeight: 200 }}
-                  aria-label="settings"
-                  variant="text"
-                >
-                  <AddIcon />
-                </Button>
-              }
-              title={channelUser.receiver.fullName}
-              subheader={
-                channelUser.lastMessage
-                  ? `${channelUser.lastMessage.message} • ${new Date(
-                      channelUser.lastMessage.createdAt
-                    ).toLocaleString()}`
-                  : "No messages"
-              }
+            <Image
+              src="/svg-icons/sasuke.svg"
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
             />
-          </Card>
-        ))}
+             <Image
+              src="/svg-icons/gun.svg"
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
+            <Typography variant="h6">𝔜𝔬𝔲𝔯 𝔪𝔢𝔰𝔰𝔞𝔤𝔢𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!</Typography>
+          </Stack>
+        )}
       </Container>
     </>
   );

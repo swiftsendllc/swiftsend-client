@@ -65,7 +65,7 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
                   </Box>
                 ),
                 endAdornment: (
-                  <Button onClick={handleComment} variant="text">
+                  <Button onClick={handleComment} variant="text" autoFocus>
                     Post
                   </Button>
                 ),

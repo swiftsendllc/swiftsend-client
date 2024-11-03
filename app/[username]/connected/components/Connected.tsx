@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import ConnectedModal from "../../components/ConnectedModal";
@@ -85,52 +86,91 @@ export default function ConnectedPage() {
       </Stack>
       <Divider />
       <Stack mb={8}>
-        {following.map((followingUser, idx) => (
-          <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={followingUser.avatarURL}
-                  alt={followingUser.fullName}
-                />
-              }
-              title={
-                <Typography fontWeight={200}>
-                  {followingUser.fullName}
-                </Typography>
-              }
-              subheader={
-                <Typography
-                  fontSize=".75rem"
-                  fontWeight={200}
-                  variant="subtitle2"
-                >
-                  {followingUser.username}
-                </Typography>
-              }
-              action={
-                <>
-                  <Fab
-                    aria-label="add"
-                    variant="extended"
-                    sx={{
-                      width: "100%",
-                      borderRadius: "30px",
-                    }}
-                    color="inherit"
-                    onClick={() => {
-                      setSelectedUser(followingUser);
-                      setConnectedModal(true);
-                    }}
-                  >
-                    <Typography color="primary">Connected </Typography>
-                  </Fab>
-                </>
-              }
+        {following.length === 0 ? (
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+              <Image
+              src="/svg-icons/tomoe.svg"
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
             />
-          </Card>
-        ))}
+              <Image
+              src="/svg-icons/sharingan.svg"
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
+
+
+            <Typography variant="h6">
+              𝔜𝔬𝔲𝔯 𝔣𝔯𝔦𝔢𝔫𝔡𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!
+            </Typography>
+          </Stack>
+        ) : (
+          following.map((followingUser, idx) => (
+            <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    aria-label="recipe"
+                    src={followingUser.avatarURL}
+                    alt={followingUser.fullName}
+                  />
+                }
+                title={
+                  <Typography fontWeight={200}>
+                    {followingUser.fullName}
+                  </Typography>
+                }
+                subheader={
+                  <Typography
+                    fontSize=".75rem"
+                    fontWeight={200}
+                    variant="subtitle2"
+                  >
+                    {followingUser.username}
+                  </Typography>
+                }
+                action={
+                  <>
+                    <Fab
+                      aria-label="add"
+                      variant="extended"
+                      sx={{
+                        width: "100%",
+                        borderRadius: "30px",
+                      }}
+                      color="inherit"
+                      onClick={() => {
+                        setSelectedUser(followingUser);
+                        setConnectedModal(true);
+                      }}
+                    >
+                      <Typography color="primary">Connected </Typography>
+                    </Fab>
+                  </>
+                }
+              />
+            </Card>
+          ))
+        )}
       </Stack>
 
       {selectedUser && (

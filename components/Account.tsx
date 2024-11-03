@@ -35,14 +35,15 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
   const [creator, setCreator] = useContext(CreatorContext);
   console.log({ creator });
-  const { followProfile } = useAPI();
+  const { followProfile, createChannel } = useAPI();
+  const router = useRouter();
 
   const pathname = usePathname();
   const { id } = useParams();
@@ -94,6 +95,15 @@ export default function AccountPage() {
     try {
       await followProfile(userId);
       setCreator((previous) => ({ ...previous, following: true }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadChannel = async (userId: string) => {
+    try {
+      const { _id } = await createChannel(userId);
+      router.push(`/messages/${_id}`);
     } catch (error) {
       console.log(error);
     }
@@ -343,6 +353,7 @@ export default function AccountPage() {
                 variant="extended"
                 sx={{ width: "100%", borderRadius: "30px" }}
                 color="secondary"
+                onClick={() => loadChannel(creator.userId)}
               >
                 <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
                 Message

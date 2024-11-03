@@ -83,61 +83,59 @@ export default function SingleMessage() {
           </Card>
         </Stack>
         <Divider />
-
-        {messages.map((message, idx) => (
-          <Fragment key={idx}>
-            <Stack
-              spacing={1}
-              mt={1}
-              justifyContent={
-                user.userId === message.receiverId ? "flex-start" : "flex-end"
-              }
-              alignContent={
-                user.userId === message.receiverId ? "flex-start" : "flex-end"
-              }
-              alignItems={
-                user.userId === message.receiverId ? "flex-start" : "flex-end"
-              }
-            >
-              <Card
-                sx={{
-                  width: "50%",
-                  height: "auto",
-                  borderRadius: "30px",
-                  backgroundColor:
-                    user.userId === message.receiverId ? "#4a19d2" : "#1976d2",
-                  color: user.userId === message.receiverId ? "#fff" : "#000",
-                  textAlign:
-                    user.userId === message.receiverId ? "left" : "right",
-                }}
-              >
-                <CardHeader
-                  action={
-                    <Button
-                      sx={{ height: 20, fontWeight: 200 }}
-                      aria-label="settings"
-                      variant="text"
-                    >
-                      <AutoAwesomeIcon sx={{ width: 20, height: 20 }} />
-                    </Button>
-                  }
-                  title={
-                    <Typography fontWeight={200}>
-                      {typeof message.message === "string"
-                        ? message.message
-                        : ""}
-                    </Typography>
-                  }
-                  subheader={
-                    <Typography variant="caption" fontSize=".55rem">
-                      {new Date(message.createdAt).toLocaleString()}
-                    </Typography>
-                  }
-                />
-              </Card>
-            </Stack>
-          </Fragment>
-        ))}
+        {messages.length > 0 ? (
+          messages.map((message, idx) => {
+            const isUser = user.userId === message.receiverId;
+            return (
+              <Fragment key={idx}>
+                <Stack
+                  spacing={1}
+                  mt={1}
+                  justifyContent={isUser ? "flex-start" : "flex-end"}
+                  alignContent={isUser ? "flex-start" : "flex-end"}
+                  alignItems={isUser ? "flex-start" : "flex-end"}
+                >
+                  <Card
+                    sx={{
+                      width: "70%",
+                      height: "auto",
+                      borderRadius: "30px",
+                      backgroundColor: isUser ? "#4a19d2" : "#1976d2",
+                      color: isUser ? "#fff" : "#000",
+                      textAlign: isUser ? "left" : "right",
+                    }}
+                  >
+                    <CardHeader
+                      action={
+                        <Button
+                          sx={{ height: 20, fontWeight: 200 }}
+                          aria-label="settings"
+                          variant="text"
+                        >
+                          <AutoAwesomeIcon sx={{ width: 20, height: 20 }} />
+                        </Button>
+                      }
+                      title={
+                        <Typography fontWeight={200}>
+                          {typeof message.message === "string"
+                            ? message.message
+                            : ""}
+                        </Typography>
+                      }
+                      subheader={
+                        <Typography variant="caption" fontSize=".55rem">
+                          {new Date(message.createdAt).toLocaleString()}
+                        </Typography>
+                      }
+                    />
+                  </Card>
+                </Stack>
+              </Fragment>
+            );
+          })
+        ) : (
+          <Typography fontWeight={200}>There is no message</Typography>
+        )}
 
         {messages && <MessageInput onMessage={() => null} />}
       </Container>

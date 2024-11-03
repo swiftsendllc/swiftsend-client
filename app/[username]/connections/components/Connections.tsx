@@ -19,6 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -81,17 +82,17 @@ export default function ConnectionPage() {
           <ArrowBackOutlinedIcon />
         </IconButton>
         <TextField
-          label="Search your connections"
+          label="𝔖𝔢𝔞𝔯𝔠𝔥 𝔶𝔬𝔲𝔯 𝔠𝔬𝔫𝔫𝔢𝔠𝔱𝔦𝔬𝔫𝔰"
           sx={{ width: "75%" }}
           slotProps={{
             inputLabel: {
               sx: {
                 typography: "text.secondary",
-                fontWeight:"200"
-              }
+                fontWeight: "200",
+              },
             },
             input: {
-              sx: { borderRadius: "10px" , },
+              sx: { borderRadius: "10px" },
             },
           }}
           onClick={handleSearch}
@@ -107,51 +108,88 @@ export default function ConnectionPage() {
       </Stack>
       <Divider />
       <Stack>
-        {followers.map((followedUser, idx) => (
-          <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={followedUser.avatarURL}
-                  alt={followedUser.fullName}
-                />
-              }
-              title={
-                <Button onClick={() => loadProfile(user.userId)}>
-                  <Typography fontWeight={200}>
-                    {followedUser.fullName}
-                  </Typography>
-                </Button>
-              }
-              subheader={
-                <Typography
-                  fontWeight={200}
-                  fontSize=".75rem"
-                  variant="subtitle2"
-                >
-                  {followedUser.username}
-                </Typography>
-              }
-              action={
-                followedUser.following ? (
-                  `˗ˏˋ ★ ˎˊ˗`
-                ) : (
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      setSelectedUser(followedUser);
-                      handleFollow(followedUser.userId);
-                    }}
-                  >
-                    <PersonAddIcon />
-                    Follow
-                  </Button>
-                )
-              }
+        {followers.length === 0 ? (
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Image
+              src="/svg-icons/naruto1.svg"
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
             />
-          </Card>
-        ))}
+            <Image
+              src="/svg-icons/sasuke1.svg"
+              style={{
+                objectFit: "cover",
+                width: "50%",
+                height: "50%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
+            <Typography variant="h6">
+              𝔜𝔬𝔲𝔯 𝔪𝔢𝔰𝔰𝔞𝔤𝔢𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!
+            </Typography>
+          </Stack>
+        ) : (
+          followers.map((followedUser, idx) => (
+            <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    aria-label="recipe"
+                    src={followedUser.avatarURL}
+                    alt={followedUser.fullName}
+                  />
+                }
+                title={
+                  <Button onClick={() => loadProfile(user.userId)}>
+                    <Typography fontWeight={200}>
+                      {followedUser.fullName}
+                    </Typography>
+                  </Button>
+                }
+                subheader={
+                  <Typography
+                    fontWeight={200}
+                    fontSize=".75rem"
+                    variant="subtitle2"
+                  >
+                    {followedUser.username}
+                  </Typography>
+                }
+                action={
+                  followedUser.following ? (
+                    `˗ˏˋ ★ ˎˊ˗`
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setSelectedUser(followedUser);
+                        handleFollow(followedUser.userId);
+                      }}
+                    >
+                      <PersonAddIcon />
+                      Follow
+                    </Button>
+                  )
+                }
+              />
+            </Card>
+          ))
+        )}
       </Stack>
     </>
   );

@@ -5,7 +5,6 @@ import { CreatorContext } from "@/hooks/creator-context";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/user-context";
-import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Box,
@@ -32,7 +31,7 @@ const options = [
 ];
 
 export default function AccountPostPage() {
-  const { getCreatorPosts,  } = useAPI();
+  const { getCreatorPosts } = useAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -75,12 +74,20 @@ export default function AccountPostPage() {
             alignItems="center"
             justifyContent="center"
           >
-            <CameraAltSharpIcon sx={{ width: 60, height: 60 }} />
-            <Typography variant="h5" fontWeight="100">
-              No Image
-            </Typography>
+            <Image
+              src="/svg-icons/sasuke1.svg"
+              style={{
+                objectFit: "cover",
+                width: "50%",
+                height: "50%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
             <Typography variant="h6" fontWeight="50">
-              This user has no image.
+            𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
             </Typography>
           </Stack>
         ) : (

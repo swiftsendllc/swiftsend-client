@@ -206,16 +206,38 @@ const useAPI = () => {
 
   const getChannelById = async (channelId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/channels/${channelId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/channels/${channelId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const createChannel = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/channels/create/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error);
     }
     return data;
   };
@@ -565,6 +587,7 @@ const useAPI = () => {
     sendMessage,
     editMessage,
     deleteMessage,
+    createChannel
   };
 };
 export default useAPI;

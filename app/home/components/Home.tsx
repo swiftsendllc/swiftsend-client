@@ -58,7 +58,7 @@ export default function HomePage() {
             sx={{ width: 40, height: 40 }}
           />
           <TextField
-            label="Search"
+            label="𝔖𝔢𝔞𝔯𝔠𝔥"
             sx={{ width: "60%" }}
             slotProps={{
               input: {
