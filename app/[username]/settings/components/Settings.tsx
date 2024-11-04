@@ -12,7 +12,7 @@ import {
 } from "@/components/SearchComponents";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import { authCookieKey } from "@/library/constants";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LogoutIcon from "@mui/icons-material/Logout";
