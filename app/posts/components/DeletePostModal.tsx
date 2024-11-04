@@ -2,7 +2,7 @@
 
 import Transition from "@/components/Transition";
 import { PostsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -35,7 +35,7 @@ export default function DeletePostModal({
 }) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-  const { deletePost } = useAPI();
+  const { deletePost } = usePostAPI();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [caption] = useState(post.caption);
