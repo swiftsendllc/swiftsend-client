@@ -2,6 +2,7 @@
 
 import { previewGrid } from "@/components/SearchComponents";
 import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -34,7 +35,8 @@ export default function PostPreview() {
   const [imageURL, setImageURL] = useState("");
   const [file, setFile] = useState<File>();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile, createPost } = useAPI();
+  const { uploadFile } = useAPI();
+  const { createPost } = usePostAPI();
 
   const [user] = useContext(UserContext);
 

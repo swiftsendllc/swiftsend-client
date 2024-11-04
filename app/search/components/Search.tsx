@@ -5,6 +5,7 @@ import { UserContext } from "@/hooks/user-context";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
+import usePostAPI from "@/hooks/usePostAPI";
 import {
   Avatar,
   Card,
@@ -21,7 +22,8 @@ import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
 
 export default function SearchPage() {
-  const { getTimelinePosts, getUserProfiles } = useAPI();
+  const { getUserProfiles } = useAPI();
+  const { getTimelinePosts } = usePostAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [user] = useContext(UserContext);
   const [users, setUsers] = useState<UserProfilesEntity[]>([]);

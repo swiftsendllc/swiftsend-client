@@ -2,13 +2,13 @@
 
 import { PostCard } from "@/app/home/components/Post";
 import { PostsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { Container } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function SinglePost() {
-  const { getPost } = useAPI();
+  const { getPost } = usePostAPI();
   const { postId } = useParams();
   const [post, setPost] = useState<PostsEntity>();
 
@@ -28,7 +28,7 @@ export default function SinglePost() {
   return (
     <Container maxWidth="xs">
       {post && (
-        <PostCard  allowComments post={post} onMutation={() => loadPost()} />
+        <PostCard allowComments post={post} onMutation={() => loadPost()} />
       )}
     </Container>
   );

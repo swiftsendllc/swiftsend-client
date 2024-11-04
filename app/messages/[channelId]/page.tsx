@@ -3,7 +3,7 @@
 import MessageInput from "@/components/MessageInput";
 import { ChannelContext } from "@/hooks/channel-context";
 import { UserProfilesEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import useMessageAPI from "@/hooks/useMessageAPI";
 import { UserContext } from "@/hooks/user-context";
 import styled from "@emotion/styled";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
@@ -37,7 +37,7 @@ interface ChannelData {
 }
 
 export default function SingleMessage() {
-  const { getChannelMessages } = useAPI();
+  const { getChannelMessages } = useMessageAPI();
   const [messages, setMessages] = useState<ChannelData[]>([]);
   const { channelId } = useParams();
   const router = useRouter();

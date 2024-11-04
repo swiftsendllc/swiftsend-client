@@ -1,7 +1,7 @@
 "use client";
 
 import { ChannelsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import useMessageAPI from "@/hooks/useMessageAPI";
 import { UserContext } from "@/hooks/user-context";
 import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,7 +27,7 @@ import { useContext, useEffect, useState } from "react";
 
 export function ChannelList() {
   const [user] = useContext(UserContext);
-  const { getChannels } = useAPI();
+  const { getChannels } = useMessageAPI();
   const [channel, setChannel] = useState<ChannelsEntity[]>([]);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
@@ -101,7 +101,7 @@ export function ChannelList() {
               key={idx}
               sx={{ mb: 0.3, width: "100%", p: 0 }}
               onClick={() => {
-                setSelectedUser(channelUser)
+                setSelectedUser(channelUser);
                 router.push(`/messages/${channelUser._id}`);
               }}
             >

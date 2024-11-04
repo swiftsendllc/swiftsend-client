@@ -3,7 +3,7 @@ import DeletePostModal from "@/app/posts/components/DeletePostModal";
 import EditPostModal from "@/app/posts/components/EditPostModal";
 import { CreatorContext } from "@/hooks/creator-context";
 import { PostsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
@@ -31,7 +31,7 @@ const options = [
 ];
 
 export default function AccountPostPage() {
-  const { getCreatorPosts } = useAPI();
+  const { getCreatorPosts } = usePostAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -87,7 +87,7 @@ export default function AccountPostPage() {
               priority
             />
             <Typography variant="h6" fontWeight="50">
-            𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
+              𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
             </Typography>
           </Stack>
         ) : (

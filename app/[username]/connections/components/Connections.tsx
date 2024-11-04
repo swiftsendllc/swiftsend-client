@@ -3,7 +3,6 @@
 import { CreatorContext } from "@/hooks/creator-context";
 import { UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/user-context";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -20,13 +19,11 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function ConnectionPage() {
-  const { getFollowers, followProfile, getUserProfile } = useAPI();
-  const [user] = useContext(UserContext);
+  const { getFollowers, followProfile } = useAPI();
   const [creator] = useContext(CreatorContext);
   const [followers, setFollowers] = useState<UserProfilesEntity[]>([]);
   const [, setSelectedUser] = useState<UserProfilesEntity | null>(null);
@@ -56,16 +53,6 @@ export default function ConnectionPage() {
     setIsCardOpen(true);
   };
 
-  const loadProfile = async (userId: string) => {
-    try {
-      const getUser = await getUserProfile(userId);
-      const username = getUser.username;
-      router.push(`/users/${username}`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     loadConnections(creator.userId);
   }, [creator.userId]); //eslint-disable-line
@@ -78,7 +65,7 @@ export default function ConnectionPage() {
         alignContent="center"
         alignItems="center"
       >
-        <IconButton href={`/${creator.username}`} LinkComponent={Link}>
+        <IconButton  onClick={() => router.back()}>
           <ArrowBackOutlinedIcon />
         </IconButton>
         <TextField
@@ -155,7 +142,9 @@ export default function ConnectionPage() {
                   />
                 }
                 title={
-                  <Button onClick={() => loadProfile(user.userId)}>
+                  <Button
+                    onClick={() => router.push(`/${followedUser.username}`)}
+                  >
                     <Typography fontWeight={200}>
                       {followedUser.fullName}
                     </Typography>

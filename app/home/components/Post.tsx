@@ -4,6 +4,7 @@ import { CommentInput } from "@/components/CommentInput";
 import TopBackNav from "@/components/TopBackNav";
 import { PostsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -30,6 +31,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 interface PostProps {
@@ -58,12 +60,14 @@ export const PostCard = ({
   allowComments = false,
   onMutation,
 }: PostProps) => {
-  const { likePost, savePost, followProfile } = useAPI();
+  const { followProfile } = useAPI();
+  const { likePost, savePost } = usePostAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [isFollowing, setIsFollowing] = useState(post.isFollowing);
   const [user] = useContext(UserContext);
+  const router = useRouter();
 
   const handleLike = debounce(async (postId: string) => {
     try {
@@ -113,7 +117,13 @@ export const PostCard = ({
               />
             ) : null
           }
-          title={post.user.fullName}
+          title={
+            <>
+              <IconButton onClick={() => router.push(`/${post.user.username}`)}>
+                <Typography>{post.user.fullName}</Typography>
+              </IconButton>
+            </>
+          }
           subheader={moment(post.createdAt).format("LLL")}
         />
         <Typography variant="body2" sx={{ color: "text.secondary" }}>

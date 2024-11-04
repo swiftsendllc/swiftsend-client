@@ -7,6 +7,7 @@ import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
   Avatar,
+  Button,
   Card,
   CardHeader,
   Divider,
@@ -17,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import ConnectedModal from "../../components/ConnectedModal";
 
@@ -27,6 +28,7 @@ export default function ConnectedPage() {
   const [following, setFollowing] = useState<UserProfilesEntity[]>([]);
   const [connectedModal, setConnectedModal] = useState(false);
   const [, setIsCardOpen] = useState(false);
+  const router = useRouter();
   const [selectedUser, setSelectedUser] = useState<UserProfilesEntity | null>(
     null
   );
@@ -56,7 +58,7 @@ export default function ConnectedPage() {
         alignContent="center"
         alignItems="center"
       >
-        <IconButton href={`/${creator.username}`} LinkComponent={Link}>
+        <IconButton onClick={() => router.back()}>
           <ArrowBackOutlinedIcon />
         </IconButton>
         <TextField
@@ -93,7 +95,7 @@ export default function ConnectedPage() {
             alignItems="center"
             justifyContent="center"
           >
-              <Image
+            <Image
               src="/svg-icons/tomoe.svg"
               style={{
                 objectFit: "cover",
@@ -105,7 +107,7 @@ export default function ConnectedPage() {
               height={100}
               priority
             />
-              <Image
+            <Image
               src="/svg-icons/sharingan.svg"
               style={{
                 objectFit: "cover",
@@ -117,7 +119,6 @@ export default function ConnectedPage() {
               height={100}
               priority
             />
-
 
             <Typography variant="h6">
               𝔜𝔬𝔲𝔯 𝔣𝔯𝔦𝔢𝔫𝔡𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!
@@ -135,9 +136,13 @@ export default function ConnectedPage() {
                   />
                 }
                 title={
-                  <Typography fontWeight={200}>
-                    {followingUser.fullName}
-                  </Typography>
+                  <Button
+                    onClick={() => router.push(`/${followingUser.username}`)}
+                  >
+                    <Typography fontWeight={200}>
+                      {followingUser.fullName}
+                    </Typography>
+                  </Button>
                 }
                 subheader={
                   <Typography

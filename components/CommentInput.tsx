@@ -1,7 +1,7 @@
 "use client";
 
 import { CommentPostInput } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import {
   Avatar,
@@ -20,7 +20,7 @@ interface CommentInputProps {
 
 export function CommentInput({ postId, onComment }: CommentInputProps) {
   const [user] = useContext(UserContext);
-  const { commentPost } = useAPI();
+  const { commentPost } = usePostAPI();
   const [formData, setFormData] = useState<Partial<CommentPostInput>>({
     comment: "",
   });

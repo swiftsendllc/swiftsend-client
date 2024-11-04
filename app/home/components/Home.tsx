@@ -1,7 +1,7 @@
 "use client";
 
 import { PostsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -21,7 +21,7 @@ import { PostCard } from "./Post";
 export default function HomePage() {
   const [user] = useContext(UserContext);
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const { getTimelinePosts } = useAPI();
+  const { getTimelinePosts } = usePostAPI();
   const [isCardOpen, setIsCardOpen] = useState(false);
 
   const handleSearch = () => {

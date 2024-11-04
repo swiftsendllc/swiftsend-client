@@ -2,7 +2,7 @@
 
 import Transition from "@/components/Transition";
 import { PostsEntity, UpdatePostInput } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import usePostAPI from "@/hooks/usePostAPI";
 import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseIcon from "@mui/icons-material/Close";
@@ -40,7 +40,7 @@ export default function EditPostModal({
   const [didChange, setDidChange] = useState(false);
 
   const [caption, setCaption] = useState(post.caption);
-  const { editPost } = useAPI();
+  const { editPost } = usePostAPI();
   const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
     caption: post.caption,
   });

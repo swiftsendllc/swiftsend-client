@@ -3,10 +3,12 @@ import UnFollowModal from "@/app/[username]/components/UnFollowModal";
 import UploadModal from "@/app/[username]/components/UploadModal";
 import { CreatorContext } from "@/hooks/creator-context";
 import useAPI from "@/hooks/useAPI";
+import useMessageAPI from "@/hooks/useMessageAPI";
 import { UserContext } from "@/hooks/user-context";
 import theme from "@/util/theme";
+import { FiberManualRecord } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
-import AddSharpIcon from "@mui/icons-material/AddSharp";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
@@ -42,7 +44,9 @@ export default function AccountPage() {
   const [user] = useContext(UserContext);
   const [creator, setCreator] = useContext(CreatorContext);
   console.log({ creator });
-  const { followProfile, createChannel } = useAPI();
+  const { followProfile } = useAPI();
+  const { createChannel } = useMessageAPI();
+
   const router = useRouter();
 
   const pathname = usePathname();
@@ -120,19 +124,24 @@ export default function AccountPage() {
       >
         <Box display="flex" gap={0} width="50%" marginRight={0}>
           {user.userId !== creator.userId ? (
-            <Typography
-              variant="h5"
-              fontWeight={50}
-              textAlign="left"
-              sx={{
-                display: "inline-block",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {creator.username}
-            </Typography>
+            <>
+              <IconButton onClick={() => router.back()}>
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography
+                variant="h5"
+                fontWeight={50}
+                textAlign="left"
+                sx={{
+                  display: "inline-block",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {creator.username}
+              </Typography>
+            </>
           ) : (
             <Typography
               variant="h5"
@@ -198,18 +207,28 @@ export default function AccountPage() {
               <Avatar
                 src={creator.avatarURL!}
                 alt="Profile Picture"
-                sx={{ width: 80, height: 80,border: "3px solid #80EF80" }}
+                sx={{ width: 80, height: 80 }}
               />
             ) : (
               <Badge
                 overlap="circular"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                badgeContent={<AddSharpIcon />}
+                badgeContent={
+                  user.isOnline ? (
+                    <FiberManualRecord
+                      sx={{
+                        color: "#80EF80",
+                        fontSize: "15px",
+                        border: "#80EF80",
+                      }}
+                    />
+                  ) : null
+                }
               >
                 <Avatar
                   src={user.avatarURL!}
                   alt="Profile Picture"
-                  sx={{ width: 80, height: 80 ,border: "3px solid #80EF80"}}
+                  sx={{ width: 80, height: 80 }}
                 />
               </Badge>
             )}

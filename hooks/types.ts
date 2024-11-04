@@ -23,6 +23,7 @@ export interface UserProfilesEntity {
   followingCount: number;
 
   following: boolean;
+  isOnline: boolean
 }
 
 export interface UpdateUserInput {

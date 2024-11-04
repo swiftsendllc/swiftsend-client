@@ -2,7 +2,7 @@
 
 import { ChannelContext } from "@/hooks/channel-context";
 import { MessageUserInput } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
+import useMessageAPI from "@/hooks/useMessageAPI";
 import AddIcon from "@mui/icons-material/Add";
 import LandscapeIcon from "@mui/icons-material/Landscape";
 import SendIcon from "@mui/icons-material/Send";
@@ -15,7 +15,7 @@ interface UserMessageInputProps {
 }
 
 export default function MessageInput({ onMessage }: UserMessageInputProps) {
-  const { sendMessage } = useAPI();
+  const { sendMessage } = useMessageAPI();
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState("");
   const [channel] = useContext(ChannelContext);
