@@ -1,9 +1,9 @@
 "use client";
 
 import Transition from "@/components/Transition";
+import usePostAPI from "@/hooks/api/usePostAPI";
+import { UserContext } from "@/hooks/context/user-context";
 import { PostsEntity, UpdatePostInput } from "@/hooks/types";
-import usePostAPI from "@/hooks/usePostAPI";
-import { UserContext } from "@/hooks/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";

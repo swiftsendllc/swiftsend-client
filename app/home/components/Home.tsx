@@ -1,8 +1,8 @@
 "use client";
 
+import usePostAPI from "@/hooks/api/usePostAPI";
 import { PostsEntity } from "@/hooks/types";
-import usePostAPI from "@/hooks/usePostAPI";
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {

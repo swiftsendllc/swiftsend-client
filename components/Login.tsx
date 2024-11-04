@@ -1,6 +1,6 @@
 "use client";
 
-import useAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/api/useAPI";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";

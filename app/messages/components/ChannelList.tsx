@@ -1,8 +1,8 @@
 "use client";
 
+import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelsEntity } from "@/hooks/types";
-import useMessageAPI from "@/hooks/useMessageAPI";
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";

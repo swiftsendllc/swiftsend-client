@@ -1,8 +1,8 @@
 "use client";
 
 import { PostCard } from "@/app/home/components/Post";
+import usePostAPI from "@/hooks/api/usePostAPI";
 import { PostsEntity } from "@/hooks/types";
-import usePostAPI from "@/hooks/usePostAPI";
 import { Container } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

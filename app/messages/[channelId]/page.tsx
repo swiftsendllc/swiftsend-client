@@ -1,10 +1,10 @@
 "use client";
 
 import MessageInput from "@/components/MessageInput";
-import { ChannelContext } from "@/hooks/channel-context";
+import useMessageAPI from "@/hooks/api/useMessageAPI";
+import { ChannelContext } from "@/hooks/context/channel-context";
 import { UserProfilesEntity } from "@/hooks/types";
-import useMessageAPI from "@/hooks/useMessageAPI";
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import styled from "@emotion/styled";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";

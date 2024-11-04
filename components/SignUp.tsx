@@ -1,6 +1,6 @@
 "use client";
 
-import useAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/api/useAPI";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

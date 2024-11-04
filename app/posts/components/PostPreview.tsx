@@ -1,9 +1,9 @@
 "use client";
 
 import { previewGrid } from "@/components/SearchComponents";
-import useAPI from "@/hooks/useAPI";
-import usePostAPI from "@/hooks/usePostAPI";
-import { UserContext } from "@/hooks/user-context";
+import useAPI from "@/hooks/api/useAPI";
+import usePostAPI from "@/hooks/api/usePostAPI";
+import { UserContext } from "@/hooks/context/user-context";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";

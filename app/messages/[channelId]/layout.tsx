@@ -1,4 +1,4 @@
-import { ChannelContextWrapper } from "@/hooks/channel-context";
+import { ChannelContextWrapper } from "@/hooks/context/channel-context";
 import { ChannelsEntity } from "@/hooks/types";
 import { authCookieKey } from "@/library/constants";
 import { cookies } from "next/headers";

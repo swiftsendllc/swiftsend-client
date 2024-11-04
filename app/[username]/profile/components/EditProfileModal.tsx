@@ -1,9 +1,9 @@
 "use client";
 
 import Transition from "@/components/Transition";
+import useAPI from "@/hooks/api/useAPI";
 import { UpdateUserInput } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import { LoadingButton } from "@mui/lab";
 import {
   Button,

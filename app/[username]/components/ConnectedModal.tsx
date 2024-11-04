@@ -1,9 +1,9 @@
 "use client";
 
 import Transition from "@/components/Transition";
-import { CreatorContext } from "@/hooks/creator-context";
+import useAPI from "@/hooks/api/useAPI";
+import { CreatorContext } from "@/hooks/context/creator-context";
 import { UserProfilesEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
 import { LoadingButton } from "@mui/lab";
 import {
   Avatar,

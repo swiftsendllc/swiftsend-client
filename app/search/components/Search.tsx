@@ -1,11 +1,11 @@
 "use client";
+import useAPI from "@/hooks/api/useAPI";
 import { PostsEntity, UserProfilesEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
-import usePostAPI from "@/hooks/usePostAPI";
+import usePostAPI from "@/hooks/api/usePostAPI";
 import {
   Avatar,
   Card,

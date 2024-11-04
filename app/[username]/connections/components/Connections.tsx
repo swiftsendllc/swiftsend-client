@@ -1,8 +1,8 @@
 "use client";
 
-import { CreatorContext } from "@/hooks/creator-context";
+import useAPI from "@/hooks/api/useAPI";
+import { CreatorContext } from "@/hooks/context/creator-context";
 import { UserProfilesEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -65,7 +65,7 @@ export default function ConnectionPage() {
         alignContent="center"
         alignItems="center"
       >
-        <IconButton  onClick={() => router.back()}>
+        <IconButton onClick={() => router.back()}>
           <ArrowBackOutlinedIcon />
         </IconButton>
         <TextField

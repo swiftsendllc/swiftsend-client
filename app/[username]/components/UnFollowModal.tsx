@@ -1,8 +1,8 @@
 "use client";
 
 import Transition from "@/components/Transition";
-import { CreatorContext } from "@/hooks/creator-context";
-import useAPI from "@/hooks/useAPI";
+import useAPI from "@/hooks/api/useAPI";
+import { CreatorContext } from "@/hooks/context/creator-context";
 import { LoadingButton } from "@mui/lab";
 import {
   Avatar,
@@ -40,10 +40,10 @@ export default function UnFollowModal({
     setLoading(true);
     try {
       await unFollowProfile(userId);
-      setCreator((previous) => ({ ...previous, following: false }));
+      setCreator((previous: boolean) => ({ previous, following: false }));
       handleClose();
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 

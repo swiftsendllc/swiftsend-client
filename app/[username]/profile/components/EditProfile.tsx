@@ -1,7 +1,7 @@
 "use client";
 
-import useAPI from "@/hooks/useAPI";
-import { UserContext } from "@/hooks/user-context";
+import useAPI from "@/hooks/api/useAPI";
+import { UserContext } from "@/hooks/context/user-context";
 import {
   InputAdornment,
   List,

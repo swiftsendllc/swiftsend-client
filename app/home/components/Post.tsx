@@ -2,10 +2,10 @@
 
 import { CommentInput } from "@/components/CommentInput";
 import TopBackNav from "@/components/TopBackNav";
+import useAPI from "@/hooks/api/useAPI";
+import usePostAPI from "@/hooks/api/usePostAPI";
 import { PostsEntity } from "@/hooks/types";
-import useAPI from "@/hooks/useAPI";
-import usePostAPI from "@/hooks/usePostAPI";
-import { UserContext } from "@/hooks/user-context";
+import { UserContext } from "@/hooks/context/user-context";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";

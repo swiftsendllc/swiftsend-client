@@ -1,10 +1,10 @@
 "use client";
 import UnFollowModal from "@/app/[username]/components/UnFollowModal";
 import UploadModal from "@/app/[username]/components/UploadModal";
-import { CreatorContext } from "@/hooks/creator-context";
-import useAPI from "@/hooks/useAPI";
-import useMessageAPI from "@/hooks/useMessageAPI";
-import { UserContext } from "@/hooks/user-context";
+import useAPI from "@/hooks/api/useAPI";
+import useMessageAPI from "@/hooks/api/useMessageAPI";
+import { CreatorContext } from "@/hooks/context/creator-context";
+import { UserContext } from "@/hooks/context/user-context";
 import theme from "@/util/theme";
 import { FiberManualRecord } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
@@ -98,7 +98,7 @@ export default function AccountPage() {
   const handleFollow = async (userId: string) => {
     try {
       await followProfile(userId);
-      setCreator((previous) => ({ ...previous, following: true }));
+      setCreator((previous: boolean) => ({ previous, following: true }));
     } catch (error) {
       console.log(error);
     }
@@ -214,15 +214,13 @@ export default function AccountPage() {
                 overlap="circular"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 badgeContent={
-                  user.isOnline ? (
-                    <FiberManualRecord
-                      sx={{
-                        color: "#80EF80",
-                        fontSize: "15px",
-                        border: "#80EF80",
-                      }}
-                    />
-                  ) : null
+                  <FiberManualRecord
+                    sx={{
+                      color: "#80EF80",
+                      fontSize: "15px",
+                      border: "#80EF80",
+                    }}
+                  />
                 }
               >
                 <Avatar

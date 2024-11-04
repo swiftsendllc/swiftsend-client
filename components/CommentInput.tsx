@@ -1,8 +1,8 @@
 "use client";
 
+import usePostAPI from "@/hooks/api/usePostAPI";
+import { UserContext } from "@/hooks/context/user-context";
 import { CommentPostInput } from "@/hooks/types";
-import usePostAPI from "@/hooks/usePostAPI";
-import { UserContext } from "@/hooks/user-context";
 import {
   Avatar,
   Box,

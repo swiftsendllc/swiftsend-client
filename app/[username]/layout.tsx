@@ -1,4 +1,4 @@
-import { CreatorContextWrapper } from "@/hooks/creator-context";
+import { CreatorContextWrapper } from "@/hooks/context/creator-context";
 import { UserProfilesEntity } from "@/hooks/types";
 import { authCookieKey } from "@/library/constants";
 import { Stack, Typography } from "@mui/material";

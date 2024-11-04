@@ -1,10 +1,10 @@
 "use client";
 import DeletePostModal from "@/app/posts/components/DeletePostModal";
 import EditPostModal from "@/app/posts/components/EditPostModal";
-import { CreatorContext } from "@/hooks/creator-context";
+import usePostAPI from "@/hooks/api/usePostAPI";
+import { CreatorContext } from "@/hooks/context/creator-context";
+import { UserContext } from "@/hooks/context/user-context";
 import { PostsEntity } from "@/hooks/types";
-import usePostAPI from "@/hooks/usePostAPI";
-import { UserContext } from "@/hooks/user-context";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Box,
