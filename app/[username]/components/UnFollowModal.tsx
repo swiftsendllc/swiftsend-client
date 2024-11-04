@@ -40,7 +40,7 @@ export default function UnFollowModal({
     setLoading(true);
     try {
       await unFollowProfile(userId);
-      setCreator((previous: boolean) => ({ previous, following: false }));
+      setCreator((previous) => ({ ...previous, following: false }));
       handleClose();
     } finally {
       setLoading(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useState } from "react";
-import { UserProfilesEntity } from "./types";
+import { UserProfilesEntity } from "../types";
 
 const emptyUser = {
   userId: "",
