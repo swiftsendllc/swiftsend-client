@@ -3,12 +3,14 @@
 import { ChannelsEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/user-context";
+import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 import {
   Avatar,
+  Badge,
   Button,
   Card,
   CardHeader,
@@ -27,7 +29,15 @@ export function ChannelList() {
   const [user] = useContext(UserContext);
   const { getChannels } = useAPI();
   const [channel, setChannel] = useState<ChannelsEntity[]>([]);
+  const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
+
+  const SmallAvatar = styled(Avatar)(() => ({
+    color: "#80EF80",
+    width: 15,
+    height: 15,
+    border: `2px solid `,
+  }));
 
   const loadChannels = async () => {
     try {
@@ -91,16 +101,27 @@ export function ChannelList() {
               key={idx}
               sx={{ mb: 0.3, width: "100%", p: 0 }}
               onClick={() => {
+                setSelectedUser(channelUser)
                 router.push(`/messages/${channelUser._id}`);
               }}
             >
               <CardHeader
                 avatar={
-                  <Avatar
-                    aria-label="recipe"
-                    src={channelUser.receiver.avatarURL}
-                    alt={channelUser.receiver.fullName}
-                  />
+                  <>
+                    <Badge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      badgeContent={
+                        <SmallAvatar src={channelUser.receiver.avatarURL} />
+                      }
+                    >
+                      <Avatar
+                        aria-label="recipe"
+                        src={channelUser.receiver.avatarURL}
+                        alt={channelUser.receiver.fullName}
+                      />
+                    </Badge>
+                  </>
                 }
                 action={
                   <Button
@@ -141,7 +162,7 @@ export function ChannelList() {
               height={100}
               priority
             />
-             <Image
+            <Image
               src="/svg-icons/gun.svg"
               style={{
                 objectFit: "cover",
@@ -153,7 +174,9 @@ export function ChannelList() {
               height={100}
               priority
             />
-            <Typography variant="h6">𝔜𝔬𝔲𝔯 𝔪𝔢𝔰𝔰𝔞𝔤𝔢𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!</Typography>
+            <Typography variant="h6">
+              𝔜𝔬𝔲𝔯 𝔪𝔢𝔰𝔰𝔞𝔤𝔢𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!
+            </Typography>
           </Stack>
         )}
       </Container>

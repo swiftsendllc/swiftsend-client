@@ -51,13 +51,13 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="share your thoughts"
+            placeholder={`𝔐𝔢𝔰𝔰𝔞𝔤𝔢 ${channel.receiver.fullName}`}
             value={messageInput || ""}
             onChange={(e) => setMessageInput(e.target.value)}
             slotProps={{
               input: {
                 startAdornment: (
-                  <Box>
+                  <Box mr={1.5}>
                     <AddIcon />
                   </Box>
                 ),

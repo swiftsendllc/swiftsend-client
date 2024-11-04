@@ -198,7 +198,7 @@ export default function AccountPage() {
               <Avatar
                 src={creator.avatarURL!}
                 alt="Profile Picture"
-                sx={{ width: 80, height: 80 }}
+                sx={{ width: 80, height: 80,border: "3px solid #80EF80" }}
               />
             ) : (
               <Badge
@@ -209,7 +209,7 @@ export default function AccountPage() {
                 <Avatar
                   src={user.avatarURL!}
                   alt="Profile Picture"
-                  sx={{ width: 80, height: 80 }}
+                  sx={{ width: 80, height: 80 ,border: "3px solid #80EF80"}}
                 />
               </Badge>
             )}

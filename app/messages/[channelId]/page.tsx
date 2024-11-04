@@ -5,11 +5,13 @@ import { ChannelContext } from "@/hooks/channel-context";
 import { UserProfilesEntity } from "@/hooks/types";
 import useAPI from "@/hooks/useAPI";
 import { UserContext } from "@/hooks/user-context";
+import styled from "@emotion/styled";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
   Avatar,
+  Badge,
   Button,
   Card,
   CardHeader,
@@ -19,6 +21,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useState } from "react";
 
@@ -41,6 +44,13 @@ export default function SingleMessage() {
   const [channel] = useContext(ChannelContext);
   const [user] = useContext(UserContext);
 
+  const SmallAvatar = styled(Avatar)(() => ({
+    color: "#80EF80",
+    width: 15,
+    height: 15,
+    border: `2px solid `,
+  }));
+
   const loadChannelMessages = async () => {
     try {
       const message = await getChannelMessages(channelId as string);
@@ -56,25 +66,37 @@ export default function SingleMessage() {
 
   return (
     <>
-      <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mb: 8, mt: 2 }}>
+      <Container
+        maxWidth="xs"
+        style={{ padding: 0 }}
+        sx={{ mb: 8, height: 80 }}
+      >
         <Stack
           direction="row"
           justifyContent="space-between"
           alignContent="center"
           alignItems="center"
         >
-          <Card sx={{ mb: 0.5, width: "100%", padding: 0, m: 0 }}>
+          <Card sx={{ width: "100%", padding: 0, pt: 0 }}>
             <CardHeader
               avatar={
                 <>
                   <IconButton onClick={() => router.back()}>
                     <ArrowBackOutlinedIcon />
                   </IconButton>
-                  <Avatar
-                    aria-label="recipe"
-                    src={channel.receiver.avatarURL}
-                    alt={channel.receiver.fullName}
-                  />
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    badgeContent={
+                      <SmallAvatar src={channel.receiver.avatarURL} />
+                    }
+                  >
+                    <Avatar
+                      aria-label="recipe"
+                      src={channel.receiver.avatarURL}
+                      alt={channel.receiver.fullName}
+                    />
+                  </Badge>
                 </>
               }
               title={channel.receiver.fullName}
@@ -134,10 +156,47 @@ export default function SingleMessage() {
             );
           })
         ) : (
-          <Typography fontWeight={200}>There is no message</Typography>
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Stack direction="row" spacing={2} my={2}>
+              <Avatar src={user.avatarURL} />
+              <Avatar src={channel.receiver.avatarURL} />
+            </Stack>
+
+            <Typography variant="h6" fontWeight="50" my={3}>
+              𝔜𝔬𝔲 𝔞𝔯𝔢 𝔠𝔬𝔫𝔫𝔢𝔠𝔱𝔦𝔫𝔤 𝔴𝔦𝔱𝔥 {channel.receiver.fullName}
+            </Typography>
+
+            <Image
+              src="/svg-icons/naruto3.svg"
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
+
+            <Typography
+              variant="h6"
+              fontWeight="50"
+              mt={5}
+              textAlign="center"
+              justifyContent="center"
+            >
+              𝔖𝔱𝔞𝔯𝔱 𝔦𝔫𝔱𝔢𝔯𝔞𝔠𝔱𝔦𝔫𝔤 𝔴𝔦𝔱𝔥 @{channel.receiver.username} 𝔦𝔫 𝔦𝔫𝔰𝔱𝔞𝔤𝔯𝔞𝔪
+            </Typography>
+          </Stack>
         )}
 
-        {messages && <MessageInput onMessage={() => null} />}
+        {messages && <MessageInput onMessage={() => loadChannelMessages()} />}
       </Container>
     </>
   );
