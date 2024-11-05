@@ -16,7 +16,6 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -31,7 +30,6 @@ export default function ConnectedModal({
 }) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-  const router = useRouter();
   const { unFollowProfile } = useAPI();
   const [loading, setLoading] = useState(false);
   const [creator] = useContext(CreatorContext);

@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Animation from "./Animation";
 
@@ -30,7 +29,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const router = useRouter();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async () => {

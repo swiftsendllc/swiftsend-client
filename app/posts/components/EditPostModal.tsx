@@ -2,7 +2,6 @@
 
 import Transition from "@/components/Transition";
 import usePostAPI from "@/hooks/api/usePostAPI";
-import { UserContext } from "@/hooks/context/user-context";
 import { PostsEntity, UpdatePostInput } from "@/hooks/types";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,8 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function EditPostModal({
@@ -45,9 +43,6 @@ export default function EditPostModal({
   const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
     caption: post.caption,
   });
-  const router = useRouter();
-
-  const [user] = useContext(UserContext);
 
   useEffect(() => {
     setOpen(isOpen);

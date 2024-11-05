@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { countries } from "./SearchComponents";
 
@@ -45,8 +44,6 @@ export default function SignUpPage() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [gender, setGender] = useState("");
   const [region, setRegion] = useState("");
-
-  const router = useRouter();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
