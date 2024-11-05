@@ -69,7 +69,7 @@ export default function SignUpPage() {
         dateOfBirth: dob,
       });
 
-      router.push("/home");
+      window.location.href = "/home";
     } catch (error) {
       console.error("SigUp failed", error);
     } finally {

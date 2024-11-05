@@ -35,6 +35,7 @@ import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 
 const minWidth = 35;
 
@@ -74,6 +75,7 @@ export default function SettingsPage() {
   const handleLogout = () => {
     deleteCookie(authCookieKey);
     router.push("/");
+    toast.success("Logged out ");
   };
   return (
     <>

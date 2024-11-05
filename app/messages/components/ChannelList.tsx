@@ -1,13 +1,13 @@
 "use client";
 
 import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { ChannelsEntity } from "@/hooks/types";
 import { UserContext } from "@/hooks/context/user-context";
-import styled from "@emotion/styled";
+import { ChannelsEntity } from "@/hooks/types";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
+import { FiberManualRecord } from "@mui/icons-material";
 import {
   Avatar,
   Badge,
@@ -24,6 +24,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export function ChannelList() {
   const [user] = useContext(UserContext);
@@ -32,19 +33,15 @@ export function ChannelList() {
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
 
-  const SmallAvatar = styled(Avatar)(() => ({
-    color: "#80EF80",
-    width: 15,
-    height: 15,
-    border: `2px solid `,
-  }));
-
   const loadChannels = async () => {
     try {
       const channels = await getChannels();
       setChannel(channels);
     } catch (error) {
       console.log(error);
+      toast.error(
+        <Typography color="error">Failed to load channels!</Typography>
+      );
     }
   };
 
@@ -112,7 +109,13 @@ export function ChannelList() {
                       overlap="circular"
                       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                       badgeContent={
-                        <SmallAvatar src={channelUser.receiver.avatarURL} />
+                        <FiberManualRecord
+                          sx={{
+                            color: "#80EF80",
+                            fontSize: "15px",
+                            border: "#80EF80",
+                          }}
+                        />
                       }
                     >
                       <Avatar

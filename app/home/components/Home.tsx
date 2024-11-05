@@ -1,8 +1,8 @@
 "use client";
 
 import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity } from "@/hooks/types";
 import { UserContext } from "@/hooks/context/user-context";
+import { PostsEntity } from "@/hooks/types";
 import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
@@ -16,6 +16,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { PostCard } from "./Post";
 
 export default function HomePage() {
@@ -35,6 +36,7 @@ export default function HomePage() {
       setPosts(posts);
     } catch (error) {
       console.log(error);
+      toast.success("Loading feed...");
     }
   };
 

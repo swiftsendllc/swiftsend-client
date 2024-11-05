@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function UnFollowModal({
   isOpen,
@@ -42,6 +43,10 @@ export default function UnFollowModal({
       await unFollowProfile(userId);
       setCreator((previous) => ({ ...previous, following: false }));
       handleClose();
+      toast.success(`Disconnected ${creator.fullName}`);
+    } catch (error) {
+      console.log(error);
+      toast.error(`Failed to disconnect ${creator.fullName}`);
     } finally {
       setLoading(false);
     }

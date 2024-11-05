@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function EditPostModal({
   isOpen,
@@ -66,7 +67,10 @@ export default function EditPostModal({
       const data = await editPost(formData, post._id);
       setCaption(data.caption);
       handleClose();
-      router.push(`/${user.username}`);
+      toast.success("Post edited");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to edit post!");
     } finally {
       setLoading(false);
     }

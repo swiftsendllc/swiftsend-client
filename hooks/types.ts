@@ -97,12 +97,15 @@ export interface ChannelsEntity {
 }
 
 export interface MessagesEntity {
+  _id: string;
   senderId: string;
   receiverId: string;
   channelId: string;
   message: string;
   imageURL: string | null;
   createdAt: Date;
+  deletedAt: Date;
+  editedAt: Date;
   user: UserProfilesEntity;
 }
 

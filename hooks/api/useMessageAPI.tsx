@@ -132,6 +132,25 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const deleteChannelMessages = async (_id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/channels/delete/${_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error);
+    }
+    return data;
+  };
+
   return {
     getChannels,
     getChannelById,
@@ -140,6 +159,7 @@ const useMessageAPI = () => {
     deleteMessage,
     editMessage,
     createChannel,
+    deleteChannelMessages
   };
 };
 export default useMessageAPI;

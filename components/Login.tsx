@@ -38,7 +38,7 @@ export default function LoginPage() {
     setPasswordError("");
     try {
       await login(email, password);
-      router.push(`/home`);
+      window.location.href = "/home";
     } catch (err) {
       console.log(err);
       setPasswordError("Invalid credentials");

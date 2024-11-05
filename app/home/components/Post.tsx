@@ -4,8 +4,8 @@ import { CommentInput } from "@/components/CommentInput";
 import TopBackNav from "@/components/TopBackNav";
 import useAPI from "@/hooks/api/useAPI";
 import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity } from "@/hooks/types";
 import { UserContext } from "@/hooks/context/user-context";
+import { PostsEntity } from "@/hooks/types";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
@@ -33,6 +33,7 @@ import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface PostProps {
   post: PostsEntity;
@@ -68,14 +69,21 @@ export const PostCard = ({
   const [isFollowing, setIsFollowing] = useState(post.isFollowing);
   const [user] = useContext(UserContext);
   const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleSee = () => {
+    setIsExpanded((prev) => !prev);
+  };
 
   const handleLike = debounce(async (postId: string) => {
     try {
       const post = (await likePost(postId)) as PostsEntity;
       setIsLiked(post.isLiked);
       setLikeCount(post.likeCount);
+      toast.success("Liked");
     } catch (error) {
       console.log(error);
+      toast.error("Failed to like post!");
     }
   }, 250);
 
@@ -83,8 +91,10 @@ export const PostCard = ({
     try {
       const post = (await savePost(postId)) as PostsEntity;
       setIsSaved(post.isSaved);
+      toast.success("Saved")
     } catch (error) {
       console.log(error);
+      toast.error("Failed to save post!")
     }
   }, 250);
 
@@ -92,8 +102,10 @@ export const PostCard = ({
     try {
       const followUser = (await followProfile(userId)) as PostsEntity;
       setIsFollowing(followUser.isFollowing);
+      toast.success(`Connected ${followUser}`)
     } catch (error) {
       console.log(error);
+      toast.error("Failed to connect user")
     }
   };
 
@@ -126,8 +138,26 @@ export const PostCard = ({
           }
           subheader={moment(post.createdAt).format("LLL")}
         />
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {post.caption}
+        <Typography variant="body2">
+          {isExpanded && post.caption.length > 50
+            ? post.caption
+            : `${post.caption.slice(0, 50)}${
+                post.caption.length > 0 ? "..." : ""
+              }`}
+          {post.caption.length > 50 && (
+            <Button
+              onClick={handleSee}
+              variant="text"
+              size="small"
+              sx={{
+                textTransform: "none",
+                fontSize: "0.8rem",
+                fontWeight: 500,
+              }}
+            >
+              {isExpanded ? `See less` : `See more`}
+            </Button>
+          )}
         </Typography>
         <Box sx={{ position: "relative" }}>
           <CardMedia

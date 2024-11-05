@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import EditProfileModal from "./EditProfileModal";
 
 export default function EditProfilePage() {
@@ -92,6 +93,10 @@ export default function EditProfilePage() {
 
       const user = await updateUser({ avatarURL: url });
       setUserInfo(user);
+      toast.success("Updated profile picture");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to upload profile picture");
     } finally {
       setLoading(false);
     }

@@ -204,11 +204,25 @@ export default function AccountPage() {
             alignItems="center"
           >
             {user.userId !== creator.userId ? (
-              <Avatar
-                src={creator.avatarURL!}
-                alt="Profile Picture"
-                sx={{ width: 80, height: 80 }}
-              />
+              <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                badgeContent={
+                  <FiberManualRecord
+                    sx={{
+                      color: "#80EF80",
+                      fontSize: "15px",
+                      border: "#80EF80",
+                    }}
+                  />
+                }
+              >
+                <Avatar
+                  src={creator.avatarURL!}
+                  alt="Profile Picture"
+                  sx={{ width: 80, height: 80 }}
+                />
+              </Badge>
             ) : (
               <Badge
                 overlap="circular"

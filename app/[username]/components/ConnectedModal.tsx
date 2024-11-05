@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ConnectedModal({
   isOpen,
@@ -45,7 +46,10 @@ export default function ConnectedModal({
     try {
       await unFollowProfile(user.userId);
       handleClose();
-      router.push(`/${creator.username}/connected`);
+      toast.success(`Disconnected ${creator.fullName}`);
+    } catch (error) {
+      console.log(error);
+      toast.error(`Failed to disconnect ${creator.fullName}`);
     } finally {
       setLoading(false);
     }

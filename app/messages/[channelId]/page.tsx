@@ -3,16 +3,14 @@
 import MessageInput from "@/components/MessageInput";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
-import { UserProfilesEntity } from "@/hooks/types";
 import { UserContext } from "@/hooks/context/user-context";
-import styled from "@emotion/styled";
+import { UserProfilesEntity } from "@/hooks/types";
+import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
   Avatar,
   Badge,
-  Button,
   Card,
   CardHeader,
   Container,
@@ -21,9 +19,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import FilterIconDrawer from "./FilterDrawer";
 
 interface ChannelData {
   _id: string;
@@ -33,23 +34,26 @@ interface ChannelData {
   message: string;
   imageURL: string | null;
   createdAt: Date;
+  deletedAt: Date;
+  editedAt: Date;
   receiver: UserProfilesEntity;
+  lastMessage: {
+    _id: string;
+    message: string;
+    createdAt: string;
+    deletedAt: Date;
+    editedAt: Date;
+  } | null;
 }
 
 export default function SingleMessage() {
-  const { getChannelMessages } = useMessageAPI();
+  const { getChannelMessages, deleteMessage } = useMessageAPI();
   const [messages, setMessages] = useState<ChannelData[]>([]);
   const { channelId } = useParams();
   const router = useRouter();
   const [channel] = useContext(ChannelContext);
   const [user] = useContext(UserContext);
-
-  const SmallAvatar = styled(Avatar)(() => ({
-    color: "#80EF80",
-    width: 15,
-    height: 15,
-    border: `2px solid `,
-  }));
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const loadChannelMessages = async () => {
     try {
@@ -57,8 +61,24 @@ export default function SingleMessage() {
       setMessages(message);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load posts!");
     }
   };
+
+  const handleDelete = async (messageId: string) => {
+    try {
+      await deleteMessage(messageId);
+      setMessages((previous) =>
+        previous.filter((message) => message._id !== messageId)
+      );
+      toast.success("Message deleted ");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete message!");
+    }
+  };
+
+
 
   useEffect(() => {
     if (channelId) loadChannelMessages();
@@ -88,7 +108,13 @@ export default function SingleMessage() {
                     overlap="circular"
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     badgeContent={
-                      <SmallAvatar src={channel.receiver.avatarURL} />
+                      <FiberManualRecord
+                        sx={{
+                          color: "#80EF80",
+                          fontSize: "15px",
+                          border: "#80EF80",
+                        }}
+                      />
                     }
                   >
                     <Avatar
@@ -100,7 +126,13 @@ export default function SingleMessage() {
                 </>
               }
               title={channel.receiver.fullName}
-              action={<FilterAltOutlinedIcon />}
+              action={
+                messages.length > 0 ? (
+                  <IconButton onClick={() => setIsDrawerOpen(true)}>
+                    <FilterAltOutlinedIcon />
+                  </IconButton>
+                ) : null
+              }
             />
           </Card>
         </Stack>
@@ -129,13 +161,17 @@ export default function SingleMessage() {
                   >
                     <CardHeader
                       action={
-                        <Button
-                          sx={{ height: 20, fontWeight: 200 }}
-                          aria-label="settings"
-                          variant="text"
-                        >
-                          <AutoAwesomeIcon sx={{ width: 20, height: 20 }} />
-                        </Button>
+                        <SimpleTreeView>
+                          <TreeItem itemId={message._id} >
+                            <TreeItem
+                              itemId="grid"
+                              label="Delete"
+                              onClick={() => handleDelete(message._id)}
+                            />
+                            <TreeItem itemId="chart" label="Edit" />
+                            <TreeItem itemId="data" label="Forward" />
+                          </TreeItem>
+                        </SimpleTreeView>
                       }
                       title={
                         <Typography fontWeight={200}>
@@ -195,7 +231,11 @@ export default function SingleMessage() {
             </Typography>
           </Stack>
         )}
-
+        <FilterIconDrawer
+          channel={channel}
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+        />
         {messages && <MessageInput onMessage={() => loadChannelMessages()} />}
       </Container>
     </>

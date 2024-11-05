@@ -21,6 +21,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ConnectionPage() {
   const { getFollowers, followProfile } = useAPI();
@@ -44,8 +45,10 @@ export default function ConnectionPage() {
       await followProfile(userId);
       setSelectedUser(null); // clear selected user after following
       loadConnections(creator.userId); // refresh followers to update follow status
+      toast.success(`Connected ${creator.fullName}`);
     } catch (error) {
       console.log(error);
+      toast.error(`Failed to connect ${creator.fullName}`);
     }
   };
 

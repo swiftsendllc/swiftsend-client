@@ -2,8 +2,8 @@
 
 import Transition from "@/components/Transition";
 import useAPI from "@/hooks/api/useAPI";
-import { UpdateUserInput } from "@/hooks/types";
 import { UserContext } from "@/hooks/context/user-context";
+import { UpdateUserInput } from "@/hooks/types";
 import { LoadingButton } from "@mui/lab";
 import {
   Button,
@@ -92,8 +92,10 @@ export default function EditProfileModal({
       const data = await updateUser(formData);
       setUserInfo(data);
       handleClose();
+      toast.success(` The ${data} is updated `);
     } catch (error) {
-      toast.error(error.message);
+      console.log(error);
+      toast.error(`Failed to update!`);
     } finally {
       setLoading(false);
     }
