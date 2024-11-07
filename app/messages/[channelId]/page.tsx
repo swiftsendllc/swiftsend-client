@@ -4,9 +4,10 @@ import MessageInput from "@/components/MessageInput";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import { UserContext } from "@/hooks/context/user-context";
-import { UserProfilesEntity } from "@/hooks/types";
+import { MessagesEntity, UserProfilesEntity } from "@/hooks/types";
 import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import EditIcon from "@mui/icons-material/Edit";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
   Avatar,
@@ -19,12 +20,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import FilterIconDrawer from "./FilterDrawer";
+import InfoChannelDrawer from "./InfoChannelDrawer";
+import InfoMessageDrawer from "./InfoMessageDrawer";
 
 interface ChannelData {
   _id: string;
@@ -47,13 +48,17 @@ interface ChannelData {
 }
 
 export default function SingleMessage() {
-  const { getChannelMessages, deleteMessage } = useMessageAPI();
+  const { getChannelMessages } = useMessageAPI();
   const [messages, setMessages] = useState<ChannelData[]>([]);
   const { channelId } = useParams();
   const router = useRouter();
   const [channel] = useContext(ChannelContext);
   const [user] = useContext(UserContext);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [infoChannelDrawer, setInfoChannelDrawer] = useState(false);
+  const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
+    null
+  );
 
   const loadChannelMessages = async () => {
     try {
@@ -64,21 +69,6 @@ export default function SingleMessage() {
       toast.error("Failed to load posts!");
     }
   };
-
-  const handleDelete = async (messageId: string) => {
-    try {
-      await deleteMessage(messageId);
-      setMessages((previous) =>
-        previous.filter((message) => message._id !== messageId)
-      );
-      toast.success("Message deleted ");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to delete message!");
-    }
-  };
-
-
 
   useEffect(() => {
     if (channelId) loadChannelMessages();
@@ -128,7 +118,7 @@ export default function SingleMessage() {
               title={channel.receiver.fullName}
               action={
                 messages.length > 0 ? (
-                  <IconButton onClick={() => setIsDrawerOpen(true)}>
+                  <IconButton onClick={() => setInfoChannelDrawer(true)}>
                     <FilterAltOutlinedIcon />
                   </IconButton>
                 ) : null
@@ -161,17 +151,17 @@ export default function SingleMessage() {
                   >
                     <CardHeader
                       action={
-                        <SimpleTreeView>
-                          <TreeItem itemId={message._id} >
-                            <TreeItem
-                              itemId="grid"
-                              label="Delete"
-                              onClick={() => handleDelete(message._id)}
-                            />
-                            <TreeItem itemId="chart" label="Edit" />
-                            <TreeItem itemId="data" label="Forward" />
-                          </TreeItem>
-                        </SimpleTreeView>
+                        !isUser ? (
+                          <IconButton
+                            sx={{ mt: 0 }}
+                            onClick={() => {
+                              setSelectedMessage(message);
+                              setInfoMessageDrawer(true);
+                            }}
+                          >
+                            <EditIcon sx={{ width: 15, height: 15 }} />
+                          </IconButton>
+                        ) : null
                       }
                       title={
                         <Typography fontWeight={200}>
@@ -231,11 +221,20 @@ export default function SingleMessage() {
             </Typography>
           </Stack>
         )}
-        <FilterIconDrawer
+        <InfoChannelDrawer
           channel={channel}
-          isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
+          isOpen={infoChannelDrawer}
+          onClose={() => setInfoChannelDrawer(false)}
         />
+        {selectedMessage && (
+           <InfoMessageDrawer
+           isOpen={infoMessageDrawer}
+           onClose={() => setInfoMessageDrawer(false)}
+           message={selectedMessage}
+           setChannelMessages={setMessages}
+         />
+        )}
+
         {messages && <MessageInput onMessage={() => loadChannelMessages()} />}
       </Container>
     </>

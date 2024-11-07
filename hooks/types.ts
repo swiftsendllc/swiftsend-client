@@ -111,7 +111,6 @@ export interface MessagesEntity {
 
 export interface EditMessageInput {
   message: string;
-  imageURL: string;
 }
 export interface MessageUserInput {
   receiverId: string;

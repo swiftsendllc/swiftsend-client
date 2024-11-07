@@ -13,7 +13,7 @@ import Drawer from "@mui/material/Drawer";
 import { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function FilterIconDrawer({
+export default function InfoChannelDrawer({
   isOpen,
   onClose,
   channel,
@@ -49,7 +49,7 @@ export default function FilterIconDrawer({
       action: () => handleDeleteChannelMessages(),
     },
     {
-      label: " channel",
+      label: " Edit",
       icon: <LayersClearIcon />,
     },
     {
