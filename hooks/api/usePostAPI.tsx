@@ -168,6 +168,25 @@ const usePostAPI = () => {
     return data;
   };
 
+  const deleteComment = async (postId: string, commentId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const savePost = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
@@ -218,6 +237,7 @@ const usePostAPI = () => {
     getTimelinePosts,
     getSaves,
     getCreatorPosts,
+    deleteComment
   };
 };
 export default usePostAPI;

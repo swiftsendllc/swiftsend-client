@@ -98,7 +98,7 @@ const useMessageAPI = () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/edit`,
       {
-        method: "POST",
+        method: "PATCH",
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -159,7 +159,7 @@ const useMessageAPI = () => {
     deleteMessage,
     editMessage,
     createChannel,
-    deleteChannelMessages
+    deleteChannelMessages,
   };
 };
 export default useMessageAPI;

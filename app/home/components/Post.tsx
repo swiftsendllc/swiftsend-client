@@ -62,11 +62,12 @@ export const PostCard = ({
   onMutation,
 }: PostProps) => {
   const { followProfile } = useAPI();
-  const { likePost, savePost } = usePostAPI();
+  const { likePost, savePost, deleteComment } = usePostAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [isFollowing, setIsFollowing] = useState(post.isFollowing);
+  const [commentCount, setCommentCount] = useState(post.commentCount);
   const [user] = useContext(UserContext);
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -74,6 +75,10 @@ export const PostCard = ({
   const handleSee = () => {
     setIsExpanded((prev) => !prev);
   };
+
+  useEffect(() => {
+    setCommentCount(post.commentCount);
+  }, [post.commentCount]);
 
   const handleLike = debounce(async (postId: string) => {
     try {
@@ -91,10 +96,10 @@ export const PostCard = ({
     try {
       const post = (await savePost(postId)) as PostsEntity;
       setIsSaved(post.isSaved);
-      toast.success("Saved")
+      toast.success("Saved");
     } catch (error) {
       console.log(error);
-      toast.error("Failed to save post!")
+      toast.error("Failed to save post!");
     }
   }, 250);
 
@@ -102,10 +107,21 @@ export const PostCard = ({
     try {
       const followUser = (await followProfile(userId)) as PostsEntity;
       setIsFollowing(followUser.isFollowing);
-      toast.success(`Connected ${followUser}`)
+      toast.success(`Connected ${followUser}`);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to connect user")
+      toast.error("Failed to connect user!");
+    }
+  };
+
+  const handleDelete = async (postId: string, commentId: string) => {
+    try {
+      const post = (await deleteComment(postId, commentId)) as PostsEntity;
+      setCommentCount(post.commentCount);
+      toast.success("Deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete comment!");
     }
   };
 
@@ -188,7 +204,7 @@ export const PostCard = ({
           <Stack direction="row" justifyContent="space-between">
             <Box alignItems="left">{`${likeCount} ❤`}</Box>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <Box>{` ${post.commentCount} 💬`}</Box>
+              <Box>{` ${commentCount} 💬`}</Box>
               <Box>{`${post.shareCount} ➦`}</Box>
             </Stack>
           </Stack>
@@ -244,7 +260,9 @@ export const PostCard = ({
                       <Typography ml={1} py={0}>
                         {comment.user.fullName}
                       </Typography>
-                      <IconButton>
+                      <IconButton
+                        onClick={() => handleDelete(post._id, comment._id)}
+                      >
                         <MoreHorizIcon />
                       </IconButton>
                     </Stack>

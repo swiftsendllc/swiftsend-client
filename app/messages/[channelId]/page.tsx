@@ -4,7 +4,7 @@ import MessageInput from "@/components/MessageInput";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import { UserContext } from "@/hooks/context/user-context";
-import { MessagesEntity, UserProfilesEntity } from "@/hooks/types";
+import { MessagesEntity } from "@/hooks/types";
 import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import EditIcon from "@mui/icons-material/Edit";
@@ -27,29 +27,9 @@ import toast from "react-hot-toast";
 import InfoChannelDrawer from "./InfoChannelDrawer";
 import InfoMessageDrawer from "./InfoMessageDrawer";
 
-interface ChannelData {
-  _id: string;
-  senderId: string;
-  receiverId: string;
-  channelId: string;
-  message: string;
-  imageURL: string | null;
-  createdAt: Date;
-  deletedAt: Date;
-  editedAt: Date;
-  receiver: UserProfilesEntity;
-  lastMessage: {
-    _id: string;
-    message: string;
-    createdAt: string;
-    deletedAt: Date;
-    editedAt: Date;
-  } | null;
-}
-
 export default function SingleMessage() {
   const { getChannelMessages } = useMessageAPI();
-  const [messages, setMessages] = useState<ChannelData[]>([]);
+  const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const { channelId } = useParams();
   const router = useRouter();
   const [channel] = useContext(ChannelContext);
@@ -227,12 +207,12 @@ export default function SingleMessage() {
           onClose={() => setInfoChannelDrawer(false)}
         />
         {selectedMessage && (
-           <InfoMessageDrawer
-           isOpen={infoMessageDrawer}
-           onClose={() => setInfoMessageDrawer(false)}
-           message={selectedMessage}
-           setChannelMessages={setMessages}
-         />
+          <InfoMessageDrawer
+            isOpen={infoMessageDrawer}
+            onClose={() => setInfoMessageDrawer(false)}
+            message={selectedMessage}
+            setChannelMessages={setMessages}
+          />
         )}
 
         {messages && <MessageInput onMessage={() => loadChannelMessages()} />}

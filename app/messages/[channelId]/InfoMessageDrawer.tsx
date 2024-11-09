@@ -1,9 +1,7 @@
 import useMessageAPI from "@/hooks/api/useMessageAPI";
-import {
-  EditMessageInput,
-  MessagesEntity,
-  UserProfilesEntity,
-} from "@/hooks/types";
+import { EditMessageInput, MessagesEntity } from "@/hooks/types";
+import CloseIcon from "@mui/icons-material/Close";
+import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LayersClearIcon from "@mui/icons-material/LayersClear";
 import {
@@ -19,30 +17,12 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
   TextField,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-interface ChannelData {
-  _id: string;
-  senderId: string;
-  receiverId: string;
-  channelId: string;
-  message: string;
-  imageURL: string | null;
-  createdAt: Date;
-  deletedAt: Date;
-  editedAt: Date;
-  receiver: UserProfilesEntity;
-  lastMessage: {
-    _id: string;
-    message: string;
-    createdAt: string;
-    deletedAt: Date;
-    editedAt: Date;
-  } | null;
-}
 export default function InfoMessageDrawer({
   isOpen,
   onClose,
@@ -52,11 +32,11 @@ export default function InfoMessageDrawer({
   isOpen: boolean;
   onClose?: () => unknown;
   message: MessagesEntity;
-  setChannelMessages: React.Dispatch<React.SetStateAction<ChannelData[]>>;
+  setChannelMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) {
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [open, setOpen] = useState(isOpen);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [, setOpen] = useState(isOpen);
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
 
   const handleDrawerClose = () => {
@@ -87,14 +67,14 @@ export default function InfoMessageDrawer({
   const handleEdit = async () => {
     try {
       if (!editedMessage.message) return;
-      await editMessage(message._id, editedMessage);
+      const updatedMessage = await editMessage(message._id, editedMessage);
       setChannelMessages((pre) =>
         pre.map((msg) =>
-          msg._id === message._id ? { ...msg, ...editedMessage } : msg
+          msg._id === message._id ? { ...msg, ...updatedMessage } : msg
         )
       );
       toast.success("Edited");
-      setEditDialogOpen(false)
+      setEditDialogOpen(false);
     } catch (error) {
       console.log(error);
       toast.error("Failed to edit message!");
@@ -145,35 +125,72 @@ export default function InfoMessageDrawer({
         </Drawer>
       </Box>
       <Dialog
-          open={editDialogOpen}
-          onClose={() => setEditDialogOpen(false)}
-          PaperProps={{
-            component: "form",
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        PaperProps={{
+          style: {
+            margin: "0",
+            width: "100%",
+          },
+        }}
+      >
+        <FormControl
+          component="form"
+          variant="standard"
+          fullWidth
+          sx={{
+            margin: 0,
+            padding: 0,
           }}
         >
-
-            <DialogContent>
-              <TextField
-                autoFocus
-                label="Edit message"
-                type="message"
-                fullWidth
-                variant="standard"
-                value={editedMessage.message || " "}
-                onChange={(e) => setEditedMessage({ message: e.target.value })}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+          <DialogContent>
+            <TextField
+              focused
+              autoFocus
+              label="Edit message"
+              type="message"
+              fullWidth
+              value={editedMessage.message || " "}
+              onChange={(e) => setEditedMessage({ message: e.target.value })}
+            />
+          </DialogContent>
+          <DialogActions
+            sx={{
+              padding: 0,
+              margin: 0,
+              paddingLeft: 0,
+              justifyContent: "flex",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Stack
+              direction="row"
+              sx={{
+                justifyContent: "space-between",
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Button
+                variant="contained"
+                onClick={() => setEditDialogOpen(false)}
+              >
+                <CloseIcon /> Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
                 type="submit"
                 disabled={!editedMessage.message}
                 onClick={handleEdit}
               >
-                Save
+                <DoneOutlineIcon /> Save
               </Button>
-            </DialogActions>
-        </Dialog>
+            </Stack>
+          </DialogActions>
+        </FormControl>
+      </Dialog>
     </>
   );
 }
