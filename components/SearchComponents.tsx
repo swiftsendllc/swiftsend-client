@@ -3,8 +3,8 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import BrokenImageOutlinedIcon from "@mui/icons-material/BrokenImageOutlined";
 import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
 import HandshakeIcon from "@mui/icons-material/Handshake";
@@ -16,14 +16,13 @@ import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
 import InsertCommentRoundedIcon from "@mui/icons-material/InsertCommentRounded";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
+import ShareIcon from "@mui/icons-material/Share";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
@@ -31,6 +30,7 @@ import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+
 
 export const yourAccounts = [
   {
@@ -46,22 +46,29 @@ export const howToUseInstagram = [
     label: "Saved",
     leftIcon: <BookmarkBorderOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/saved`,
   },
   {
-    label: "Archive",
-    leftIcon: <RestoreOutlinedIcon sx={{ width: 30, height: 30 }} />,
+    label: "Liked",
+    leftIcon: <FavoriteBorderIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/liked`,
+
   },
   {
-    label: "Your Activity",
-    leftIcon: <BrokenImageOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Notifications",
-    leftIcon: <NotificationsNoneOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    label: "Comment",
     text: "",
+    leftIcon: <InsertCommentRoundedIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/comment`,
+
+  },
+  {
+    label: "Shared",
+    leftIcon: <ShareIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/shared`,
+
   },
 ];
 export const forProfessionals = [
@@ -70,7 +77,6 @@ export const forProfessionals = [
     leftIcon: <EqualizerOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-
   {
     label: "Creator tools and controls",
     leftIcon: <InsertChartOutlinedIcon sx={{ width: 30, height: 30 }} />,
@@ -85,31 +91,20 @@ export const forProfessionals = [
 ];
 export const whoCanSeeYourContent = [
   {
+    text: "",
     label: "Account Privacy",
     leftIcon: <LockOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-
   {
     label: "Blocked",
     leftIcon: <BlockOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
-  {
-    label: "Hide story and live",
-    text: "",
-    leftIcon: <HideSourceOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
 ];
 export const howOthersCanInteractWithYou = [
   {
-    label: "Message replies ",
-    leftIcon: <MailOutlineOutlinedIcon sx={{ width: 30, height: 30 }} />,
-    rightIcon: <KeyboardArrowRightOutlinedIcon />,
-  },
-  {
-    label: "Tags and mentions",
+    label: "Shared",
     leftIcon: <TagOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
@@ -118,6 +113,11 @@ export const howOthersCanInteractWithYou = [
     leftIcon: <InsertCommentRoundedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
     text: "",
+  },
+  {
+    label: "Likes",
+    leftIcon: <RestoreOutlinedIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
   },
 ];
 export const whatYouSee = [
@@ -174,7 +174,6 @@ export const moreInfoAndSupport = [
     text: "",
   },
 ];
-
 
 export const countries = [
   { label: "Argentina" },
@@ -337,5 +336,3 @@ export const postSamples = [
     title: "Bike",
   },
 ];
-
-

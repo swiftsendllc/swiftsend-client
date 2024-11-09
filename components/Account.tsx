@@ -5,7 +5,6 @@ import useAPI from "@/hooks/api/useAPI";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
 import { UserContext } from "@/hooks/context/user-context";
-import theme from "@/util/theme";
 import { FiberManualRecord } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -19,10 +18,7 @@ import MovieSharpIcon from "@mui/icons-material/MovieSharp";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import {
   Avatar,
@@ -39,6 +35,7 @@ import {
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useContext, useState } from "react";
+import { MusicModal } from "./MusicModal";
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
@@ -53,6 +50,7 @@ export default function AccountPage() {
   const { id } = useParams();
   const [createModal, setCreateModal] = useState(false);
   const [unFollowModal, setUnFollowModal] = useState(false);
+  const [musicModal, setMusicModal] = useState(false);
 
   const stats = [
     {
@@ -288,7 +286,7 @@ export default function AccountPage() {
                 }}
               >
                 <CardContent sx={{ p: 0, width: "100%" }}>
-                  <Stack direction="column">
+                  <IconButton onClick={() => setMusicModal(true)}>
                     <Typography
                       variant="subtitle2"
                       fontWeight={100}
@@ -297,26 +295,7 @@ export default function AccountPage() {
                     >
                       Live From Space
                     </Typography>
-                    <Stack direction="row" justifyContent="left" sx={{ pr: 0 }}>
-                      <IconButton aria-label="previous">
-                        {theme.direction === "rtl" ? (
-                          <SkipPreviousIcon />
-                        ) : (
-                          <SkipNextIcon />
-                        )}
-                      </IconButton>
-                      <IconButton aria-label="play/pause">
-                        <PlayArrowIcon />
-                      </IconButton>
-                      <IconButton aria-label="next">
-                        {theme.direction === "rtl" ? (
-                          <SkipNextIcon />
-                        ) : (
-                          <SkipPreviousIcon />
-                        )}
-                      </IconButton>
-                    </Stack>
-                  </Stack>
+                  </IconButton>
                 </CardContent>
               </Card>
             </Stack>
@@ -444,6 +423,7 @@ export default function AccountPage() {
           <Divider />
         </Stack>
       </Box>
+      <MusicModal isOpen={musicModal} onClose={() => setMusicModal(false)} />
       <UnFollowModal
         isOpen={unFollowModal}
         onClose={() => setUnFollowModal(false)}

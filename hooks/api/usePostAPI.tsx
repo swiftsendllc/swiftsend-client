@@ -74,15 +74,18 @@ const usePostAPI = () => {
     return data;
   };
 
-  const getSaves = async () => {
+  const getSaves = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/saves`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${userId}/saves`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -225,6 +228,24 @@ const usePostAPI = () => {
     return data;
   };
 
+  const getComment = async (_id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}.comment`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
   return {
     createPost,
     getPost,
@@ -237,7 +258,8 @@ const usePostAPI = () => {
     getTimelinePosts,
     getSaves,
     getCreatorPosts,
-    deleteComment
+    deleteComment,
+    getComment
   };
 };
 export default usePostAPI;
