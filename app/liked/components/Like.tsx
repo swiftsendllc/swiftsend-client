@@ -16,27 +16,27 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-export const SavePage = () => {
-  
-  const [save, setSave] = useState<PostsEntity[]>([]);
-  const { getSaves } = usePostAPI();
+export function LikePage() {
+  const [like, setLike] = useState<PostsEntity[]>([]);
+  const { getLike } = usePostAPI();
   const router = useRouter();
   const [user] = useContext(UserContext);
 
-  const loadSaves = async () => {
+  const loadLike = async () => {
     try {
-      const saved = await getSaves(user.userId);
-      setSave(saved);
+      const post = await getLike(user.userId);
+      setLike(post);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load likes!");
     }
   };
 
   useEffect(() => {
-    loadSaves();
-  }, []); //eslint-disable-line
-
+    loadLike()
+  },[]) //eslint-disable-line
   return (
     <>
       <Stack direction="row" mt={2} justifyContent="space-between">
@@ -45,7 +45,7 @@ export const SavePage = () => {
         </IconButton>
         <Typography fontWeight={200} color="primary">
           {" "}
-          Saves
+          Likes
         </Typography>
         <IconButton>
           <MoreVertOutlinedIcon />
@@ -53,17 +53,17 @@ export const SavePage = () => {
       </Stack>
       <Divider />
       <Stack>
-        { save.length > 0 ? (
+        {like.length > 0 ? (
           <ImageList
             sx={{ width: "100%", height: "auto", margin: "0" }}
             cols={3}
             gap={4}
             rowHeight={125}
           >
-            {save.map((saved) => (
-              <ImageListItem key={saved._id}>
+            {like.map((liked) => (
+              <ImageListItem key={liked._id}>
                 <Image
-                  src={saved.imageURL}
+                  src={liked.imageURL}
                   style={{
                     objectFit: "cover",
                     width: "100%",
@@ -77,31 +77,31 @@ export const SavePage = () => {
               </ImageListItem>
             ))}{" "}
           </ImageList>
-        ): (
-           <Stack
-              my="10"
-              alignContent="center"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Image
-                src="/svg-icons/sasuke1.svg"
-                style={{
-                  objectFit: "cover",
-                  width: "50%",
-                  height: "50%",
-                }}
-                alt="image"
-                width={300}
-                height={100}
-                priority
-              />
-              <Typography variant="h6" fontWeight="50">
-                𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
-              </Typography>
-            </Stack>
+        ) : (
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Image
+              src="/svg-icons/sasuke1.svg"
+              style={{
+                objectFit: "cover",
+                width: "50%",
+                height: "50%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
+            <Typography variant="h6" fontWeight="50">
+              𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
+            </Typography>
+          </Stack>
         )}
       </Stack>
     </>
   );
-};
+}

@@ -228,10 +228,29 @@ const usePostAPI = () => {
     return data;
   };
 
-  const getComment = async (_id: string) => {
+  const getComment = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}.comment`,
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${userId}/comments`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const getLike = async (userId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/user/${userId}/likes`,
       {
         method: "GET",
         headers: {
@@ -259,7 +278,8 @@ const usePostAPI = () => {
     getSaves,
     getCreatorPosts,
     deleteComment,
-    getComment
+    getComment,
+    getLike
   };
 };
 export default usePostAPI;

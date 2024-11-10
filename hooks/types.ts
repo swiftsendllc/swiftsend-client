@@ -70,6 +70,8 @@ export interface CommentPostInput {
 export interface CommentsEntity {
   _id: string;
   comment: string;
+  postId: string
+  createdAt: string
   user: UserProfilesEntity;
 }
 

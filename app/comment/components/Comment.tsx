@@ -1,15 +1,57 @@
 "use client";
 
-import { postSamples } from "@/components/SearchComponents";
+import usePostAPI from "@/hooks/api/usePostAPI";
+import { UserContext } from "@/hooks/context/user-context";
+import { CommentsEntity } from "@/hooks/types";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, Divider, IconButton, Stack, Typography } from "@mui/material";
-import Image from "next/image";
+import PreviewIcon from "@mui/icons-material/Preview";
+
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export function CommentPage() {
   const router = useRouter();
+  const [comments, setComments] = useState<CommentsEntity[]>([]);
+  const [, setSelectedComment] = useState<CommentsEntity | null>(null);
+  const { getComment, deleteComment } = usePostAPI();
+  const [user] = useContext(UserContext);
+
+  const loadComment = async () => {
+    try {
+      const comment = await getComment(user.userId);
+      setComments(comment);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load comments!");
+    }
+  };
+
+  const handleDelete = async (postId: string, commentId: string) => {
+    try {
+      await deleteComment(postId, commentId);
+      toast.success("This comment is deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete comment");
+    }
+  };
+
+  useEffect(() => {
+    loadComment();
+  }, []); //eslint-disable-line
 
   return (
     <>
@@ -25,42 +67,46 @@ export function CommentPage() {
         </IconButton>
       </Stack>
       <Divider />
-      <Stack
-        direction="row"
-        spacing={2}
-        overflow="auto"
-        alignItems="center"
-        sx={{ overflowX: "auto", whiteSpace: "nowrap" }}
-      >
-        {postSamples.map((post, idx) => (
-          <Fragment key={idx}>
-            <Box
-              height="100%"
-              width="100%"
-              display="flex"
-              justifyContent="center"
-              sx={{
-              transform: `rotate(30deg)`, // Slight rotation effect
-              transition: "transform 0.3s ease, box-shadow 0.3s ease",
-              "&:hover": {
-                transform: `rotate(30deg) scale(1.05)`, // Slightly enlarges and straightens on hover
-              },
-            }}
-            >
-              <Image
-                src={post.imageURL}
-                style={{
-                  objectFit: "contain",
-                  borderRadius: "16px",
-                  boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
-                }}
-                alt={post.title}
-                width={400}
-                height={400}
-                priority
-              />
-            </Box>
-          </Fragment>
+      <Stack direction="column" spacing={0.5}>
+        {comments.map((comment, idx) => (
+          <Card
+            key={idx}
+            sx={{ mb: 0.5, width: "100%", p: 0, m: 0, borderRadius: "15px" }}
+            onClick={() => setSelectedComment(comment)}
+          >
+            <CardHeader
+              avatar={
+                <>
+                  <Avatar
+                    aria-label="recipe"
+                    src={comment.user.avatarURL}
+                    alt={comment.user.fullName}
+                  />
+                </>
+              }
+              title={comment.user.fullName}
+              subheader={comment.createdAt}
+              action={
+                <>
+                  <IconButton
+                    onClick={() => {
+                      router.push(`/posts/${comment.postId}`);
+                    }}
+                  >
+                    <PreviewIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDelete(comment.postId, comment._id)}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </>
+              }
+            />
+            <CardContent>
+              <Typography fontWeight={300}>{comment.comment}</Typography>
+            </CardContent>
+          </Card>
         ))}
       </Stack>
     </>
