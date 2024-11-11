@@ -1,5 +1,6 @@
 "use client";
 
+import useAPI from "@/hooks/api/useAPI";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import { MessageUserInput } from "@/hooks/types";
@@ -8,7 +9,8 @@ import LandscapeIcon from "@mui/icons-material/Landscape";
 import SendIcon from "@mui/icons-material/Send";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Container, Paper, TextField } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 interface UserMessageInputProps {
   onMessage: () => unknown;
@@ -19,6 +21,10 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState("");
   const [channel] = useContext(ChannelContext);
+
+  const [, setImageURL] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { uploadFile } = useAPI();
 
   const handleMessage = async () => {
     setLoading(true);
@@ -31,6 +37,23 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
       onMessage();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpload = async (file: File) => {
+    if (!file) return;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const { url } = await uploadFile(formData);
+      await sendMessage({ imageURL: url });
+      setImageURL(url);
+      toast.success("Uploaded");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to upload image!");
     } finally {
       setLoading(false);
     }
@@ -73,9 +96,19 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
                     >
                       <SendIcon />
                     </LoadingButton>
-                    <Button>
-                      <LandscapeIcon />
-                    </Button>
+                      <Button onClick={() => inputRef.current?.click()}>
+                        <LandscapeIcon />
+                      </Button>
+                    <input
+                      type="file"
+                      ref={inputRef}
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (!e.target.files?.length) return;
+                        handleUpload(e.target.files[0]);
+                      }}
+                      hidden
+                    />
                   </>
                 ),
               },

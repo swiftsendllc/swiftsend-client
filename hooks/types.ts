@@ -104,7 +104,7 @@ export interface MessagesEntity {
   receiverId: string;
   channelId: string;
   message: string;
-  imageURL: string | null;
+  imageURL: string;
   createdAt: Date;
   deletedAt: Date;
   editedAt: Date;
@@ -117,5 +117,5 @@ export interface EditMessageInput {
 export interface MessageUserInput {
   receiverId: string;
   message: string;
-  imageURl: string
+  imageURL: string
 }

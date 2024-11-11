@@ -17,6 +17,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardMedia,
   Container,
   Divider,
   IconButton,
@@ -171,11 +172,14 @@ export default function SingleMessage() {
                         ) : null
                       }
                       title={
-                        <Typography fontWeight={200}>
-                          {typeof message.message === "string"
-                            ? message.message
-                            : ""}
-                        </Typography>
+                        !message.imageURL && (
+                          <Typography fontWeight={200}>
+                            {typeof message.message ||
+                            message.imageURL === "string"
+                              ? message.message || message.imageURL
+                              : ""}
+                          </Typography>
+                        )
                       }
                       subheader={
                         <Typography variant="caption" fontSize=".55rem">
@@ -183,6 +187,20 @@ export default function SingleMessage() {
                         </Typography>
                       }
                     />
+                    {message.imageURL && (
+                      <CardMedia
+                        style={{
+                          objectFit: "contain",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        component="img"
+                        src={message.imageURL}
+                        alt="Image loading"
+                        width={400}
+                        height={400}
+                      />
+                    )}
                   </Card>
                 </Stack>
               </Fragment>
