@@ -7,12 +7,15 @@ import { UserContext } from "@/hooks/context/user-context";
 import { MessagesEntity } from "@/hooks/types";
 import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import {
   Avatar,
   Badge,
   Card,
+  CardContent,
   CardHeader,
   Container,
   Divider,
@@ -98,15 +101,39 @@ export default function SingleMessage() {
               title={channel.receiver.fullName}
               action={
                 messages.length > 0 ? (
-                  <IconButton onClick={() => setInfoChannelDrawer(true)}>
-                    <FilterAltOutlinedIcon />
-                  </IconButton>
+                  <>
+                    <IconButton>
+                      <ContactPhoneIcon />
+                    </IconButton>
+                    <IconButton>
+                      <VideoCameraFrontIcon />
+                    </IconButton>
+                    <IconButton onClick={() => setInfoChannelDrawer(true)}>
+                      <FilterAltOutlinedIcon />
+                    </IconButton>
+                  </>
                 ) : null
               }
             />
           </Card>
         </Stack>
         <Divider />
+        <Card sx={{ my: 2, borderRadius: "50px" }}>
+          <CardContent>
+            <Typography
+              textAlign="center"
+              alignContent="center"
+              alignItems="center"
+              variant="body1"
+              fontWeight={200}
+            >
+              Messages are end to end encrypted.
+              <br />
+              No one outside of this chat can read or listen to them.Tap to
+              learn more.
+            </Typography>
+          </CardContent>
+        </Card>
         {messages.length > 0 ? (
           messages.map((message, idx) => {
             const isUser = user.userId === message.receiverId;

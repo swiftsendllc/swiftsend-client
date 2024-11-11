@@ -117,4 +117,5 @@ export interface EditMessageInput {
 export interface MessageUserInput {
   receiverId: string;
   message: string;
+  imageURl: string
 }
