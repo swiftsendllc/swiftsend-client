@@ -55,7 +55,7 @@ export default function InfoMessageDrawer({
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
 
   const [channel] = useContext(ChannelContext);
-  const [forwardedMessage, setForwardedMessage] = useState<
+  const [forwardedMessage] = useState<
     Partial<MessageUserInput>
   >({
     message: message.message,
@@ -123,8 +123,9 @@ export default function InfoMessageDrawer({
     try {
       if (!forwardedMessage.message) return;
       const forwarded = await forwardMessage(message._id, forwardedMessage,  receiverId);
-      setForwardedMessage(forwarded);
+      setChannelMessages((prev) => [...prev, forwarded]);
       setChannelDialogOpen(false)
+      toast.success("Forwarded")
     } catch (error) {
       console.log(error);
       toast.error("Failed to load message!");

@@ -62,8 +62,7 @@ export default function SingleMessage() {
     <>
       <Container
         maxWidth="xs"
-        style={{ padding: 0, marginBottom: 30 }}
-        sx={{ mb:8, height: 80 }}
+        style={{ padding: 0, marginBottom: 60 }}
       >
         <Stack
           direction="row"
