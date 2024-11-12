@@ -138,7 +138,7 @@ export function ChannelList() {
                 title={channelUser.receiver.fullName}
                 subheader={
                   channelUser.lastMessage
-                    ? `${channelUser.lastMessage.message} • ${new Date(
+                    ? `${channelUser.lastMessage.message || ""} • ${new Date(
                         channelUser.lastMessage.createdAt
                       ).toLocaleString()}`
                     : "No messages"

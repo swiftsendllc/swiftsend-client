@@ -93,6 +93,26 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const forwardMessage = async (_id: string, body: Partial<MessageUserInput>, receiverId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/${receiverId}/forward`,
+      {
+        method: "POST",
+        body:JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const editMessage = async (_id: string, body: Partial<EditMessageInput>) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
@@ -160,6 +180,7 @@ const useMessageAPI = () => {
     editMessage,
     createChannel,
     deleteChannelMessages,
+    forwardMessage
   };
 };
 export default useMessageAPI;

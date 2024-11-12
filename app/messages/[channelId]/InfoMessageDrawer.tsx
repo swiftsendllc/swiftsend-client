@@ -1,15 +1,29 @@
 import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { EditMessageInput, MessagesEntity } from "@/hooks/types";
+import { ChannelContext } from "@/hooks/context/channel-context";
+import {
+  ChannelsEntity,
+  EditMessageInput,
+  MessagesEntity,
+  MessageUserInput,
+} from "@/hooks/types";
+import { FiberManualRecord } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LayersClearIcon from "@mui/icons-material/LayersClear";
+import SendIcon from "@mui/icons-material/Send";
+import ShortcutIcon from "@mui/icons-material/Shortcut";
 import {
+  Avatar,
+  Badge,
   Box,
   Button,
+  Card,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Drawer,
   FormControl,
   List,
@@ -20,7 +34,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function InfoMessageDrawer({
@@ -36,20 +50,44 @@ export default function InfoMessageDrawer({
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [channelDialogOpen, setChannelDialogOpen] = useState(false);
   const [, setOpen] = useState(isOpen);
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
+
+  const [channel] = useContext(ChannelContext);
+  const [forwardedMessage, setForwardedMessage] = useState<
+    Partial<MessageUserInput>
+  >({
+    message: message.message,
+  });
+  const { deleteMessage, editMessage, getChannels, forwardMessage } =
+    useMessageAPI();
+  const [channels, setChannels] = useState<ChannelsEntity[]>([]);
+  const [editedMessage, setEditedMessage] = useState<Partial<EditMessageInput>>(
+    {
+      message: message.message,
+    }
+  );
 
   const handleDrawerClose = () => {
     onClose?.();
     setOpen(false);
   };
 
-  const { deleteMessage, editMessage } = useMessageAPI();
-  const [editedMessage, setEditedMessage] = useState<Partial<EditMessageInput>>(
-    {
-      message: message.message,
+  const loadChannels = async () => {
+    try {
+      const channels = await getChannels();
+      setChannels(channels);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load channels!");
     }
-  );
+  };
+
+  useEffect(() => {
+    loadChannels();
+  }, []); //eslint-disable-line
+
   const handleDelete = async () => {
     try {
       await deleteMessage(message._id);
@@ -81,6 +119,18 @@ export default function InfoMessageDrawer({
     }
   };
 
+  const handleForward = async (receiverId: string) => {
+    try {
+      if (!forwardedMessage.message) return;
+      const forwarded = await forwardMessage(message._id, forwardedMessage,  receiverId);
+      setForwardedMessage(forwarded);
+      setChannelDialogOpen(false)
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load message!");
+    }
+  };
+
   const messageDrawer = [
     {
       label: "Delete",
@@ -94,7 +144,8 @@ export default function InfoMessageDrawer({
     },
     {
       label: "Forward",
-      icon: <LayersClearIcon />,
+      icon: <ShortcutIcon />,
+      action: () => setChannelDialogOpen(true),
     },
   ];
 
@@ -190,6 +241,55 @@ export default function InfoMessageDrawer({
             </Stack>
           </DialogActions>
         </FormControl>
+      </Dialog>
+      <Dialog
+        open={channelDialogOpen}
+        keepMounted
+        fullWidth
+        onClose={() => setChannelDialogOpen(false)}
+      >
+        <DialogTitle fontWeight={200}>Forward this message to: </DialogTitle>
+        {channels
+          .filter(
+            (channelUser) =>
+              channelUser.receiver.userId !== channel.receiver.userId
+          )
+          .map((channelUser, idx) => (
+            <Card key={idx} sx={{ width: "100%", p: 0 }}>
+              <CardHeader
+                avatar={
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    badgeContent={
+                      <FiberManualRecord
+                        sx={{
+                          color: "#80EF80",
+                          border: "80EF80",
+                          fontSize: "15px",
+                        }}
+                      />
+                    }
+                  >
+                    <Avatar
+                      src={channelUser.receiver.avatarURL}
+                      alt={channelUser.receiver.username}
+                    />
+                  </Badge>
+                }
+                action={
+                  <Button
+                    variant="contained"
+                    onClick={() => handleForward(channelUser.receiver.userId)}
+                  >
+                    Send
+                    <SendIcon sx={{ width: 15, height: 15, ml: 1 }} />
+                  </Button>
+                }
+                title={channelUser.receiver.fullName}
+              />
+            </Card>
+          ))}
       </Dialog>
     </>
   );

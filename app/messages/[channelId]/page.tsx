@@ -62,8 +62,8 @@ export default function SingleMessage() {
     <>
       <Container
         maxWidth="xs"
-        style={{ padding: 0 }}
-        sx={{ mb: 8, height: 80 }}
+        style={{ padding: 0, marginBottom: 30 }}
+        sx={{ mb:8, height: 80 }}
       >
         <Stack
           direction="row"
@@ -193,12 +193,14 @@ export default function SingleMessage() {
                           objectFit: "contain",
                           width: "100%",
                           height: "100%",
+                          marginBottom:"20"
                         }}
                         component="img"
                         src={message.imageURL}
                         alt="Image loading"
                         width={400}
                         height={400}
+
                       />
                     )}
                   </Card>

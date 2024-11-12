@@ -48,7 +48,7 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
       const formData = new FormData();
       formData.append("file", file);
       const { url } = await uploadFile(formData);
-      await sendMessage({ imageURL: url });
+      await sendMessage({ imageURL: url, receiverId: channel.receiver.userId });
       setImageURL(url);
       toast.success("Uploaded");
     } catch (error) {
