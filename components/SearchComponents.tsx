@@ -23,6 +23,7 @@ import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
 import ShareIcon from "@mui/icons-material/Share";
+import CloudQueueSharpIcon from '@mui/icons-material/CloudQueueSharp';
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
@@ -140,11 +141,19 @@ export const yourAppAndMedia = [
     label: "Device permissions ",
     leftIcon: <PhoneAndroidOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/permissions`
   },
   {
     label: "Language ",
     leftIcon: <TranslateOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/language`
+  },
+  {
+    label: "Weather ",
+    leftIcon: <CloudQueueSharpIcon sx={{ width: 30, height: 30 }} />,
+    rightIcon: <KeyboardArrowRightOutlinedIcon />,
+    route: `/weather`
   },
 ];
 

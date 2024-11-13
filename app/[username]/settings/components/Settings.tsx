@@ -327,7 +327,10 @@ export default function SettingsPage() {
       </Typography>
       <List sx={{ width: "100%", mb: 1, padding: 0 }}>
         {yourAppAndMedia.map((option, idx) => (
-          <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
+          <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}
+          href={option.route}
+          LinkComponent={Link}
+          >
             <ListItemIcon sx={{ pr: 1, minWidth }}>
               {option.leftIcon}
             </ListItemIcon>

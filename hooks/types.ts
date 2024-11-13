@@ -70,8 +70,8 @@ export interface CommentPostInput {
 export interface CommentsEntity {
   _id: string;
   comment: string;
-  postId: string
-  createdAt: string
+  postId: string;
+  createdAt: string;
   user: UserProfilesEntity;
 }
 
@@ -117,5 +117,7 @@ export interface EditMessageInput {
 export interface MessageUserInput {
   receiverId: string;
   message: string;
-  imageURL: string
+  imageURL: string;
 }
+
+

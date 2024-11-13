@@ -55,9 +55,7 @@ export default function InfoMessageDrawer({
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
 
   const [channel] = useContext(ChannelContext);
-  const [forwardedMessage] = useState<
-    Partial<MessageUserInput>
-  >({
+  const [forwardedMessage] = useState<Partial<MessageUserInput>>({
     message: message.message,
   });
   const { deleteMessage, editMessage, getChannels, forwardMessage } =
@@ -122,10 +120,14 @@ export default function InfoMessageDrawer({
   const handleForward = async (receiverId: string) => {
     try {
       if (!forwardedMessage.message) return;
-      const forwarded = await forwardMessage(message._id, forwardedMessage,  receiverId);
+      const forwarded = await forwardMessage(
+        message._id,
+        forwardedMessage,
+        receiverId
+      );
       setChannelMessages((prev) => [...prev, forwarded]);
-      setChannelDialogOpen(false)
-      toast.success("Forwarded")
+      setChannelDialogOpen(false);
+      toast.success("Forwarded");
     } catch (error) {
       console.log(error);
       toast.error("Failed to load message!");
@@ -163,16 +165,25 @@ export default function InfoMessageDrawer({
           onClose={handleDrawerClose}
         >
           <List>
-            {messageDrawer.map((option, idx) => (
-              <Fragment key={idx}>
-                <ListItem disablePadding>
-                  <ListItemButton onClick={option.action}>
-                    <ListItemIcon>{option.icon}</ListItemIcon>
-                    <ListItemText primary={option.label} />
-                  </ListItemButton>
-                </ListItem>
-              </Fragment>
-            ))}
+            {messageDrawer.map((option, idx) => {
+              const initial = new Date(message.createdAt).getTime();
+              const current = new Date().getTime();
+              const isDisabled = current - initial >= 2 * 60 * 1000;
+
+              return (
+                <Fragment key={idx}>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={option.action}
+                      disabled={isDisabled && option.label === "Edit"}
+                    >
+                      <ListItemIcon>{option.icon}</ListItemIcon>
+                      <ListItemText primary={option.label} />
+                    </ListItemButton>
+                  </ListItem>
+                </Fragment>
+              );
+            })}
           </List>
         </Drawer>
       </Box>
