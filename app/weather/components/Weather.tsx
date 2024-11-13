@@ -1,9 +1,8 @@
 "use client";
 
 import useWeatherAPI from "@/hooks/api/useWeatherAPI";
-import { WeatherEntity } from "@/hooks/weatherTypes";
+import { WeatherExplorerEntity } from "@/hooks/weatherTypes";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MenuIcon from "@mui/icons-material/Menu";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -24,8 +23,10 @@ import toast from "react-hot-toast";
 
 export function WeatherPage() {
   const router = useRouter();
-  const { getWeather } = useWeatherAPI();
-  const [weatherData, setWeatherData] = useState<WeatherEntity[]>([]);
+  const { getWeatherExplorer } = useWeatherAPI();
+  const [weatherData, setWeatherData] = useState<WeatherExplorerEntity | null>(
+    null
+  );
   const [longitude, setLongitude] = useState<number | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
 
@@ -45,7 +46,7 @@ export function WeatherPage() {
     const handleWeather = async () => {
       try {
         if (latitude && longitude) {
-          const data = await getWeather(latitude, longitude);
+          const data = await getWeatherExplorer(latitude, longitude);
           setWeatherData(data);
         }
       } catch (error) {
@@ -55,6 +56,21 @@ export function WeatherPage() {
     };
     handleWeather();
   }, [latitude, longitude]); //eslint-disable-line
+
+  // useEffect(() => {
+  //   const handleWeather = async () => {
+  //     try {
+  //       if (latitude && longitude) {
+  //         const data = await getWeather(latitude, longitude);
+  //         setWeatherData(data);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       toast.error("Failed to load weather...");
+  //     }
+  //   };
+  //   handleWeather();
+  // }, [latitude, longitude]); //eslint-disable-line
 
   return (
     <>
@@ -66,12 +82,12 @@ export function WeatherPage() {
           WEATHER
         </Typography>
         <IconButton onClick={handleLocationRequest}>
-          <MenuIcon />
+          <SearchIcon />
         </IconButton>
       </Stack>
       <Divider />
-      {weatherData.map((data, idx) => (
-        <Fragment key={idx}>
+      {weatherData && (
+        <Fragment>
           <Stack>
             <Card style={{ color: "#2196f3" }}>
               <CardHeader
@@ -80,7 +96,7 @@ export function WeatherPage() {
                     <NightsStayIcon />
                   </Avatar>
                 }
-                title={<Typography>{data.timezone}</Typography>}
+                title={<Typography>{weatherData.location?.name}</Typography>}
                 subheader={moment().format("LLL")}
                 action={
                   <Fab color="primary">
@@ -99,7 +115,7 @@ export function WeatherPage() {
                   </Avatar>
                 }
                 title={<Typography>TODAY&apos;S WEATHER</Typography>}
-                action={<Typography>{moment().format("LLL")}</Typography>}
+                action={<Typography>{weatherData.location?.region}</Typography>}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
@@ -113,7 +129,7 @@ export function WeatherPage() {
             </Card>
           </Stack>
         </Fragment>
-      ))}
+      )}
     </>
   );
 }

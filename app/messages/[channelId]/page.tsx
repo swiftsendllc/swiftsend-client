@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import InfoChannelDrawer from "./InfoChannelDrawer";
 import InfoMessageDrawer from "./InfoMessageDrawer";
@@ -43,6 +43,7 @@ export default function SingleMessage() {
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
     null
   );
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
   const loadChannelMessages = async () => {
     try {
@@ -58,19 +59,26 @@ export default function SingleMessage() {
     if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
 
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
     <>
       <Container
         maxWidth="xs"
-        style={{ padding: 0, marginBottom: 60 }}
+        style={{ padding: 0, marginBottom: 60, position: "relative", }}
       >
         <Stack
           direction="row"
           justifyContent="space-between"
           alignContent="center"
           alignItems="center"
+          sx={{ position: "fixed", width: "100%", zIndex:4 }}
         >
-          <Card sx={{ width: "100%", padding: 0, pt: 0 }}>
+          <Card style={{ width: "100%", padding: 0 }}>
             <CardHeader
               avatar={
                 <>
@@ -118,7 +126,7 @@ export default function SingleMessage() {
           </Card>
         </Stack>
         <Divider />
-        <Card sx={{ my: 2, borderRadius: "50px" }}>
+        <Card sx={{ my: 2, borderRadius: "50px", marginTop: 10 }}>
           <CardContent>
             <Typography
               textAlign="center"
@@ -145,6 +153,7 @@ export default function SingleMessage() {
                   justifyContent={isUser ? "flex-start" : "flex-end"}
                   alignContent={isUser ? "flex-start" : "flex-end"}
                   alignItems={isUser ? "flex-start" : "flex-end"}
+                  ref={idx === messages.length - 1 ? lastMessageRef : null}
                 >
                   <Card
                     sx={{
@@ -192,14 +201,13 @@ export default function SingleMessage() {
                           objectFit: "contain",
                           width: "100%",
                           height: "100%",
-                          marginBottom:"20"
+                          marginBottom: "20",
                         }}
                         component="img"
                         src={message.imageURL}
                         alt="Image loading"
                         width={400}
                         height={400}
-
                       />
                     )}
                   </Card>
