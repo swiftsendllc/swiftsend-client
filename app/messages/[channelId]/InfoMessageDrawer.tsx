@@ -2,15 +2,17 @@ import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import {
   ChannelsEntity,
+  DeleteMessageInput,
   EditMessageInput,
   MessagesEntity,
   MessageUserInput,
 } from "@/hooks/types";
 import { FiberManualRecord } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import LayersClearIcon from "@mui/icons-material/LayersClear";
 import SendIcon from "@mui/icons-material/Send";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
 import {
@@ -67,6 +69,10 @@ export default function InfoMessageDrawer({
     }
   );
 
+  const [isDeleted] = useState<Partial<DeleteMessageInput>>({
+    deleted: message.deleted,
+  });
+
   const handleDrawerClose = () => {
     onClose?.();
     setOpen(false);
@@ -86,14 +92,23 @@ export default function InfoMessageDrawer({
     loadChannels();
   }, []); //eslint-disable-line
 
-  const handleDelete = async () => {
+  const handleDelete = async (deleted: boolean) => {
     try {
-      await deleteMessage(message._id);
-      setChannelMessages((previous) =>
-        previous.filter((msg) => msg._id !== message._id)
-      );
+      await deleteMessage(message._id, isDeleted, deleted);
+      if (deleted) {
+        setChannelMessages((pre) =>
+          pre.map((msg) =>
+            msg._id === message._id ? { ...msg, deleted: true } : msg
+          )
+        );
+      } else {
+        setChannelMessages((previous) =>
+          previous.filter((msg) => msg._id !== message._id)
+        );
+      }
+
       onClose?.();
-      toast.success("Deleted");
+      toast.success(deleted ? "Deleted for everyone" : "Deleted for you");
     } catch (error) {
       console.log(error);
       toast.error("Failed to delete message!");
@@ -134,20 +149,25 @@ export default function InfoMessageDrawer({
     }
   };
 
-  const messageDrawer = [
+  const messageInfoOptions = [
     {
-      label: "Delete",
-      icon: <LayersClearIcon />,
-      action: handleDelete,
+      label: "Delete for you",
+      icon: <DeleteOutlineIcon sx={{ color: "var(--error)" }} />,
+      action: () => handleDelete(false),
+    },
+    {
+      label: "Delete for everyone",
+      icon: <DeleteSweepOutlinedIcon sx={{ color: "var(--error)" }} />,
+      action: () => handleDelete(true),
     },
     {
       label: "Edit",
-      icon: <EditIcon />,
+      icon: <EditIcon sx={{ color: "var(--warning)" }} />,
       action: () => setEditDialogOpen(true),
     },
     {
       label: "Forward",
-      icon: <ShortcutIcon />,
+      icon: <ShortcutIcon sx={{ color: "var(--success)" }} />,
       action: () => setChannelDialogOpen(true),
     },
   ];
@@ -165,7 +185,7 @@ export default function InfoMessageDrawer({
           onClose={handleDrawerClose}
         >
           <List>
-            {messageDrawer.map((option, idx) => {
+            {messageInfoOptions.map((option, idx) => {
               const initial = new Date(message.createdAt).getTime();
               const current = new Date().getTime();
               const isDisabled = current - initial >= 2 * 60 * 1000;

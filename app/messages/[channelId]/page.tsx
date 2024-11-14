@@ -69,61 +69,63 @@ export default function SingleMessage() {
     <>
       <Container
         maxWidth="xs"
-        style={{ padding: 0, marginBottom: 60, position: "relative", }}
+        style={{ padding: 0, marginBottom: 60, position: "relative" }}
       >
         <Stack
           direction="row"
           justifyContent="space-between"
           alignContent="center"
           alignItems="center"
-          sx={{ position: "fixed", width: "100%", zIndex:4 }}
+          sx={{ position: "fixed", zIndex: 4, left: 0, right: 0 }}
         >
-          <Card style={{ width: "100%", padding: 0 }}>
-            <CardHeader
-              avatar={
-                <>
-                  <IconButton onClick={() => router.back()}>
-                    <ArrowBackOutlinedIcon />
-                  </IconButton>
-                  <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                    badgeContent={
-                      <FiberManualRecord
-                        sx={{
-                          color: "#80EF80",
-                          fontSize: "15px",
-                          border: "#80EF80",
-                        }}
-                      />
-                    }
-                  >
-                    <Avatar
-                      aria-label="recipe"
-                      src={channel.receiver.avatarURL}
-                      alt={channel.receiver.fullName}
-                    />
-                  </Badge>
-                </>
-              }
-              title={channel.receiver.fullName}
-              action={
-                messages.length > 0 ? (
+          <Container maxWidth="xs" style={{ padding: 0 }}>
+            <Card style={{ width: "100%", padding: 0 }}>
+              <CardHeader
+                avatar={
                   <>
-                    <IconButton>
-                      <ContactPhoneIcon />
+                    <IconButton onClick={() => router.back()}>
+                      <ArrowBackOutlinedIcon />
                     </IconButton>
-                    <IconButton>
-                      <VideoCameraFrontIcon />
-                    </IconButton>
-                    <IconButton onClick={() => setInfoChannelDrawer(true)}>
-                      <FilterAltOutlinedIcon />
-                    </IconButton>
+                    <Badge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      badgeContent={
+                        <FiberManualRecord
+                          sx={{
+                            color: "#80EF80",
+                            fontSize: "15px",
+                            border: "#80EF80",
+                          }}
+                        />
+                      }
+                    >
+                      <Avatar
+                        aria-label="recipe"
+                        src={channel.receiver.avatarURL}
+                        alt={channel.receiver.fullName}
+                      />
+                    </Badge>
                   </>
-                ) : null
-              }
-            />
-          </Card>
+                }
+                title={channel.receiver.fullName}
+                action={
+                  messages.length > 0 ? (
+                    <>
+                      <IconButton>
+                        <ContactPhoneIcon />
+                      </IconButton>
+                      <IconButton>
+                        <VideoCameraFrontIcon />
+                      </IconButton>
+                      <IconButton onClick={() => setInfoChannelDrawer(true)}>
+                        <FilterAltOutlinedIcon />
+                      </IconButton>
+                    </>
+                  ) : null
+                }
+              />
+            </Card>
+          </Container>
         </Stack>
         <Divider />
         <Card sx={{ my: 2, borderRadius: "50px", marginTop: 10 }}>
@@ -180,19 +182,41 @@ export default function SingleMessage() {
                         ) : null
                       }
                       title={
-                        !message.imageURL && (
+                        !message.imageURL && !message.deleted ? (
                           <Typography fontWeight={200}>
                             {typeof message.message ||
                             message.imageURL === "string"
                               ? message.message || message.imageURL
                               : ""}
                           </Typography>
+                        ) : (
+                          <Typography fontWeight={200}>
+                            This message was deleted
+                          </Typography>
                         )
                       }
                       subheader={
-                        <Typography variant="caption" fontSize=".55rem">
-                          {new Date(message.createdAt).toLocaleString()}
-                        </Typography>
+                        <>
+                          {message.edited ? (
+                            <>
+                              <Typography variant="caption" fontSize=".55rem">
+                                {new Date(message.editedAt).toLocaleString()}
+                              </Typography>
+                              <Typography variant="caption" fontSize=".55rem">
+                                edited
+                              </Typography>
+                            </>
+                          ) : (
+                            <Typography variant="caption" fontSize=".55rem">
+                              {new Date(message.createdAt).toLocaleString()}
+                            </Typography>
+                          )}
+                          {message.deleted && (
+                            <Typography variant="caption" fontSize=".55rem">
+                              {new Date(message.deletedAt).toLocaleString()}
+                            </Typography>
+                          )}
+                        </>
                       }
                     />
                     {message.imageURL && (

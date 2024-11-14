@@ -1,6 +1,6 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie } from "cookies-next";
-import { EditMessageInput, MessageUserInput } from "../types";
+import { DeleteMessageInput, EditMessageInput, MessageUserInput } from "../types";
 
 const useMessageAPI = () => {
   const getChannels = async () => {
@@ -133,12 +133,13 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const deleteMessage = async (_id: string) => {
+  const deleteMessage = async (_id: string, body: Partial<DeleteMessageInput>, deleted: boolean) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/delete`,
+      `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/${deleted}/delete`,
       {
         method: "DELETE",
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
