@@ -4,8 +4,8 @@ import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { UserContext } from "@/hooks/context/user-context";
 import { ChannelsEntity } from "@/hooks/types";
 import AddIcon from "@mui/icons-material/Add";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 import { FiberManualRecord } from "@mui/icons-material";
 import {
@@ -88,7 +88,7 @@ export function ChannelList() {
             aria-label="edit"
             variant="circular"
           >
-            <BookmarkBorderOutlinedIcon />
+            <SettingsIcon />
           </Fab>
         </Stack>
         <Divider sx={{ mt: 1 }} />

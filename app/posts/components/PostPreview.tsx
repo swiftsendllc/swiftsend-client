@@ -77,7 +77,7 @@ export default function PostPreview() {
       >
         <Stack mt={2}>
           <Stack direction="row" alignContent="center" alignItems="center">
-            <IconButton href="/account" LinkComponent={Link}>
+            <IconButton onClick={() => router.back()} LinkComponent={Link}>
               <ArrowBackIosNewIcon />
             </IconButton>
             <Typography alignContent="center" alignItems="center" variant="h6">

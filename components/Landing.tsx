@@ -1,8 +1,8 @@
 "use client";
 
-import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { GoogleIconCustom } from "./CustomIcons";
 
 export default function LandingPage() {
   return (
@@ -32,14 +32,15 @@ export default function LandingPage() {
         <Button
           fullWidth
           variant="contained"
-          startIcon={<GoogleIcon />}
+          startIcon={<GoogleIconCustom />}
           href="/account"
         >
           Continue with Google
         </Button>
       </Stack>
       <Typography variant="body2" align="center" color="text.secondary">
-        By signing up, you agree to our <a href="/terms">Terms of Service</a> and <a href="/policy">Privacy Policy</a>
+        By signing up, you agree to our <a href="/terms">Terms of Service</a>{" "}
+        and <a href="/policy">Privacy Policy</a>
       </Typography>
     </Container>
   );
