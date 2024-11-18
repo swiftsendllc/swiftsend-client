@@ -1,24 +1,43 @@
 "use client";
-import { postSamples } from "@/components/SearchComponents";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import userReelAPI from "@/hooks/api/useReelAPI";
+import { ReelsEntity } from "@/hooks/types";
 import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import {
-  Box,
-  IconButton,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  Stack,
-  Typography,
-} from "@mui/material";
-import Image from "next/image";
+import { Box, Card, CardMedia, Grid2, Stack, Typography } from "@mui/material";
+import { cluster } from "radash";
+import { Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-export default function TagPage() {
+export default function ReelsPage() {
+  const [reels, setReels] = useState<ReelsEntity[]>([]);
+  const videoGroups = cluster(reels, 3);
+  const { getReels } = userReelAPI();
+
+  const calculateRowCols = (idx: number, igx: number) => {
+    return idx % 2 === 0 && (idx === 0 ? igx % 2 === 0 : true)
+      ? 1
+      : igx % 2 !== 0 && idx === 1
+      ? 1
+      : 2;
+  };
+
+  const loadUserReels = async () => {
+    try {
+      const reel = await getReels();
+      setReels(reel);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load reel!");
+    }
+  };
+
+  useEffect(() => {
+    loadUserReels();
+  }, []); //eslint-disable-line
+
   return (
     <>
-      <Box mb={2}>
-        {postSamples.length === 0 ? (
+      <Box mb={8}>
+        {reels.length === 0 ? (
           <Stack
             my="10"
             alignContent="center"
@@ -34,49 +53,27 @@ export default function TagPage() {
             </Typography>
           </Stack>
         ) : (
-          <ImageList
-            sx={{ width: "100%", height: "auto" }}
-            cols={3}
-            gap={8}
-            rowHeight={164}
-          >
-            {postSamples.map((post, idx) => (
-              <ImageListItem key={idx}>
-                <Image
-                  src={post.imageURL}
-                  style={{
-                    objectFit: "cover",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  alt={post.title || "image"}
-                  width={300}
-                  height={100}
-                  loading="lazy"
-                />
-                <ImageListItemBar
-                  sx={{ background: "transparent" }}
-                  position="top"
-                  actionIcon={
-                    <IconButton sx={{ color: "white" }} aria-label="star">
-                      <StarBorderIcon />
-                    </IconButton>
-                  }
-                  actionPosition="right"
-                />
-                <ImageListItemBar
-                  sx={{ background: "transparent" }}
-                  position="bottom"
-                  actionIcon={
-                    <IconButton sx={{ color: "white" }} aria-label="bookmark">
-                      <BookmarkBorderOutlinedIcon />
-                    </IconButton>
-                  }
-                  actionPosition="right"
-                />
-              </ImageListItem>
-            ))}
-          </ImageList>
+          <Fragment>
+            <Grid2 container spacing={0.5}>
+              {reels.map((reel, idx) => (
+                <Card key={idx} sx={{ width: "100%", padding: 0, mb: 0.5 }}>
+                  <CardMedia
+                    component="video"
+                    style={{
+                      objectFit: "contain",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    src={reel.videoURL}
+                    controls
+                    autoPlay={true}
+                    muted={false}
+                    loop={false}
+                  />
+                </Card>
+              ))}
+            </Grid2>
+          </Fragment>
         )}
       </Box>
     </>

@@ -2,7 +2,7 @@ import Transition from "@/components/Transition";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import React, { useEffect, useState } from "react";
 
-import { create } from "@/components/SearchComponents";
+import { uploadingOptions } from "@/components/SearchComponents";
 import {
   Dialog,
   DialogTitle,
@@ -58,12 +58,12 @@ export default function UploadModal({
           <DialogTitle textAlign="center">Create</DialogTitle>
           <Divider />
           <List sx={{ width: "100%", padding: 0, mb: 0 }}>
-            {create.map((option, idx) => (
+            {uploadingOptions.map((option, idx) => (
               <React.Fragment key={idx}>
                 <ListItemButton
                   key={idx}
                   sx={{ padding: 0, py: 1, borderRadius: 2 }}
-                  href="/posts"
+                  href={option.value}
                   LinkComponent={Link}
                 >
                   <ListItemIcon sx={{ pr: 1, minWidth: 35 }}>

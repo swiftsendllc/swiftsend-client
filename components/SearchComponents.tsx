@@ -3,6 +3,7 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import CloudQueueSharpIcon from "@mui/icons-material/CloudQueueSharp";
 import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
@@ -23,7 +24,6 @@ import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
 import PhoneAndroidOutlinedIcon from "@mui/icons-material/PhoneAndroidOutlined";
 import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
 import ShareIcon from "@mui/icons-material/Share";
-import CloudQueueSharpIcon from '@mui/icons-material/CloudQueueSharp';
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
@@ -31,7 +31,6 @@ import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
 
 export const yourAccounts = [
   {
@@ -54,7 +53,6 @@ export const howToUseInstagram = [
     leftIcon: <FavoriteBorderIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
     route: `/liked`,
-
   },
   {
     label: "Comment",
@@ -62,14 +60,12 @@ export const howToUseInstagram = [
     leftIcon: <InsertCommentRoundedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
     route: `/comment`,
-
   },
   {
     label: "Shared",
     leftIcon: <ShareIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
     route: `/shared`,
-
   },
 ];
 export const forProfessionals = [
@@ -141,19 +137,19 @@ export const yourAppAndMedia = [
     label: "Device permissions ",
     leftIcon: <PhoneAndroidOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
-    route: `/permissions`
+    route: `/permissions`,
   },
   {
     label: "Language ",
     leftIcon: <TranslateOutlinedIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
-    route: `/language`
+    route: `/language`,
   },
   {
     label: "Weather ",
     leftIcon: <CloudQueueSharpIcon sx={{ width: 30, height: 30 }} />,
     rightIcon: <KeyboardArrowRightOutlinedIcon />,
-    route: `/weather`
+    route: `/weather`,
   },
 ];
 
@@ -276,23 +272,27 @@ export const profileInformation = [
   },
 ];
 
-export const create = [
+export const uploadingOptions = [
   {
     label: "Entry",
     icon: <GridOnSharpIcon sx={{ width: 30, height: 30 }} />,
+    value: "/posts",
   },
   {
     label: "Intro",
     icon: <MovieSharpIcon sx={{ width: 30, height: 30 }} />,
+    value: "/reels",
   },
   {
     label: "Status",
     icon: <HistoryToggleOffIcon sx={{ width: 30, height: 30 }} />,
+    value: "/status",
   },
 
   {
     label: "Subscribe",
     icon: <ShoppingBasketIcon sx={{ width: 30, height: 30 }} />,
+    value: "/subscribe",
   },
 ];
 export const postSamples = [

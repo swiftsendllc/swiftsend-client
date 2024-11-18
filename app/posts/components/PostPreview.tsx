@@ -48,7 +48,6 @@ export default function PostPreview() {
     setLoading(true);
     try {
       const formData = new FormData();
-
       formData.append("file", file);
       const { url } = await uploadFile(formData);
       console.log("the url is:", url);

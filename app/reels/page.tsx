@@ -1,3 +1,5 @@
-export default function Reels(){
-  return
+import { ReelPreview } from "./components/ReelPreview";
+
+export default function Reels() {
+  return <ReelPreview />;
 }
