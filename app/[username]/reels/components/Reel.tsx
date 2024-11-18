@@ -3,22 +3,12 @@ import userReelAPI from "@/hooks/api/useReelAPI";
 import { ReelsEntity } from "@/hooks/types";
 import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
 import { Box, Card, CardMedia, Grid2, Stack, Typography } from "@mui/material";
-import { cluster } from "radash";
 import { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function ReelsPage() {
   const [reels, setReels] = useState<ReelsEntity[]>([]);
-  const videoGroups = cluster(reels, 3);
   const { getReels } = userReelAPI();
-
-  const calculateRowCols = (idx: number, igx: number) => {
-    return idx % 2 === 0 && (idx === 0 ? igx % 2 === 0 : true)
-      ? 1
-      : igx % 2 !== 0 && idx === 1
-      ? 1
-      : 2;
-  };
 
   const loadUserReels = async () => {
     try {

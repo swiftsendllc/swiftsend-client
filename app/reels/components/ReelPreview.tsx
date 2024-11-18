@@ -201,7 +201,7 @@ export function ReelPreview() {
               fullWidth
               style={{ color: "var(--warning)" }}
               onClick={() => {
-                handleVideoDelete;
+                handleVideoDelete();
                 router.back();
               }}
             >
