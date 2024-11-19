@@ -2,7 +2,7 @@
 
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { CommentsEntity } from "@/hooks/types";
+import { CommentsEntity } from "@/hooks/entities/posts.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

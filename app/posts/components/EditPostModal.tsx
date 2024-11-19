@@ -2,7 +2,7 @@
 
 import Transition from "@/components/Transition";
 import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity, UpdatePostInput } from "@/hooks/types";
+import { PostsEntity, UpdatePostInput } from "@/hooks/entities/posts.entities";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";

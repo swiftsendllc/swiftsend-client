@@ -3,7 +3,7 @@
 import useAPI from "@/hooks/api/useAPI";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
-import { MessageUserInput } from "@/hooks/types";
+import { MessageUserInput } from "@/hooks/entities/messages.entities";
 import AddIcon from "@mui/icons-material/Add";
 import LandscapeIcon from "@mui/icons-material/Landscape";
 import SendIcon from "@mui/icons-material/Send";

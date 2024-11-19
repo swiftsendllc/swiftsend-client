@@ -1,12 +1,7 @@
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
-import {
-  ChannelsEntity,
-  DeleteMessageInput,
-  EditMessageInput,
-  MessagesEntity,
-  MessageUserInput,
-} from "@/hooks/types";
+import { ChannelsEntity, DeleteMessageInput, EditMessageInput, MessagesEntity, MessageUserInput } from "@/hooks/entities/messages.entities";
+
 import { FiberManualRecord } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";

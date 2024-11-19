@@ -1,5 +1,5 @@
 import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { ChannelsEntity } from "@/hooks/types";
+import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import LayersClearIcon from "@mui/icons-material/LayersClear";
 import {
   Box,

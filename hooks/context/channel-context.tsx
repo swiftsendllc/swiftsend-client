@@ -1,7 +1,7 @@
 "use client";
 
-import { ChannelsEntity } from "@/hooks/types";
 import { createContext, useState } from "react";
+import { ChannelsEntity } from "../entities/messages.entities";
 
 const emptyChannel = {
   _id: "",

@@ -2,7 +2,7 @@
 
 import useAPI from "@/hooks/api/useAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/types";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";

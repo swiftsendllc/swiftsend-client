@@ -3,7 +3,7 @@
 import Transition from "@/components/Transition";
 import useAPI from "@/hooks/api/useAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { UpdateUserInput } from "@/hooks/types";
+import { UpdateUserInput } from "@/hooks/entities/users.entities";
 import { LoadingButton } from "@mui/lab";
 import {
   Button,

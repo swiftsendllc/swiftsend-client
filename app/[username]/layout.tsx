@@ -1,5 +1,5 @@
 import { CreatorContextWrapper } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/types";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { authCookieKey } from "@/library/constants";
 import { Stack, Typography } from "@mui/material";
 import { cookies } from "next/headers";

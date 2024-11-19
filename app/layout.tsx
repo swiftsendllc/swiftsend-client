@@ -4,13 +4,13 @@ import type { Metadata, Viewport } from "next";
 import { Kanit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
-import { UserProfilesEntity } from "@/hooks/types";
 import { UserContextWrapper } from "@/hooks/context/user-context";
 import { authCookieKey } from "@/library/constants";
 import theme from "@/util/theme";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import "./globals.css";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 
 const kanitFont = Kanit({
   subsets: ["latin"],

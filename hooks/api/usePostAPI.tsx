@@ -1,6 +1,6 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie } from "cookies-next";
-import { CommentPostInput, CreatePostInput, UpdatePostInput } from "../types";
+import { CommentPostInput, CreatePostInput, UpdatePostInput } from "../entities/posts.entities";
 
 const usePostAPI = () => {
   const createPost = async (body: Partial<CreatePostInput>) => {

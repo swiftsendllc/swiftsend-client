@@ -2,7 +2,7 @@
 
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { CommentPostInput } from "@/hooks/types";
+import { CommentPostInput } from "@/hooks/entities/posts.entities";
 import {
   Avatar,
   Box,

@@ -1,6 +1,6 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie } from "cookies-next";
-import { CreateReelInput } from "../types";
+import { CreateReelInput } from "../entities/reels.entities";
 
 const userReelAPI = () => {
   const createReel = async (body: Partial<CreateReelInput>) => {

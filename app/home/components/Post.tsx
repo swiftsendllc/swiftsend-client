@@ -5,7 +5,7 @@ import TopBackNav from "@/components/TopBackNav";
 import useAPI from "@/hooks/api/useAPI";
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";

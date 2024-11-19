@@ -2,7 +2,7 @@
 
 import { PostCard } from "@/app/home/components/Post";
 import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import { Container } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -1,6 +1,6 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie } from "cookies-next";
-import { DeleteMessageInput, EditMessageInput, MessageUserInput } from "../types";
+import { DeleteMessageInput, EditMessageInput, MessageUserInput } from "../entities/messages.entities";
 
 const useMessageAPI = () => {
   const getChannels = async () => {

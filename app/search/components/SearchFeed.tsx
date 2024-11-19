@@ -1,5 +1,5 @@
 "use client";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import { Dialog, ImageList, ImageListItem, Stack } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -20,8 +20,8 @@ interface SearchFeedProps {
 
 export const SearchFeed = ({ post }: SearchFeedProps) => {
   const imageGroups = cluster(post, 3);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
 
   const handleClick = (imageURL: string) => {

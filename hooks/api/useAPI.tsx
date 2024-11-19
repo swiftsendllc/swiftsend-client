@@ -1,7 +1,7 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie, setCookie } from "cookies-next";
 import Error from "next/error";
-import { UpdateUserInput } from "../types";
+import { UpdateUserInput } from "../entities/users.entities";
 
 const useAPI = () => {
   const login = async (email: string, password: string) => {

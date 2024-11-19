@@ -3,7 +3,7 @@
 import Transition from "@/components/Transition";
 import useAPI from "@/hooks/api/useAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/types";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { LoadingButton } from "@mui/lab";
 import {
   Avatar,

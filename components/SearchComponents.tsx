@@ -281,7 +281,7 @@ export const uploadingOptions = [
   {
     label: "Intro",
     icon: <MovieSharpIcon sx={{ width: 30, height: 30 }} />,
-    value: "/reels",
+    value: "/reels/preview",
   },
   {
     label: "Status",

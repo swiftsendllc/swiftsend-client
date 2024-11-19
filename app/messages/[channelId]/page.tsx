@@ -4,7 +4,6 @@ import MessageInput from "@/components/MessageInput";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import { UserContext } from "@/hooks/context/user-context";
-import { MessagesEntity } from "@/hooks/types";
 import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
@@ -30,6 +29,7 @@ import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import InfoChannelDrawer from "./InfoChannelDrawer";
 import InfoMessageDrawer from "./InfoMessageDrawer";
+import { MessagesEntity } from "@/hooks/entities/messages.entities";
 
 export default function SingleMessage() {
   const { getChannelMessages } = useMessageAPI();

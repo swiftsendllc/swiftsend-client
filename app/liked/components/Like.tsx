@@ -2,7 +2,7 @@
 
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import {

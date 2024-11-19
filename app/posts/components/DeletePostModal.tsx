@@ -3,7 +3,7 @@
 import Transition from "@/components/Transition";
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TagFacesIcon from "@mui/icons-material/TagFaces";

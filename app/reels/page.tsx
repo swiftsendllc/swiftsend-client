@@ -1,5 +1,5 @@
-import { ReelPreview } from "./components/ReelPreview";
+import ReelsScrollPage from "./components/Reel";
 
 export default function Reels() {
-  return <ReelPreview />;
+  return <ReelsScrollPage />;
 }

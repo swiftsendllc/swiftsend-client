@@ -24,11 +24,11 @@ import toast from "react-hot-toast";
 export function WeatherPage() {
   const router = useRouter();
   const { getWeatherExplorer } = useWeatherAPI();
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherExplorerEntity | null>(
     null
   );
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [latitude, setLatitude] = useState<number | null>(null);
 
   const handleLocationRequest = () => {
     try {
@@ -56,21 +56,6 @@ export function WeatherPage() {
     };
     handleWeather();
   }, [latitude, longitude]); //eslint-disable-line
-
-  // useEffect(() => {
-  //   const handleWeather = async () => {
-  //     try {
-  //       if (latitude && longitude) {
-  //         const data = await getWeather(latitude, longitude);
-  //         setWeatherData(data);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       toast.error("Failed to load weather...");
-  //     }
-  //   };
-  //   handleWeather();
-  // }, [latitude, longitude]); //eslint-disable-line
 
   return (
     <>

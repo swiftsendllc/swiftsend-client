@@ -4,7 +4,7 @@ import EditPostModal from "@/app/posts/components/EditPostModal";
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
 import { UserContext } from "@/hooks/context/user-context";
-import { PostsEntity } from "@/hooks/types";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Box,

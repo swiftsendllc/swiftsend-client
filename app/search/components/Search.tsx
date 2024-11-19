@@ -1,6 +1,5 @@
 "use client";
 import useAPI from "@/hooks/api/useAPI";
-import { PostsEntity, UserProfilesEntity } from "@/hooks/types";
 import { UserContext } from "@/hooks/context/user-context";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -20,14 +19,16 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 
 export default function SearchPage() {
   const { getUserProfiles } = useAPI();
-  const { getTimelinePosts } = usePostAPI();
-  const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [user] = useContext(UserContext);
-  const [users, setUsers] = useState<UserProfilesEntity[]>([]);
+  const { getTimelinePosts } = usePostAPI();
   const [isCardOpen, setIsCardOpen] = useState(false);
+  const [posts, setPosts] = useState<PostsEntity[]>([]);
+  const [users, setUsers] = useState<UserProfilesEntity[]>([]);
 
   const loadPosts = async () => {
     try {

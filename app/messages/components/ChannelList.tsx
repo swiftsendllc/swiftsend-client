@@ -2,7 +2,6 @@
 
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { UserContext } from "@/hooks/context/user-context";
-import { ChannelsEntity } from "@/hooks/types";
 import AddIcon from "@mui/icons-material/Add";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -25,6 +24,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 
 export function ChannelList() {
   const [user] = useContext(UserContext);

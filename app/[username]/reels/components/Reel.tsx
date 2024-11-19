@@ -1,6 +1,6 @@
 "use client";
 import userReelAPI from "@/hooks/api/useReelAPI";
-import { ReelsEntity } from "@/hooks/types";
+import { ReelsEntity } from "@/hooks/entities/reels.entities";
 import CameraAltSharpIcon from "@mui/icons-material/CameraAltSharp";
 import { Box, Card, CardMedia, Grid2, Stack, Typography } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
