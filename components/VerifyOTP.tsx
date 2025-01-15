@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "@/locales/dictionary";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { LoadingButton } from "@mui/lab";
@@ -18,6 +19,7 @@ export default function VerifyOTPPage() {
   const [loading, setLoading] = useState(false);
   const [canSend, setCanResend] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -31,7 +33,7 @@ export default function VerifyOTPPage() {
     }, 1000);
     //cleanup the timeout if the component unmounts
     return () => clearTimeout(interval);
-  } ,[timeLeft]);
+  }, [timeLeft]);
 
   const onSubmit = async () => {
     if (!canSend) return;
@@ -76,7 +78,7 @@ export default function VerifyOTPPage() {
       </Box>
 
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
-        <Typography variant="h5"> Verify your account</Typography>
+        <Typography variant="h5"> {t("verifyEmailHeader")}</Typography>
       </Box>
       <FormControl
         variant="standard"
@@ -89,11 +91,10 @@ export default function VerifyOTPPage() {
       >
         <Stack direction="column" spacing={2}>
           <Typography variant="h6" fontWeight={200}>
-            This extra step shows it&apos;s really you trying to sign in{" "}
+            {t("verifyEmail")}
           </Typography>
           <Typography variant="h6" fontWeight={200}>
-            Please check your email and confirm your account by clicking on the
-            link
+            {t("emailCheck")}
           </Typography>
           <LoadingButton
             loading={loading}

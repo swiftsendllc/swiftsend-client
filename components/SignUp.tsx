@@ -20,6 +20,7 @@ import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import { useState } from "react";
 import { countries } from "./SearchComponents";
+import { useTranslation } from "@/locales/dictionary";
 
 const genderOption = [
   {
@@ -40,7 +41,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [continued, setContinued] = useState(false);
-
+  const { t} = useTranslation()
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [gender, setGender] = useState("");
   const [region, setRegion] = useState("");
@@ -105,7 +106,7 @@ export default function SignUpPage() {
             <AccountCircleIcon sx={{ width: 25, height: 25 }} />
           </Box>
           <Box mt={{ md: 2, sm: 2 }} mb={2}>
-            <Typography variant="h5">Sign in with Instagram</Typography>
+            <Typography variant="h5">{t("signUpHeader")}</Typography>
           </Box>
           <FormControl
             variant="standard"
@@ -191,7 +192,7 @@ export default function SignUpPage() {
             <AccountCircleIcon sx={{ width: 25, height: 25 }} />
           </Box>
           <Box mt={{ md: 2, sm: 2 }} mb={2}>
-            <Typography variant="h5">Sign in with Instagram</Typography>
+            <Typography variant="h5">{t("signUpHeader")}</Typography>
           </Box>
           <FormControl
             variant="standard"
@@ -241,7 +242,7 @@ export default function SignUpPage() {
                 helperText={
                   email && !isEmailValid ? (
                     <Typography sx={{ color: "var(--error)" }}>
-                      Please enter a valid email address
+                      {t("validEmail")}
                     </Typography>
                   ) : null
                 }
@@ -282,7 +283,7 @@ export default function SignUpPage() {
                     color: "currentcolor",
                   }}
                 >
-                  Already have an account? Login
+                 {t("existingAccount")}
                 </Link>
               </Typography>
               <LoadingButton
@@ -302,7 +303,7 @@ export default function SignUpPage() {
                 type="submit"
                 onClick={handleContinue}
               >
-                Continue
+                {t("continue")}
               </LoadingButton>
             </Stack>
           </FormControl>

@@ -20,6 +20,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
 import { useState } from "react";
 import Animation from "./Animation";
+import { useTranslation } from "@/locales/dictionary";
 
 export default function LoginPage() {
   const { login } = useAPI();
@@ -28,6 +29,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const {t} = useTranslation()
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -76,7 +78,7 @@ export default function LoginPage() {
         <AccountCircleIcon sx={{ width: 25, height: 25 }} />
       </Box>
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
-        <Typography variant="h5"> Login with Instagram</Typography>
+        <Typography variant="h5"> {t("loginHeader")}</Typography>
       </Box>
       <FormControl
         variant="standard"
@@ -134,7 +136,7 @@ export default function LoginPage() {
                 }}
                 href="/forgot-password"
               >
-                Forgot your password?
+                {t('forgotPassword')}
               </Link>
             </Typography>
 
@@ -146,7 +148,7 @@ export default function LoginPage() {
                 }}
                 href="/signup"
               >
-                Create account
+                {t('createAccount')}
               </Link>
             </Typography>
           </Stack>
@@ -158,7 +160,7 @@ export default function LoginPage() {
             type="submit"
             disabled={!(email && password)}
           >
-            Login
+            {t("login")}
           </LoadingButton>
         </Stack>
       </FormControl>
