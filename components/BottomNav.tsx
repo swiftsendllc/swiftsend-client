@@ -6,6 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import {
+  Badge,
   Box,
   Container,
   Icon,
@@ -41,6 +42,7 @@ export default function BottomNav() {
       value: "/messages",
       label: "Message",
       icon: <EmailIcon />,
+      hasBadge: true,
     },
     {
       value: "/reels",
@@ -93,12 +95,48 @@ export default function BottomNav() {
                     alignContent="center"
                     spacing={0}
                     p={1}
+                    m={0}
                   >
-                    <Icon
-                      color={pathName === option.value ? "primary" : "action"}
-                    >
-                      {option.icon}
-                    </Icon>
+                    {option.hasBadge ? (
+                      <Badge
+                        badgeContent={9}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        color="primary"
+                        sx={{
+                          "& .MuiBadge-badge": {
+                            animation: "ripple 1.2s infinite ease-in-out",
+                          },
+                          "@keyframes ripple": {
+                            "0%": {
+                              transform: "scale(.8)",
+                              opacity: 1,
+                            },
+                            "100%": {
+                              transform: "scale(1)",
+                              opacity: 0,
+                            },
+                          },
+                        }}
+                      >
+                        <Icon
+                          color={
+                            pathName === option.value ? "primary" : "action"
+                          }
+                        >
+                          {option.icon}
+                        </Icon>
+                      </Badge>
+                    ) : (
+                      <Icon
+                        color={pathName === option.value ? "primary" : "action"}
+                      >
+                        {option.icon}
+                      </Icon>
+                    )}
+
                     <Typography
                       variant="body2"
                       color={

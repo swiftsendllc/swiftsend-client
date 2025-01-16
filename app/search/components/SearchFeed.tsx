@@ -22,6 +22,7 @@ export const SearchFeed = ({ post }: SearchFeedProps) => {
   const imageGroups = cluster(post, 3);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+ 
 
 
   const handleClick = (imageURL: string) => {
