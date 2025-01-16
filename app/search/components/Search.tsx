@@ -5,6 +5,8 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 import usePostAPI from "@/hooks/api/usePostAPI";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import {
   Avatar,
   Card,
@@ -19,8 +21,6 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
-import { PostsEntity } from "@/hooks/entities/posts.entities";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 
 export default function SearchPage() {
   const { getUserProfiles } = useAPI();
@@ -37,6 +37,10 @@ export default function SearchPage() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleClose = () => {
+    setIsCardOpen(false);
   };
 
   const loadUsers = async (query: string) => {
@@ -106,8 +110,13 @@ export default function SearchPage() {
 
       {isCardOpen ? (
         <>
+
           {users.map((user) => (
-            <Card sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }} key={user.userId}>
+            <Card
+              sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }}
+              key={user.userId}
+              onBlur={handleClose}
+            >
               <CardHeader
                 avatar={
                   <Avatar

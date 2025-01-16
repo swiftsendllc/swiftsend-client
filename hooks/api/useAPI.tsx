@@ -127,12 +127,13 @@ const useAPI = () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/users/search?q=${encodeURIComponent(
         query
-      )}`,
+      )}&t=${Date.now()}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Cache-Control":"no-cache"
         },
       }
     );
