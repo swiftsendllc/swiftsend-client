@@ -1,6 +1,7 @@
 export const de = {
-  hello: "Hallo",
-  message_saved: "Nachricht gespeichert",
+  appName: "Instagram",
+  email: "E-Mail",
+  password: "Passwort",
   signUp: "Registrieren",
   login: "Anmelden",
   googleSign: "Weiter mit Google",

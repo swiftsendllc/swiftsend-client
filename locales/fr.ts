@@ -1,6 +1,7 @@
 export const fr = {
-  hello: "Bonjour",
-  message_saved: "Message enregistré",
+  appName: "Instagram",
+  email: "E-mail",
+  password: "Mot de passe",
   signUp: "S'inscrire",
   login: "Connexion",
   googleSign: "Continuer avec Google",

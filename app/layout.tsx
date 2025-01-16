@@ -4,6 +4,7 @@ import { authCookieKey } from "@/library/constants";
 import theme from "@/util/theme";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
+import { getCookie } from "cookies-next";
 import type { Metadata, Viewport } from "next";
 import { Kanit } from "next/font/google";
 import { cookies, headers } from "next/headers";
@@ -62,11 +63,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await validateAuth();
+  const locale = getCookie("locale") || "en";
 
   console.log({ user });
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />

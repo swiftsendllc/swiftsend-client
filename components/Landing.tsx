@@ -1,5 +1,5 @@
 "use client";
-import { LangCode, useTranslation } from "@/locales/dictionary";
+import { LangCode, useTranslation,  } from "@/locales/dictionary";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { GoogleIconCustom } from "./CustomIcons";
+
 export default function LandingPage() {
   const [open, setOpen] = useState(false);
   const { t, locale, setLocale } = useTranslation();
@@ -86,7 +87,7 @@ export default function LandingPage() {
       <Box width="100%" textAlign="center" alignContent="center" mb={20}>
         <InstagramIcon sx={{ height: 140, width: 140 }} />
         <Typography variant="h3" fontWeight={300}>
-          instagram
+          {t("appName")}
         </Typography>
       </Box>
 

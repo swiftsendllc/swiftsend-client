@@ -1,6 +1,7 @@
 "use client";
 
 import useAPI from "@/hooks/api/useAPI";
+import { useTranslation } from "@/locales/dictionary";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -20,7 +21,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
 import { useState } from "react";
 import Animation from "./Animation";
-import { useTranslation } from "@/locales/dictionary";
 
 export default function LoginPage() {
   const { login } = useAPI();
@@ -29,7 +29,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -71,7 +71,7 @@ export default function LoginPage() {
           <InstagramIcon sx={{ height: 100, width: 100 }} />
         </Animation>
         <Typography variant="h5" fontWeight={300}>
-          instagram
+          {t("appName")}
         </Typography>
       </Box>
       <Box width="100%" alignContent="center" textAlign="center" mt={10}>
@@ -93,7 +93,7 @@ export default function LoginPage() {
           <TextField
             required
             id="email-required"
-            label="Email"
+            label={t("email")}
             type="email"
             autoComplete="username"
             value={email}
@@ -105,7 +105,7 @@ export default function LoginPage() {
           <TextField
             required
             id="password-required"
-            label="Password"
+            label={t("password")}
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -136,7 +136,7 @@ export default function LoginPage() {
                 }}
                 href="/forgot-password"
               >
-                {t('forgotPassword')}
+                {t("forgotPassword")}
               </Link>
             </Typography>
 
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 }}
                 href="/signup"
               >
-                {t('createAccount')}
+                {t("createAccount")}
               </Link>
             </Typography>
           </Stack>
