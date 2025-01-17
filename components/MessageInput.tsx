@@ -96,9 +96,9 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
                     >
                       <SendIcon />
                     </LoadingButton>
-                      <Button onClick={() => inputRef.current?.click()}>
-                        <LandscapeIcon />
-                      </Button>
+                    <Button onClick={() => inputRef.current?.click()}>
+                      <LandscapeIcon />
+                    </Button>
                     <input
                       type="file"
                       ref={inputRef}

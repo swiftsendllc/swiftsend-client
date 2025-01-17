@@ -3,7 +3,9 @@
 import MessageInput from "@/components/MessageInput";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
+import { SocketContext } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
+import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
@@ -29,7 +31,6 @@ import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import InfoChannelDrawer from "./InfoChannelDrawer";
 import InfoMessageDrawer from "./InfoMessageDrawer";
-import { MessagesEntity } from "@/hooks/entities/messages.entities";
 
 export default function SingleMessage() {
   const { getChannelMessages } = useMessageAPI();
@@ -44,6 +45,7 @@ export default function SingleMessage() {
     null
   );
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const { socket } = useContext(SocketContext);
 
   const loadChannelMessages = async () => {
     try {
@@ -55,6 +57,26 @@ export default function SingleMessage() {
     }
   };
 
+  const getSocketMessages =   () => {
+    if (socket) {
+      console.log("Socket connected:", socket?.id);
+       socket.on("newMessage", (newMessage: MessagesEntity) => {
+        console.log("New messages received:", newMessage);
+        setMessages((prev) => [...prev, newMessage]);
+      });
+      socket.on("connect_err", (error) => {
+        console.error("Socket connection error:", error);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        console.log("Socket disconnected:", socket?.id);
+        socket.off("newMessage");
+      }
+    };
+  };
+
   useEffect(() => {
     if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
@@ -64,6 +86,13 @@ export default function SingleMessage() {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    const cleanUp = getSocketMessages();
+    return () => {
+      cleanUp()
+    }
+  }, [socket]); //eslint-disable-line
 
   return (
     <>

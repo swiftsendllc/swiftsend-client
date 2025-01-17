@@ -1,3 +1,4 @@
+import { SocketContextProvider } from "@/hooks/context/socket-context";
 import { UserContextWrapper } from "@/hooks/context/user-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { authCookieKey } from "@/library/constants";
@@ -103,7 +104,13 @@ export default async function RootLayout({
         />
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <UserContextWrapper user={user}>{children}</UserContextWrapper>
+            <UserContextWrapper user={user}>
+              <SocketContextProvider
+                serverURL={process.env.NEXT_PUBLIC_API_URL!}
+              >
+                {children}
+              </SocketContextProvider>
+            </UserContextWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

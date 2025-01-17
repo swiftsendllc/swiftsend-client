@@ -1,6 +1,10 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie } from "cookies-next";
-import { DeleteMessageInput, EditMessageInput, MessageUserInput } from "../entities/messages.entities";
+import {
+  DeleteMessageInput,
+  EditMessageInput,
+  MessageUserInput,
+} from "../entities/messages.entities";
 
 const useMessageAPI = () => {
   const getChannels = async () => {
@@ -93,13 +97,17 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const forwardMessage = async (_id: string, body: Partial<MessageUserInput>, receiverId: string) => {
+  const forwardMessage = async (
+    _id: string,
+    body: Partial<MessageUserInput>,
+    receiverId: string
+  ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/${receiverId}/forward`,
       {
         method: "POST",
-        body:JSON.stringify(body),
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -133,7 +141,11 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const deleteMessage = async (_id: string, body: Partial<DeleteMessageInput>, deleted: boolean) => {
+  const deleteMessage = async (
+    _id: string,
+    body: Partial<DeleteMessageInput>,
+    deleted: boolean
+  ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/${deleted}/delete`,
@@ -156,7 +168,26 @@ const useMessageAPI = () => {
   const deleteChannelMessages = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/channels/delete/${_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/channels/messages/delete/${_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error);
+    }
+    return data;
+  };
+
+  const deleteChannel = async (_id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/channels/${_id}/delete`,
       {
         method: "DELETE",
         headers: {
@@ -181,7 +212,8 @@ const useMessageAPI = () => {
     editMessage,
     createChannel,
     deleteChannelMessages,
-    forwardMessage
+    forwardMessage,
+    deleteChannel
   };
 };
 export default useMessageAPI;
