@@ -44,6 +44,7 @@ export default function SingleMessage() {
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
     null
   );
+
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const { socket } = useContext(SocketContext);
 
@@ -57,10 +58,10 @@ export default function SingleMessage() {
     }
   };
 
-  const getSocketMessages =   () => {
+  const getSocketMessages = () => {
     if (socket) {
       console.log("Socket connected:", socket?.id);
-       socket.on("newMessage", (newMessage: MessagesEntity) => {
+      socket.on("newMessage", (newMessage: MessagesEntity) => {
         console.log("New messages received:", newMessage);
         setMessages((prev) => [...prev, newMessage]);
       });
@@ -90,8 +91,8 @@ export default function SingleMessage() {
   useEffect(() => {
     const cleanUp = getSocketMessages();
     return () => {
-      cleanUp()
-    }
+      cleanUp();
+    };
   }, [socket]); //eslint-disable-line
 
   return (
@@ -211,11 +212,11 @@ export default function SingleMessage() {
                         ) : null
                       }
                       title={
-                        !message.imageURL && !message.deleted ? (
+                         !message.deleted  ? (
                           <Typography fontWeight={200}>
                             {typeof message.message ||
-                            message.imageURL === "string"
-                              ? message.message || message.imageURL
+                            message.message === "string"
+                              ? message.message
                               : ""}
                           </Typography>
                         ) : (
@@ -248,7 +249,7 @@ export default function SingleMessage() {
                         </>
                       }
                     />
-                    {message.imageURL && (
+                    {message.imageURL && !message.deleted &&  (
                       <CardMedia
                         style={{
                           objectFit: "contain",
