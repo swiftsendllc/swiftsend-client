@@ -6,10 +6,11 @@ import AddIcon from "@mui/icons-material/Add";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 
-import { FiberManualRecord } from "@mui/icons-material";
+import { StyledBadge } from "@/components/SearchComponents";
+import { SocketContext } from "@/hooks/context/socket-context";
+import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import {
   Avatar,
-  Badge,
   Button,
   Card,
   CardHeader,
@@ -24,7 +25,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 
 export function ChannelList() {
   const [user] = useContext(UserContext);
@@ -32,6 +32,7 @@ export function ChannelList() {
   const [channel, setChannel] = useState<ChannelsEntity[]>([]);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
+  const { onlineUsers } = useContext(SocketContext);
 
   const loadChannels = async () => {
     try {
@@ -105,25 +106,29 @@ export function ChannelList() {
               <CardHeader
                 avatar={
                   <>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                      badgeContent={
-                        <FiberManualRecord
-                          sx={{
-                            color: "#80EF80",
-                            fontSize: "15px",
-                            border: "#80EF80",
-                          }}
+                    {onlineUsers ? (
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent
+                        variant="dot"
+                      >
+                        <Avatar
+                          aria-label="recipe"
+                          src={channelUser.receiver.avatarURL}
+                          alt={channelUser.receiver.fullName}
                         />
-                      }
-                    >
+                      </StyledBadge>
+                    ) : (
                       <Avatar
                         aria-label="recipe"
                         src={channelUser.receiver.avatarURL}
                         alt={channelUser.receiver.fullName}
                       />
-                    </Badge>
+                    )}
                   </>
                 }
                 action={

@@ -6,7 +6,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  Badge,
   Box,
   Container,
   Icon,
@@ -19,6 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useContext } from "react";
+import { StyledBadge } from "./SearchComponents";
 
 export default function BottomNav() {
   const _pathName = usePathname();
@@ -98,27 +98,11 @@ export default function BottomNav() {
                     m={0}
                   >
                     {option.hasBadge ? (
-                      <Badge
-                        badgeContent={9}
+                      <StyledBadge
+                        badgeContent
                         anchorOrigin={{
                           vertical: "top",
                           horizontal: "right",
-                        }}
-                        color="primary"
-                        sx={{
-                          "& .MuiBadge-badge": {
-                            animation: "ripple 1.2s infinite ease-in-out",
-                          },
-                          "@keyframes ripple": {
-                            "0%": {
-                              transform: "scale(.8)",
-                              opacity: 1,
-                            },
-                            "100%": {
-                              transform: "scale(1)",
-                              opacity: 0,
-                            },
-                          },
                         }}
                       >
                         <Icon
@@ -128,7 +112,7 @@ export default function BottomNav() {
                         >
                           {option.icon}
                         </Icon>
-                      </Badge>
+                      </StyledBadge>
                     ) : (
                       <Icon
                         color={pathName === option.value ? "primary" : "action"}

@@ -1,12 +1,12 @@
 "use client";
 
 import MessageInput from "@/components/MessageInput";
+import { StyledBadge } from "@/components/SearchComponents";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import { SocketContext } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
 import { MessagesEntity } from "@/hooks/entities/messages.entities";
-import { FiberManualRecord } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import EditIcon from "@mui/icons-material/Edit";
@@ -14,7 +14,6 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import {
   Avatar,
-  Badge,
   Card,
   CardContent,
   CardHeader,
@@ -46,8 +45,8 @@ export default function SingleMessage() {
   );
 
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
-  const { socket } = useContext(SocketContext);
-
+  const { socket, onlineUsers } = useContext(SocketContext);
+  console.log("online users:", onlineUsers);
   const loadChannelMessages = async () => {
     try {
       const message = await getChannelMessages(channelId as string);
@@ -65,6 +64,15 @@ export default function SingleMessage() {
         console.log("New messages received:", newMessage);
         setMessages((prev) => [...prev, newMessage]);
       });
+      socket.on("messageEdited", (editedMessage: MessagesEntity) => {
+        console.log("Message edited:", editedMessage)
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg._id === editedMessage._id ? { ...msg, ...editedMessage } : msg
+          )
+        );
+      });
+
       socket.on("connect_err", (error) => {
         console.error("Socket connection error:", error);
       });
@@ -74,6 +82,7 @@ export default function SingleMessage() {
       if (socket) {
         console.log("Socket disconnected:", socket?.id);
         socket.off("newMessage");
+        socket.off("messageEdited");
       }
     };
   };
@@ -116,25 +125,39 @@ export default function SingleMessage() {
                     <IconButton onClick={() => router.back()}>
                       <ArrowBackOutlinedIcon />
                     </IconButton>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                      badgeContent={
-                        <FiberManualRecord
-                          sx={{
-                            color: "#80EF80",
-                            fontSize: "15px",
-                            border: "#80EF80",
-                          }}
+                    {onlineUsers ? (
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent
+                        variant="dot"
+                      >
+                        <Avatar
+                          aria-label="recipe"
+                          src={channel.receiver.avatarURL}
+                          alt={channel.receiver.fullName}
                         />
-                      }
-                    >
-                      <Avatar
-                        aria-label="recipe"
-                        src={channel.receiver.avatarURL}
-                        alt={channel.receiver.fullName}
-                      />
-                    </Badge>
+                      </StyledBadge>
+                    ) : (
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent
+                        variant="dot"
+                      >
+                        <Avatar
+                          aria-label="recipe"
+                          src={channel.receiver.avatarURL}
+                          alt={channel.receiver.fullName}
+                        />
+                      </StyledBadge>
+                    )}
                   </>
                 }
                 title={channel.receiver.fullName}
@@ -212,7 +235,7 @@ export default function SingleMessage() {
                         ) : null
                       }
                       title={
-                         !message.deleted  ? (
+                        !message.deleted ? (
                           <Typography fontWeight={200}>
                             {typeof message.message ||
                             message.message === "string"
@@ -249,7 +272,7 @@ export default function SingleMessage() {
                         </>
                       }
                     />
-                    {message.imageURL && !message.deleted &&  (
+                    {message.imageURL && !message.deleted && (
                       <CardMedia
                         style={{
                           objectFit: "contain",

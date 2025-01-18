@@ -31,6 +31,7 @@ import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Badge, styled } from "@mui/material";
 
 export const yourAccounts = [
   {
@@ -345,3 +346,30 @@ export const postSamples = [
     title: "Bike",
   },
 ];
+
+export const StyledBadge = styled(Badge)(() => ({
+  "& .MuiBadge-badge": {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow:"0 0 0 0px",
+    "&::after": {
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(0.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));

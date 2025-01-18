@@ -1,6 +1,13 @@
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
-import { ChannelsEntity, DeleteMessageInput, EditMessageInput, MessagesEntity, MessageUserInput } from "@/hooks/entities/messages.entities";
+import { SocketContext } from "@/hooks/context/socket-context";
+import {
+  ChannelsEntity,
+  DeleteMessageInput,
+  EditMessageInput,
+  MessagesEntity,
+  MessageUserInput,
+} from "@/hooks/entities/messages.entities";
 
 import { FiberManualRecord } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -50,7 +57,7 @@ export default function InfoMessageDrawer({
   const [channelDialogOpen, setChannelDialogOpen] = useState(false);
   const [, setOpen] = useState(isOpen);
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
-
+  const { socket } = useContext(SocketContext);
   const [channel] = useContext(ChannelContext);
   const [forwardedMessage] = useState<Partial<MessageUserInput>>({
     message: message.message,
@@ -68,7 +75,7 @@ export default function InfoMessageDrawer({
     deleted: message.deleted,
   });
 
-  const handleDrawerClose = () => {
+  const handleClose = () => {
     onClose?.();
     setOpen(false);
   };
@@ -116,15 +123,36 @@ export default function InfoMessageDrawer({
       const updatedMessage = await editMessage(message._id, editedMessage);
       setChannelMessages((pre) =>
         pre.map((msg) =>
-          msg._id === message._id ? { ...msg, ...updatedMessage } : msg
+          msg._id === message._id ? { ...msg, ...editedMessage } : msg
         )
       );
+      socket?.emit("messageEdited", updatedMessage);
       toast.success("Edited");
       setEditDialogOpen(false);
     } catch (error) {
       console.log(error);
       toast.error("Failed to edit message!");
     }
+  };
+
+  const getEditedSocketMessages = () => {
+    if (socket) {
+      console.log("Socket connected", socket?.id);
+      socket.on("messageEdited", (editedMessage: EditMessageInput) => {
+        console.log("Message edited:", editedMessage);
+        setChannelMessages((pre) =>
+          pre.map((msg) =>
+            msg._id === message._id ? { ...msg, ...editedMessage } : msg
+          )
+        );
+      });
+    }
+    return () => {
+      if (socket) {
+        console.log("Socket disconnected:", socket?.id);
+        socket.off("messageEdited");
+      }
+    };
   };
 
   const handleForward = async (receiverId: string) => {
@@ -143,6 +171,13 @@ export default function InfoMessageDrawer({
       toast.error("Failed to load message!");
     }
   };
+
+  useEffect(() => {
+    const cleanUp = getEditedSocketMessages();
+    return () => {
+      cleanUp();
+    };
+  }, [socket]); //eslint-disable-line
 
   const messageInfoOptions = [
     {
@@ -177,7 +212,7 @@ export default function InfoMessageDrawer({
           sx={{
             maxWidth: "xs",
           }}
-          onClose={handleDrawerClose}
+          onClose={handleClose}
         >
           <List>
             {messageInfoOptions.map((option, idx) => {
@@ -259,9 +294,11 @@ export default function InfoMessageDrawer({
               <Button
                 variant="contained"
                 color="success"
-                type="submit"
                 disabled={!editedMessage.message}
-                onClick={handleEdit}
+                onClick={() => {
+                  handleEdit();
+                  handleClose()
+                }}
               >
                 <DoneOutlineIcon /> Save
               </Button>
