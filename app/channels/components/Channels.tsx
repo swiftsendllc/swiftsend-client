@@ -1,12 +1,12 @@
 "use client";
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { UserContext } from "@/hooks/context/user-context";
 import AddIcon from "@mui/icons-material/Add";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 import { StyledBadge } from "@/components/SearchComponents";
+import { ChannelsContext } from "@/hooks/context/channels-context";
 import { SocketContext } from "@/hooks/context/socket-context";
 import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import {
@@ -23,32 +23,17 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useContext, useState } from "react";
+import moment from "moment";
 
-export function ChannelList() {
+export function ChannelPage() {
   const [user] = useContext(UserContext);
-  const { getChannels } = useMessageAPI();
-  const [channel, setChannel] = useState<ChannelsEntity[]>([]);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
   const { onlineUsers } = useContext(SocketContext);
+  const [channels] = useContext(ChannelsContext);
+  console.log(channels)
 
-  const loadChannels = async () => {
-    try {
-      const channels = await getChannels();
-      setChannel(channels);
-    } catch (error) {
-      console.log(error);
-      toast.error(
-        <Typography color="error">Failed to load channels!</Typography>
-      );
-    }
-  };
-
-  useEffect(() => {
-    loadChannels();
-  }, []); //eslint-disable-line
 
   return (
     <>
@@ -93,8 +78,8 @@ export function ChannelList() {
           </Fab>
         </Stack>
         <Divider sx={{ mt: 1 }} />
-        {channel.length > 0 ? (
-          channel.map((channelUser, idx) => (
+        {channels.length > 0 ? (
+          channels.map((channelUser, idx) => (
             <Card
               key={idx}
               sx={{ mb: 0.3, width: "100%", p: 0 }}
@@ -143,9 +128,9 @@ export function ChannelList() {
                 title={channelUser.receiver.fullName}
                 subheader={
                   channelUser.lastMessage
-                    ? `${channelUser.lastMessage.message || ""} • ${new Date(
+                    ? `${channelUser.lastMessage.message || ""} • ${moment(
                         channelUser.lastMessage.createdAt
-                      ).toLocaleString()}`
+                      ).format("LLL")}`
                     : "No messages"
                 }
               />
@@ -159,7 +144,7 @@ export function ChannelList() {
             justifyContent="center"
           >
             <Image
-              src="/svg-icons/sasuke.svg"
+              src="/svg/sasuke.svg"
               style={{
                 objectFit: "cover",
                 width: "100%",
@@ -171,7 +156,7 @@ export function ChannelList() {
               priority
             />
             <Image
-              src="/svg-icons/gun.svg"
+              src="/svg/gun.svg"
               style={{
                 objectFit: "cover",
                 width: "100%",

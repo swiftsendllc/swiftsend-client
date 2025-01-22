@@ -75,7 +75,7 @@ export default function AccountPostPage() {
             justifyContent="center"
           >
             <Image
-              src="/svg-icons/sasuke1.svg"
+              src="/svg/sasuke1.svg"
               style={{
                 objectFit: "cover",
                 width: "50%",

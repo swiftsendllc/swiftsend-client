@@ -2,6 +2,7 @@
 
 import useAPI from "@/hooks/api/useAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
+import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
@@ -20,7 +21,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import ConnectedModal from "../../components/ConnectedModal";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 
 export default function ConnectedPage() {
   const { getFollowing } = useAPI();
@@ -96,7 +96,7 @@ export default function ConnectedPage() {
             justifyContent="center"
           >
             <Image
-              src="/svg-icons/tomoe.svg"
+              src="/svg/tomoe.svg"
               style={{
                 objectFit: "cover",
                 width: "100%",
@@ -108,7 +108,7 @@ export default function ConnectedPage() {
               priority
             />
             <Image
-              src="/svg-icons/sharingan.svg"
+              src="/svg/sharingan.svg"
               style={{
                 objectFit: "cover",
                 width: "100%",

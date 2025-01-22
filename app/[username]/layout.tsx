@@ -43,7 +43,7 @@ export default async function Layout({
         my={15}
       >
         <Image
-          src="/svg-icons/sasuke1.svg"
+          src="/svg/sasuke1.svg"
           style={{
             objectFit: "cover",
             width: "50%",

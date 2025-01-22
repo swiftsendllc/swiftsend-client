@@ -106,7 +106,7 @@ export default function ConnectionPage() {
             justifyContent="center"
           >
             <Image
-              src="/svg-icons/naruto1.svg"
+              src="/svg/naruto1.svg"
               style={{
                 objectFit: "cover",
                 width: "100%",
@@ -118,7 +118,7 @@ export default function ConnectionPage() {
               priority
             />
             <Image
-              src="/svg-icons/sasuke1.svg"
+              src="/svg/sasuke1.svg"
               style={{
                 objectFit: "cover",
                 width: "50%",

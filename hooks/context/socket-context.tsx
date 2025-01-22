@@ -14,7 +14,7 @@ export const SocketContext = createContext<{
   onlineUsers: [],
 });
 
-export const SocketContextProvider = ({
+export const SocketContextWrapper = ({
   children,
   serverURL,
 }: {

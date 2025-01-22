@@ -3,7 +3,6 @@ import { ChannelContext } from "@/hooks/context/channel-context";
 import { SocketContext } from "@/hooks/context/socket-context";
 import {
   ChannelsEntity,
-  DeleteMessageInput,
   EditMessageInput,
   MessagesEntity,
   MessageUserInput,
@@ -11,7 +10,6 @@ import {
 
 import { FiberManualRecord } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -71,10 +69,6 @@ export default function InfoMessageDrawer({
     }
   );
 
-  const [isDeleted] = useState<Partial<DeleteMessageInput>>({
-    deleted: message.deleted,
-  });
-
   const handleClose = () => {
     onClose?.();
     setOpen(false);
@@ -96,21 +90,16 @@ export default function InfoMessageDrawer({
 
   const handleDelete = async (deleted: boolean) => {
     try {
-      await deleteMessage(message._id, isDeleted, deleted);
+      await deleteMessage(message._id, deleted);
       if (deleted) {
         setChannelMessages((pre) =>
           pre.map((msg) =>
             msg._id === message._id ? { ...msg, deleted: true } : msg
           )
         );
-      } else {
-        setChannelMessages((previous) =>
-          previous.filter((msg) => msg._id !== message._id)
-        );
       }
-
       onClose?.();
-      toast.success(deleted ? "Deleted for everyone" : "Deleted for you");
+      toast.success("Deleted for everyone");
     } catch (error) {
       console.log(error);
       toast.error("Failed to delete message!");
@@ -120,13 +109,12 @@ export default function InfoMessageDrawer({
   const handleEdit = async () => {
     try {
       if (!editedMessage.message) return;
-      const updatedMessage = await editMessage(message._id, editedMessage);
+      await editMessage(message._id, editedMessage);
       setChannelMessages((pre) =>
         pre.map((msg) =>
           msg._id === message._id ? { ...msg, ...editedMessage } : msg
         )
       );
-      socket?.emit("messageEdited", updatedMessage);
       toast.success("Edited");
       setEditDialogOpen(false);
     } catch (error) {
@@ -146,11 +134,21 @@ export default function InfoMessageDrawer({
           )
         );
       });
+
+      socket.on("messageDeleted", (message:{messageId: string, deleted: boolean, deletedAt: Date}) => {
+        console.log( message)
+        setChannelMessages((pre) =>
+          pre.map((msg) =>
+            msg._id === message.messageId ? { ...msg, deleted: message.deleted, deletedAt: message.deletedAt } : msg
+          )
+        );
+      });
     }
     return () => {
       if (socket) {
         console.log("Socket disconnected:", socket?.id);
         socket.off("messageEdited");
+        socket.off("messageDeleted");
       }
     };
   };
@@ -181,12 +179,7 @@ export default function InfoMessageDrawer({
 
   const messageInfoOptions = [
     {
-      label: "Delete for you",
-      icon: <DeleteOutlineIcon sx={{ color: "var(--error)" }} />,
-      action: () => handleDelete(false),
-    },
-    {
-      label: "Delete for everyone",
+      label: "Delete",
       icon: <DeleteSweepOutlinedIcon sx={{ color: "var(--error)" }} />,
       action: () => handleDelete(true),
     },
@@ -297,7 +290,7 @@ export default function InfoMessageDrawer({
                 disabled={!editedMessage.message}
                 onClick={() => {
                   handleEdit();
-                  handleClose()
+                  handleClose();
                 }}
               >
                 <DoneOutlineIcon /> Save

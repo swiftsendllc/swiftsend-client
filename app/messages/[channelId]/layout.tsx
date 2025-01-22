@@ -1,4 +1,5 @@
 import { ChannelContextWrapper } from "@/hooks/context/channel-context";
+import { SocketContextWrapper } from "@/hooks/context/socket-context";
 import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import { authCookieKey } from "@/library/constants";
 import { cookies } from "next/headers";
@@ -34,9 +35,11 @@ export default async function Layout({
 
   return (
     <>
-      <ChannelContextWrapper channel={channel}>
-        {children}
-      </ChannelContextWrapper>
+      <SocketContextWrapper serverURL={process.env.NEXT_PUBLIC_API_URL!}>
+        <ChannelContextWrapper channel={channel}>
+          {children}
+        </ChannelContextWrapper>
+      </SocketContextWrapper>
     </>
   );
 }

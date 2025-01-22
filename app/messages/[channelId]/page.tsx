@@ -28,10 +28,10 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import InfoChannelDrawer from "./InfoChannelDrawer";
-import InfoMessageDrawer from "./InfoMessageDrawer";
+import InfoChannelDrawer from "../components/InfoChannelDrawer";
+import InfoMessageDrawer from "../components/InfoMessageDrawer";
 
-export default function SingleMessage() {
+export default function MessagePage() {
   const { getChannelMessages } = useMessageAPI();
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const { channelId } = useParams();
@@ -64,14 +64,33 @@ export default function SingleMessage() {
         console.log("New messages received:", newMessage);
         setMessages((prev) => [...prev, newMessage]);
       });
+
       socket.on("messageEdited", (editedMessage: MessagesEntity) => {
-        console.log("Message edited:", editedMessage)
+        console.log("Message edited:", editedMessage);
         setMessages((prev) =>
           prev.map((msg) =>
             msg._id === editedMessage._id ? { ...msg, ...editedMessage } : msg
           )
         );
       });
+
+      socket.on(
+        "messageDeleted",
+        (message: { messageId: string; deleted: boolean; deletedAt: Date }) => {
+          console.log("Message deleted:", message);
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg._id === message.messageId
+                ? {
+                    ...msg,
+                    deleted: message.deleted,
+                    deletedAt: message.deletedAt,
+                  }
+                : msg
+            )
+          );
+        }
+      );
 
       socket.on("connect_err", (error) => {
         console.error("Socket connection error:", error);
@@ -83,6 +102,8 @@ export default function SingleMessage() {
         console.log("Socket disconnected:", socket?.id);
         socket.off("newMessage");
         socket.off("messageEdited");
+        socket.off("messageDeleted");
+        socket.off("connect_err");
       }
     };
   };
@@ -222,7 +243,7 @@ export default function SingleMessage() {
                   >
                     <CardHeader
                       action={
-                        !isUser ? (
+                        !isUser && !message.deleted ? (
                           <IconButton
                             sx={{ mt: 0 }}
                             onClick={() => {
@@ -240,7 +261,7 @@ export default function SingleMessage() {
                             {typeof message.message ||
                             message.message === "string"
                               ? message.message
-                              : ""}
+                              : null}
                           </Typography>
                         ) : (
                           <Typography fontWeight={200}>
@@ -250,23 +271,29 @@ export default function SingleMessage() {
                       }
                       subheader={
                         <>
-                          {message.edited ? (
+                          {message.deleted ? (
+                            <>
+                              <Typography variant="caption" fontSize=".55rem">
+                                {new Date(message.deletedAt).toLocaleString()}
+                              </Typography>
+                              <Typography variant="caption" fontSize=".55rem">
+                                {" "}
+                                deleted
+                              </Typography>
+                            </>
+                          ) : message.edited ? (
                             <>
                               <Typography variant="caption" fontSize=".55rem">
                                 {new Date(message.editedAt).toLocaleString()}
                               </Typography>
                               <Typography variant="caption" fontSize=".55rem">
+                                {" "}
                                 edited
                               </Typography>
                             </>
                           ) : (
                             <Typography variant="caption" fontSize=".55rem">
                               {new Date(message.createdAt).toLocaleString()}
-                            </Typography>
-                          )}
-                          {message.deleted && (
-                            <Typography variant="caption" fontSize=".55rem">
-                              {new Date(message.deletedAt).toLocaleString()}
                             </Typography>
                           )}
                         </>
@@ -309,7 +336,7 @@ export default function SingleMessage() {
             </Typography>
 
             <Image
-              src="/svg-icons/naruto3.svg"
+              src="/svg/naruto3.svg"
               style={{
                 objectFit: "cover",
                 width: "100%",
