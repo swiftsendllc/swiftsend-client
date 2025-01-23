@@ -48,7 +48,7 @@ export const SocketContextWrapper = ({
         socket.disconnect();
       }
     };
-  }, []);
+  }, []); //eslint-disable-line
 
   return (
     <SocketContext.Provider value={{ socket, onlineUsers }}>

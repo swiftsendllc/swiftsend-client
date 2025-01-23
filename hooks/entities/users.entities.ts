@@ -1,4 +1,5 @@
 export interface UserProfilesEntity {
+  _id:string
   userId: string;
 
   user: { email: string };

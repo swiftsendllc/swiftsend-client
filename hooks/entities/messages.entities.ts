@@ -1,14 +1,21 @@
 import { UserProfilesEntity } from "./users.entities";
 
-
 export interface ChannelsEntity {
   _id: string;
   users: string[];
   receiver: UserProfilesEntity;
   lastMessage: {
     _id: string;
+    senderId: string;
+    receiverId: string;
+    channelId: string;
     message: string;
-    createdAt: string;
+    imageURL: string | null;
+    createdAt: Date;
+    deletedAt: Date;
+    editedAt: Date;
+    deleted: boolean;
+    edited: boolean;
   } | null;
 }
 
@@ -35,7 +42,3 @@ export interface MessageUserInput {
   message: string;
   imageURL: string;
 }
-
-
-
-

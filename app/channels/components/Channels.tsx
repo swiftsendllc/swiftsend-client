@@ -7,8 +7,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 import { StyledBadge } from "@/components/SearchComponents";
 import { ChannelsContext } from "@/hooks/context/channels-context";
-import { SocketContext } from "@/hooks/context/socket-context";
-import { ChannelsEntity } from "@/hooks/entities/messages.entities";
+import { useSocket } from "@/hooks/context/socket-context";
+import {
+  ChannelsEntity,
+  MessagesEntity,
+} from "@/hooks/entities/messages.entities";
 import {
   Avatar,
   Button,
@@ -21,19 +24,34 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import moment from "moment";
+import { useContext, useEffect, useState } from "react";
 
 export function ChannelPage() {
   const [user] = useContext(UserContext);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
-  const { onlineUsers } = useContext(SocketContext);
-  const [channels] = useContext(ChannelsContext);
-  console.log(channels)
+  const { onlineUsers, socket } = useSocket();
+  const [channels, setChannels] = useContext(ChannelsContext);
 
+  useEffect(() => {
+    socket.on("newMessage", (message: MessagesEntity) => {
+      console.log("lastMessage received:", message);
+      setChannels((channels) => {
+        return channels.map((channel) =>
+          channel._id === message.channelId
+            ? { ...channel, lastMessage: message }
+            : channel
+        );
+      });
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [setChannels]); //eslint-disable-line
 
   return (
     <>

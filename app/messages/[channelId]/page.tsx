@@ -121,7 +121,6 @@ export default function MessagePage() {
   useEffect(() => {
     if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
-
   useEffect(() => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });

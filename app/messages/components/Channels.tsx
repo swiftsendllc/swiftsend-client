@@ -7,7 +7,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 import { StyledBadge } from "@/components/SearchComponents";
 import { ChannelsContext } from "@/hooks/context/channels-context";
-import { SocketContext } from "@/hooks/context/socket-context";
+import { useSocket } from "@/hooks/context/socket-context";
 import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import {
   Avatar,
@@ -21,19 +21,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
-import moment from "moment";
 
 export function ChannelPage() {
   const [user] = useContext(UserContext);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
-  const { onlineUsers } = useContext(SocketContext);
   const [channels] = useContext(ChannelsContext);
-  console.log(channels)
-
+  const { onlineUsers } = useSocket();
+  console.log(channels);
 
   return (
     <>

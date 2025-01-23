@@ -7,6 +7,7 @@ const emptyChannel = {
   _id: "",
   users: ["", ""],
   receiver: {
+    _id:"",
     userId: "",
     fullName: "",
     avatarURL: "",
@@ -23,7 +24,19 @@ const emptyChannel = {
     region: "",
     following: false,
   },
-  lastMessage: null,
+  lastMessage: {
+    _id:"",
+    senderId: "",
+    receiverId: "",
+    channelId: "",
+    message: "",
+    imageURL: "",
+    createdAt: new Date(),
+    deletedAt: new Date(),
+    editedAt: new Date(),
+    deleted: false,
+    edited: false
+  }
 } satisfies ChannelsEntity;
 
 export const ChannelContext = createContext<

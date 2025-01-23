@@ -4,6 +4,7 @@ import { createContext, useState } from "react";
 import { UserProfilesEntity } from "../entities/users.entities";
 
 const emptyUser = {
+  _id:"",
   userId: "",
   fullName: "",
   avatarURL: "",
