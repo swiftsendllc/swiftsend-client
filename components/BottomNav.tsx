@@ -39,7 +39,7 @@ export default function BottomNav() {
       icon: <SearchIcon />,
     },
     {
-      value: "/messages",
+      value: "/channels",
       label: "Message",
       icon: <EmailIcon />,
       hasBadge: true,

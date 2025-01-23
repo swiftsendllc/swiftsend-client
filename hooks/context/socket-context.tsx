@@ -21,44 +21,47 @@ export const SocketContextWrapper = ({
   children: React.ReactNode;
   serverURL: string;
 }) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [onlineUsers, setOnLineUsers] = useState<string[]>([]);
   const [user] = useContext(UserContext);
-
   const userId = user?.userId || null;
+  const socket = io(serverURL, { query: { userId } });
+  const [onlineUsers, setOnLineUsers] = useState<string[]>([]);
 
   useEffect(() => {
-    if (userId) {
-      const socketConnection = io(serverURL, { query: { userId } });
-      setSocket(socketConnection);
+    socket.on("connect", () => {
+      console.log("Socket connected successfully:", socket.id);
+    });
 
-      socketConnection.on("connect", () => {
-        console.log("Socket connected successfully:", socketConnection.id);
-      });
+    socket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err);
+    });
 
-      socketConnection.on("connect_error", (err) => {
-        console.error("Socket connection error:", err);
-      });
+    socket.on("getOnlineUsers", (users: string[]) => {
+      setOnLineUsers(users);
+    });
 
-      socketConnection.on("getOnlineUsers", (users: string[]) => {
-        setOnLineUsers(users);
-      });
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected");
+    });
 
-      socketConnection.on("disconnect", () => {
-        console.log("Socket disconnected");
-      });
-
-      return () => {
-        if (socketConnection) {
-          socketConnection.disconnect();
-        }
-      };
-    }
-  }, [userId, serverURL]);
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []);
 
   return (
     <SocketContext.Provider value={{ socket, onlineUsers }}>
       {children}
     </SocketContext.Provider>
   );
+};
+
+export const useSocket = () => {
+  const { socket, onlineUsers } = useContext(SocketContext);
+  if (!socket) {
+    throw new Error("useSocket is not in context");
+  }
+
+  return { socket, onlineUsers };
 };

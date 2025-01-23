@@ -23,7 +23,6 @@ export interface MessagesEntity {
   deletedAt: Date;
   editedAt: Date;
   user: UserProfilesEntity;
-  deletedBy: string[];
   deleted: boolean;
   edited: boolean;
 }
@@ -37,8 +36,6 @@ export interface MessageUserInput {
   imageURL: string;
 }
 
-export interface DeleteMessageInput {
-  deleted: boolean;
-}
+
 
 

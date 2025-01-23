@@ -77,6 +77,12 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
             placeholder={`𝔐𝔢𝔰𝔰𝔞𝔤𝔢 ${channel.receiver.fullName}`}
             value={messageInput || ""}
             onChange={(e) => setMessageInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                 handleMessage();
+              }
+            }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -91,7 +97,7 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
                       loading={loading}
                       loadingPosition="start"
                       startIcon={null}
-                      disabled={!messageInput}
+                      disabled={!messageInput || messageInput.trim() === ""}
                       onClick={handleMessage}
                     >
                       <SendIcon />

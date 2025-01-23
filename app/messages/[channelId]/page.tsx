@@ -4,7 +4,7 @@ import MessageInput from "@/components/MessageInput";
 import { StyledBadge } from "@/components/SearchComponents";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
-import { SocketContext } from "@/hooks/context/socket-context";
+import { useSocket } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
 import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
@@ -43,10 +43,9 @@ export default function MessagePage() {
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
     null
   );
-
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
-  const { socket, onlineUsers } = useContext(SocketContext);
-  console.log("online users:", onlineUsers);
+  const { socket, onlineUsers } = useSocket();
+
   const loadChannelMessages = async () => {
     try {
       const message = await getChannelMessages(channelId as string);
@@ -57,56 +56,67 @@ export default function MessagePage() {
     }
   };
 
-  const getSocketMessages = () => {
-    if (socket) {
-      console.log("Socket connected:", socket?.id);
-      socket.on("newMessage", (newMessage: MessagesEntity) => {
-        console.log("New messages received:", newMessage);
-        setMessages((prev) => [...prev, newMessage]);
-      });
+  useEffect(() => {
+    console.log("Socket connected:", socket?.id);
+    socket.on("newMessage", (newMessage: MessagesEntity) => {
+      console.log("New messages received:", newMessage);
+      setMessages((prev) => [...prev, newMessage]);
+    });
 
-      socket.on("messageEdited", (editedMessage: MessagesEntity) => {
+    socket.on(
+      "messageEdited",
+      (editedMessage: {
+        messageId: string;
+        message: string;
+        editedAt: Date;
+        edited: boolean;
+      }) => {
         console.log("Message edited:", editedMessage);
         setMessages((prev) =>
           prev.map((msg) =>
-            msg._id === editedMessage._id ? { ...msg, ...editedMessage } : msg
+            msg._id === editedMessage.messageId
+              ? {
+                  ...msg,
+                  message: editedMessage.message,
+                  editedAt: editedMessage.editedAt,
+                  edited: true,
+                }
+              : msg
           )
         );
-      });
+      }
+    );
 
-      socket.on(
-        "messageDeleted",
-        (message: { messageId: string; deleted: boolean; deletedAt: Date }) => {
-          console.log("Message deleted:", message);
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg._id === message.messageId
-                ? {
-                    ...msg,
-                    deleted: message.deleted,
-                    deletedAt: message.deletedAt,
-                  }
-                : msg
-            )
-          );
-        }
-      );
-
-      socket.on("connect_err", (error) => {
-        console.error("Socket connection error:", error);
-      });
-    }
+    socket.on(
+      "messageDeleted",
+      (message: { messageId: string; deleted: boolean; deletedAt: Date }) => {
+        console.log("Message deleted:", message);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg._id === message.messageId
+              ? {
+                  ...msg,
+                  messageId: message.messageId,
+                  deletedAt: message.deletedAt,
+                  deleted: true,
+                }
+              : msg
+          )
+        );
+      }
+    );
+    socket.on("connect_err", (error) => {
+      console.error("Socket connection error:", error);
+    });
 
     return () => {
-      if (socket) {
-        console.log("Socket disconnected:", socket?.id);
-        socket.off("newMessage");
-        socket.off("messageEdited");
-        socket.off("messageDeleted");
-        socket.off("connect_err");
-      }
+      console.log("Socket disconnected:", socket.id);
+      socket.off("newMessage");
+      socket.off("messageEdited");
+      socket.off("messageDeleted");
+      socket.off("connect_err");
     };
-  };
+  }, [setMessages]); //eslint-disable-line
 
   useEffect(() => {
     if (channelId) loadChannelMessages();
@@ -117,13 +127,6 @@ export default function MessagePage() {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
-  useEffect(() => {
-    const cleanUp = getSocketMessages();
-    return () => {
-      cleanUp();
-    };
-  }, [socket]); //eslint-disable-line
 
   return (
     <>
@@ -143,7 +146,7 @@ export default function MessagePage() {
               <CardHeader
                 avatar={
                   <>
-                    <IconButton onClick={() => router.back()}>
+                    <IconButton onClick={() => router.push("/channels")}>
                       <ArrowBackOutlinedIcon />
                     </IconButton>
                     {onlineUsers ? (
@@ -256,16 +259,16 @@ export default function MessagePage() {
                         ) : null
                       }
                       title={
-                        !message.deleted ? (
+                        message.deleted ? (
+                          <Typography fontWeight={200}>
+                            This message was deleted
+                          </Typography>
+                        ) : (
                           <Typography fontWeight={200}>
                             {typeof message.message ||
                             message.message === "string"
                               ? message.message
                               : null}
-                          </Typography>
-                        ) : (
-                          <Typography fontWeight={200}>
-                            This message was deleted
                           </Typography>
                         )
                       }
@@ -369,7 +372,7 @@ export default function MessagePage() {
             isOpen={infoMessageDrawer}
             onClose={() => setInfoMessageDrawer(false)}
             message={selectedMessage}
-            setChannelMessages={setMessages}
+            setMessages={setMessages}
           />
         )}
 
