@@ -25,8 +25,6 @@ export default function BottomNav() {
   const { id } = useParams();
   const [user] = useContext(UserContext);
 
-  console.log({ user });
-
   const navigationItems = [
     {
       value: "/home",

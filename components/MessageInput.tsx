@@ -80,7 +80,7 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                 handleMessage();
+                handleMessage();
               }
             }}
             slotProps={{

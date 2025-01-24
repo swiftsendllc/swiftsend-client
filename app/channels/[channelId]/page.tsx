@@ -28,8 +28,8 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import InfoChannelDrawer from "../components/InfoChannelDrawer";
-import InfoMessageDrawer from "../components/InfoMessageDrawer";
+import InfoChannelDrawer from "./components/InfoChannelDrawer";
+import InfoMessageDrawer from "./components/InfoMessageDrawer";
 
 export default function MessagePage() {
   const { getChannelMessages } = useMessageAPI();
@@ -45,19 +45,18 @@ export default function MessagePage() {
   );
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const { socket, onlineUsers } = useSocket();
-
   const loadChannelMessages = async () => {
     try {
       const message = await getChannelMessages(channelId as string);
       setMessages(message);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to load posts!");
+      toast.error("Failed to load messages!");
     }
   };
 
   useEffect(() => {
-    console.log("Socket connected:", socket?.id);
+    console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
       console.log("New messages received:", newMessage);
       setMessages((prev) => [...prev, newMessage]);
@@ -258,18 +257,11 @@ export default function MessagePage() {
                         ) : null
                       }
                       title={
-                        message.deleted ? (
-                          <Typography fontWeight={200}>
-                            This message was deleted
-                          </Typography>
-                        ) : (
-                          <Typography fontWeight={200}>
-                            {typeof message.message ||
-                            message.message === "string"
-                              ? message.message
-                              : null}
-                          </Typography>
-                        )
+                        <Typography fontWeight={200}>
+                          {message.deleted
+                            ? "This message was deleted"
+                            : message.message || "unknown message"}{" "}
+                        </Typography>
                       }
                       subheader={
                         <>

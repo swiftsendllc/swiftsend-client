@@ -35,6 +35,7 @@ export function ChannelPage() {
   const router = useRouter();
   const { onlineUsers, socket } = useSocket();
   const [channels, setChannels] = useContext(ChannelsContext);
+  const online = channels.map((channelUser) => onlineUsers?.includes(channelUser.receiver.userId))
 
   useEffect(() => {
     socket.on("newMessage", (message: MessagesEntity) => {
@@ -103,13 +104,12 @@ export function ChannelPage() {
               sx={{ mb: 0.3, width: "100%", p: 0 }}
               onClick={() => {
                 setSelectedUser(channelUser);
-                router.push(`/messages/${channelUser._id}`);
+                router.push(`/channels/${channelUser._id}`);
               }}
             >
               <CardHeader
                 avatar={
                   <>
-                    {onlineUsers ? (
                       <StyledBadge
                         overlap="circular"
                         anchorOrigin={{
@@ -118,6 +118,7 @@ export function ChannelPage() {
                         }}
                         badgeContent
                         variant="dot"
+                        color={online ? "default" : "error"}
                       >
                         <Avatar
                           aria-label="recipe"
@@ -125,13 +126,7 @@ export function ChannelPage() {
                           alt={channelUser.receiver.fullName}
                         />
                       </StyledBadge>
-                    ) : (
-                      <Avatar
-                        aria-label="recipe"
-                        src={channelUser.receiver.avatarURL}
-                        alt={channelUser.receiver.fullName}
-                      />
-                    )}
+
                   </>
                 }
                 action={

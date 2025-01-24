@@ -11,7 +11,7 @@ const getChannels = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/channels`, {
     method: "GET",
     headers: {
-      Content_Type: "Application/json",
+      "Content-Type": "Application/json",
       Authorization: `Bearer ${accessToken}`,
     },
   });
