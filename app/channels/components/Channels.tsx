@@ -17,15 +17,17 @@ import {
   Button,
   Card,
   CardHeader,
+  CircularProgress,
   Container,
   Divider,
   Fab,
+  LinearProgress,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import { setCookie } from "cookies-next";
 import moment from "moment";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -33,13 +35,12 @@ export function ChannelPage() {
   const [user] = useContext(UserContext);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
-  const { onlineUsers, socket } = useSocket();
+  const { socket, onlineUsers } = useSocket();
   const [channels, setChannels] = useContext(ChannelsContext);
-  const online = channels.map((channelUser) => onlineUsers?.includes(channelUser.receiver.userId))
+  console.log("online users:", onlineUsers);
 
   useEffect(() => {
     socket.on("newMessage", (message: MessagesEntity) => {
-      console.log("lastMessage received:", message);
       setChannels((channels) => {
         return channels.map((channel) =>
           channel._id === message.channelId
@@ -49,8 +50,66 @@ export function ChannelPage() {
       });
     });
 
+    socket.on(
+      "messageDeleted",
+      (message: {
+        messageId: string;
+        deleted: boolean;
+        deletedAt: Date;
+        message: string;
+      }) => {
+        setChannels((channels) => {
+          return channels.map((channel) =>
+            channel.lastMessage?._id === message.messageId
+              ? {
+                  ...channel,
+                  lastMessage: {
+                    ...channel.lastMessage,
+                    deleted: message.deleted,
+                    deletedAt: message.deletedAt,
+                    message: "",
+                  },
+                }
+              : channel
+          );
+        });
+      }
+    );
+    socket.on(
+      "messageEdited",
+      (editedMessage: {
+        messageId: string;
+        message: string;
+        editedAt: Date;
+        edited: true;
+      }) => {
+        setChannels((channels) => {
+          return channels.map((channel) =>
+            channel.lastMessage?._id === editedMessage.messageId
+              ? {
+                  ...channel,
+                  lastMessage: {
+                    ...channel.lastMessage,
+                    edited: editedMessage.edited,
+                    editedAt: editedMessage.editedAt,
+                    message: editedMessage.message,
+                  },
+                }
+              : channel
+          );
+        });
+      }
+    );
+
+    socket.on("onlineUsers", (users: string[]) => {
+      setCookie("onlineUsers", JSON.stringify(users));
+    });
+
     return () => {
       socket.off("newMessage");
+      socket.off("onlineUsers");
+      socket.off("messageDeleted");
+      socket.off("messageEdited");
     };
   }, [setChannels]); //eslint-disable-line
 
@@ -71,7 +130,7 @@ export function ChannelPage() {
 
           <TextField
             sx={{ width: "60%" }}
-            label="𝔖𝔢𝔞𝔯𝔠𝔥"
+            label="Search"
             slotProps={{
               input: {
                 sx: { borderRadius: "10px" },
@@ -98,90 +157,87 @@ export function ChannelPage() {
         </Stack>
         <Divider sx={{ mt: 1 }} />
         {channels.length > 0 ? (
-          channels.map((channelUser, idx) => (
-            <Card
-              key={idx}
-              sx={{ mb: 0.3, width: "100%", p: 0 }}
-              onClick={() => {
-                setSelectedUser(channelUser);
-                router.push(`/channels/${channelUser._id}`);
-              }}
-            >
-              <CardHeader
-                avatar={
-                  <>
-                      <StyledBadge
-                        overlap="circular"
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                        badgeContent
-                        variant="dot"
-                        color={online ? "default" : "error"}
-                      >
+          channels.map((channelUser, idx) => {
+            console.log("The user is:",channelUser.receiver.isOnline)
+            return (
+              <Card
+                key={idx}
+                sx={{ mb: 0.3, width: "100%", p: 0 }}
+                onClick={() => {
+                  setSelectedUser(channelUser);
+                  router.push(`/channels/${channelUser._id}`);
+                }}
+              >
+                <CardHeader
+                  avatar={
+                    <>
+                      {channelUser.receiver.isOnline ? (
+                        <StyledBadge
+                          overlap="circular"
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                          }}
+                          badgeContent
+                          variant="dot"
+                        >
+                          <Avatar
+                            aria-label="recipe"
+                            src={channelUser.receiver.avatarURL}
+                            alt={channelUser.receiver.fullName}
+                          />
+                        </StyledBadge>
+                      ) : (
                         <Avatar
                           aria-label="recipe"
                           src={channelUser.receiver.avatarURL}
                           alt={channelUser.receiver.fullName}
                         />
-                      </StyledBadge>
-
-                  </>
-                }
-                action={
-                  <Button
-                    sx={{ height: 20, fontWeight: 200 }}
-                    aria-label="settings"
-                    variant="text"
-                  >
-                    <AddIcon />
-                  </Button>
-                }
-                title={channelUser.receiver.fullName}
-                subheader={
-                  channelUser.lastMessage
-                    ? `${channelUser.lastMessage.message || ""} • ${moment(
-                        channelUser.lastMessage.createdAt
-                      ).format("LLL")}`
-                    : "No messages"
-                }
-              />
-            </Card>
-          ))
+                      )}
+                    </>
+                  }
+                  action={
+                    <Button
+                      sx={{ height: 20, fontWeight: 200 }}
+                      aria-label="settings"
+                      variant="text"
+                    >
+                      <AddIcon />
+                    </Button>
+                  }
+                  title={channelUser.receiver.fullName}
+                  subheader={
+                    channelUser.lastMessage?.deleted
+                      ? "This message was deleted"
+                      : channelUser.lastMessage?.edited
+                      ? `${
+                          channelUser.lastMessage.message.slice(0, 10) || ""
+                        }... • ${moment(
+                          channelUser.lastMessage.editedAt
+                        ).format("hh:mm A")}`
+                      : `${
+                          channelUser.lastMessage?.message.slice(0, 10) || ""
+                        }... • ${moment(
+                          channelUser.lastMessage?.createdAt
+                        ).format("hh:mm A")}`
+                  }
+                />
+              </Card>
+            );
+          })
         ) : (
-          <Stack
-            my="10"
-            alignContent="center"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Image
-              src="/svg/sasuke.svg"
-              style={{
-                objectFit: "cover",
-                width: "100%",
-                height: "100%",
-              }}
-              alt="image"
-              width={300}
-              height={100}
-              priority
-            />
-            <Image
-              src="/svg/gun.svg"
-              style={{
-                objectFit: "cover",
-                width: "100%",
-                height: "100%",
-              }}
-              alt="image"
-              width={300}
-              height={100}
-              priority
-            />
-            <Typography variant="h6">
-              𝔜𝔬𝔲𝔯 𝔪𝔢𝔰𝔰𝔞𝔤𝔢𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!
+          <Stack my="10" sx={{ width: "100%" }} spacing={2}>
+            <LinearProgress color="warning" />
+            <Stack p={20}>
+              <CircularProgress color="error" />
+            </Stack>
+            <Typography
+              justifyContent="center"
+              textAlign="center"
+              color="warning"
+              variant="body1"
+            >
+              There is an error while loading the page
             </Typography>
           </Stack>
         )}

@@ -19,7 +19,8 @@ const emptyUser = {
   followerCount: 0,
   followingCount: 0,
   region: "",
-  following: false
+  following: false,
+  lastSeen: new Date()
 } satisfies UserProfilesEntity;
 
 export const CreatorContext = createContext<

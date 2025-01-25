@@ -7,7 +7,7 @@ const emptyChannel = {
   _id: "",
   users: ["", ""],
   receiver: {
-    _id:"",
+    _id: "",
     userId: "",
     fullName: "",
     avatarURL: "",
@@ -23,9 +23,11 @@ const emptyChannel = {
     followingCount: 0,
     region: "",
     following: false,
+    isOnline: false,
+    lastSeen: new Date()
   },
   lastMessage: {
-    _id:"",
+    _id: "",
     senderId: "",
     receiverId: "",
     channelId: "",
@@ -35,8 +37,8 @@ const emptyChannel = {
     deletedAt: new Date(),
     editedAt: new Date(),
     deleted: false,
-    edited: false
-  }
+    edited: false,
+  },
 } satisfies ChannelsEntity;
 
 export const ChannelContext = createContext<
@@ -50,7 +52,9 @@ export function ChannelContextWrapper({
   children: React.ReactNode;
   channel: ChannelsEntity | null;
 }) {
-  const [channelInfo, setChannel] = useState<ChannelsEntity>(channel || emptyChannel);
+  const [channelInfo, setChannel] = useState<ChannelsEntity>(
+    channel || emptyChannel
+  );
   return (
     <ChannelContext.Provider value={[channelInfo, setChannel]}>
       {children}

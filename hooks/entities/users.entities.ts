@@ -22,6 +22,8 @@ export interface UserProfilesEntity {
   followingCount: number;
 
   following: boolean;
+  isOnline?: boolean;
+  lastSeen: Date
 }
 
 export interface UpdateUserInput {

@@ -1,9 +1,15 @@
+import BottomNav from "@/components/BottomNav";
 import { CreatorContextWrapper } from "@/hooks/context/creator-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { authCookieKey } from "@/library/constants";
-import { Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  LinearProgress,
+  Stack,
+} from "@mui/material";
 import { cookies } from "next/headers";
-import Image from "next/image";
 import React from "react";
 
 const getUser = async (username: string) => {
@@ -34,31 +40,31 @@ export default async function Layout({
   params: Record<string, string>;
 }>) {
   const user = await getUser(params.username);
+
   if (!user) {
     return (
-      <Stack
-        alignContent="center"
-        alignItems="center"
-        justifyContent="center"
-        my={15}
-      >
-        <Image
-          src="/svg/sasuke1.svg"
-          style={{
-            objectFit: "cover",
-            width: "50%",
-            height: "50%",
-          }}
-          alt="image"
-          width={300}
-          height={100}
-          priority
-        />
-        <Typography variant="h6" fontWeight="50" textAlign="center" mt={5}>
-          𝔚𝔢 𝔞𝔯𝔢 𝔲𝔫𝔞𝔳𝔞𝔦𝔩𝔞𝔟𝔩𝔢 𝔞𝔱 𝔱𝔥𝔢 𝔪𝔬𝔪𝔢𝔫𝔱.
-          <br /> 𝔗𝔥𝔢𝔯𝔢 𝔦𝔰 𝔫𝔬 𝔰𝔲𝔠𝔥 𝔲𝔰𝔢𝔯.
-        </Typography>
-      </Stack>
+      <>
+        <Stack
+          alignContent="center"
+          alignItems="center"
+          justifyContent="center"
+          mb={15}
+          mt={5}
+          overflow="hidden"
+        >
+          <Alert severity="warning" variant="filled">
+            <AlertTitle>Error</AlertTitle>
+            SORRY TO SAY, LOOKS LIKE THERE IS AN ERROR!
+          </Alert>
+          <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2} p={5}>
+            <LinearProgress color="warning" />
+          </Stack>
+          <Button variant="contained" color="success">
+            go back to home page
+          </Button>
+        </Stack>
+        <BottomNav/>
+      </>
     );
   }
   return (

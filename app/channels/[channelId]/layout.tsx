@@ -1,28 +1,37 @@
+import BottomNav from "@/components/BottomNav";
 import { ChannelContextWrapper } from "@/hooks/context/channel-context";
 import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import { authCookieKey } from "@/library/constants";
-import { Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  LinearProgress,
+  Stack,
+} from "@mui/material";
 import { cookies } from "next/headers";
-import Image from "next/image";
+import { notFound } from "next/navigation";
 
 const getChannelById = async (channelId: string) => {
-  const accessToken = cookies().get(authCookieKey)?.value;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/channels/${channelId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.message);
+  try {
+    const accessToken = cookies().get(authCookieKey)?.value;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/channels/${channelId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) return notFound();
+    return data as ChannelsEntity;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
-  return data as ChannelsEntity;
 };
 export default async function Layout({
   children,
@@ -32,31 +41,32 @@ export default async function Layout({
   params: Record<string, string>;
 }>) {
   const channel = await getChannelById(params.channelId);
+
   if (!channel) {
     return (
-      <Stack
-        alignContent="center"
-        alignItems="center"
-        justifyContent="center"
-        my={15}
-      >
-        <Image
-          src="/svg/sasuke1.svg"
-          style={{
-            objectFit: "cover",
-            width: "50%",
-            height: "50%",
-          }}
-          alt="image"
-          width={300}
-          height={100}
-          priority
-        />
-        <Typography variant="h6" fontWeight="50" textAlign="center" mt={5}>
-          Looks like
-          <br /> There is an error
-        </Typography>
-      </Stack>
+      <>
+        <Stack
+          alignContent="center"
+          alignItems="center"
+          justifyContent="center"
+          mb={15}
+          mt={5}
+          overflow="hidden"
+        >
+          <Alert severity="warning" variant="filled">
+            <AlertTitle>WARNING</AlertTitle>
+            SORRY TO SAY, LOOKS LIKE THERE IS AN ERROR! PLEASE TRY TO REFRESH
+            THE PAGE, IF THE PROBLEM PERSISTS, CONTACT SUPPORT.
+          </Alert>
+          <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2} p={5}>
+            <LinearProgress color="warning" />
+          </Stack>
+          <Button variant="contained" color="success">
+            go back to home page
+          </Button>
+        </Stack>
+        <BottomNav />
+      </>
     );
   }
 

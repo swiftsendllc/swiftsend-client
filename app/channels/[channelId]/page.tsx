@@ -24,6 +24,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { setCookie } from "cookies-next";
+import moment from "moment";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
@@ -32,19 +34,21 @@ import InfoChannelDrawer from "./components/InfoChannelDrawer";
 import InfoMessageDrawer from "./components/InfoMessageDrawer";
 
 export default function MessagePage() {
-  const { getChannelMessages } = useMessageAPI();
-  const [messages, setMessages] = useState<MessagesEntity[]>([]);
-  const { channelId } = useParams();
   const router = useRouter();
-  const [channel] = useContext(ChannelContext);
+  const { socket } = useSocket();
+  const { channelId } = useParams();
   const [user] = useContext(UserContext);
+  const [channel] = useContext(ChannelContext);
+  const { getChannelMessages } = useMessageAPI();
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const [infoChannelDrawer, setInfoChannelDrawer] = useState(false);
   const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
     null
   );
-  const lastMessageRef = useRef<HTMLDivElement | null>(null);
-  const { socket, onlineUsers } = useSocket();
+
+
   const loadChannelMessages = async () => {
     try {
       const message = await getChannelMessages(channelId as string);
@@ -58,7 +62,6 @@ export default function MessagePage() {
   useEffect(() => {
     console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
-      console.log("New messages received:", newMessage);
       setMessages((prev) => [...prev, newMessage]);
     });
 
@@ -70,7 +73,6 @@ export default function MessagePage() {
         editedAt: Date;
         edited: boolean;
       }) => {
-        console.log("Message edited:", editedMessage);
         setMessages((prev) =>
           prev.map((msg) =>
             msg._id === editedMessage.messageId
@@ -88,8 +90,12 @@ export default function MessagePage() {
 
     socket.on(
       "messageDeleted",
-      (message: { messageId: string; deleted: boolean; deletedAt: Date }) => {
-        console.log("Message deleted:", message);
+      (message: {
+        messageId: string;
+        deleted: boolean;
+        deletedAt: Date;
+        message: string;
+      }) => {
         setMessages((prev) =>
           prev.map((msg) =>
             msg._id === message.messageId
@@ -98,12 +104,18 @@ export default function MessagePage() {
                   messageId: message.messageId,
                   deletedAt: message.deletedAt,
                   deleted: true,
+                  message: "",
                 }
               : msg
           )
         );
       }
     );
+
+    socket.on("onlineUsers", (users: string[]) => {
+      setCookie("onlineUsers", JSON.stringify(users));
+    });
+
     socket.on("connect_err", (error) => {
       console.error("Socket connection error:", error);
     });
@@ -120,6 +132,7 @@ export default function MessagePage() {
   useEffect(() => {
     if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
+
   useEffect(() => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
@@ -144,10 +157,10 @@ export default function MessagePage() {
               <CardHeader
                 avatar={
                   <>
-                    <IconButton onClick={() => router.push("/channels")}>
+                    <IconButton onClick={() => router.back()}>
                       <ArrowBackOutlinedIcon />
                     </IconButton>
-                    {onlineUsers ? (
+                    {channel.receiver.isOnline ? (
                       <StyledBadge
                         overlap="circular"
                         anchorOrigin={{
@@ -164,25 +177,22 @@ export default function MessagePage() {
                         />
                       </StyledBadge>
                     ) : (
-                      <StyledBadge
-                        overlap="circular"
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                        badgeContent
-                        variant="dot"
-                      >
-                        <Avatar
-                          aria-label="recipe"
-                          src={channel.receiver.avatarURL}
-                          alt={channel.receiver.fullName}
-                        />
-                      </StyledBadge>
+                      <Avatar
+                        aria-label="recipe"
+                        src={channel.receiver.avatarURL}
+                        alt={channel.receiver.fullName}
+                      />
                     )}
                   </>
                 }
                 title={channel.receiver.fullName}
+                subheader={
+                  channel.receiver.isOnline ? (
+                    <Typography variant="body2">ONLINE</Typography>
+                  ) : (
+                   `last seen at ${ moment(channel.receiver.lastSeen).format("HH:MM A")}`
+                  )
+                }
                 action={
                   messages.length > 0 ? (
                     <>
@@ -203,6 +213,7 @@ export default function MessagePage() {
           </Container>
         </Stack>
         <Divider />
+
         <Card sx={{ my: 2, borderRadius: "50px", marginTop: 10 }}>
           <CardContent>
             <Typography
@@ -219,6 +230,7 @@ export default function MessagePage() {
             </Typography>
           </CardContent>
         </Card>
+
         {messages.length > 0 ? (
           messages.map((message, idx) => {
             const isUser = user.userId === message.receiverId;
@@ -264,33 +276,13 @@ export default function MessagePage() {
                         </Typography>
                       }
                       subheader={
-                        <>
-                          {message.deleted ? (
-                            <>
-                              <Typography variant="caption" fontSize=".55rem">
-                                {new Date(message.deletedAt).toLocaleString()}
-                              </Typography>
-                              <Typography variant="caption" fontSize=".55rem">
-                                {" "}
-                                deleted
-                              </Typography>
-                            </>
-                          ) : message.edited ? (
-                            <>
-                              <Typography variant="caption" fontSize=".55rem">
-                                {new Date(message.editedAt).toLocaleString()}
-                              </Typography>
-                              <Typography variant="caption" fontSize=".55rem">
-                                {" "}
-                                edited
-                              </Typography>
-                            </>
-                          ) : (
-                            <Typography variant="caption" fontSize=".55rem">
-                              {new Date(message.createdAt).toLocaleString()}
-                            </Typography>
-                          )}
-                        </>
+                        <Typography variant="caption" fontSize=".55rem">
+                          {message.deleted
+                            ? ` ${moment(message.deletedAt).fromNow()} deleted`
+                            : message.edited
+                            ? `${moment(message.editedAt).fromNow()} edited`
+                            : `${moment(message.createdAt).fromNow()}`}
+                        </Typography>
                       }
                     />
                     {message.imageURL && !message.deleted && (
@@ -326,7 +318,7 @@ export default function MessagePage() {
             </Stack>
 
             <Typography variant="h6" fontWeight="50" my={3}>
-              𝔜𝔬𝔲 𝔞𝔯𝔢 𝔠𝔬𝔫𝔫𝔢𝔠𝔱𝔦𝔫𝔤 𝔴𝔦𝔱𝔥 {channel.receiver.fullName}
+              You are connecting with {channel.receiver.fullName}
             </Typography>
 
             <Image
@@ -349,7 +341,7 @@ export default function MessagePage() {
               textAlign="center"
               justifyContent="center"
             >
-              𝔖𝔱𝔞𝔯𝔱 𝔦𝔫𝔱𝔢𝔯𝔞𝔠𝔱𝔦𝔫𝔤 𝔴𝔦𝔱𝔥 @{channel.receiver.username} 𝔦𝔫 𝔦𝔫𝔰𝔱𝔞𝔤𝔯𝔞𝔪
+              You are connecting with @{channel.receiver.username}
             </Typography>
           </Stack>
         )}
