@@ -1,8 +1,9 @@
 "use client";
 
+import { StyledBadge } from "@/components/SearchComponents";
 import useAPI from "@/hooks/api/useAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
+import { FollowersEntity } from "@/hooks/entities/users.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import {
@@ -25,14 +26,12 @@ import ConnectedModal from "../../components/ConnectedModal";
 export default function ConnectedPage() {
   const { getFollowing } = useAPI();
   const [creator] = useContext(CreatorContext);
-  const [following, setFollowing] = useState<UserProfilesEntity[]>([]);
+  const [following, setFollowing] = useState<FollowersEntity[]>([]);
   const [connectedModal, setConnectedModal] = useState(false);
-  const [, setIsCardOpen] = useState(false);
   const router = useRouter();
-  const [selectedUser, setSelectedUser] = useState<UserProfilesEntity | null>(
+  const [selectedUser, setSelectedUser] = useState<FollowersEntity | null>(
     null
   );
-
   const loadConnected = async (userId: string) => {
     try {
       const fetchFollowing = await getFollowing(userId);
@@ -40,10 +39,6 @@ export default function ConnectedPage() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleSearch = () => {
-    setIsCardOpen(true);
   };
 
   useEffect(() => {
@@ -75,7 +70,6 @@ export default function ConnectedPage() {
               sx: { borderRadius: "10px" },
             },
           }}
-          onClick={handleSearch}
         />
         <Fab
           sx={{ width: 40, height: 40 }}
@@ -129,18 +123,38 @@ export default function ConnectedPage() {
             <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
               <CardHeader
                 avatar={
-                  <Avatar
-                    aria-label="recipe"
-                    src={followingUser.avatarURL}
-                    alt={followingUser.fullName}
-                  />
+                  followingUser.user.isOnline ? (
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      badgeContent
+                      variant="dot"
+                    >
+                      <Avatar
+                        aria-label="recipe"
+                        src={followingUser.user.avatarURL}
+                        alt={followingUser.user.fullName}
+                      />
+                    </StyledBadge>
+                  ) : (
+                    <Avatar
+                      aria-label="recipe"
+                      src={followingUser.user.avatarURL}
+                      alt={followingUser.user.fullName}
+                    />
+                  )
                 }
                 title={
                   <Button
-                    onClick={() => router.push(`/${followingUser.username}`)}
+                    onClick={() =>
+                      router.push(`/${followingUser.user.username}`)
+                    }
                   >
                     <Typography fontWeight={200}>
-                      {followingUser.fullName}
+                      {followingUser.user.fullName}
                     </Typography>
                   </Button>
                 }
@@ -150,7 +164,7 @@ export default function ConnectedPage() {
                     fontWeight={200}
                     variant="subtitle2"
                   >
-                    {followingUser.username}
+                    {followingUser.user.username}
                   </Typography>
                 }
                 action={
@@ -183,6 +197,13 @@ export default function ConnectedPage() {
           isOpen={connectedModal}
           onClose={() => setConnectedModal(false)}
           user={selectedUser}
+          onUnFollow={(unFollowedUserId) => {
+            setFollowing((prev) =>
+              prev.filter(
+                (follower) => follower.user.userId !== unFollowedUserId
+              )
+            );
+          }}
         />
       )}
     </>

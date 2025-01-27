@@ -1,6 +1,5 @@
 import BottomNav from "@/components/BottomNav";
 import { ChannelsContextWrapper } from "@/hooks/context/channels-context";
-import { SocketContextWrapper } from "@/hooks/context/socket-context";
 import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import { authCookieKey } from "@/library/constants";
 import {
@@ -69,9 +68,7 @@ export default async function Layout({
   return (
     <>
       <ChannelsContextWrapper channels={channels}>
-        <SocketContextWrapper serverURL={process.env.NEXT_PUBLIC_API_URL!}>
-          {children}
-        </SocketContextWrapper>
+        {children}
       </ChannelsContextWrapper>
     </>
   );

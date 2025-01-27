@@ -18,15 +18,15 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  CircularProgress,
   Container,
   Divider,
   IconButton,
+  LinearProgress,
   Stack,
   Typography,
 } from "@mui/material";
-import { setCookie } from "cookies-next";
 import moment from "moment";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -47,7 +47,6 @@ export default function MessagePage() {
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
     null
   );
-
 
   const loadChannelMessages = async () => {
     try {
@@ -111,10 +110,6 @@ export default function MessagePage() {
         );
       }
     );
-
-    socket.on("onlineUsers", (users: string[]) => {
-      setCookie("onlineUsers", JSON.stringify(users));
-    });
 
     socket.on("connect_err", (error) => {
       console.error("Socket connection error:", error);
@@ -189,8 +184,16 @@ export default function MessagePage() {
                 subheader={
                   channel.receiver.isOnline ? (
                     <Typography variant="body2">ONLINE</Typography>
+                  ) : new Date().getTime() -
+                      new Date(channel.receiver.lastSeen).getTime() >=
+                    24 * 60 * 60 * 1000 ? (
+                    `last seen at ${moment(channel.receiver.lastSeen).format(
+                      "LTL"
+                    )}`
                   ) : (
-                   `last seen at ${ moment(channel.receiver.lastSeen).format("HH:MM A")}`
+                    `last seen at ${moment(
+                      channel.receiver.lastSeen
+                    ).fromNow()}`
                   )
                 }
                 action={
@@ -316,32 +319,16 @@ export default function MessagePage() {
               <Avatar src={user.avatarURL} />
               <Avatar src={channel.receiver.avatarURL} />
             </Stack>
+            <CircularProgress />
 
-            <Typography variant="h6" fontWeight="50" my={3}>
+            <Typography variant="h6" fontWeight="50" my={3} color="primary">
               You are connecting with {channel.receiver.fullName}
             </Typography>
-
-            <Image
-              src="/svg/naruto3.svg"
-              style={{
-                objectFit: "cover",
-                width: "100%",
-                height: "100%",
-              }}
-              alt="image"
-              width={300}
-              height={100}
-              priority
-            />
-
-            <Typography
-              variant="h6"
-              fontWeight="50"
-              mt={5}
-              textAlign="center"
-              justifyContent="center"
-            >
-              You are connecting with @{channel.receiver.username}
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+              <LinearProgress color="success" />
+            </Stack>
+            <Typography variant="h6" fontWeight="50" my={3} color="primary">
+              hello 👋
             </Typography>
           </Stack>
         )}

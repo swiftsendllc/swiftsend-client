@@ -4,7 +4,7 @@ import { createContext, useState } from "react";
 import { UserProfilesEntity } from "../entities/users.entities";
 
 const emptyUser = {
-  _id:"",
+  _id: "",
   userId: "",
   fullName: "",
   avatarURL: "",
@@ -19,8 +19,10 @@ const emptyUser = {
   followerCount: 0,
   followingCount: 0,
   region: "",
-  following: false,
-  lastSeen: new Date()
+  isFollowing: false,
+  isFollowedByMe:false,
+  isOnline: false,
+  lastSeen: new Date(),
 } satisfies UserProfilesEntity;
 
 export const UserContext = createContext<

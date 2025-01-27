@@ -5,7 +5,6 @@ import useAPI from "@/hooks/api/useAPI";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
 import { UserContext } from "@/hooks/context/user-context";
-import { FiberManualRecord } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -22,7 +21,6 @@ import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import {
   Avatar,
-  Badge,
   Box,
   Card,
   CardContent,
@@ -36,6 +34,7 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { MusicModal } from "./MusicModal";
+import { StyledBadge } from "./SearchComponents";
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
@@ -105,7 +104,7 @@ export default function AccountPage() {
   const loadChannel = async (userId: string) => {
     try {
       const { _id } = await createChannel(userId);
-      router.push(`/messages/${_id}`);
+      router.push(`/channels/${_id}`);
     } catch (error) {
       console.log(error);
     }
@@ -201,47 +200,33 @@ export default function AccountPage() {
             alignContent="center"
             alignItems="center"
           >
-            {user.userId !== creator.userId ? (
-              <Badge
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                badgeContent={
-                  <FiberManualRecord
-                    sx={{
-                      color: "#80EF80",
-                      fontSize: "15px",
-                      border: "#80EF80",
-                    }}
+            <>
+              {creator.isOnline ? (
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  badgeContent
+                  variant="dot"
+                >
+                  <Avatar
+                    aria-label="recipe"
+                    src={creator.avatarURL}
+                    alt={creator.fullName}
+                    sx={{ width: 80, height: 80 }}
                   />
-                }
-              >
+                </StyledBadge>
+              ) : (
                 <Avatar
-                  src={creator.avatarURL!}
-                  alt="Profile Picture"
+                  aria-label="recipe"
+                  src={creator.avatarURL}
+                  alt={creator.fullName}
                   sx={{ width: 80, height: 80 }}
                 />
-              </Badge>
-            ) : (
-              <Badge
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                badgeContent={
-                  <FiberManualRecord
-                    sx={{
-                      color: "#80EF80",
-                      fontSize: "15px",
-                      border: "#80EF80",
-                    }}
-                  />
-                }
-              >
-                <Avatar
-                  src={user.avatarURL!}
-                  alt="Profile Picture"
-                  sx={{ width: 80, height: 80 }}
-                />
-              </Badge>
-            )}
+              )}
+            </>
 
             <Stack direction="column" spacing={1}>
               <Stack
@@ -333,7 +318,7 @@ export default function AccountPage() {
               width="100%"
               spacing={2}
             >
-              {creator.following ? (
+              {creator.isFollowedByMe ? (
                 <Fab
                   aria-label="add"
                   variant="extended"

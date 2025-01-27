@@ -22,9 +22,10 @@ const emptyChannel = {
     followerCount: 0,
     followingCount: 0,
     region: "",
-    following: false,
     isOnline: false,
-    lastSeen: new Date()
+    lastSeen: new Date(),
+    isFollowing:false,
+    isFollowedByMe:false
   },
   lastMessage: {
     _id: "",

@@ -1,3 +1,4 @@
+import { SocketContextWrapper } from "@/hooks/context/socket-context";
 import { UserContextWrapper } from "@/hooks/context/user-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { authCookieKey } from "@/library/constants";
@@ -24,8 +25,8 @@ export const metadata = {
   manifest: "/manifest.json",
   keywords: ["nextjs", "nextjs14", "next14", "pwa", "next-pwa"],
   icons: [
-    { rel: "apple-touch-icon", url: "icons/icon-192x192.png" },
-    { rel: "icon", url: "icons/instagram-symbol.png" },
+    { rel: "apple-touch-icon", url: "photos/app_icon.svg" },
+    { rel: "icon", url: "photos/app_icon.svg" },
   ],
 } satisfies Metadata;
 
@@ -103,7 +104,13 @@ export default async function RootLayout({
         />
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <UserContextWrapper user={user}>{children}</UserContextWrapper>
+            <UserContextWrapper user={user}>
+              <SocketContextWrapper
+                serverURL={process.env.NEXT_PUBLIC_API_URL!}
+              >
+                {children}
+              </SocketContextWrapper>
+            </UserContextWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

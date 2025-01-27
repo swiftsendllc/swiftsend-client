@@ -1,11 +1,14 @@
 "use client";
 
+import { StyledBadge } from "@/components/SearchComponents";
 import useAPI from "@/hooks/api/useAPI";
 import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
+import { FollowersEntity } from "@/hooks/entities/users.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+
 import {
   Avatar,
   Button,
@@ -26,8 +29,8 @@ import toast from "react-hot-toast";
 export default function ConnectionPage() {
   const { getFollowers, followProfile } = useAPI();
   const [creator] = useContext(CreatorContext);
-  const [followers, setFollowers] = useState<UserProfilesEntity[]>([]);
-  const [, setSelectedUser] = useState<UserProfilesEntity | null>(null);
+  const [followers, setFollowers] = useState<FollowersEntity[]>([]);
+  const [, setSelectedUser] = useState<FollowersEntity | null>(null);
   const [, setIsCardOpen] = useState(false);
   const router = useRouter();
 
@@ -43,12 +46,12 @@ export default function ConnectionPage() {
   const handleFollow = async (userId: string) => {
     try {
       await followProfile(userId);
-      setSelectedUser(null); // clear selected user after following
-      loadConnections(creator.userId); // refresh followers to update follow status
-      toast.success(`Connected ${creator.fullName}`);
+      setSelectedUser(null);
+      loadConnections(creator.userId);
+      toast.success(`Connected `);
     } catch (error) {
       console.log(error);
-      toast.error(`Failed to connect ${creator.fullName}`);
+      toast.error(`Failed to connect!!`);
     }
   };
 
@@ -138,18 +141,38 @@ export default function ConnectionPage() {
             <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
               <CardHeader
                 avatar={
-                  <Avatar
-                    aria-label="recipe"
-                    src={followedUser.avatarURL}
-                    alt={followedUser.fullName}
-                  />
+                  followedUser.user.isOnline ? (
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      badgeContent
+                      variant="dot"
+                    >
+                      <Avatar
+                        aria-label="recipe"
+                        src={followedUser.user.avatarURL}
+                        alt={followedUser.user.fullName}
+                      />
+                    </StyledBadge>
+                  ) : (
+                    <Avatar
+                      aria-label="recipe"
+                      src={followedUser.user.avatarURL}
+                      alt={followedUser.user.fullName}
+                    />
+                  )
                 }
                 title={
                   <Button
-                    onClick={() => router.push(`/${followedUser.username}`)}
+                    onClick={() =>
+                      router.push(`/${followedUser.user.username}`)
+                    }
                   >
                     <Typography fontWeight={200}>
-                      {followedUser.fullName}
+                      {followedUser.user.fullName}
                     </Typography>
                   </Button>
                 }
@@ -159,18 +182,18 @@ export default function ConnectionPage() {
                     fontSize=".75rem"
                     variant="subtitle2"
                   >
-                    {followedUser.username}
+                    {followedUser.user.username}
                   </Typography>
                 }
                 action={
-                  followedUser.following ? (
-                    `˗ˏˋ ★ ˎˊ˗`
+                  followedUser.user.isFollowedByMe ? (
+                    <PeopleIcon />
                   ) : (
                     <Button
                       variant="contained"
                       onClick={() => {
                         setSelectedUser(followedUser);
-                        handleFollow(followedUser.userId);
+                        handleFollow(followedUser.user.userId);
                       }}
                     >
                       <PersonAddIcon />

@@ -2,8 +2,7 @@
 
 import Transition from "@/components/Transition";
 import useAPI from "@/hooks/api/useAPI";
-import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
+import { FollowersEntity } from "@/hooks/entities/users.entities";
 import { LoadingButton } from "@mui/lab";
 import {
   Avatar,
@@ -16,23 +15,24 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function ConnectedModal({
   isOpen,
   onClose,
   user,
+  onUnFollow
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  user: UserProfilesEntity;
+  user: FollowersEntity;
+  onUnFollow: (useFollowedUserId: string) =>void
 }) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { unFollowProfile } = useAPI();
   const [loading, setLoading] = useState(false);
-  const [creator] = useContext(CreatorContext);
 
   const handleClose = () => {
     setOpen(false);
@@ -42,12 +42,13 @@ export default function ConnectedModal({
   const handleUnFollow = async () => {
     setLoading(true);
     try {
-      await unFollowProfile(user.userId);
+      await unFollowProfile(user.followedUserId);
       handleClose();
-      toast.success(`Disconnected ${creator.fullName}`);
+      onUnFollow(user.user.userId)
+      toast.success(`Disconnected`);
     } catch (error) {
       console.log(error);
-      toast.error(`Failed to disconnect ${creator.fullName}`);
+      toast.error(`Failed to disconnect!!`);
     } finally {
       setLoading(false);
     }
@@ -83,18 +84,18 @@ export default function ConnectedModal({
               avatar={
                 <Avatar
                   aria-label="recipe"
-                  src={user.avatarURL}
-                  alt={user.fullName}
+                  src={user.user.avatarURL}
+                  alt={user.user.fullName}
                 />
               }
-              title={user.fullName}
+              title={user.user.fullName}
               subheader={
                 <Typography
                   fontWeight={200}
                   fontSize=".75rem"
                   variant="subtitle2"
                 >
-                  {user.username}
+                  {user.user.username}
                 </Typography>
               }
             />

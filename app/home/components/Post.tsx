@@ -13,6 +13,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import {
   Avatar,
@@ -346,7 +347,7 @@ const FollowButton = (props: FollowButtonProps) => {
         setIsFollowing((isFollowing) => isFollowing);
       }}
     >
-      {isFollowing ? null : "ℱᵒᒻᒻᵒ꒳"}
+      {isFollowing ? null : <PersonAddIcon /> }
     </Button>
   );
 };
