@@ -18,13 +18,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Adjust this to your version
+          node-version: '18'  # Adjust this to your version
 
       # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Merge feature-branch (all PRs) into main
+      # Step 4: Merge local into main
       - name: Merge local into main
         run: |
           git fetch origin
@@ -33,7 +33,7 @@ jobs:
           git merge origin/local --no-ff -m "Merge local into main"
           git push origin main
 
-     # Step 5: Create a Git tag based on the manually set version in package.json
+      # Step 5: Create a Git tag based on the manually set version in package.json
       - name: Create version tag
         run: |
           VERSION=$(node -p "require('./package.json').version")
