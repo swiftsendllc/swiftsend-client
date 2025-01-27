@@ -75,7 +75,7 @@ export default function ConnectionPage() {
           <ArrowBackOutlinedIcon />
         </IconButton>
         <TextField
-          label="𝔖𝔢𝔞𝔯𝔠𝔥 𝔶𝔬𝔲𝔯 𝔠𝔬𝔫𝔫𝔢𝔠𝔱𝔦𝔬𝔫𝔰"
+          label="Search your Connections"
           sx={{ width: "75%" }}
           slotProps={{
             inputLabel: {
@@ -133,7 +133,7 @@ export default function ConnectionPage() {
               priority
             />
             <Typography variant="h6">
-              𝔜𝔬𝔲𝔯 𝔪𝔢𝔰𝔰𝔞𝔤𝔢𝔰 𝔴𝔦𝔩𝔩 𝔞𝔭𝔭𝔢𝔞𝔯 𝔥𝔢𝔯𝔢𝔢𝔢𝔢𝔢!!!!!!
+              Your friends will appear here
             </Typography>
           </Stack>
         ) : (

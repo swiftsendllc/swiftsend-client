@@ -1,8 +1,9 @@
 {
-  "name": "clone-frontend",
-  "version": "0.1.0",
+  "name": "instagram",
+  "version": "v1.0.0",
   "private": true,
   "scripts": {
+    "release": "npm run build && git tag v$(node -p \"require('./package.json').version\") && git push origin v$(node -p \"require('./package.json').version\")",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
