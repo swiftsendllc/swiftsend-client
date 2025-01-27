@@ -30,7 +30,7 @@ jobs:
           git fetch origin
           git checkout main
           git pull origin main  # Get the latest updates from main
-          git merge origin/feature-branch --no-ff -m "Merge local into main"
+          git merge origin/local --no-ff -m "Merge local into main"
           git push origin main
 
      # Step 5: Create a Git tag based on the manually set version in package.json
