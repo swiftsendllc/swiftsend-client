@@ -3,48 +3,23 @@ name: Release Workflow
 on:
   push:
     tags:
-      - 'v*'  # Trigger on version tags like v1.0.0, v1.0.1, etc.
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'  # Adjust this to your version
-
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
-
-      # Step 4: Merge local into main
-      - name: Merge local into main
+      - name: Push to Prod Branch
         run: |
-          git fetch origin
-          git checkout main
-          git pull origin main  # Get the latest updates from main
-          git merge origin/local --no-ff -m "Merge local into main"
-          git push origin main
-
-      # Step 5: Create a Git tag based on the manually set version in package.json
-      - name: Create version tag
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          git tag -a "v$VERSION" -m "Release v$VERSION"
-          git push origin "v$VERSION"
-
-      # Step 6: Push the updated version and tag
-      - name: Push version and tags
-        run: |
-          git push --follow-tags
-
-      # Step 7: Run npm release to trigger build and deployment
-      - name: Run npm release
-        run: npm run release  # This command will handle the build and deployment logic
+          git checkout -b deploy
+          git merge ${{ github.ref }}
+          git push origin deploy
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

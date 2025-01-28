@@ -1,9 +1,9 @@
 {
   "name": "instagram",
-  "version": "v1.0.1",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
-    "release": "npm run build && git tag v$(node -p \"require('./package.json').version\") && git push origin v$(node -p \"require('./package.json').version\")",
+    "release": "git tag v$(node -p \"require('./package.json').version\") && git push origin v$(node -p \"require('./package.json').version\")",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
