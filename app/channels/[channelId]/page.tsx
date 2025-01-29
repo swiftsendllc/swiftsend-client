@@ -187,7 +187,7 @@ export default function MessagePage() {
                   ) : new Date().getTime() -
                       new Date(channel.receiver.lastSeen).getTime() >=
                     24 * 60 * 60 * 1000 ? (
-                    `last seen at ${moment(channel.receiver.lastSeen).format(
+                    ` Seen ${moment(channel.receiver.lastSeen).format(
                       "LTL"
                     )}`
                   ) : (
