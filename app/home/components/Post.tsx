@@ -1,6 +1,7 @@
 "use client";
 
 import { CommentInput } from "@/components/CommentInput";
+import { StyledBadge } from "@/components/SearchComponents";
 import TopBackNav from "@/components/TopBackNav";
 import useAPI from "@/hooks/api/useAPI";
 import usePostAPI from "@/hooks/api/usePostAPI";
@@ -9,11 +10,10 @@ import { PostsEntity } from "@/hooks/entities/posts.entities";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import {
   Avatar,
@@ -26,15 +26,15 @@ import {
   debounce,
   Divider,
   IconButton,
-  Paper,
   Stack,
   Typography,
 } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { CommentStack } from "./CommentStack";
 
 interface PostProps {
   post: PostsEntity;
@@ -72,6 +72,9 @@ export const PostCard = ({
   const [user] = useContext(UserContext);
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
+  const lastCommentRef = useRef<HTMLDivElement | null>(null);
+  const [, setComments] = useState(post.comments);
+  const [commentInfoDrawer, setCommentInfoDrawer] = useState(false);
 
   const handleSee = () => {
     setIsExpanded((prev) => !prev);
@@ -80,6 +83,10 @@ export const PostCard = ({
   useEffect(() => {
     setCommentCount(post.commentCount);
   }, [post.commentCount]);
+
+  useEffect(() => {
+    setComments(post.comments);
+  }, [post.comments]);
 
   const handleLike = debounce(async (postId: string) => {
     try {
@@ -115,16 +122,11 @@ export const PostCard = ({
     }
   };
 
-  const handleDelete = async (postId: string, commentId: string) => {
-    try {
-      const post = (await deleteComment(postId, commentId)) as PostsEntity;
-      setCommentCount(post.commentCount);
-      toast.success("Deleted");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to delete comment!");
+  useEffect(() => {
+    if (lastCommentRef.current) {
+      lastCommentRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [post.comments]);
 
   return (
     <>
@@ -132,11 +134,31 @@ export const PostCard = ({
       <Card key={post._id} sx={{ mb: 0.5, width: "100%", padding: 0, m: 0 }}>
         <CardHeader
           avatar={
-            <Avatar
-              aria-label="recipe"
-              src={post.user.avatarURL}
-              alt={post.user.fullName}
-            />
+            <>
+              {post.user.isOnline ? (
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  badgeContent
+                  variant="dot"
+                >
+                  <Avatar
+                    aria-label="recipe"
+                    src={post.user.avatarURL}
+                    alt={post.user.fullName}
+                  />
+                </StyledBadge>
+              ) : (
+                <Avatar
+                  aria-label="recipe"
+                  src={post.user.avatarURL}
+                  alt={post.user.fullName}
+                />
+              )}
+            </>
           }
           action={
             post.userId !== user.userId ? (
@@ -242,42 +264,13 @@ export const PostCard = ({
               flexDirection="column"
               sx={{ pb: 20, px: 1 }}
             >
-              {post.comments.map((comment) => (
-                <Stack key={comment._id} direction="row" spacing={1} mt={2}>
-                  <Avatar
-                    src={comment.user.avatarURL}
-                    alt={comment.user.fullName}
-                  />
-                  <Paper
-                    sx={{ width: "100%", backgroundColor: "inherit" }}
-                    variant="elevation"
-                  >
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignContent="center"
-                      alignItems="center"
-                    >
-                      <Typography ml={1} py={0}>
-                        {comment.user.fullName}
-                      </Typography>
-                      <IconButton
-                        onClick={() => handleDelete(post._id, comment._id)}
-                      >
-                        <MoreHorizIcon />
-                      </IconButton>
-                    </Stack>
-                    <Typography
-                      mx={1}
-                      mb={1}
-                      variant="subtitle2"
-                      fontWeight={200}
-                      color="textSecondary"
-                    >
-                      {comment.comment}
-                    </Typography>
-                  </Paper>
-                </Stack>
+              {post.comments.map((comment, idx) => (
+                <CommentStack
+                  onDelete={() => onMutation?.()}
+                  key={idx}
+                  comment={comment}
+                  postId={post._id}
+                />
               ))}
             </Box>
           </>
@@ -347,7 +340,7 @@ const FollowButton = (props: FollowButtonProps) => {
         setIsFollowing((isFollowing) => isFollowing);
       }}
     >
-      {isFollowing ? null : <PersonAddIcon /> }
+      {isFollowing ? null : <PersonAddIcon />}
     </Button>
   );
 };
