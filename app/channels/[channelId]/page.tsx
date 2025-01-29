@@ -185,6 +185,12 @@ export default function MessagePage() {
                 subheader={
                   channel.receiver.isOnline ? (
                     <Typography variant="body2">ONLINE</Typography>
+                  ) : new Date().getTime() -
+                      new Date(channel.receiver.lastSeen).getTime() >=
+                    24 * 60 * 60 * 1000 ? (
+                    ` Seen ${moment(channel.receiver.lastSeen).format(
+                      "LTL"
+                    )}`
                   ) : (
                     `last seen at ${moment(
                       channel.receiver.lastSeen
