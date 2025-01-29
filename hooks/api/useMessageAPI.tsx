@@ -197,6 +197,44 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const messageSeen = async (messageId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/messages/seen/${messageId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const messageDelivered = async (messageId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/messages/delivered/${messageId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   return {
     getChannels,
     getChannelById,
@@ -208,6 +246,8 @@ const useMessageAPI = () => {
     deleteChannelMessages,
     forwardMessage,
     deleteChannel,
+    messageSeen,
+    messageDelivered
   };
 };
 export default useMessageAPI;

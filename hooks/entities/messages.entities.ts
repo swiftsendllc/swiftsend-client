@@ -32,6 +32,8 @@ export interface MessagesEntity {
   user: UserProfilesEntity;
   deleted: boolean;
   edited: boolean;
+  seen: boolean;
+  delivered: boolean;
 }
 
 export interface EditMessageInput {

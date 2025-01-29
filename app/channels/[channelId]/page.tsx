@@ -40,11 +40,11 @@ export default function MessagePage() {
   const { channelId } = useParams();
   const [user] = useContext(UserContext);
   const [channel] = useContext(ChannelContext);
-  const { getChannelMessages } = useMessageAPI();
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const [infoChannelDrawer, setInfoChannelDrawer] = useState(false);
   const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
+  const { getChannelMessages, messageSeen, messageDelivered } = useMessageAPI();
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
     null
   );
@@ -63,6 +63,27 @@ export default function MessagePage() {
     console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
       setMessages((prev) => [...prev, newMessage]);
+      socket.emit("messageDelivered", {
+        messageId: newMessage._id,
+        receiverId: user._id,
+      });
+      messageDelivered(newMessage._id);
+    });
+
+    socket.on("messageDelivered", (messageId: string) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === messageId ? { ...msg, delivered: true } : msg
+        )
+      );
+    });
+
+    socket.on("messageSeen", (messageId: string) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === messageId ? { ...msg, seen: true } : msg
+        )
+      );
     });
 
     socket.on(
@@ -133,7 +154,21 @@ export default function MessagePage() {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+    if (messages.length > 0 && channel.receiver.isOnline) {
+      const unSeenMessages = messages.filter(
+        (msg) => !msg.seen && msg.receiverId !== user.userId
+      );
+      if (unSeenMessages.length > 0) {
+        unSeenMessages.forEach((msg) => {
+          socket.emit("messageSeen", {
+            messageId: msg._id,
+            receiverId: user.userId,
+          });
+          messageSeen(msg._id);
+        });
+      }
+    }
+  }, [messages, user.userId]); //eslint-disable-line
 
   return (
     <>
@@ -188,9 +223,7 @@ export default function MessagePage() {
                   ) : new Date().getTime() -
                       new Date(channel.receiver.lastSeen).getTime() >=
                     24 * 60 * 60 * 1000 ? (
-                    ` Seen ${moment(channel.receiver.lastSeen).format(
-                      "LTL"
-                    )}`
+                    ` Seen ${moment(channel.receiver.lastSeen).format("LTL")}`
                   ) : (
                     `last seen at ${moment(
                       channel.receiver.lastSeen
@@ -259,9 +292,9 @@ export default function MessagePage() {
                       position: "relative",
                     }}
                   >
-                    <CardContent sx={{ padding: 0, paddingX: 1, paddingY: 1  }}>
+                    <CardContent sx={{ padding: 0, paddingX: 1, paddingY: 1 }}>
                       <Stack
-                        direction={isUser ? "row-reverse": "row"}
+                        direction={isUser ? "row-reverse" : "row"}
                         justifyContent="space-between"
                         alignItems="center"
                       >
@@ -273,11 +306,19 @@ export default function MessagePage() {
                             ? "This message was deleted"
                             : message.message || "unknown message"}{" "}
                         </Typography>
-                        <Avatar
-                          src={message.user.avatarURL}
-                          alt={message.user.fullName}
-                          sx={{ position: "relative" }}
-                        />
+                        {isUser ? (
+                          <Avatar
+                            src={channel.receiver.avatarURL}
+                            alt={channel.receiver.fullName}
+                            sx={{ position: "relative" }}
+                          />
+                        ) : (
+                          <Avatar
+                            src={user.avatarURL}
+                            alt={user.fullName}
+                            sx={{ position: "relative" }}
+                          />
+                        )}
                       </Stack>
                     </CardContent>
                     <CardHeader
@@ -301,13 +342,32 @@ export default function MessagePage() {
                         ) : null
                       }
                       subheader={
-                        <Typography variant="caption" fontSize=".55rem" px="1">
-                          {message.deleted
-                            ? `${moment(message.deletedAt).fromNow()} deleted`
-                            : message.edited
-                            ? `${moment(message.editedAt).fromNow()} edited`
-                            : `${moment(message.createdAt).fromNow()}`}
-                        </Typography>
+                        <>
+                          <Stack direction="row" justifyContent="space-between">
+                            {!isUser &&
+                             <Typography fontSize="0.85rem">
+                             {message.delivered
+                               ? "Delivered"
+                               : message.seen
+                               ? "Seen"
+                               : null}
+                           </Typography>}
+
+                            <Typography
+                              variant="caption"
+                              fontSize=".55rem"
+                              px="1"
+                            >
+                              {message.deleted
+                                ? `${moment(
+                                    message.deletedAt
+                                  ).fromNow()} deleted`
+                                : message.edited
+                                ? `${moment(message.editedAt).fromNow()} edited`
+                                : `${moment(message.createdAt).fromNow()}`}
+                            </Typography>
+                          </Stack>
+                        </>
                       }
                     />
                     {message.imageURL && !message.deleted && (
