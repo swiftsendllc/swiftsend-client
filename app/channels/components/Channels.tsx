@@ -35,9 +35,8 @@ export function ChannelPage() {
   const [user] = useContext(UserContext);
   const [, setSelectedUser] = useState<ChannelsEntity | null>(null);
   const router = useRouter();
-  const { socket, onlineUsers } = useSocket();
+  const { socket } = useSocket();
   const [channels, setChannels] = useContext(ChannelsContext);
-  console.log("online users:", onlineUsers);
 
   useEffect(() => {
     socket.on("newMessage", (message: MessagesEntity) => {
@@ -158,7 +157,6 @@ export function ChannelPage() {
         <Divider sx={{ mt: 1 }} />
         {channels.length > 0 ? (
           channels.map((channelUser, idx) => {
-            console.log("The user is:",channelUser.receiver.isOnline)
             return (
               <Card
                 key={idx}

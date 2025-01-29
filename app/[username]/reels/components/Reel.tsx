@@ -56,7 +56,7 @@ export default function ReelsPage() {
                     }}
                     src={reel.videoURL}
                     controls
-                    autoPlay={true}
+                    autoPlay={false}
                     muted={false}
                     loop={false}
                   />

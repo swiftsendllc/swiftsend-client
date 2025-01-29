@@ -43,7 +43,7 @@ export default function BottomNav() {
       hasBadge: true,
     },
     {
-      value: "/reels",
+      value: "/intro",
       label: "Intro",
       icon: <PlayCircleSharpIcon />,
     },

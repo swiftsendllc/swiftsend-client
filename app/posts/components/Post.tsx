@@ -1,6 +1,7 @@
 "use client";
 
-import { CommentInput } from "@/components/CommentInput";
+import { CommentInput } from "@/app/comment/components/CommentInput";
+import { CommentStack } from "@/app/comment/components/CommentStack";
 import { StyledBadge } from "@/components/SearchComponents";
 import TopBackNav from "@/components/TopBackNav";
 import useAPI from "@/hooks/api/useAPI";
@@ -34,7 +35,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { CommentStack } from "./CommentStack";
 
 interface PostProps {
   post: PostsEntity;
@@ -63,7 +63,7 @@ export const PostCard = ({
   onMutation,
 }: PostProps) => {
   const { followProfile } = useAPI();
-  const { likePost, savePost, deleteComment } = usePostAPI();
+  const { likePost, savePost,  } = usePostAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
@@ -74,7 +74,6 @@ export const PostCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
   const [, setComments] = useState(post.comments);
-  const [commentInfoDrawer, setCommentInfoDrawer] = useState(false);
 
   const handleSee = () => {
     setIsExpanded((prev) => !prev);

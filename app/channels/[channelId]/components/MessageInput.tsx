@@ -74,7 +74,7 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder={`𝔐𝔢𝔰𝔰𝔞𝔤𝔢 ${channel.receiver.fullName}`}
+            placeholder={`Message ${channel.receiver.fullName}`}
             value={messageInput || ""}
             onChange={(e) => setMessageInput(e.target.value)}
             onKeyDown={(e) => {

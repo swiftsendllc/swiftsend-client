@@ -1,6 +1,6 @@
 {
-  "name": "Instagram",
-  "short_name": "Instagram",
+  "name": "SwiftSend",
+  "short_name": "SwiftSend",
   "description": "Messaging App",
   "start_url": "/",
   "display": "standalone",

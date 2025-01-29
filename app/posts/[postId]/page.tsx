@@ -1,6 +1,6 @@
 "use client";
 
-import { PostCard } from "@/app/home/components/Post";
+import { PostCard } from "@/app/posts/components/Post";
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { PostsEntity } from "@/hooks/entities/posts.entities";
 import { Container } from "@mui/material";

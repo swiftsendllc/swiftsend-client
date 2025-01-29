@@ -1,12 +1,13 @@
 "use client";
 
-import MessageInput from "@/components/MessageInput";
+import MessageInput from "@/app/channels/[channelId]/components/MessageInput";
 import { StyledBadge } from "@/components/SearchComponents";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import { useSocket } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
 import { MessagesEntity } from "@/hooks/entities/messages.entities";
+import { DoneAll } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import EditIcon from "@mui/icons-material/Edit";
@@ -251,37 +252,58 @@ export default function MessagePage() {
                     sx={{
                       width: "70%",
                       height: "auto",
-                      borderRadius: "30px",
+                      padding: 0,
+                      textAlign: isUser ? "right" : "left",
                       backgroundColor: isUser ? "#4a19d2" : "#1976d2",
                       color: isUser ? "#fff" : "#000",
-                      textAlign: isUser ? "left" : "right",
+                      position: "relative",
                     }}
                   >
-                    <CardHeader
-                      action={
-                        !isUser && !message.deleted ? (
-                          <IconButton
-                            sx={{ mt: 0 }}
-                            onClick={() => {
-                              setSelectedMessage(message);
-                              setInfoMessageDrawer(true);
-                            }}
-                          >
-                            <EditIcon sx={{ width: 15, height: 15 }} />
-                          </IconButton>
-                        ) : null
-                      }
-                      title={
-                        <Typography fontWeight={200}>
+                    <CardContent sx={{ padding: 0, paddingX: 1, paddingY: 1  }}>
+                      <Stack
+                        direction={isUser ? "row-reverse": "row"}
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary", textAlign: "left" }}
+                        >
                           {message.deleted
                             ? "This message was deleted"
                             : message.message || "unknown message"}{" "}
                         </Typography>
+                        <Avatar
+                          src={message.user.avatarURL}
+                          alt={message.user.fullName}
+                          sx={{ position: "relative" }}
+                        />
+                      </Stack>
+                    </CardContent>
+                    <CardHeader
+                      sx={{ padding: 0, paddingX: 1 }}
+                      action={
+                        !isUser && !message.deleted ? (
+                          <>
+                            <IconButton
+                              sx={{ mt: 0 }}
+                              onClick={() => {
+                                setSelectedMessage(message);
+                                setInfoMessageDrawer(true);
+                              }}
+                            >
+                              <EditIcon sx={{ width: 13, height: 13 }} />
+                            </IconButton>
+                            <IconButton sx={{ mt: 0 }}>
+                              <DoneAll sx={{ width: 13, height: 13 }} />
+                            </IconButton>
+                          </>
+                        ) : null
                       }
                       subheader={
-                        <Typography variant="caption" fontSize=".55rem">
+                        <Typography variant="caption" fontSize=".55rem" px="1">
                           {message.deleted
-                            ? ` ${moment(message.deletedAt).fromNow()} deleted`
+                            ? `${moment(message.deletedAt).fromNow()} deleted`
                             : message.edited
                             ? `${moment(message.editedAt).fromNow()} edited`
                             : `${moment(message.createdAt).fromNow()}`}
