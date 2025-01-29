@@ -15,7 +15,7 @@ export interface PostsEntity {
   createdAt: Date;
   user: UserProfilesEntity;
   comments?: CommentsEntity[];
-  saves?: SavesEntity[];
+  saves?: SavesEntity;
 }
 
 export interface CreatePostInput {

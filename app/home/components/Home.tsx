@@ -2,6 +2,7 @@
 
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
+import { PostsEntity } from "@/hooks/entities/posts.entities";
 import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
@@ -16,8 +17,7 @@ import {
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { PostCard } from "./Post";
-import { PostsEntity } from "@/hooks/entities/posts.entities";
+import { PostCard } from "../../posts/components/Post";
 
 export default function HomePage() {
   const [user] = useContext(UserContext);

@@ -50,7 +50,6 @@ export default function PostPreview() {
       const formData = new FormData();
       formData.append("file", file);
       const { url } = await uploadFile(formData);
-      console.log("the url is:", url);
       await createPost({ caption, imageURL: url });
       setImageURL(url);
       router.push(`/${user.username}`);

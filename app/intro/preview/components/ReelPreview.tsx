@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { Fragment, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-export function ReelPreview() {
+export function ReelPreviewPage() {
   const router = useRouter();
   const { uploadFile } = useAPI();
   const { createReel } = userReelAPI();
@@ -36,7 +36,7 @@ export function ReelPreview() {
   const [caption, setCaption] = useState("");
   const [videoURL, setVideoURL] = useState("");
   const [loading, setLoading] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = async () => {
     if (!file) return;
@@ -45,7 +45,6 @@ export function ReelPreview() {
       const formData = new FormData();
       formData.append("file", file);
       const { url } = await uploadFile(formData);
-      console.log("The url is :",url )
       await createReel({ caption, videoURL: url });
       setVideoURL(url);
       toast.success("Successfully uploaded...");

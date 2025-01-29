@@ -19,17 +19,17 @@ interface CommentInputProps {
 }
 
 export function CommentInput({ postId, onComment }: CommentInputProps) {
-  const [user] = useContext(UserContext);
   const { commentPost } = usePostAPI();
-  const [formData, setFormData] = useState<Partial<CommentPostInput>>({
+  const [user] = useContext(UserContext);
+  const [comment, setComment] = useState<Partial<CommentPostInput>>({
     comment: "",
   });
 
   const handleComment = async () => {
     try {
-      if (formData.comment) {
-        await commentPost(formData, postId);
-        setFormData({ comment: "" });
+      if (comment.comment) {
+        await commentPost(comment, postId);
+        setComment({ comment: "" });
         onComment();
       }
     } catch (error) {
@@ -55,8 +55,14 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
             variant="outlined"
             placeholder="Share your thoughts..."
             autoFocus
-            value={formData.comment || ""}
-            onChange={(e) => setFormData({ comment: e.target.value })}
+            value={comment.comment || ""}
+            onChange={(e) => setComment({ comment: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleComment();
+              }
+            }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -65,7 +71,12 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
                   </Box>
                 ),
                 endAdornment: (
-                  <Button onClick={handleComment} variant="text" autoFocus>
+                  <Button
+                    variant="text"
+                    type="submit"
+                    disabled={!comment.comment}
+                    onClick={handleComment}
+                  >
                     Post
                   </Button>
                 ),

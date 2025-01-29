@@ -19,8 +19,8 @@ const kanitFont = Kanit({
 });
 
 export const metadata = {
-  title: "Instagram",
-  description: "cloning Instagram",
+  title: "SwiftSend",
+  description: "web messaging",
   generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["nextjs", "nextjs14", "next14", "pwa", "next-pwa"],
@@ -66,8 +66,6 @@ export default async function RootLayout({
   const user = await validateAuth();
   const locale = getCookie("locale") || "en";
 
-  console.log({ user });
-
   return (
     <html lang={locale}>
       <head>
@@ -95,7 +93,6 @@ export default async function RootLayout({
               background: "#000",
               color: "#fff",
               padding: "5px 5px",
-              borderRadius: "3px",
               fontSize: "14px",
             },
             success: { style: { background: "#000", color: "#fff" } },

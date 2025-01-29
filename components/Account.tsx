@@ -39,7 +39,6 @@ import { StyledBadge } from "./SearchComponents";
 export default function AccountPage() {
   const [user] = useContext(UserContext);
   const [creator, setCreator] = useContext(CreatorContext);
-  console.log({ creator });
   const { followProfile } = useAPI();
   const { createChannel } = useMessageAPI();
 
