@@ -2,6 +2,7 @@ import BottomNav from "@/components/BottomNav";
 import { CreatorContextWrapper } from "@/hooks/context/creator-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { authCookieKey } from "@/library/constants";
+import { ENV } from "@/util/constants";
 import {
   Alert,
   AlertTitle,
@@ -15,16 +16,13 @@ import React from "react";
 const getUser = async (username: string) => {
   const accessToken = cookies().get(authCookieKey)?.value;
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${username}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+  const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/users/${username}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
   if (!res.ok) {
     return null;
   }
@@ -63,7 +61,7 @@ export default async function Layout({
             go back to home page
           </Button>
         </Stack>
-        <BottomNav/>
+        <BottomNav />
       </>
     );
   }

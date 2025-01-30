@@ -12,6 +12,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import { ENV } from "@/util/constants";
 
 const kanitFont = Kanit({
   subsets: ["latin"],
@@ -39,7 +40,7 @@ const validateAuth = async () => {
   const pathname = headersList.get("x-pathname") ?? "/";
   const accessToken = cookies().get(authCookieKey)?.value;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
+  const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/auth/status`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -102,9 +103,7 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <UserContextWrapper user={user}>
-              <SocketContextWrapper
-                serverURL={process.env.NEXT_PUBLIC_API_URL!}
-              >
+              <SocketContextWrapper serverURL={ENV("NEXT_PUBLIC_API_URL")!}>
                 {children}
               </SocketContextWrapper>
             </UserContextWrapper>

@@ -1,6 +1,7 @@
 "use client";
 
 import useAPI from "@/hooks/api/useAPI";
+import { useTranslation } from "@/locales/dictionary";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -20,7 +21,6 @@ import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import { useState } from "react";
 import { countries } from "./SearchComponents";
-import { useTranslation } from "@/locales/dictionary";
 
 const genderOption = [
   {
@@ -41,7 +41,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [continued, setContinued] = useState(false);
-  const { t} = useTranslation()
+  const { t } = useTranslation();
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [gender, setGender] = useState("");
   const [region, setRegion] = useState("");
@@ -99,7 +99,7 @@ export default function SignUpPage() {
           <Box width="100%" textAlign="right" alignContent="center" mb={10}>
             <InstagramIcon sx={{ width: 100, height: 100 }} />
             <Typography variant="h5" fontWeight={300}>
-              instagram
+              Swiftsend
             </Typography>
           </Box>
           <Box width="100%" alignContent="center" textAlign="center" mt={10}>
@@ -185,7 +185,7 @@ export default function SignUpPage() {
           <Box width="100%" textAlign="right" alignContent="center" mb={10}>
             <InstagramIcon sx={{ height: 100, width: 100 }} />
             <Typography variant="h5" fontWeight={300}>
-              instagram
+              Swiftsend
             </Typography>
           </Box>
           <Box width="100%" alignContent="center" textAlign="center" mt={10}>
@@ -283,7 +283,7 @@ export default function SignUpPage() {
                     color: "currentcolor",
                   }}
                 >
-                 {t("existingAccount")}
+                  {t("existingAccount")}
                 </Link>
               </Typography>
               <LoadingButton

@@ -4,11 +4,12 @@ import {
   EditMessageInput,
   MessageUserInput,
 } from "../entities/messages.entities";
+import { ENV } from "@/util/constants";
 
 const useMessageAPI = () => {
   const getChannels = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/channels`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/channels`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +26,7 @@ const useMessageAPI = () => {
   const getChannelById = async (channelId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/channels/${channelId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${channelId}`,
       {
         method: "GET",
         headers: {
@@ -44,7 +45,7 @@ const useMessageAPI = () => {
   const createChannel = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/channels/create/${userId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/channels/create/${userId}`,
       {
         method: "POST",
         headers: {
@@ -63,7 +64,7 @@ const useMessageAPI = () => {
   const getChannelMessages = async (channelId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/channels/${channelId}/messages`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${channelId}/messages`,
       {
         method: "GET",
         headers: {
@@ -81,7 +82,7 @@ const useMessageAPI = () => {
 
   const sendMessage = async (body: Partial<MessageUserInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/messages`, {
       method: "POST",
       body: JSON.stringify(body),
       headers: {
@@ -103,7 +104,7 @@ const useMessageAPI = () => {
   ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/${receiverId}/forward`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/${_id}/${receiverId}/forward`,
       {
         method: "POST",
         body: JSON.stringify(body),
@@ -123,7 +124,7 @@ const useMessageAPI = () => {
   const editMessage = async (_id: string, body: Partial<EditMessageInput>) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/edit`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/${_id}/edit`,
       {
         method: "PATCH",
         body: JSON.stringify(body),
@@ -143,7 +144,7 @@ const useMessageAPI = () => {
   const deleteMessage = async (_id: string, deleted: boolean) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages/${_id}/${deleted}/delete`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/${_id}/${deleted}/delete`,
       {
         method: "DELETE",
         headers: {
@@ -162,7 +163,7 @@ const useMessageAPI = () => {
   const deleteChannelMessages = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/channels/messages/delete/${_id}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/channels/messages/delete/${_id}`,
       {
         method: "DELETE",
         headers: {
@@ -181,7 +182,7 @@ const useMessageAPI = () => {
   const deleteChannel = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/channels/${_id}/delete`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${_id}/delete`,
       {
         method: "DELETE",
         headers: {
@@ -200,7 +201,7 @@ const useMessageAPI = () => {
   const messageSeen = async (messageId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages/seen/${messageId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/seen/${messageId}`,
       {
         method: "PUT",
         headers: {
@@ -219,7 +220,7 @@ const useMessageAPI = () => {
   const messageDelivered = async (messageId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages/delivered/${messageId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/delivered/${messageId}`,
       {
         method: "PUT",
         headers: {
@@ -247,7 +248,7 @@ const useMessageAPI = () => {
     forwardMessage,
     deleteChannel,
     messageSeen,
-    messageDelivered
+    messageDelivered,
   };
 };
 export default useMessageAPI;

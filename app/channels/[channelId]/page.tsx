@@ -10,6 +10,7 @@ import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import { DoneAll } from "@mui/icons-material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
@@ -70,21 +71,27 @@ export default function MessagePage() {
       messageDelivered(newMessage._id);
     });
 
-    socket.on("messageDelivered", (messageId: string) => {
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === messageId ? { ...msg, delivered: true } : msg
-        )
-      );
-    });
+    socket.on(
+      "messageDelivered",
+      (message: { messageId: string; delivered: boolean }) => {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg._id === message.messageId ? { ...msg, delivered: true } : msg
+          )
+        );
+      }
+    );
 
-    socket.on("messageSeen", (messageId: string) => {
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === messageId ? { ...msg, seen: true } : msg
-        )
-      );
-    });
+    socket.on(
+      "messageSeen",
+      (message: { messageId: string; seen: boolean }) => {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg._id === message.messageId ? { ...msg, seen: true } : msg
+          )
+        );
+      }
+    );
 
     socket.on(
       "messageEdited",
@@ -142,6 +149,8 @@ export default function MessagePage() {
       socket.off("newMessage");
       socket.off("messageEdited");
       socket.off("messageDeleted");
+      socket.off("messageSeen");
+      socket.off("messageDelivered");
       socket.off("connect_err");
     };
   }, [setMessages]); //eslint-disable-line
@@ -162,7 +171,7 @@ export default function MessagePage() {
         unSeenMessages.forEach((msg) => {
           socket.emit("messageSeen", {
             messageId: msg._id,
-            receiverId: user.userId,
+            seen: true,
           });
           messageSeen(msg._id);
         });
@@ -326,47 +335,51 @@ export default function MessagePage() {
                       action={
                         !isUser && !message.deleted ? (
                           <>
-                            <IconButton
-                              sx={{ mt: 0 }}
-                              onClick={() => {
-                                setSelectedMessage(message);
-                                setInfoMessageDrawer(true);
-                              }}
+                            <Stack
+                              direction="row"
+                              justifyContent="space-between"
                             >
-                              <EditIcon sx={{ width: 13, height: 13 }} />
-                            </IconButton>
-                            <IconButton sx={{ mt: 0 }}>
-                              <DoneAll sx={{ width: 13, height: 13 }} />
-                            </IconButton>
+                              <IconButton
+                                sx={{ mt: 0 }}
+                                onClick={() => {
+                                  setSelectedMessage(message);
+                                  setInfoMessageDrawer(true);
+                                }}
+                              >
+                                <EditIcon sx={{ width: 13, height: 13 }} />
+                              </IconButton>
+                              {!isUser && (
+                                <Typography fontSize="0.85rem">
+                                  {message.seen ? (
+                                    <IconButton sx={{ mt: 0 }}>
+                                      <DoneAll sx={{ width: 13, height: 13 }} />
+                                    </IconButton>
+                                  ) : message.delivered ? (
+                                    <IconButton sx={{ mt: 0 }}>
+                                      <DoneIcon
+                                        sx={{ width: 13, height: 13 }}
+                                      />
+                                    </IconButton>
+                                  ) : null}
+                                </Typography>
+                              )}
+                            </Stack>
                           </>
                         ) : null
                       }
                       subheader={
                         <>
-                          <Stack direction="row" justifyContent="space-between">
-                            {!isUser &&
-                             <Typography fontSize="0.85rem">
-                             {message.delivered
-                               ? "Delivered"
-                               : message.seen
-                               ? "Seen"
-                               : null}
-                           </Typography>}
-
-                            <Typography
-                              variant="caption"
-                              fontSize=".55rem"
-                              px="1"
-                            >
-                              {message.deleted
-                                ? `${moment(
-                                    message.deletedAt
-                                  ).fromNow()} deleted`
-                                : message.edited
-                                ? `${moment(message.editedAt).fromNow()} edited`
-                                : `${moment(message.createdAt).fromNow()}`}
-                            </Typography>
-                          </Stack>
+                          <Typography
+                            variant="caption"
+                            fontSize=".55rem"
+                            px="1"
+                          >
+                            {message.deleted
+                              ? `${moment(message.deletedAt).fromNow()} deleted`
+                              : message.edited
+                              ? `${moment(message.editedAt).fromNow()} edited`
+                              : `${moment(message.createdAt).fromNow()}`}
+                          </Typography>
                         </>
                       }
                     />

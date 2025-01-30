@@ -73,7 +73,7 @@ export default function VerifyOTPPage() {
       <Box width="100%" alignContent="center" textAlign="right" mb={10}>
         <InstagramIcon sx={{ width: 100, height: 100 }} />
         <Typography variant="h5" fontWeight={300}>
-          instagram
+          Swiftsend
         </Typography>
       </Box>
 
