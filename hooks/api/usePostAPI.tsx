@@ -1,11 +1,16 @@
 import { authCookieKey } from "@/library/constants";
 import { getCookie } from "cookies-next";
-import { CommentPostInput, CreatePostInput, UpdatePostInput } from "../entities/posts.entities";
+import {
+  CommentPostInput,
+  CreatePostInput,
+  UpdatePostInput,
+} from "../entities/posts.entities";
+import { ENV } from "@/util/constants";
 
 const usePostAPI = () => {
   const createPost = async (body: Partial<CreatePostInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/create`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/create`, {
       method: "POST",
       body: JSON.stringify(body),
       headers: {
@@ -22,16 +27,13 @@ const usePostAPI = () => {
 
   const getPost = async (postId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/${postId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -41,7 +43,7 @@ const usePostAPI = () => {
 
   const getPosts = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +60,7 @@ const usePostAPI = () => {
   const getCreatorPosts = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/creators/${userId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/creators/${userId}`,
       {
         method: "GET",
         headers: {
@@ -77,7 +79,7 @@ const usePostAPI = () => {
   const getSaves = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${userId}/saves`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/${userId}/saves`,
       {
         method: "GET",
         headers: {
@@ -95,17 +97,14 @@ const usePostAPI = () => {
 
   const editPost = async (body: Partial<UpdatePostInput>, _id: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/edit`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/${_id}/edit`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -116,7 +115,7 @@ const usePostAPI = () => {
   const deletePost = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/delete`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/${_id}/delete`,
       {
         method: "DELETE",
         headers: {
@@ -134,16 +133,13 @@ const usePostAPI = () => {
 
   const likePost = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/like`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/${_id}/like`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -154,7 +150,7 @@ const usePostAPI = () => {
   const commentPost = async (body: Partial<CommentPostInput>, _id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/create-comment`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/${_id}/create-comment`,
       {
         method: "PUT",
         body: JSON.stringify(body),
@@ -174,7 +170,7 @@ const usePostAPI = () => {
   const deleteComment = async (postId: string, commentId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}/comments/${commentId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/${postId}/comments/${commentId}`,
       {
         method: "DELETE",
         headers: {
@@ -192,16 +188,13 @@ const usePostAPI = () => {
 
   const savePost = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${_id}/save`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/${_id}/save`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -211,16 +204,13 @@ const usePostAPI = () => {
 
   const getTimelinePosts = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/timeline`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/timeline`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -231,7 +221,7 @@ const usePostAPI = () => {
   const getComment = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/${userId}/comments`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/${userId}/comments`,
       {
         method: "GET",
         headers: {
@@ -250,7 +240,7 @@ const usePostAPI = () => {
   const getLike = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts/user/${userId}/likes`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/posts/user/${userId}/likes`,
       {
         method: "GET",
         headers: {
@@ -279,7 +269,7 @@ const usePostAPI = () => {
     getCreatorPosts,
     deleteComment,
     getComment,
-    getLike
+    getLike,
   };
 };
 export default usePostAPI;

@@ -1,5 +1,5 @@
 export const en = {
-  appName: "Instagram",
+  appName: "Swiftsend",
   email: "Email",
   password: "Password",
   signUp: "Sign Up",
@@ -7,10 +7,10 @@ export const en = {
   googleSign: "Continue with Google",
   privacyPolicy:
     "By signing up, you agree with our Terms and Service and Privacy Policy",
-  loginHeader: "Login with Instagram",
+  loginHeader: "Login with Swiftsend",
   forgotPassword: "Forgot your password?",
   createAccount: "Create new account",
-  signUpHeader: "Sign up with Instagram",
+  signUpHeader: "Sign up with Swiftsend",
   validEmail: "Please enter a valid email",
   existingAccount: "Already have an account? Login",
   continue: "Continue",

@@ -63,7 +63,7 @@ export const PostCard = ({
   onMutation,
 }: PostProps) => {
   const { followProfile } = useAPI();
-  const { likePost, savePost,  } = usePostAPI();
+  const { likePost, savePost } = usePostAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
@@ -206,7 +206,7 @@ export const PostCard = ({
               height: "100%",
             }}
             src={post.imageURL}
-            alt={post.caption || "Instagram image"}
+            alt={post.caption || "Swiftsend image"}
             width={400}
             height={400}
           />

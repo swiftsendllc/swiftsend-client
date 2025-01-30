@@ -50,13 +50,13 @@ export default function ForgotPasswordPage() {
       <Box width="100%" alignContent="center" textAlign="right" mb={10}>
         <InstagramIcon sx={{ width: 100, height: 100 }} />
         <Typography variant="h5" fontWeight={300}>
-          instagram
+          Swiftsend
         </Typography>
         <Box width="100%" alignContent="center" textAlign="center">
           <Typography variant="h6" fontWeight={200} mt={6}>
             This extra step shows it&apos;s really you trying to sign in{" "}
           </Typography>
-          <AccountCircleIcon sx={{ width: 25, height: 25, marginTop: 2 }}  />
+          <AccountCircleIcon sx={{ width: 25, height: 25, marginTop: 2 }} />
         </Box>
       </Box>
       <Box mt={{ md: 2, sm: 2 }} mb={2}>

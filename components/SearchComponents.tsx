@@ -42,7 +42,7 @@ export const yourAccounts = [
   },
 ];
 
-export const howToUseInstagram = [
+export const howToUseSwiftsend = [
   {
     label: "Saved",
     leftIcon: <BookmarkBorderOutlinedIcon sx={{ width: 30, height: 30 }} />,
@@ -350,7 +350,7 @@ export const StyledBadge = styled(Badge)(() => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
     color: "#44b700",
-    boxShadow:"0 0 0 0px",
+    boxShadow: "0 0 0 0px",
     "&::after": {
       position: "absolute",
       width: "100%",

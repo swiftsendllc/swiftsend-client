@@ -56,7 +56,7 @@ export default function BottomNav() {
           height="30"
           src={user.avatarURL!}
           alt="avatar"
-          style={{ width: 20, height: 20, borderRadius: "30px" }}
+          style={{ width: 20, height: 20, }}
         />
       ),
     },

@@ -3,7 +3,7 @@
 import {
   forProfessionals,
   howOthersCanInteractWithYou,
-  howToUseInstagram,
+  howToUseSwiftsend,
   moreInfoAndSupport,
   payments,
   whatYouSee,
@@ -53,7 +53,7 @@ export default function SettingsPage() {
           height={30}
           src={user.avatarURL!}
           alt="avatar"
-          style={{ width: 30, height: 30, borderRadius: "50%" }}
+          style={{ width: 30, height: 30 }}
         />
       ),
       rightIcon: <KeyboardArrowRightOutlinedIcon />,
@@ -62,7 +62,7 @@ export default function SettingsPage() {
   ];
   const settingsPage = [
     ...yourAccounts,
-    ...howToUseInstagram,
+    ...howToUseSwiftsend,
     ...forProfessionals,
     ...whoCanSeeYourContent,
     ...howOthersCanInteractWithYou,
@@ -161,10 +161,10 @@ export default function SettingsPage() {
       </List>
       <Divider />
       <Typography fontWeight={400} variant="h6" color="text.secondary">
-        How to use instagram
+        How to use Swiftsend
       </Typography>
       <List sx={{ width: "100%", mb: 1, padding: 0 }}>
-        {howToUseInstagram.map((option, idx) => (
+        {howToUseSwiftsend.map((option, idx) => (
           <ListItemButton
             key={idx}
             sx={{ padding: 0, py: 1, borderRadius: 2 }}
@@ -327,9 +327,11 @@ export default function SettingsPage() {
       </Typography>
       <List sx={{ width: "100%", mb: 1, padding: 0 }}>
         {yourAppAndMedia.map((option, idx) => (
-          <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}
-          href={option.route}
-          LinkComponent={Link}
+          <ListItemButton
+            key={idx}
+            sx={{ padding: 0, py: 1, borderRadius: 2 }}
+            href={option.route}
+            LinkComponent={Link}
           >
             <ListItemIcon sx={{ pr: 1, minWidth }}>
               {option.leftIcon}

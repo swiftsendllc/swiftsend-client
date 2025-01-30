@@ -2,6 +2,7 @@ import BottomNav from "@/components/BottomNav";
 import { ChannelsContextWrapper } from "@/hooks/context/channels-context";
 import { ChannelsEntity } from "@/hooks/entities/messages.entities";
 import { authCookieKey } from "@/library/constants";
+import { ENV } from "@/util/constants";
 import {
   Alert,
   AlertTitle,
@@ -16,7 +17,7 @@ import React from "react";
 const getChannels = async () => {
   try {
     const accessToken = cookies().get(authCookieKey)?.value;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/channels`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/channels`, {
       method: "GET",
       headers: {
         "Content-Type": "Application/json",

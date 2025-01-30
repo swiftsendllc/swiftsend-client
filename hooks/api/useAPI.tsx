@@ -2,10 +2,11 @@ import { authCookieKey } from "@/library/constants";
 import { getCookie, setCookie } from "cookies-next";
 import Error from "next/error";
 import { UpdateUserInput } from "../entities/users.entities";
+import { ENV } from "@/util/constants";
 
 const useAPI = () => {
   const login = async (email: string, password: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/auth/login`, {
       method: "POST",
       body: JSON.stringify({ email, password }),
       headers: {
@@ -30,7 +31,7 @@ const useAPI = () => {
     region: string;
     gender: string;
   }) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/auth/signup`, {
       method: "POST",
       body: JSON.stringify(input),
       headers: {
@@ -49,7 +50,7 @@ const useAPI = () => {
 
   const testToken = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/auth/signup`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +66,7 @@ const useAPI = () => {
 
   const uploadFile = async (formData: FormData) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/upload`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/users/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -85,17 +86,14 @@ const useAPI = () => {
 
   const updateUser = async (body: Partial<UpdateUserInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/me/edit`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/users/me/edit`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -106,7 +104,7 @@ const useAPI = () => {
   const getUserProfile = async (usernameOrId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${usernameOrId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/users/${usernameOrId}`,
       {
         method: "GET",
         headers: {
@@ -125,7 +123,7 @@ const useAPI = () => {
   const getUserProfiles = async (query: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/search?q=${encodeURIComponent(
+      `${ENV("NEXT_PUBLIC_API_URL")}/users/search?q=${encodeURIComponent(
         query
       )}&t=${Date.now()}`,
       {
@@ -133,7 +131,7 @@ const useAPI = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
-          "Cache-Control":"no-cache"
+          "Cache-Control": "no-cache",
         },
       }
     );
@@ -147,7 +145,7 @@ const useAPI = () => {
   const getFollowers = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/followers`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/users/${userId}/followers`,
       {
         method: "GET",
         headers: {
@@ -166,7 +164,7 @@ const useAPI = () => {
   const getFollowing = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/following`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/users/${userId}/following`,
       {
         method: "GET",
         headers: {
@@ -185,7 +183,7 @@ const useAPI = () => {
   const followProfile = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/follow-user`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/users/${userId}/follow-user`,
       {
         method: "POST",
         headers: {
@@ -204,7 +202,7 @@ const useAPI = () => {
   const unFollowProfile = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/remove-follower`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/users/${userId}/remove-follower`,
       {
         method: "DELETE",
         headers: {
