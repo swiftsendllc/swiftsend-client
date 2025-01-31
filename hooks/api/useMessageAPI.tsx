@@ -1,10 +1,10 @@
 import { authCookieKey } from "@/library/constants";
+import { ENV } from "@/util/constants";
 import { getCookie } from "cookies-next";
 import {
   EditMessageInput,
   MessageUserInput,
 } from "../entities/messages.entities";
-import { ENV } from "@/util/constants";
 
 const useMessageAPI = () => {
   const getChannels = async () => {
@@ -61,10 +61,13 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const getChannelMessages = async (channelId: string) => {
+  const getChannelMessages = async (channelId: string, query: { offset: number; limit: number }) => {
     const accessToken = getCookie(authCookieKey);
+    const {offset, limit} = query
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${channelId}/messages`,
+      `${ENV(
+        "NEXT_PUBLIC_API_URL"
+      )}/channels/${channelId}/messages?offset=${offset}&limit=${limit}`,
       {
         method: "GET",
         headers: {
