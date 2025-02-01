@@ -3,7 +3,7 @@
 import useAPI from "@/hooks/api/useAPI";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
-import { MessageUserInput } from "@/hooks/entities/messages.entities";
+import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import AddIcon from "@mui/icons-material/Add";
 import LandscapeIcon from "@mui/icons-material/Landscape";
 import SendIcon from "@mui/icons-material/Send";
@@ -13,7 +13,7 @@ import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface UserMessageInputProps {
-  onMessage: () => unknown;
+  onMessage: (msg: MessagesEntity) => unknown;
 }
 
 export default function MessageInput({ onMessage }: UserMessageInputProps) {
@@ -29,12 +29,12 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
   const handleMessage = async () => {
     setLoading(true);
     try {
-      (await sendMessage({
+      const msg = (await sendMessage({
         message: messageInput,
         receiverId: channel.receiver.userId,
-      })) as MessageUserInput;
+      })) as MessagesEntity;
       setMessageInput("");
-      onMessage();
+      onMessage(msg);
     } catch (error) {
       console.log(error);
     } finally {
@@ -67,6 +67,7 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
         left: 0,
         bottom: 0,
         right: 0,
+        zIndex: 8,
       }}
     >
       <Container maxWidth="xs" sx={{ padding: 0 }}>

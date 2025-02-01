@@ -6,21 +6,13 @@ import { ChannelContext } from "@/hooks/context/channel-context";
 import { useSocket } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
 import { MessagesEntity } from "@/hooks/entities/messages.entities";
-import {
-  Avatar,
-  CircularProgress,
-  Container,
-  Divider,
-  LinearProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Container, LinearProgress, List } from "@mui/material";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { ChatHeaderPage } from "./components/ChatHeader";
-import { MessageBubblePage } from "./components/MessageBubble";
+import { MessageBubblePage } from "./components/MessageThread";
 
 export default function MessagePage() {
   const limit = 20;
@@ -30,26 +22,24 @@ export default function MessagePage() {
   const [hasMore, setHasMore] = useState(true);
   const [channel] = useContext(ChannelContext);
   const [loading, setLoading] = useState(false);
-  const [offset, setOffSet] = useState<number>(0);
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const { getChannelMessages, messageSeen, messageDelivered } = useMessageAPI();
 
-  const loadChannelMessages = async (InitialLoad: boolean=false) => {
+  const loadChannelMessages = async (initialLoad = false) => {
+    const offset = initialLoad ? 0 : messages.length;
+
     setLoading(true);
     try {
       const messages = await getChannelMessages(channelId as string, {
-        offset: InitialLoad ? 0 : offset,
+        offset,
         limit,
       });
-      if(InitialLoad) {
-      setMessages(messages);
+
+      if (initialLoad) {
+        setMessages(messages);
       } else {
-        setMessages((prev) => [...messages, ...prev])
-      }
-      setHasMore(messages.length === limit);
-      if (!InitialLoad) {
-        setOffSet((prevOffset) => prevOffset + limit);
+        setHasMore(messages.length === limit);
+        setMessages((prev) => [...prev, ...messages]);
       }
     } catch (error) {
       console.log(error);
@@ -62,7 +52,8 @@ export default function MessagePage() {
   useEffect(() => {
     console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
-      setMessages((prev) => [...prev, newMessage]);
+      console.log("new message received", newMessage);
+      setMessages((prev) => [newMessage, ...prev]);
       socket.emit("messageDelivered", {
         messageId: newMessage._id,
         receiverId: user._id,
@@ -155,7 +146,7 @@ export default function MessagePage() {
   }, [setMessages]); //eslint-disable-line
 
   useEffect(() => {
-    if (channelId) loadChannelMessages(true);
+    if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
 
   useEffect(() => {
@@ -175,82 +166,78 @@ export default function MessagePage() {
       }
     }
   }, [user.userId]); //eslint-disable-line
-  const paginationLoadMessages = () => {
-    if(hasMore && !loading) {
-      loadChannelMessages()
-    }
-  }
 
-  useEffect(() => {
-    if (virtuosoRef.current) {
-      virtuosoRef.current?.scrollToIndex({
-        index: messages.length - 1,
-        behavior: "smooth",
-      });
+  const loadMoreMessages = () => {
+    console.log("end_");
+
+    if (hasMore && !loading) {
+      loadChannelMessages();
     }
-  }, [messages]);
+  };
 
   return (
     <>
       <Container
         maxWidth="xs"
-        style={{ padding: 0, marginBottom: 60, position: "relative" }}
+        style={{
+          padding: 0,
+          marginBottom: 60,
+        }}
       >
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignContent="center"
-          alignItems="center"
-          sx={{ position: "fixed", zIndex: 4, left: 0, right: 0 }}
+        <Box
+          width="100%"
+          sx={{
+            position: "fixed",
+
+            zIndex: 8,
+          }}
         >
           <ChatHeaderPage channel={channel} messages={messages} />
-        </Stack>
-        <Divider />
-        {/* <EncryptionNoticePage /> */}
-        <Virtuoso
-          ref={virtuosoRef}
-          style={{ height: "100vh" }}
-          totalCount={messages.length}
-          startReached={paginationLoadMessages}
-          initialTopMostItemIndex={messages.length - 1}
-          itemContent={(index: number) => {
-            const message = messages[index];
-            return (
-              <MessageBubblePage
-                message={message}
-                channel={channel}
-                user={user}
-                setMessages={setMessages}
-              />
-            );
+        </Box>
+        <List
+          sx={{
+            height: "800px",
+            overflowY: "scroll",
+            display: "flex",
+            flexDirection: "column-reverse",
           }}
-        />
-        {messages.length === 0 && (
-          <Stack
-            my="10"
-            alignContent="center"
-            alignItems="center"
-            justifyContent="center"
+          id="scroll-id"
+        >
+          <InfiniteScroll
+            style={{
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column-reverse",
+            }}
+            dataLength={messages.length}
+            hasMore={hasMore}
+            inverse={true}
+            scrollThreshold={0.8}
+            next={loadMoreMessages}
+            loader={
+              loading && (
+                <LinearProgress sx={{ marginTop: 10, position: "relative" }} />
+              )
+            }
+            initialScrollY={500}
+            scrollableTarget="scroll-id"
           >
-            <Stack direction="row" spacing={2} my={2}>
-              <Avatar src={user.avatarURL} />
-              <Avatar src={channel.receiver.avatarURL} />
-            </Stack>
-            <CircularProgress />
+            <MessageBubblePage
+              messages={messages}
+              channel={channel}
+              user={user}
+              setMessages={setMessages}
+            />
+          </InfiniteScroll>
+        </List>
 
-            <Typography variant="h6" fontWeight="50" my={3} color="primary">
-              You are connecting with {channel.receiver.fullName}
-            </Typography>
-            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-              <LinearProgress color="success" />
-            </Stack>
-            <Typography variant="h6" fontWeight="50" my={3} color="primary">
-              hello 👋
-            </Typography>
-          </Stack>
+        {messages && (
+          <MessageInput
+            onMessage={(msg) => {
+              setMessages((prev) => [msg, ...prev]);
+            }}
+          />
         )}
-
-        {messages && <MessageInput onMessage={() => loadChannelMessages(true)} />}
       </Container>
     </>
   );
