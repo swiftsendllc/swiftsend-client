@@ -1,6 +1,7 @@
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { ChannelsEntity } from "@/hooks/entities/messages.entities";
-import LayersClearIcon from "@mui/icons-material/LayersClear";
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
+import PermMediaIcon from "@mui/icons-material/PermMedia";
+import WallpaperIcon from "@mui/icons-material/Wallpaper";
 import {
   Box,
   List,
@@ -10,51 +11,50 @@ import {
   ListItemText,
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
-import { Fragment, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import React, { Fragment, useEffect, useState } from "react";
 
-export default function InfoChannelDrawer({
+export const InfoChannelDrawer = ({
   isOpen,
   onClose,
-  channel,
+  setCheckBox,
+  setBackground
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  channel: ChannelsEntity;
-}) {
+  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
+  setBackground: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-  const { deleteChannelMessages } = useMessageAPI();
 
   const handleClose = () => {
     setOpen(false);
     onClose?.();
   };
 
-  const handleDeleteChannelMessages = async () => {
-    try {
-      await deleteChannelMessages(channel._id);
-      handleClose();
-      toast.success("Deleted channel messages");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to delete channel messages!");
-    }
-  };
-
   const drawer = [
     {
+      label: "Select",
+      icon: <ChecklistIcon />,
+      action: () => {
+        setCheckBox(true);
+        handleClose();
+      },
+    },
+    {
+      label: "Change Background",
+      icon: <WallpaperIcon />,
+      action: () => {
+        setBackground(true)
+      }
+    },
+    {
       label: "Delete channel",
-      icon: <LayersClearIcon />,
-      action: () => handleDeleteChannelMessages(),
+      icon: <FolderDeleteIcon />,
     },
     {
-      label: " Edit",
-      icon: <LayersClearIcon />,
-    },
-    {
-      label: "Daniel",
-      icon: <LayersClearIcon />,
+      label: "Media",
+      icon: <PermMediaIcon />,
     },
   ];
 
@@ -86,4 +86,4 @@ export default function InfoChannelDrawer({
       </Box>
     </>
   );
-}
+};

@@ -16,6 +16,7 @@ import { UserContext } from "@/hooks/context/user-context";
 import { authCookieKey } from "@/library/constants";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LogoutIcon from "@mui/icons-material/Logout";
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 import {
   Autocomplete,
@@ -419,6 +420,21 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
+      <Divider />
+      <List sx={{ width: "100%", mt: 1, mb: 2 }}>
+        <ListItemButton
+          sx={{ padding: 0, py: 1, borderRadius: 2 }}
+        >
+          <ListItemIcon sx={{ pr: 1, minWidth }}>
+            <DarkModeIcon sx={{ width: 30, height: 30 }} color="primary" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Dark mode"
+            primaryTypographyProps={{ color: "primary" }}
+          />
+        </ListItemButton>
+      </List>
+
       <Divider />
       <List sx={{ width: "100%", mt: 1, mb: 2 }}>
         <ListItemButton

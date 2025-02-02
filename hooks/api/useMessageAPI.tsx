@@ -61,9 +61,12 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const getChannelMessages = async (channelId: string, query: { offset: number; limit: number }) => {
+  const getChannelMessages = async (
+    channelId: string,
+    query: { offset: number; limit: number }
+  ) => {
     const accessToken = getCookie(authCookieKey);
-    const {offset, limit} = query
+    const { offset, limit } = query;
     const res = await fetch(
       `${ENV(
         "NEXT_PUBLIC_API_URL"
@@ -163,12 +166,13 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const deleteChannelMessages = async (_id: string) => {
+  const deleteMessages = async (messageIds: string[]) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/messages/delete/${_id}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/channels/messages/delete/`,
       {
         method: "DELETE",
+        body: JSON.stringify({ messageIds }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -247,7 +251,7 @@ const useMessageAPI = () => {
     deleteMessage,
     editMessage,
     createChannel,
-    deleteChannelMessages,
+    deleteMessages,
     forwardMessage,
     deleteChannel,
     messageSeen,

@@ -98,7 +98,7 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
                       loading={loading}
                       loadingPosition="start"
                       startIcon={null}
-                      disabled={!messageInput || messageInput.trim() === ""}
+                      disabled={!messageInput}
                       onClick={handleMessage}
                     >
                       <SendIcon />
