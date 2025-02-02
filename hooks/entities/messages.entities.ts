@@ -44,3 +44,7 @@ export interface MessageUserInput {
   message: string;
   imageURL: string;
 }
+
+export interface DeleteMessagesInput {
+  messageIds: string[];
+}

@@ -24,7 +24,7 @@ export const SocketContextWrapper = ({
   const [user] = useContext(UserContext);
   const userId = user?.userId || null;
   const socket = io(serverURL, { query: { userId } });
-  const [onlineUsers, setOnLineUsers] = useState<string[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -36,7 +36,7 @@ export const SocketContextWrapper = ({
     });
 
     socket.on("getOnlineUsers", (users: string[]) => {
-      setOnLineUsers(users);
+      setOnlineUsers(users);
     });
 
     socket.on("disconnect", () => {

@@ -205,7 +205,9 @@ export function ChannelPage() {
                   }
                   title={channelUser.receiver.fullName}
                   subheader={
-                    channelUser.lastMessage?.deleted
+                    channelUser.lastMessage?.imageURL
+                      ? "Image"
+                      : channelUser.lastMessage?.deleted
                       ? "This message was deleted"
                       : channelUser.lastMessage?.edited
                       ? `${

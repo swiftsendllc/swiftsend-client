@@ -25,6 +25,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
@@ -37,6 +38,9 @@ export default function PostPreview() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile } = useAPI();
   const { createPost } = usePostAPI();
+  const isImage = caption.match(
+    /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/i
+  );
 
   const [user] = useContext(UserContext);
 

@@ -41,12 +41,12 @@ import toast from "react-hot-toast";
 export default function InfoMessageDrawer({
   isOpen,
   onClose,
-  message,
+  selectedMessage,
   setMessages,
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  message: MessagesEntity;
+  selectedMessage: MessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -56,18 +56,18 @@ export default function InfoMessageDrawer({
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
   const [channel] = useContext(ChannelContext);
   const [forwardedMessage] = useState<Partial<MessageUserInput>>({
-    message: message.message,
+    message: selectedMessage.message,
   });
   const { deleteMessage, editMessage, forwardMessage } = useMessageAPI();
   const [channels] = useState<ChannelsEntity[]>([]);
   const [editedMessage, setEditedMessage] = useState<Partial<EditMessageInput>>(
     {
-      message: message.message,
+      message: selectedMessage.message,
     }
   );
   useEffect(() => {
-    setEditedMessage({ message: message.message });
-  }, [message]);
+    setEditedMessage({ message: selectedMessage.message });
+  }, [selectedMessage]);
 
   const handleClose = () => {
     onClose?.();
@@ -76,11 +76,11 @@ export default function InfoMessageDrawer({
 
   const handleDelete = async (deleted: boolean) => {
     try {
-      await deleteMessage(message._id, deleted);
+      await deleteMessage(selectedMessage._id, deleted);
       if (deleted) {
         setMessages((pre) =>
           pre.map((msg) =>
-            msg._id === message._id ? { ...msg, deleted: true } : msg
+            msg._id === selectedMessage._id ? { ...msg, deleted: true } : msg
           )
         );
       }
@@ -95,10 +95,10 @@ export default function InfoMessageDrawer({
   const handleEdit = async () => {
     try {
       if (!editedMessage.message) return;
-      await editMessage(message._id, editedMessage);
+      await editMessage(selectedMessage._id, editedMessage);
       setMessages((pre) =>
         pre.map((msg) =>
-          msg._id === message._id ? { ...msg, ...editedMessage } : msg
+          msg._id === selectedMessage._id ? { ...msg, ...editedMessage } : msg
         )
       );
 
@@ -114,7 +114,7 @@ export default function InfoMessageDrawer({
     try {
       if (!forwardedMessage.message) return;
       const forwarded = await forwardMessage(
-        message._id,
+        selectedMessage._id,
         forwardedMessage,
         receiverId
       );
@@ -159,7 +159,7 @@ export default function InfoMessageDrawer({
         >
           <List>
             {messageInfoOptions.map((option, idx) => {
-              const initial = new Date(message.createdAt).getTime();
+              const initial = new Date(selectedMessage.createdAt).getTime();
               const current = new Date().getTime();
               const isDisabled = current - initial >= 2 * 60 * 1000;
 
