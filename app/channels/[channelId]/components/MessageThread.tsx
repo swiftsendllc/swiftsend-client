@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import moment from "moment";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { ImageThumbnailPage } from "./ImageThumbnail";
 import InfoMessageDrawer from "./InfoMessageDrawer";
 
@@ -47,20 +47,25 @@ export const MessageThreadPage = ({
     null
   );
   const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
+  const [client, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  },[])
 
   const handleToggleCheckBox = (messageId: string) => {
     setSelectedMessageIds((prev) => {
-
       const newSelectedMessageIds = prev.includes(messageId)
-
         ? prev.filter((id) => id !== messageId)
-
         : [...prev, messageId];
-        
+
       return newSelectedMessageIds;
     });
   };
 
+  if(!client){
+    return null
+  }
   return (
     <>
       {selectedMessage && (
@@ -98,7 +103,7 @@ export const MessageThreadPage = ({
                 <ImageThumbnailPage message={message} />
                 <Chip
                   label={
-                    <Typography variant="caption" fontSize="0.55rem">
+                    <Typography variant="caption" component="span" fontSize="0.55rem">
                       {message.deleted
                         ? `${moment(message.deletedAt)
                             .fromNow()
@@ -143,7 +148,7 @@ export const MessageThreadPage = ({
                       direction="row-reverse"
                       justifyContent="space-between"
                     >
-                      <Typography variant="body2" textAlign="right">
+                      <Typography variant="body2" component="span" textAlign="right">
                         {message.deleted && !message.imageURL
                           ? "THIS MESSAGE IS DELETED"
                           : message.message || "UNKNOWN MESSAGE"}{" "}
@@ -163,7 +168,7 @@ export const MessageThreadPage = ({
                         justifyContent="space-between"
                         paddingBottom="0"
                       >
-                        <Typography variant="caption" fontSize="0.55rem">
+                        <Typography variant="caption" component="span" fontSize="0.55rem">
                           {message.deleted
                             ? `${moment(message.deletedAt)
                                 .fromNow()
@@ -189,7 +194,7 @@ export const MessageThreadPage = ({
                             </IconButton>
                           )}
                           {isUser && (
-                            <Typography fontSize="0.85rem">
+                            <Typography component="span" fontSize="0.85rem">
                               {message.seen ? (
                                 <IconButton sx={{ mt: 0 }}>
                                   <DoneAll sx={{ width: 13, height: 13 }} />

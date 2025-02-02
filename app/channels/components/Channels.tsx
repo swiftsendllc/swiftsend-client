@@ -169,29 +169,22 @@ export function ChannelPage() {
                 <CardHeader
                   avatar={
                     <>
-                      {channelUser.receiver.isOnline ? (
-                        <StyledBadge
-                          overlap="circular"
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right",
-                          }}
-                          badgeContent
-                          variant="dot"
-                        >
-                          <Avatar
-                            aria-label="recipe"
-                            src={channelUser.receiver.avatarURL}
-                            alt={channelUser.receiver.fullName}
-                          />
-                        </StyledBadge>
-                      ) : (
+                      <StyledBadge
+                        isOnline={channelUser.receiver.isOnline}
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent
+                        variant="dot"
+                      >
                         <Avatar
                           aria-label="recipe"
                           src={channelUser.receiver.avatarURL}
                           alt={channelUser.receiver.fullName}
                         />
-                      )}
+                      </StyledBadge>
                     </>
                   }
                   action={

@@ -200,31 +200,23 @@ export default function AccountPage() {
             alignItems="center"
           >
             <>
-              {creator.isOnline ? (
-                <StyledBadge
-                  overlap="circular"
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  badgeContent
-                  variant="dot"
-                >
-                  <Avatar
-                    aria-label="recipe"
-                    src={creator.avatarURL}
-                    alt={creator.fullName}
-                    sx={{ width: 80, height: 80 }}
-                  />
-                </StyledBadge>
-              ) : (
+              <StyledBadge
+                isOnline={creator.isOnline}
+                overlap="circular"
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                badgeContent
+                variant="dot"
+              >
                 <Avatar
                   aria-label="recipe"
                   src={creator.avatarURL}
                   alt={creator.fullName}
                   sx={{ width: 80, height: 80 }}
                 />
-              )}
+              </StyledBadge>
             </>
 
             <Stack direction="column" spacing={1}>

@@ -18,7 +18,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useContext } from "react";
-import { StyledBadge } from "./SearchComponents";
 
 export default function BottomNav() {
   const _pathName = usePathname();
@@ -30,11 +29,13 @@ export default function BottomNav() {
       value: "/home",
       label: "Home",
       icon: <HomeIcon />,
+      hasBadge: false,
     },
     {
       value: "/search",
       label: "Search",
       icon: <SearchIcon />,
+      hasBadge: false,
     },
     {
       value: "/channels",
@@ -46,8 +47,10 @@ export default function BottomNav() {
       value: "/intro",
       label: "Intro",
       icon: <PlayCircleSharpIcon />,
+      hasBadge: false,
     },
     {
+      hasBadge: false,
       value: `/${user.username}`,
       label: "Account",
       icon: (
@@ -56,7 +59,7 @@ export default function BottomNav() {
           height="30"
           src={user.avatarURL!}
           alt="avatar"
-          style={{ width: 20, height: 20, }}
+          style={{ width: 20, height: 20 }}
         />
       ),
     },
@@ -95,29 +98,11 @@ export default function BottomNav() {
                     p={1}
                     m={0}
                   >
-                    {option.hasBadge ? (
-                      <StyledBadge
-                        badgeContent
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
-                        }}
-                      >
-                        <Icon
-                          color={
-                            pathName === option.value ? "primary" : "action"
-                          }
-                        >
-                          {option.icon}
-                        </Icon>
-                      </StyledBadge>
-                    ) : (
-                      <Icon
-                        color={pathName === option.value ? "primary" : "action"}
-                      >
-                        {option.icon}
-                      </Icon>
-                    )}
+                    <Icon
+                      color={pathName === option.value ? "primary" : "action"}
+                    >
+                      {option.icon}
+                    </Icon>
 
                     <Typography
                       variant="body2"

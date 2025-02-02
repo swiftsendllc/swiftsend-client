@@ -123,29 +123,22 @@ export default function ConnectedPage() {
             <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
               <CardHeader
                 avatar={
-                  followingUser.user.isOnline ? (
-                    <StyledBadge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent
-                      variant="dot"
-                    >
-                      <Avatar
-                        aria-label="recipe"
-                        src={followingUser.user.avatarURL}
-                        alt={followingUser.user.fullName}
-                      />
-                    </StyledBadge>
-                  ) : (
+                  <StyledBadge
+                    isOnline={followingUser.user.isOnline}
+                    overlap="circular"
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    badgeContent
+                    variant="dot"
+                  >
                     <Avatar
                       aria-label="recipe"
                       src={followingUser.user.avatarURL}
                       alt={followingUser.user.fullName}
                     />
-                  )
+                  </StyledBadge>
                 }
                 title={
                   <Button

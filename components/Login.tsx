@@ -38,7 +38,7 @@ export default function LoginPage() {
     setPasswordError("");
     try {
       await login(email, password);
-      window.location.href = "/home";
+      window.location.href = "/channels";
     } catch (err) {
       console.log(err);
       setPasswordError("Invalid credentials");

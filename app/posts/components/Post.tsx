@@ -134,14 +134,14 @@ export const PostCard = ({
         <CardHeader
           avatar={
             <>
-              {post.user.isOnline ? (
                 <StyledBadge
+                isOnline={post.user.isOnline}
                   overlap="circular"
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
                   }}
-                  badgeContent
+
                   variant="dot"
                 >
                   <Avatar
@@ -150,13 +150,6 @@ export const PostCard = ({
                     alt={post.user.fullName}
                   />
                 </StyledBadge>
-              ) : (
-                <Avatar
-                  aria-label="recipe"
-                  src={post.user.avatarURL}
-                  alt={post.user.fullName}
-                />
-              )}
             </>
           }
           action={

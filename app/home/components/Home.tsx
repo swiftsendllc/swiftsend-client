@@ -3,33 +3,18 @@
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
 import { PostsEntity } from "@/hooks/entities/posts.entities";
-import EditIcon from "@mui/icons-material/Edit";
-import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  Avatar,
-  Card,
-  CardHeader,
-  Container,
-  Divider,
-  Fab,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Avatar, Card, CardHeader, Container, Divider } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { PostCard } from "../../posts/components/Post";
+import { HomeHeaderPage } from "./HomeHeader";
 
 export default function HomePage() {
   const [user] = useContext(UserContext);
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const { getTimelinePosts } = usePostAPI();
-  const [isCardOpen, setIsCardOpen] = useState(false);
+  const [isCardOpen,] = useState(false);
 
-  const handleSearch = () => {
-    setIsCardOpen(true);
-  };
-
-  // Function to load all posts
   const loadPosts = async () => {
     try {
       const posts = await getTimelinePosts();
@@ -41,51 +26,13 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    loadPosts(); // Load posts on component mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    loadPosts();
+  }, []); //eslint-disable-line
 
   return (
     <>
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignContent="center"
-          alignItems="center"
-        >
-          <Avatar
-            src={user.avatarURL}
-            alt="Profile picture"
-            sx={{ width: 40, height: 40 }}
-          />
-          <TextField
-            label="𝔖𝔢𝔞𝔯𝔠𝔥"
-            sx={{ width: "60%" }}
-            slotProps={{
-              input: {
-                sx: { borderRadius: "10px" },
-              },
-            }}
-            onClick={handleSearch}
-          />
-          <Fab
-            sx={{ width: 40, height: 40 }}
-            color="primary"
-            aria-label="edit"
-            variant="circular"
-          >
-            <EditIcon />
-          </Fab>
-          <Fab
-            sx={{ width: 40, height: 40 }}
-            color="secondary"
-            aria-label="edit"
-            variant="circular"
-          >
-            <SettingsIcon />
-          </Fab>
-        </Stack>
+        <HomeHeaderPage  />
         <Divider sx={{ mt: 1 }} />
         {isCardOpen ? (
           <Card sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }}>
