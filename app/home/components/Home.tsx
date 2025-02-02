@@ -13,12 +13,8 @@ export default function HomePage() {
   const [user] = useContext(UserContext);
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const { getTimelinePosts } = usePostAPI();
-  const [isCardOpen, setIsCardOpen] = useState(false);
+  const [isCardOpen,] = useState(false);
 
-  const handleSearch = () => {
-    setIsCardOpen(true);
-  };
-  // Function to load all posts
   const loadPosts = async () => {
     try {
       const posts = await getTimelinePosts();
@@ -30,9 +26,8 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    loadPosts(); // Load posts on component mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    loadPosts();
+  }, []); //eslint-disable-line
 
   return (
     <>
