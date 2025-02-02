@@ -2,17 +2,16 @@ import { SocketContextWrapper } from "@/hooks/context/socket-context";
 import { UserContextWrapper } from "@/hooks/context/user-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import { authCookieKey } from "@/library/constants";
+import { ENV } from "@/util/constants";
 import theme from "@/util/theme";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
-import { getCookie } from "cookies-next";
 import type { Metadata, Viewport } from "next";
 import { Kanit } from "next/font/google";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { ENV } from "@/util/constants";
 
 const kanitFont = Kanit({
   subsets: ["latin"],
@@ -65,10 +64,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await validateAuth();
-  const locale = getCookie("locale") || "en";
+  const newLocale = cookies().get("locale")?.value || "en";
+  console.log(newLocale)
 
   return (
-    <html lang={locale}>
+    <html lang={newLocale}>
       <head>
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />

@@ -6,6 +6,7 @@ import { ChannelContext } from "@/hooks/context/channel-context";
 import { UserContext } from "@/hooks/context/user-context";
 import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import { Container, List } from "@mui/material";
+import { getCookie } from "cookies-next";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -24,9 +25,14 @@ export default function MessagePage() {
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const { getChannelMessages } = useMessageAPI();
   const [checkBox, setCheckBox] = useState(false);
-  const [background, setBackground] = useState(false)
+  const [backgroundImage, setBackgroundImage] = useState<string | null>("");
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
   GetSocketMessages({ setMessages, channel, messages });
+  const backgroundImageCookie = getCookie("imageURL");
+
+  useEffect(() => {
+    if (backgroundImageCookie) setBackgroundImage(backgroundImageCookie);
+  }, [backgroundImageCookie]);
 
   const loadChannelMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
@@ -64,7 +70,6 @@ export default function MessagePage() {
     if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
 
-
   return (
     <>
       <Container
@@ -76,14 +81,13 @@ export default function MessagePage() {
       >
         <ChatHeaderPage
           channel={channel}
-          messages={messages}
+          loading={loading}
           checkBox={checkBox}
+          messages={messages}
           setCheckBox={setCheckBox}
           selectedMessageIds={selectedMessageIds}
           setSelectedMessageIds={setSelectedMessageIds}
-          loading={loading}
-          background={background}
-          setBackground={setBackground}
+          setBackgroundImage={setBackgroundImage}
         />
         <List
           sx={{
@@ -91,6 +95,8 @@ export default function MessagePage() {
             overflowY: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
+            background: `url('${backgroundImage}')`,
+            objectFit:"cover",
           }}
           id="scroll-id"
         >

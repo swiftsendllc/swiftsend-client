@@ -345,9 +345,14 @@ export const postSamples = [
     title: "Bike",
   },
 ];
-
-export const StyledBadge = styled(Badge)(() => ({
-  "& .MuiBadge-badge": {
+interface StyledBadgeProps{
+  isOnline: boolean | undefined
+}
+export const StyledBadge = styled(Badge, {
+  shouldForwardProp: (prop) => prop !== "isOnline"
+})<StyledBadgeProps>(({isOnline}) => ({
+  "& .MuiBadge-badge":isOnline
+  ? {
     backgroundColor: "#44b700",
     color: "#44b700",
     boxShadow: "0 0 0 0px",
@@ -360,6 +365,10 @@ export const StyledBadge = styled(Badge)(() => ({
       border: "1px solid currentColor",
       content: '""',
     },
+  }:
+  {
+    backgroundColor: "grey",
+    color: "grey",
   },
   "@keyframes ripple": {
     "0%": {

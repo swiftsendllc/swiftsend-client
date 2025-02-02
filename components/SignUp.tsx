@@ -67,7 +67,7 @@ export default function SignUpPage() {
         dateOfBirth: dob,
       });
 
-      window.location.href = "/home";
+      window.location.href = "/channels";
     } catch (error) {
       console.error("SigUp failed", error);
     } finally {

@@ -132,38 +132,29 @@ export default function ConnectionPage() {
               height={100}
               priority
             />
-            <Typography variant="h6">
-              Your friends will appear here
-            </Typography>
+            <Typography variant="h6">Your friends will appear here</Typography>
           </Stack>
         ) : (
           followers.map((followedUser, idx) => (
             <Card key={idx} sx={{ mb: 0.5, width: "100%", p: 0 }}>
               <CardHeader
                 avatar={
-                  followedUser.user.isOnline ? (
-                    <StyledBadge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent
-                      variant="dot"
-                    >
-                      <Avatar
-                        aria-label="recipe"
-                        src={followedUser.user.avatarURL}
-                        alt={followedUser.user.fullName}
-                      />
-                    </StyledBadge>
-                  ) : (
+                  <StyledBadge
+                    isOnline={followedUser.user.isOnline}
+                    overlap="circular"
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    badgeContent
+                    variant="dot"
+                  >
                     <Avatar
                       aria-label="recipe"
                       src={followedUser.user.avatarURL}
                       alt={followedUser.user.fullName}
                     />
-                  )
+                  </StyledBadge>
                 }
                 title={
                   <Button

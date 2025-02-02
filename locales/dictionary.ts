@@ -1,4 +1,5 @@
 import { getCookie, setCookie } from "cookies-next";
+import { useEffect, useState } from "react";
 import { de } from "./de";
 import { en } from "./en";
 import { fr } from "./fr";
@@ -22,20 +23,23 @@ export const dictionary = {
 export type LangCode = "en" | "de" | "fr";
 
 export const useTranslation = () => {
-  let locale = ((getCookie("locale") as string) || "en") as LangCode;
+  const [locale, setLocaleState] = useState<LangCode>("en");
+  useEffect(() => {
+    const storedLocale = ((getCookie("locale") as string) || "en") as LangCode;
+    setLocaleState(storedLocale);
+  }, []);
 
   function translate(key: keyof typeof en) {
-    if (!dictionary[locale]) locale = "en";
+    if (!dictionary[locale]) {
+      locale === "en";
+    }
     return dictionary[locale][key];
   }
 
-  const setLocale = (locale: LangCode) => {
-    setCookie("locale", locale);
+  const setLocale = (newLocale: LangCode) => {
+    setCookie("locale", newLocale);
+    setLocaleState(newLocale)
   };
 
   return { t: translate, locale, setLocale };
-
 };
-
-
-

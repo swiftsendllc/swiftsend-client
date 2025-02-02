@@ -1,4 +1,5 @@
 "use client";
+import { StyledBadge } from "@/components/SearchComponents";
 import useAPI from "@/hooks/api/useAPI";
 import usePostAPI from "@/hooks/api/usePostAPI";
 import { UserContext } from "@/hooks/context/user-context";
@@ -23,7 +24,6 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
-import { StyledBadge } from "@/components/SearchComponents";
 
 export default function SearchPage() {
   const { getUserProfiles } = useAPI();
@@ -151,31 +151,23 @@ export default function SearchPage() {
             >
               <CardHeader
                 avatar={
-                  user.isOnline ? (
-                    <StyledBadge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent
-                      variant="dot"
-                    >
-                      <Avatar
-                        aria-label="recipe"
-                        src={user.avatarURL}
-                        alt={user.fullName}
-                        sx={{ width: 40, height: 40 }}
-                      />
-                    </StyledBadge>
-                  ) : (
+                  <StyledBadge
+                    isOnline={user.isOnline}
+                    overlap="circular"
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    badgeContent
+                    variant="dot"
+                  >
                     <Avatar
                       aria-label="recipe"
                       src={user.avatarURL}
                       alt={user.fullName}
                       sx={{ width: 40, height: 40 }}
                     />
-                  )
+                  </StyledBadge>
                 }
                 title={user.fullName}
                 subheader={user.username}

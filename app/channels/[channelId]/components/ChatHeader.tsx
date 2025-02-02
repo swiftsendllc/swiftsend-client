@@ -33,8 +33,7 @@ export const ChatHeaderPage = ({
   messages,
   checkBox,
   setCheckBox,
-  background,
-  setBackground,
+  setBackgroundImage,
   selectedMessageIds,
   setSelectedMessageIds,
 }: {
@@ -43,8 +42,7 @@ export const ChatHeaderPage = ({
   channel: ChannelsEntity;
   messages: MessagesEntity[];
   selectedMessageIds: string[];
-  background: boolean,
-  setBackground: React.Dispatch<React.SetStateAction<boolean>>
+  setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
@@ -82,29 +80,22 @@ export const ChatHeaderPage = ({
                 <IconButton onClick={() => router.back()}>
                   <ArrowBackOutlinedIcon />
                 </IconButton>
-                {channel.receiver.isOnline ? (
-                  <StyledBadge
-                    overlap="circular"
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    badgeContent
-                    variant="dot"
-                  >
-                    <Avatar
-                      aria-label="recipe"
-                      src={channel.receiver.avatarURL}
-                      alt={channel.receiver.fullName}
-                    />
-                  </StyledBadge>
-                ) : (
+                <StyledBadge
+                  isOnline={channel.receiver.isOnline}
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  badgeContent
+                  variant="dot"
+                >
                   <Avatar
                     aria-label="recipe"
                     src={channel.receiver.avatarURL}
                     alt={channel.receiver.fullName}
                   />
-                )}
+                </StyledBadge>
               </>
             }
             title={channel.receiver.fullName}
@@ -170,7 +161,7 @@ export const ChatHeaderPage = ({
         isOpen={infoChannelDrawer}
         onClose={() => setInfoChannelDrawer(false)}
         setCheckBox={setCheckBox}
-        setBackground={setBackground}
+        setBackgroundImage={setBackgroundImage}
       />
     </Box>
   );
