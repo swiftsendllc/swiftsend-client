@@ -57,7 +57,7 @@ export default async function Layout({
           <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2} p={5}>
             <LinearProgress color="warning" />
           </Stack>
-          <Button variant="contained" color="success">
+          <Button variant="contained" color="success" href="/channels">
             go back to home page
           </Button>
         </Stack>

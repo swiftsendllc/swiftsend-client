@@ -17,30 +17,43 @@ import {
   Container,
   Divider,
   Fab,
+  LinearProgress,
+  List,
   Stack,
   TextField,
 } from "@mui/material";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce } from "use-debounce";
 import { SearchFeed } from "./SearchFeed";
 
 export default function SearchPage() {
+  const limit = 20;
   const { getUserProfiles } = useAPI();
   const [user] = useContext(UserContext);
   const { getTimelinePosts } = usePostAPI();
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [isCardOpen, setIsCardOpen] = useState(false);
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [users, setUsers] = useState<UserProfilesEntity[]>([]);
-  // const [addFilter, setAddFilter] = useState(false);
-  // const [gender, setGender] = useState<string | null>(null);
 
-  const loadPosts = async () => {
+  const loadPosts = async (initialLoad = false) => {
+    const offset = initialLoad ? 0 : posts.length;
+    setLoading(true);
     try {
-      const posts = await getTimelinePosts();
-      setPosts(posts);
+      const posts = await getTimelinePosts({ offset, limit });
+      if (initialLoad) {
+        setPosts(posts);
+      } else {
+        setHasMore(posts.length === limit);
+        setPosts((prev) => [...prev, ...posts]);
+      }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,6 +71,11 @@ export default function SearchPage() {
 
   const handleClose = () => {
     setIsCardOpen(false);
+  };
+  const loadMorePosts = () => {
+    if (hasMore && !loading) {
+      loadPosts();
+    }
   };
 
   useEffect(() => {
@@ -131,7 +149,7 @@ export default function SearchPage() {
             color="secondary"
             aria-label="edit"
             variant="circular"
-            href="/saves"
+            href="/saved"
             LinkComponent={Link}
           >
             <BookmarkBorderOutlinedIcon />
@@ -176,7 +194,33 @@ export default function SearchPage() {
           ))}
         </>
       ) : (
-        <SearchFeed post={posts} />
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "800px",
+            objectFit: "contain",
+            overflowY: "scroll",
+          }}
+          id="scroll-d"
+        >
+          <InfiniteScroll
+            style={{
+              flexDirection: "column",
+              display: "flex",
+              overflow: "hidden",
+            }}
+            hasMore={hasMore}
+            dataLength={posts.length}
+            next={loadMorePosts}
+            scrollThreshold={0.9}
+            scrollableTarget="scroll-id"
+            initialScrollY={500}
+            loader={loading && <LinearProgress />}
+          >
+            <SearchFeed post={posts} />
+          </InfiniteScroll>
+        </List>
       )}
     </Container>
   );

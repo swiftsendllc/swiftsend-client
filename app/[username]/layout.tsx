@@ -7,6 +7,7 @@ import {
   Alert,
   AlertTitle,
   Button,
+  Container,
   LinearProgress,
   Stack,
 } from "@mui/material";
@@ -42,25 +43,28 @@ export default async function Layout({
   if (!user) {
     return (
       <>
-        <Stack
-          alignContent="center"
-          alignItems="center"
-          justifyContent="center"
-          mb={15}
-          mt={5}
-          overflow="hidden"
-        >
-          <Alert severity="warning" variant="filled">
-            <AlertTitle>Error</AlertTitle>
-            SORRY TO SAY, LOOKS LIKE THERE IS AN ERROR!
-          </Alert>
-          <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2} p={5}>
-            <LinearProgress color="warning" />
+        <Container maxWidth="xs">
+          <Stack
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+            mb={15}
+            mt={5}
+            overflow="hidden"
+          >
+            <Alert severity="warning" variant="filled">
+              <AlertTitle>Error</AlertTitle>
+              SORRY TO SAY, LOOKS LIKE THERE IS AN ERROR!
+            </Alert>
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2} p={5}>
+              <LinearProgress color="warning" />
+            </Stack>
+            <Button variant="contained" color="success" href="/home">
+              go back to home page
+            </Button>
           </Stack>
-          <Button variant="contained" color="success">
-            go back to home page
-          </Button>
-        </Stack>
+        </Container>
+
         <BottomNav />
       </>
     );

@@ -1,3 +1,4 @@
+"use client"
 import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import { ImageListItem } from "@mui/material";
 import Image from "next/image";

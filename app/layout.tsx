@@ -25,8 +25,8 @@ export const metadata = {
   manifest: "/manifest.json",
   keywords: ["nextjs", "nextjs14", "next14", "pwa", "next-pwa"],
   icons: [
-    { rel: "apple-touch-icon", url: "photos/app_icon.svg" },
-    { rel: "icon", url: "photos/app_icon.svg" },
+    { rel: "apple-touch-icon", url: "/svg/app_icon.svg" },
+    { rel: "icon", url: "/svg/app_icon.svg" },
   ],
 } satisfies Metadata;
 
@@ -65,8 +65,6 @@ export default async function RootLayout({
 }>) {
   const user = await validateAuth();
   const newLocale = cookies().get("locale")?.value || "en";
-  console.log(newLocale)
-
   return (
     <html lang={newLocale}>
       <head>

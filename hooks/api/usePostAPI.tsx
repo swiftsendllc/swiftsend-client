@@ -1,11 +1,11 @@
 import { authCookieKey } from "@/library/constants";
+import { ENV } from "@/util/constants";
 import { getCookie } from "cookies-next";
 import {
   CommentPostInput,
   CreatePostInput,
   UpdatePostInput,
 } from "../entities/posts.entities";
-import { ENV } from "@/util/constants";
 
 const usePostAPI = () => {
   const createPost = async (body: Partial<CreatePostInput>) => {
@@ -202,15 +202,21 @@ const usePostAPI = () => {
     return data;
   };
 
-  const getTimelinePosts = async () => {
+  const getTimelinePosts = async (query: { offset: number; limit: number }) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/posts/timeline`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const { offset, limit } = query;
+    const res = await fetch(
+      `${ENV(
+        "NEXT_PUBLIC_API_URL"
+      )}/posts/timeline?offset=${offset}&limit=${limit}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);

@@ -18,8 +18,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export const SavePage = () => {
-
-  const [save, setSave] = useState<PostsEntity[]>([]);
+  const [saved, setSaved] = useState<PostsEntity[]>([]);
   const { getSaves } = usePostAPI();
   const router = useRouter();
   const [user] = useContext(UserContext);
@@ -27,7 +26,7 @@ export const SavePage = () => {
   const loadSaves = async () => {
     try {
       const saved = await getSaves(user.userId);
-      setSave(saved);
+      setSaved(saved);
     } catch (error) {
       console.log(error);
     }
@@ -45,7 +44,7 @@ export const SavePage = () => {
         </IconButton>
         <Typography fontWeight={200} color="primary">
           {" "}
-          Saves
+          Saved
         </Typography>
         <IconButton>
           <MoreVertOutlinedIcon />
@@ -53,14 +52,14 @@ export const SavePage = () => {
       </Stack>
       <Divider />
       <Stack>
-        { save.length > 0 ? (
+        {saved.length > 0 ? (
           <ImageList
             sx={{ width: "100%", height: "auto", margin: "0" }}
             cols={3}
             gap={4}
             rowHeight={125}
           >
-            {save.map((saved) => (
+            {saved.map((saved) => (
               <ImageListItem key={saved._id}>
                 <Image
                   src={saved.imageURL}
@@ -77,29 +76,29 @@ export const SavePage = () => {
               </ImageListItem>
             ))}{" "}
           </ImageList>
-        ): (
-           <Stack
-              my="10"
-              alignContent="center"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Image
-                src="/svg-icons/sasuke1.svg"
-                style={{
-                  objectFit: "cover",
-                  width: "50%",
-                  height: "50%",
-                }}
-                alt="image"
-                width={300}
-                height={100}
-                priority
-              />
-              <Typography variant="h6" fontWeight="50">
-                𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
-              </Typography>
-            </Stack>
+        ) : (
+          <Stack
+            my="10"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Image
+              src="/svg-icons/sasuke1.svg"
+              style={{
+                objectFit: "cover",
+                width: "50%",
+                height: "50%",
+              }}
+              alt="image"
+              width={300}
+              height={100}
+              priority
+            />
+            <Typography variant="h6" fontWeight="50">
+             YOUR CONTENTS WILL APPEAR HERE
+            </Typography>
+          </Stack>
         )}
       </Stack>
     </>

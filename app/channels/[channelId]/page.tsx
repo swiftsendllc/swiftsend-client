@@ -28,11 +28,11 @@ export default function MessagePage() {
   const [backgroundImage, setBackgroundImage] = useState<string | null>("");
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
   GetSocketMessages({ setMessages, channel, messages });
-  const backgroundImageCookie = getCookie("imageURL");
 
   useEffect(() => {
+    const backgroundImageCookie = getCookie("imageURL");
     if (backgroundImageCookie) setBackgroundImage(backgroundImageCookie);
-  }, [backgroundImageCookie]);
+  }, [backgroundImage]);
 
   const loadChannelMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
@@ -59,8 +59,6 @@ export default function MessagePage() {
   };
 
   const loadMoreMessages = () => {
-    console.log("end_");
-
     if (hasMore && !loading) {
       loadChannelMessages();
     }
@@ -96,7 +94,7 @@ export default function MessagePage() {
             display: "flex",
             flexDirection: "column-reverse",
             background: `url('${backgroundImage}')`,
-            objectFit:"cover",
+            objectFit: "cover",
           }}
           id="scroll-id"
         >
