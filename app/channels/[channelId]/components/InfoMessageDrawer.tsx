@@ -1,3 +1,5 @@
+"use client"
+
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { ChannelContext } from "@/hooks/context/channel-context";
 import {

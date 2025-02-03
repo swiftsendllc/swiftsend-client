@@ -1,27 +1,45 @@
 "use client";
 
 import usePostAPI from "@/hooks/api/usePostAPI";
-import { UserContext } from "@/hooks/context/user-context";
 import { PostsEntity } from "@/hooks/entities/posts.entities";
-import { Avatar, Card, CardHeader, Container, Divider } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { Container, Divider, LinearProgress, List } from "@mui/material";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { PostCard } from "../../posts/components/Post";
 import { HomeHeaderPage } from "./HomeHeader";
 
 export default function HomePage() {
-  const [user] = useContext(UserContext);
+  const limit = 10;
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const { getTimelinePosts } = usePostAPI();
-  const [isCardOpen,] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  const loadPosts = async () => {
+  const loadPosts = async (initialLoad = false) => {
+    const offset = initialLoad ? 0 : posts.length;
+    setLoading(true);
     try {
-      const posts = await getTimelinePosts();
-      setPosts(posts);
+      const posts = await getTimelinePosts({ offset, limit });
+
+      if (initialLoad) {
+        setPosts(posts);
+      } else {
+        setHasMore(posts.length === limit);
+        setPosts((prev) => [...prev, ...posts]);
+      }
     } catch (error) {
       console.log(error);
       toast.success("Loading feed...");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMorePosts = () => {
+    console.log("end");
+    if (hasMore && !loading) {
+      loadPosts();
     }
   };
 
@@ -32,24 +50,37 @@ export default function HomePage() {
   return (
     <>
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>
-        <HomeHeaderPage  />
+        <HomeHeaderPage />
         <Divider sx={{ mt: 1 }} />
-        {isCardOpen ? (
-          <Card sx={{ mb: 0.5, width: "100%", p: 0, m: 0 }}>
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={user.avatarURL}
-                  alt={user.fullName}
-                />
-              }
-              title={user.fullName}
-            />
-          </Card>
-        ) : (
-          posts.map((post) => <PostCard key={post._id} post={post} />)
-        )}
+        <List
+          sx={{
+            height: "800px",
+            overflowY: "scroll",
+            display: "flex",
+            flexDirection: "column",
+            objectFit: "cover",
+          }}
+          id="scroll-id"
+        >
+          <InfiniteScroll
+            style={{
+              flexDirection: "column",
+              display: "flex",
+              overflow: "hidden",
+            }}
+            dataLength={posts.length}
+            next={loadMorePosts}
+            hasMore={hasMore}
+            loader={loading && <LinearProgress />}
+            initialScrollY={500}
+            scrollThreshold={0.9}
+            scrollableTarget="scroll-id"
+          >
+            {posts.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </InfiniteScroll>
+        </List>
       </Container>
     </>
   );

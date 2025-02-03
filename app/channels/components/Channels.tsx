@@ -26,7 +26,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { setCookie } from "cookies-next";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -99,10 +98,6 @@ export function ChannelPage() {
         });
       }
     );
-
-    socket.on("onlineUsers", (users: string[]) => {
-      setCookie("onlineUsers", JSON.stringify(users));
-    });
 
     return () => {
       socket.off("newMessage");

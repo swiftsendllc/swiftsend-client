@@ -1,3 +1,4 @@
+"use client"
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { useSocket } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
