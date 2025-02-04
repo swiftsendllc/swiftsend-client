@@ -54,7 +54,7 @@ export const ChatHeaderPage = ({
   const handleDeleteMessages = async () => {
     try {
       await deleteMessages(selectedMessageIds);
-      toast.success(`${l} MARKED AS DELETED`);
+      toast.success(`${selectedMessageIds.length} MARKED AS DELETED`);
       setCheckBox(false);
     } catch (error) {
       console.log(error);

@@ -31,6 +31,10 @@ export const SocketContextWrapper = ({
       console.log("Socket connected successfully:", socket.id);
     });
 
+    if (userId) {
+      socket.emit("join", userId);
+    }
+
     socket.on("connect_error", (err) => {
       console.error("Socket connection error:", err);
     });
