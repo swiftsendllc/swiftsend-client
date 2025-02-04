@@ -1,76 +1,26 @@
-"use client"
-import useMessageAPI from "@/hooks/api/useMessageAPI";
+"use client";
 import { useSocket } from "@/hooks/context/socket-context";
 import { UserContext } from "@/hooks/context/user-context";
-import {
-  ChannelsEntity,
-  MessagesEntity,
-} from "@/hooks/entities/messages.entities";
+import { MessagesEntity } from "@/hooks/entities/messages.entities";
 import { useContext, useEffect } from "react";
 
 export const GetSocketMessages = ({
-  channel,
-  messages,
   setMessages,
 }: {
-  channel: ChannelsEntity;
-  messages: MessagesEntity[];
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) => {
   const { socket } = useSocket();
-  const { messageDelivered, messageSeen } = useMessageAPI();
   const [user] = useContext(UserContext);
 
   useEffect(() => {
-    if (messages.length > 0 && channel.receiver.isOnline) {
-      console.log("The receiver is online :", channel.receiver.isOnline);
-      const unSeenMessages = messages.filter(
-        (msg) => !msg.seen && msg.receiverId !== user.userId
-      );
-      if (unSeenMessages.length > 0) {
-        unSeenMessages.forEach((msg) => {
-          socket.emit("messageSeen", {
-            messageId: msg._id,
-            seen: true,
-          });
-          messageSeen(msg._id);
-        });
-      }
-    }
-  }, [user.userId]); //eslint-disable-line
-  useEffect(() => {
     console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
-      console.log("new message received", newMessage);
       setMessages((prev) => [newMessage, ...prev]);
       socket.emit("messageDelivered", {
         messageId: newMessage._id,
         receiverId: user._id,
       });
-      messageDelivered(newMessage._id);
     });
-
-    socket.on(
-      "messageDelivered",
-      (message: { messageId: string; delivered: boolean }) => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg._id === message.messageId ? { ...msg, delivered: true } : msg
-          )
-        );
-      }
-    );
-
-    socket.on(
-      "messageSeen",
-      (message: { messageId: string; seen: boolean }) => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg._id === message.messageId ? { ...msg, seen: true } : msg
-          )
-        );
-      }
-    );
 
     socket.on(
       "messageEdited",
@@ -152,8 +102,6 @@ export const GetSocketMessages = ({
       socket.off("newMessage");
       socket.off("messageEdited");
       socket.off("messageDeleted");
-      socket.off("messageSeen");
-      socket.off("messageDelivered");
       socket.off("bulkDelete");
       socket.off("connect_err");
     };

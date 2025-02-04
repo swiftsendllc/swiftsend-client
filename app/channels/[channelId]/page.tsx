@@ -27,7 +27,7 @@ export default function MessagePage() {
   const [checkBox, setCheckBox] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<string | null>("");
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
-  GetSocketMessages({ setMessages, channel, messages });
+  GetSocketMessages({ setMessages });
 
   useEffect(() => {
     const backgroundImageCookie = getCookie("imageURL");
