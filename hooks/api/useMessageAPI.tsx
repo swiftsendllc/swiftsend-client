@@ -122,6 +122,29 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const sendMessageReactions = async (body: {
+    messageId: string;
+    reaction: string;
+  }) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/reactions`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type":"application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const forwardMessage = async (
     _id: string,
     body: Partial<MessageUserInput>,
@@ -224,44 +247,6 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const messageSeen = async (messageId: string) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/seen/${messageId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-    return data;
-  };
-
-  const messageDelivered = async (messageId: string) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/delivered/${messageId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-    return data;
-  };
-
   return {
     getChannels,
     getChannelById,
@@ -273,9 +258,8 @@ const useMessageAPI = () => {
     deleteMessages,
     forwardMessage,
     deleteChannel,
-    messageSeen,
     getChannelMedia,
-    messageDelivered,
+    sendMessageReactions,
   };
 };
 export default useMessageAPI;

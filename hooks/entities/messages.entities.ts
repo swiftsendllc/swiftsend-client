@@ -34,6 +34,8 @@ export interface MessagesEntity {
   edited: boolean;
   seen: boolean;
   delivered: boolean;
+  reactions: MessageReactionsEntity[]
+
 }
 
 export interface EditMessageInput {
@@ -47,4 +49,14 @@ export interface MessageUserInput {
 
 export interface DeleteMessagesInput {
   messageIds: string[];
+}
+export interface SendMessageReactionsInput {
+  reaction: string
+  messageId: string
+}
+
+export interface MessageReactionsEntity {
+  userId: string;
+  messageId: string;
+  reaction: string;
 }

@@ -381,3 +381,30 @@ export const StyledBadge = styled(Badge, {
     },
   },
 }));
+
+export const reactions = [
+  {
+    icon: "👍",
+    label: "👍",
+  },
+  {
+    icon: "😂",
+    label: "😂",
+  },
+  {
+    icon:"❤️",
+    label:"❤️"
+  },
+  {
+    icon: "😮",
+    label: "😮",
+  },
+  {
+    icon: "😢",
+    label: "😢",
+  },
+  {
+    icon: "😡",
+    label: "😡",
+  },
+];
