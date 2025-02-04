@@ -65,7 +65,7 @@ export default function BottomNav() {
     },
   ];
 
-  const pathName = _pathName === `/path/${id}` ? `/path/` : _pathName;
+  const pathName = _pathName === `/channels/${id}` ? `/channels/` : _pathName;
 
   return (
     <Box
