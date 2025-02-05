@@ -133,7 +133,7 @@ const useMessageAPI = () => {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
-          "Content-Type":"application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       }
@@ -141,6 +141,24 @@ const useMessageAPI = () => {
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const deleteMessageReactions = async (reactionId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/messages/reactions/${reactionId}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error);
     }
     return data;
   };
@@ -260,6 +278,7 @@ const useMessageAPI = () => {
     deleteChannel,
     getChannelMedia,
     sendMessageReactions,
+    deleteMessageReactions
   };
 };
 export default useMessageAPI;

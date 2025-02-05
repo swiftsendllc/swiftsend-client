@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { InfoChannelDrawer } from "./InfoChannelDrawer";
 export const ChatHeaderPage = ({
@@ -36,12 +36,14 @@ export const ChatHeaderPage = ({
   setBackgroundImage,
   selectedMessageIds,
   setSelectedMessageIds,
+  setMessages,
 }: {
   loading: boolean;
   checkBox: boolean;
   channel: ChannelsEntity;
   messages: MessagesEntity[];
   selectedMessageIds: string[];
+  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
   setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -54,6 +56,18 @@ export const ChatHeaderPage = ({
   const handleDeleteMessages = async () => {
     try {
       await deleteMessages(selectedMessageIds);
+      setMessages((pre) =>
+        pre.map((msg) =>
+          selectedMessageIds.includes(msg._id)
+            ? {
+                ...msg,
+                messageIds: selectedMessageIds,
+                deleted: true,
+                deletedAt: new Date(),
+              }
+            : msg
+        )
+      );
       toast.success(`${selectedMessageIds.length} MARKED AS DELETED`);
       setCheckBox(false);
     } catch (error) {

@@ -1,8 +1,10 @@
 "use client";
 import { useSocket } from "@/hooks/context/socket-context";
-import { UserContext } from "@/hooks/context/user-context";
-import { MessagesEntity } from "@/hooks/entities/messages.entities";
-import { useContext, useEffect } from "react";
+import {
+  MessageReactionsEntity,
+  MessagesEntity,
+} from "@/hooks/entities/messages.entities";
+import { useEffect } from "react";
 
 export const GetSocketMessages = ({
   setMessages,
@@ -10,16 +12,11 @@ export const GetSocketMessages = ({
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) => {
   const { socket } = useSocket();
-  const [user] = useContext(UserContext);
 
   useEffect(() => {
     console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
       setMessages((prev) => [newMessage, ...prev]);
-      socket.emit("messageDelivered", {
-        messageId: newMessage._id,
-        receiverId: user._id,
-      });
     });
 
     socket.on(
@@ -93,6 +90,20 @@ export const GetSocketMessages = ({
       }
     );
 
+    socket.on("messageReactions", (messageReaction: MessageReactionsEntity) => {
+      console.log("message reactions:", messageReaction);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === messageReaction.messageId
+            ? {
+                ...msg,
+                reactions: [...msg.reactions, messageReaction],
+              }
+            : msg
+        )
+      );
+    });
+
     socket.on("connect_err", (error) => {
       console.error("Socket connection error:", error);
     });
@@ -103,6 +114,7 @@ export const GetSocketMessages = ({
       socket.off("messageEdited");
       socket.off("messageDeleted");
       socket.off("bulkDelete");
+      socket.off("messageReactions");
       socket.off("connect_err");
     };
   }, [setMessages]); //eslint-disable-line

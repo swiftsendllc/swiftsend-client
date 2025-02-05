@@ -4,28 +4,13 @@ import {
   MessagesEntity,
 } from "@/hooks/entities/messages.entities";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
-import { DoneAll } from "@mui/icons-material";
-import AddReactionIcon from "@mui/icons-material/AddReaction";
-import DoneIcon from "@mui/icons-material/Done";
-import EditIcon from "@mui/icons-material/Edit";
 
-import {
-  Avatar,
-  Chip,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import moment from "moment";
+import { Avatar, ListItem, ListItemAvatar } from "@mui/material";
 import React, { SetStateAction, useState } from "react";
-import { ImageThumbnailPage } from "./ImageThumbnail";
 import InfoMessageDrawer from "./InfoMessageDrawer";
 import { MessageReactionPage } from "./MessageReaction";
+import { MessageThreadImagePage } from "./MessageThreadImage";
+import { MessageThreadListPage } from "./MessageThreadList";
 
 export const MessageThreadPage = ({
   user,
@@ -49,6 +34,17 @@ export const MessageThreadPage = ({
   );
   const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
   const [emojiDrawer, setEmojiDrawer] = useState(false);
+  // const { deleteMessageReactions } = useMessageAPI();
+
+  // const handleDeleteMessageReactions = async (reactionId: string) => {
+  //   try {
+  //     await deleteMessageReactions(reactionId);
+  //     toast.success("DELETED");
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("FAILED TO DELETE REACTIONS!");
+  //   }
+  // };
 
   const handleToggleCheckBox = (messageId: string) => {
     setSelectedMessageIds((prev) => {
@@ -93,173 +89,29 @@ export const MessageThreadPage = ({
               </ListItemAvatar>
             )}
             {message.imageURL ? (
-              <Stack direction="column" justifyContent="left">
-                <ImageThumbnailPage message={message} />
-                <Chip
-                  label={
-                    <Typography
-                      variant="caption"
-                      component="span"
-                      fontSize="0.55rem"
-                    >
-                      {message.deleted
-                        ? `${moment(message.deletedAt)
-                            .fromNow()
-                            .toLocaleUpperCase()} DELETED`
-                        : message.edited
-                        ? `${moment(message.editedAt)
-                            .fromNow()
-                            .toLocaleUpperCase()} EDITED`
-                        : `${moment(message.createdAt)
-                            .fromNow()
-                            .toLocaleUpperCase()}`}
-                    </Typography>
-                  }
-                  icon={
-                    <>
-                      {isUser ? (
-                        <IconButton
-                          onClick={() => {
-                            setSelectedMessage(message);
-                            setInfoMessageDrawer(true);
-                          }}
-                        >
-                          <EditIcon sx={{ width: 15, height: 15 }} />
-                        </IconButton>
-                      ) : undefined}
-                      <IconButton
-                        sx={{ mt: 0 }}
-                        onClick={() => {
-                          setEmojiDrawer(true);
-                          setSelectedMessage(message);
-                        }}
-                        disabled={message.reactions.some(
-                          (r) => r.userId === user.userId
-                        )}
-                      >
-                        <AddReactionIcon sx={{ width: 13, height: 13 }} />
-                      </IconButton>
-                    </>
-                  }
-                  variant="outlined"
-                />
-              </Stack>
+              <MessageThreadImagePage
+                message={message}
+                setSelectedMessage={setSelectedMessage}
+                setInfoMessageDrawer={setInfoMessageDrawer}
+              />
             ) : (
               <>
-                <ListItemButton
-                  sx={{
-                    backgroundColor: isUser ? "#4dabf5" : "#4caf50",
-                    borderColor: isUser ? "#4dabf5" : "#4caf50",
-                    borderRadius: "10px",
-                    maxWidth: "60%",
-                    padding: "8px",
-                  }}
-                >
-                  <Stack
-                    key={idx}
-                    direction={isUser ? "row" : "row-reverse"}
-                    display="flex"
-                    p={0}
-                    m={0}
-                  ></Stack>
-                  <ListItemText
-                    primary={
-                      <Stack
-                        direction="row-reverse"
-                        justifyContent="space-between"
-                      >
-                        <Typography
-                          variant="body2"
-                          component="span"
-                          textAlign="right"
-                        >
-                          {message.deleted && !message.imageURL
-                            ? "THIS MESSAGE IS DELETED"
-                            : message.message || "UNKNOWN MESSAGE"}{" "}
-                        </Typography>
-
-                        {isUser && checkBox ? (
-                          <Checkbox
-                            checked={selectedMessageIds.includes(message._id)}
-                            onChange={() => handleToggleCheckBox(message._id)}
-                          />
-                        ) : null}
-                      </Stack>
-                    }
-                    secondary={
-                      <>
-                        <Stack
-                          direction="row"
-                          justifyContent="space-between"
-                          paddingBottom="0"
-                        >
-                          <Typography
-                            variant="caption"
-                            component="span"
-                            fontSize="0.55rem"
-                          >
-                            {message.deleted
-                              ? `${moment(message.deletedAt)
-                                  .fromNow()
-                                  .toLocaleUpperCase()} DELETED`
-                              : message.edited
-                              ? `${moment(message.editedAt)
-                                  .fromNow()
-                                  .toLocaleUpperCase()} EDITED`
-                              : `${moment(message.createdAt)
-                                  .fromNow()
-                                  .toLocaleUpperCase()}`}
-                          </Typography>
-
-                          <Stack direction="row" justifyContent="right">
-                            <IconButton
-                              sx={{ mt: 0 }}
-                              onClick={() => {
-                                setEmojiDrawer(true);
-                                setSelectedMessage(message);
-                              }}
-                              disabled={message.reactions.some(
-                                (r) => r.userId === user.userId
-                              )}
-                            >
-                              <AddReactionIcon sx={{ width: 13, height: 13 }} />
-                            </IconButton>
-                            {isUser && !message.deleted && (
-                              <IconButton
-                                sx={{ mt: 0 }}
-                                onClick={() => {
-                                  setSelectedMessage(message);
-                                  setInfoMessageDrawer(true);
-                                }}
-                              >
-                                <EditIcon sx={{ width: 13, height: 13 }} />
-                              </IconButton>
-                            )}
-
-                            {isUser && (
-                              <Typography component="span" fontSize="0.85rem">
-                                {message.seen ? (
-                                  <IconButton sx={{ mt: 0 }}>
-                                    <DoneAll sx={{ width: 13, height: 13 }} />
-                                  </IconButton>
-                                ) : (
-                                  <IconButton sx={{ mt: 0 }}>
-                                    <DoneIcon sx={{ width: 13, height: 13 }} />
-                                  </IconButton>
-                                )}
-                              </Typography>
-                            )}
-                          </Stack>
-                        </Stack>
-                        {message.reactions !== null ? (
-                          <IconButton sx={{ p: 0, m: 0, display: "flex" }}>
-                            {message.reactions.map((emoji) => emoji.reaction)}
-                          </IconButton>
-                        ) : null}
-                      </>
-                    }
-                  />
-                </ListItemButton>
+                <MessageThreadListPage
+                  idx={idx}
+                  setSelectedMessageIds={setSelectedMessageIds}
+                  message={message}
+                  checkBox={checkBox}
+                  setInfoMessageDrawer={setInfoMessageDrawer}
+                  setSelectedMessage={setSelectedMessage}
+                  setEmojiDrawer={setEmojiDrawer}
+                  selectedMessageIds={selectedMessageIds}
+                  onToggleCheckBox={() => handleToggleCheckBox(message._id)}
+                  // onDeleteMessageReactions={() =>
+                  //   message.reactions.map((emoji) =>
+                  //     handleDeleteMessageReactions(emoji._id)
+                  //   )
+                  // }
+                />
               </>
             )}
             {isUser && (
@@ -272,6 +124,7 @@ export const MessageThreadPage = ({
                 isOpen={emojiDrawer}
                 onClose={() => setEmojiDrawer(false)}
                 selectedMessage={selectedMessage}
+                setMessages={setMessages}
               />
             )}
           </ListItem>
