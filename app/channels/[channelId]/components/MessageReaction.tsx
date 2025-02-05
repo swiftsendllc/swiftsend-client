@@ -10,27 +10,37 @@ import toast from "react-hot-toast";
 export const MessageReactionPage = ({
   isOpen,
   onClose,
-  selectedMessage
+  selectedMessage,
+  setMessages,
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  selectedMessage:MessagesEntity
+  selectedMessage: MessagesEntity;
+  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) => {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { sendMessageReactions } = useMessageAPI();
 
-
   const handleClose = () => {
     setOpen(false);
     onClose?.();
   };
-  const handleEmojiReaction = async ( reaction: string) => {
+  const handleEmojiReaction = async (reaction: string) => {
     try {
-      await sendMessageReactions({
+      const reactionData = await sendMessageReactions({
         messageId: selectedMessage._id,
         reaction,
       });
+      const newReactionData = reactionData;
+      console.log("The data is:", newReactionData);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === selectedMessage._id
+            ? { ...msg, reactions: [msg.reactions, newReactionData] }
+            : msg
+        )
+      );
       toast.success("REACTED");
     } catch (error) {
       console.log(error);
@@ -61,7 +71,7 @@ export const MessageReactionPage = ({
             <Fragment key={idx}>
               <ListItemButton
                 onClick={() => {
-                  handleEmojiReaction(option.label)
+                  handleEmojiReaction(option.label);
                   handleClose();
                 }}
               >

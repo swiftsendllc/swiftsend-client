@@ -59,4 +59,5 @@ export interface MessageReactionsEntity {
   userId: string;
   messageId: string;
   reaction: string;
+  _id: string
 }

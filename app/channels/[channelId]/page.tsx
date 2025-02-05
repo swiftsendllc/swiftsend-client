@@ -86,10 +86,11 @@ export default function MessagePage() {
           selectedMessageIds={selectedMessageIds}
           setSelectedMessageIds={setSelectedMessageIds}
           setBackgroundImage={setBackgroundImage}
+          setMessages={setMessages}
         />
         <List
           sx={{
-            height: "800px",
+            height: "1000px",
             overflowY: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
