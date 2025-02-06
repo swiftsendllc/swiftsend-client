@@ -5,8 +5,10 @@ import {
 } from "@/hooks/entities/messages.entities";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 
+import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { Avatar, ListItem, ListItemAvatar } from "@mui/material";
 import React, { SetStateAction, useState } from "react";
+import toast from "react-hot-toast";
 import InfoMessageDrawer from "./InfoMessageDrawer";
 import { MessageReactionPage } from "./MessageReaction";
 import { MessageThreadImagePage } from "./MessageThreadImage";
@@ -34,17 +36,30 @@ export const MessageThreadPage = ({
   );
   const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
   const [emojiDrawer, setEmojiDrawer] = useState(false);
-  // const { deleteMessageReactions } = useMessageAPI();
+  const { deleteMessageReactions } = useMessageAPI();
 
-  // const handleDeleteMessageReactions = async (reactionId: string) => {
-  //   try {
-  //     await deleteMessageReactions(reactionId);
-  //     toast.success("DELETED");
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("FAILED TO DELETE REACTIONS!");
-  //   }
-  // };
+  const handleDeleteMessageReactions = async (reactionId: string) => {
+    try {
+      await deleteMessageReactions(reactionId);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.reactions.map((reaction) => reaction._id === reactionId)
+            ? {
+                ...msg,
+                reactions: msg.reactions.filter(
+                  (reaction) => reaction._id !== reactionId
+                ),
+              }
+            : msg
+        )
+      );
+
+      toast.success("DELETED");
+    } catch (error) {
+      console.error(error);
+      toast.error("FAILED TO DELETE REACTIONS!");
+    }
+  };
 
   const handleToggleCheckBox = (messageId: string) => {
     setSelectedMessageIds((prev) => {
@@ -106,11 +121,9 @@ export const MessageThreadPage = ({
                   setEmojiDrawer={setEmojiDrawer}
                   selectedMessageIds={selectedMessageIds}
                   onToggleCheckBox={() => handleToggleCheckBox(message._id)}
-                  // onDeleteMessageReactions={() =>
-                  //   message.reactions.map((emoji) =>
-                  //     handleDeleteMessageReactions(emoji._id)
-                  //   )
-                  // }
+                  onDeleteMessageReactions={(reactionId) =>
+                    handleDeleteMessageReactions(reactionId)
+                  }
                 />
               </>
             )}

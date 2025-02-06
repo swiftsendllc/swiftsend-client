@@ -33,13 +33,14 @@ export const MessageReactionPage = ({
         reaction,
       });
       const newReactionData = reactionData;
-      console.log("The data is:", newReactionData);
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === selectedMessage._id
-            ? { ...msg, reactions: [msg.reactions, newReactionData] }
-            : msg
-        )
+        prev.map((msg) => {
+          if (msg._id === selectedMessage._id) {
+            const updatedMessageReaction = [...msg.reactions, newReactionData];
+            return { ...msg, reactions: updatedMessageReaction };
+          }
+          return msg;
+        })
       );
       toast.success("REACTED");
     } catch (error) {
