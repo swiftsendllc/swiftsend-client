@@ -104,6 +104,27 @@ export const GetSocketMessages = ({
       );
     });
 
+    socket.on(
+      "deletedReactions",
+      (deletedReaction: { userId: string; reactionId: string }) => {
+        console.log("the deleted :", deletedReaction);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.reactions.map(
+              (reaction) => reaction._id === deletedReaction.reactionId
+            )
+              ? {
+                  ...msg,
+                  reactions: msg.reactions.filter(
+                    (reaction) => reaction._id !== deletedReaction.reactionId
+                  ),
+                }
+              : msg
+          )
+        );
+      }
+    );
+
     socket.on("connect_err", (error) => {
       console.error("Socket connection error:", error);
     });

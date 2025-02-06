@@ -101,7 +101,7 @@ export default function MessagePage() {
         >
           <InfiniteScroll
             style={{
-              overflow: "hidden",
+              overflow: "scroll",
               display: "flex",
               flexDirection: "column-reverse",
             }}

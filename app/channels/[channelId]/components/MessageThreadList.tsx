@@ -27,8 +27,8 @@ export const MessageThreadListPage = ({
   setEmojiDrawer,
   selectedMessageIds,
   onToggleCheckBox,
-}: // onDeleteMessageReactions,
-{
+  onDeleteMessageReactions,
+}: {
   idx: number;
   message: MessagesEntity;
   checkBox: boolean;
@@ -38,7 +38,7 @@ export const MessageThreadListPage = ({
   selectedMessageIds: string[];
   setInfoMessageDrawer: Dispatch<SetStateAction<boolean>>;
   onToggleCheckBox: (message: string) => unknown;
-  // onDeleteMessageReactions: (emoji: string) => unknown
+  onDeleteMessageReactions: (reactionId: string) => unknown;
 }) => {
   const [user] = useContext(UserContext);
   const isUser = user.userId === message.senderId;
@@ -63,7 +63,7 @@ export const MessageThreadListPage = ({
         <ListItemText
           primary={
             <Stack direction="row-reverse" justifyContent="space-between">
-              <Typography variant="body2" component="span" textAlign="right">
+              <Typography variant="body2" component="span" textAlign="left">
                 {message.deleted && !message.imageURL
                   ? "THIS MESSAGE IS DELETED"
                   : message.message || "UNKNOWN MESSAGE"}{" "}
@@ -109,6 +109,9 @@ export const MessageThreadListPage = ({
                       onClick={() => {
                         setEmojiDrawer(true);
                         setSelectedMessage(message);
+                        message.reactions.map((emoji) =>
+                          isUser ? null : onDeleteMessageReactions(emoji._id)
+                        );
                       }}
                     >
                       <AddReactionIcon sx={{ width: 13, height: 13 }} />
@@ -145,13 +148,13 @@ export const MessageThreadListPage = ({
               {message.reactions !== undefined && !message.deleted ? (
                 <IconButton
                   sx={{ p: 0, m: 0, display: "flex" }}
-                  // onClick={() =>
-                  //   message.reactions.map((emoji) =>
-                  //     isUser ? null : onDeleteMessageReactions(emoji._id)
-                  //   )
-                  // }
+                  onClick={() =>
+                    message.reactions.map((emoji) =>
+                      isUser ? null : onDeleteMessageReactions(emoji._id)
+                    )
+                  }
                 >
-                  <div style={{ width: 1, height: 1 }}>
+                  <div style={{ width: 1, height: 1, flexDirection: "column" }}>
                     {message.reactions.map((emoji) => emoji.reaction)}
                   </div>
                 </IconButton>
