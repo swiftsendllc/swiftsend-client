@@ -1,14 +1,15 @@
-import { ChannelContextWrapper } from "@/hooks/context/channel-context";
-import { ChannelsEntity } from "@/hooks/entities/messages.entities";
+import { GroupContextWrapper } from "@/hooks/context/group-context";
+import { GroupsEntity } from "@/hooks/entities/messages.entities";
 import { authCookieKey, ENV } from "@/library/constants";
+import { LinearProgress } from "@mui/material";
 import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
-const getChannelById = async (channelId: string) => {
+const getGroupById = async (channelId: string) => {
   try {
     const accessToken = cookies().get(authCookieKey)?.value;
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${channelId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/${channelId}`,
       {
         method: "GET",
         headers: {
@@ -19,31 +20,31 @@ const getChannelById = async (channelId: string) => {
     );
     const data = await res.json();
     if (!res.ok) return notFound();
-    return data as ChannelsEntity;
+    return data as GroupsEntity;
   } catch (error) {
     console.error(error);
-    return null;
   }
 };
+
 export default async function Layout({
-  children,
   params,
+  children,
 }: Readonly<{
   children: React.ReactNode;
   params: Record<string, string>;
 }>) {
-  const channel = await getChannelById(params.channelId);
-  const { channelId } = params;
-
-  if (!channel || channel._id !== channelId) {
-    redirect(`/channels`);
+  const group = await getGroupById(params.channelId);
+  if (!group?._id) {
+    return (
+      <>
+        <LinearProgress />
+      </>
+    );
   }
 
   return (
     <>
-      <ChannelContextWrapper channel={channel}>
-        {children}
-      </ChannelContextWrapper>
+      <GroupContextWrapper group={group}>{children}</GroupContextWrapper>
     </>
   );
 }

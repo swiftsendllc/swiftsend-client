@@ -1,6 +1,6 @@
 import BottomNav from "@/components/BottomNav";
-import { ChannelsContextWrapper } from "@/hooks/context/channels-context";
-import { ChannelsEntity } from "@/hooks/entities/messages.entities";
+import { GroupsContextWrapper } from "@/hooks/context/groups-context";
+import { GroupsEntity } from "@/hooks/entities/messages.entities";
 import { authCookieKey, ENV } from "@/library/constants";
 import {
   Alert,
@@ -11,34 +11,31 @@ import {
 } from "@mui/material";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import React from "react";
 
-const getChannels = async () => {
+const getGroups = async () => {
   try {
     const accessToken = cookies().get(authCookieKey)?.value;
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/channels`, {
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups`, {
       method: "GET",
       headers: {
-        "Content-Type": "Application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await res.json();
     if (!res.ok) return notFound();
-    return data as ChannelsEntity[];
+    return data as GroupsEntity[];
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return null;
   }
 };
 
 export default async function Layout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const channels = await getChannels();
-  if (!channels) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const groups = await getGroups();
+  if (!groups) {
     return (
       <>
         <Stack
@@ -64,12 +61,9 @@ export default async function Layout({
       </>
     );
   }
-
   return (
     <>
-      <ChannelsContextWrapper channels={channels}>
-        {children}
-      </ChannelsContextWrapper>
+      <GroupsContextWrapper groups={groups}>{children}</GroupsContextWrapper>
     </>
   );
 }

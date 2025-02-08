@@ -53,11 +53,11 @@ export function ChannelContextWrapper({
   children: React.ReactNode;
   channel: ChannelsEntity | null;
 }) {
-  const [channelInfo, setChannel] = useState<ChannelsEntity>(
+  const [channelInfo, setChannelInfo] = useState<ChannelsEntity>(
     channel || emptyChannel
   );
   return (
-    <ChannelContext.Provider value={[channelInfo, setChannel]}>
+    <ChannelContext.Provider value={[channelInfo, setChannelInfo]}>
       {children}
     </ChannelContext.Provider>
   );

@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ChatHeaderPage } from "./components/ChatHeader";
+import { EncryptionNoticePage } from "./components/EncryptionNotice";
 import { GetSocketMessages } from "./components/GetSocketMessages";
 import { MessageThreadPage } from "./components/MessageThread";
 
@@ -31,8 +32,9 @@ export default function MessagePage() {
 
   useEffect(() => {
     const backgroundImageCookie = getCookie("imageURL");
-    if (backgroundImageCookie) setBackgroundImage(backgroundImageCookie);
-  }, [backgroundImage]);
+    if (backgroundImageCookie && messages.length !== 0)
+      setBackgroundImage(backgroundImageCookie);
+  }, [backgroundImage, messages.length]);
 
   const loadChannelMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
@@ -88,44 +90,49 @@ export default function MessagePage() {
           setBackgroundImage={setBackgroundImage}
           setMessages={setMessages}
         />
-        <List
-          sx={{
-            height: "1000px",
-            overflowY: "scroll",
-            display: "flex",
-            flexDirection: "column-reverse",
-            background: `url('${backgroundImage}')`,
-            objectFit: "cover",
-          }}
-          id="scroll-id"
-        >
-          <InfiniteScroll
-            style={{
-              overflow: "scroll",
-              display: "flex",
-              flexDirection: "column-reverse",
-            }}
-            dataLength={messages.length}
-            hasMore={hasMore}
-            inverse={true}
-            scrollThreshold={0.8}
-            next={loadMoreMessages}
-            loader={loading}
-            initialScrollY={500}
-            scrollableTarget="scroll-id"
-          >
-            <MessageThreadPage
-              user={user}
-              channel={channel}
-              messages={messages}
-              checkBox={checkBox}
-              setMessages={setMessages}
-              selectedMessageIds={selectedMessageIds}
-              setSelectedMessageIds={setSelectedMessageIds}
-            />
-          </InfiniteScroll>
-        </List>
-
+        {messages.length === 0 ? (
+          <EncryptionNoticePage />
+        ) : (
+          <>
+            <List
+              sx={{
+                height: "1000px",
+                overflowY: "scroll",
+                display: "flex",
+                flexDirection: "column-reverse",
+                background: `url('${backgroundImage}')`,
+                objectFit: "cover",
+              }}
+              id="scroll-id"
+            >
+              <InfiniteScroll
+                style={{
+                  overflow: "scroll",
+                  display: "flex",
+                  flexDirection: "column-reverse",
+                }}
+                dataLength={messages.length}
+                hasMore={hasMore}
+                inverse={true}
+                scrollThreshold={0.8}
+                next={loadMoreMessages}
+                loader={loading}
+                initialScrollY={500}
+                scrollableTarget="scroll-id"
+              >
+                <MessageThreadPage
+                  user={user}
+                  channel={channel}
+                  messages={messages}
+                  checkBox={checkBox}
+                  setMessages={setMessages}
+                  selectedMessageIds={selectedMessageIds}
+                  setSelectedMessageIds={setSelectedMessageIds}
+                />
+              </InfiniteScroll>
+            </List>
+          </>
+        )}
         {messages && (
           <MessageInput
             onMessage={(msg) => {

@@ -1,8 +1,7 @@
 import { SocketContextWrapper } from "@/hooks/context/socket-context";
 import { UserContextWrapper } from "@/hooks/context/user-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
-import { authCookieKey } from "@/library/constants";
-import { ENV } from "@/util/constants";
+import { authCookieKey, ENV } from "@/library/constants";
 import theme from "@/util/theme";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ThemeProvider } from "@mui/material/styles";

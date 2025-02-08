@@ -1,8 +1,7 @@
 import BottomNav from "@/components/BottomNav";
 import { CreatorContextWrapper } from "@/hooks/context/creator-context";
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
-import { authCookieKey } from "@/library/constants";
-import { ENV } from "@/util/constants";
+import { authCookieKey, ENV } from "@/library/constants";
 import {
   Alert,
   AlertTitle,
