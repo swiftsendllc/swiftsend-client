@@ -1,5 +1,4 @@
-import { authCookieKey } from "@/library/constants";
-import { ENV } from "@/util/constants";
+import { authCookieKey, ENV } from "@/library/constants";
 import { getCookie } from "cookies-next";
 import {
   EditMessageInput,
@@ -152,7 +151,7 @@ const useMessageAPI = () => {
       {
         method: "DELETE",
         headers: {
-          "Content-Type":"application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       }
@@ -266,6 +265,41 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const getGroups = async () => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const getGroupMessages = async (channelId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/get/${channelId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   return {
     getChannels,
     getChannelById,
@@ -279,7 +313,9 @@ const useMessageAPI = () => {
     deleteChannel,
     getChannelMedia,
     sendMessageReactions,
-    deleteMessageReactions
+    deleteMessageReactions,
+    getGroups,
+    getGroupMessages,
   };
 };
 export default useMessageAPI;

@@ -34,8 +34,7 @@ export interface MessagesEntity {
   edited: boolean;
   seen: boolean;
   delivered: boolean;
-  reactions: MessageReactionsEntity[]
-
+  reactions: MessageReactionsEntity[];
 }
 
 export interface EditMessageInput {
@@ -51,13 +50,38 @@ export interface DeleteMessagesInput {
   messageIds: string[];
 }
 export interface SendMessageReactionsInput {
-  reaction: string
-  messageId: string
+  reaction: string;
+  messageId: string;
 }
 
 export interface MessageReactionsEntity {
   userId: string;
   messageId: string;
   reaction: string;
-  _id: string
+  _id: string;
+}
+
+export interface GroupMessagesEntity {
+  _id:string
+  senderId: string;
+  receiversId: string[];
+  channelId: string;
+  message: string | null;
+  imageURL: string | null;
+  createdAt: Date | null;
+  deletedAt: Date | null;
+  editedAt: Date | null;
+  deleted: boolean;
+  edited: boolean;
+  sender: UserProfilesEntity
+  receivers:UserProfilesEntity[]
+}
+export interface GroupsEntity {
+  _id: string;
+  channelAvatar: string;
+  channelName: string;
+  description: string;
+  createdAt: Date;
+  senderId: string;
+  participants: string[];
 }

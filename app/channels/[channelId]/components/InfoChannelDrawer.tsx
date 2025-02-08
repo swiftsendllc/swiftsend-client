@@ -83,7 +83,8 @@ export const InfoChannelDrawer = ({
             transform: "translateX(-50%)",
             position: "absolute",
           }}
-          onClose={handleClose}
+          hideBackdrop
+          onBlur={handleClose}
         >
           <List
             sx={{
