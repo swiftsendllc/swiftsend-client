@@ -2,7 +2,7 @@
 
 import { GroupsEntity } from "@/hooks/entities/messages.entities";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import {
@@ -14,8 +14,11 @@ import {
   IconButton,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-export const GroupHeaderPage = ({group}:{group:GroupsEntity}) => {
-  const router = useRouter()
+import { useState } from "react";
+import { GroupMembersDrawerPage } from "./GroupMembersDrawer";
+export const GroupHeaderPage = ({ group }: { group: GroupsEntity }) => {
+  const router = useRouter();
+  const [memberDrawer, setMemberDrawer] = useState<boolean>(false);
   return (
     <Box
       width="100%"
@@ -47,8 +50,8 @@ export const GroupHeaderPage = ({group}:{group:GroupsEntity}) => {
             subheader={group.description}
             action={
               <>
-                <IconButton>
-                  <ContactPhoneIcon />
+                <IconButton onClick={() => setMemberDrawer(true)}>
+                  <GroupsIcon />
                 </IconButton>
                 <IconButton>
                   <VideoCameraFrontIcon />
@@ -60,6 +63,11 @@ export const GroupHeaderPage = ({group}:{group:GroupsEntity}) => {
             }
           />
         </Card>
+        <GroupMembersDrawerPage
+          isOpen={memberDrawer}
+          onClose={() => setMemberDrawer(false)}
+          group={group}
+        />
       </Container>
     </Box>
   );

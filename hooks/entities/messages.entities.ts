@@ -67,7 +67,7 @@ export interface GroupMessagesEntity {
   receiversId: string[];
   channelId: string;
   message: string | null;
-  imageURL: string | null;
+  imageURL: string ;
   createdAt: Date | null;
   deletedAt: Date | null;
   editedAt: Date | null;
@@ -84,4 +84,10 @@ export interface GroupsEntity {
   createdAt: Date;
   senderId: string;
   participants: string[];
+  members: UserProfilesEntity[]
 }
+export interface SendGroupMessageInput {
+  message: string | null;
+  imageURL: string | null;
+}
+
