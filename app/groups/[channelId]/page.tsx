@@ -1,33 +1,23 @@
 "use client";
 
 import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { UserContext } from "@/hooks/context/user-context";
+import { GroupContext } from "@/hooks/context/group-context";
+import { useSocket } from "@/hooks/context/socket-context";
 import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
-import {
-  Avatar,
-  Container,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import moment from "moment";
+import { Container, List } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { GroupHeaderPage } from "./components/GroupHeader";
-import MessageInput from "./components/MessageInput";
-import { GroupContext } from "@/hooks/context/group-context";
+import GroupMessageInputPage from "./components/GroupMessageInput";
+import { GroupMessageThreadPage } from "./components/GroupMessageThread";
 
 export default function MessagePage() {
   const { channelId } = useParams();
   const [, setLoading] = useState(false);
+  const { socket } = useSocket();
   const { getGroupMessages } = useMessageAPI();
-  const [group] = useContext(GroupContext)
+  const [group] = useContext(GroupContext);
   const [messages, setMessages] = useState<GroupMessagesEntity[]>([]);
-  const [user] = useContext(UserContext);
   const loadGroupMessages = async () => {
     setLoading(true);
     try {
@@ -41,6 +31,18 @@ export default function MessagePage() {
   };
 
   useEffect(() => {
+    socket.on("groupMessage", (groupMessage: GroupMessagesEntity) => {
+      console.log("groupMessage received:", groupMessage);
+      setMessages((prev) => [...prev, groupMessage]);
+    });
+
+    return () => {
+      console.log("Socket disconnected:", socket.id);
+      socket.off("groupMessage");
+    };
+  }, [setMessages]);
+
+  useEffect(() => {
     if (channelId) loadGroupMessages();
   }, [channelId]); //eslint-disable-line
   return (
@@ -52,108 +54,21 @@ export default function MessagePage() {
           marginBottom: 60,
         }}
       >
-        <GroupHeaderPage group={group}/>
+        <GroupHeaderPage group={group} />
         <List
           sx={{
+            marginTop: 10,
             height: "600px",
             overflowY: "scroll",
             display: "flex",
-            flexDirection: "column-reverse",
+            flexDirection: "column",
             objectFit: "cover",
           }}
           id="scroll-id"
         >
-          {messages.map((message) => {
-            const isUser = user.userId === message.senderId;
-            const sender = message.sender;
-            return (
-              <ListItem
-                key={message._id}
-                sx={{
-                  display: "flex",
-                  justifyContent: isUser ? "flex-end" : "flex-start",
-                  textAlign: isUser ? "right" : "left",
-                  py: 1,
-                }}
-                disablePadding
-              >
-                {!isUser && (
-                  <ListItemAvatar>
-                    <Avatar alt={sender.avatarURL} src={sender.avatarURL} />
-                  </ListItemAvatar>
-                )}
-                <ListItemButton
-                  sx={{
-                    backgroundColor: isUser ? "#4dabf5" : "#4caf50",
-                    borderColor: isUser ? "#4dabf5" : "#4caf50",
-                    borderRadius: "10px",
-                    maxWidth: "60%",
-                    padding: "8px",
-                  }}
-                >
-                  <Stack
-                    key={message._id}
-                    direction={isUser ? "row" : "row-reverse"}
-                    display="flex"
-                    p={0}
-                    m={0}
-                  ></Stack>
-                  <ListItemText
-                    primary={
-                      <Stack
-                        direction="row-reverse"
-                        justifyContent="space-between"
-                      >
-                        <Typography
-                          variant="body2"
-                          component="span"
-                          textAlign="left"
-                        >
-                          {message.deleted && !message.imageURL
-                            ? "THIS MESSAGE IS DELETED"
-                            : message.message || "UNKNOWN MESSAGE"}{" "}
-                        </Typography>
-                      </Stack>
-                    }
-                    secondary={
-                      <>
-                        <Stack
-                          direction="row"
-                          justifyContent="space-between"
-                          paddingBottom="0"
-                        >
-                          <Typography
-                            variant="caption"
-                            component="span"
-                            fontSize="0.55rem"
-                          >
-                            {message.deleted
-                              ? `${moment(message.deletedAt)
-                                  .fromNow()
-                                  .toLocaleUpperCase()} DELETED`
-                              : message.edited
-                              ? `${moment(message.editedAt)
-                                  .fromNow()
-                                  .toLocaleUpperCase()} EDITED`
-                              : `${moment(message.createdAt)
-                                  .fromNow()
-                                  .toLocaleUpperCase()}`}
-                          </Typography>
-                        </Stack>
-                      </>
-                    }
-                  />
-                </ListItemButton>
-                {isUser && (
-                  <ListItemAvatar>
-                    <Avatar alt={user.fullName} src={user.avatarURL} />
-                  </ListItemAvatar>
-                )}
-              </ListItem>
-            );
-          })}
+          <GroupMessageThreadPage messages={messages} />
         </List>
-        <MessageInput />
+        {messages && <GroupMessageInputPage onSend={loadGroupMessages} />}
       </Container>
     </>
   );

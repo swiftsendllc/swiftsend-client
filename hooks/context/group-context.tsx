@@ -11,6 +11,7 @@ const emptyGroup = {
   createdAt: new Date(),
   senderId: "",
   participants: [],
+  members:[]
 } satisfies GroupsEntity;
 
 export const GroupContext = createContext<

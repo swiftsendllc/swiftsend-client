@@ -2,62 +2,64 @@
 
 import useAPI from "@/hooks/api/useAPI";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { ChannelContext } from "@/hooks/context/channel-context";
-import { MessagesEntity } from "@/hooks/entities/messages.entities";
+import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
 import AddIcon from "@mui/icons-material/Add";
 import LandscapeIcon from "@mui/icons-material/Landscape";
 import SendIcon from "@mui/icons-material/Send";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Container, Paper, TextField } from "@mui/material";
-import { useContext, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import ImagePreviewModalPage from "./ImagePreviewModal";
 
-interface UserMessageInputProps {
-  onMessage: (msg: MessagesEntity) => unknown;
+interface SendGroupMessageInput {
+  onSend: (msg: GroupMessagesEntity) => unknown;
 }
 
-export default function MessageInput({ onMessage }: UserMessageInputProps) {
-  const { sendMessage } = useMessageAPI();
+export default function GroupMessageInputPage({
+  onSend,
+}: SendGroupMessageInput) {
+  const { channelId } = useParams();
   const [loading, setLoading] = useState(false);
-  const [messageInput, setMessageInput] = useState("");
-  const [channel] = useContext(ChannelContext);
-
-  const [, setImageURL] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const { sendGroupMessage } = useMessageAPI();
   const { uploadFile } = useAPI();
+  const [messageInput, setMessageInput] = useState<string>("");
+  const [imageURLInput, setImageURLInput] = useState<string>("");
+  const [imagePreviewModal, setImagePreviewModal] = useState<boolean>(false);
+  const [file, setFile] = useState<File>();
 
   const handleMessage = async () => {
-    setLoading(true);
     try {
-      const msg = (await sendMessage({
+      const newMessage = await sendGroupMessage(channelId as string, {
         message: messageInput,
-        receiverId: channel.receiver.userId,
-      })) as MessagesEntity;
+      });
+
       setMessageInput("");
-      onMessage(msg);
+      onSend(newMessage);
     } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+      console.error(error);
+      toast.error("FAILED TO SEND MESSAGE!");
     }
   };
 
-  const handleUpload = async (file: File) => {
+  const handleUpload = async () => {
+    setLoading(true);
     if (!file) return;
     try {
       const formData = new FormData();
       formData.append("file", file);
       const { url } = await uploadFile(formData);
-      const image = await sendMessage({
+      const newImage = await sendGroupMessage(channelId as string, {
         imageURL: url,
-        receiverId: channel.receiver.userId,
       });
-      onMessage(image);
-      setImageURL(url);
-      toast.success("Uploaded");
+      setImageURLInput(url);
+      onSend(newImage);
+      setImagePreviewModal(false);
+      toast.success("UPLOADED");
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to upload image!");
+      console.error(error);
+      toast.error("FAILED TO UPLOAD IMAGE!");
     } finally {
       setLoading(false);
     }
@@ -79,11 +81,11 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder={`Message ${channel.receiver.fullName}`}
+            placeholder={`Message `}
             value={messageInput || ""}
             onChange={(e) => setMessageInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+              if (e.key === "Enter" && !e.shiftKey ) {
                 e.preventDefault();
                 handleMessage();
               }
@@ -99,27 +101,16 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
                   <>
                     {" "}
                     <LoadingButton
-                      loading={loading}
                       loadingPosition="start"
                       startIcon={null}
-                      disabled={!messageInput}
+                      disabled={!(messageInput || imageURLInput)}
                       onClick={handleMessage}
                     >
                       <SendIcon />
                     </LoadingButton>
-                    <Button onClick={() => inputRef.current?.click()}>
+                    <Button onClick={() => setImagePreviewModal(true)}>
                       <LandscapeIcon />
                     </Button>
-                    <input
-                      type="file"
-                      ref={inputRef}
-                      accept="image/*"
-                      onChange={(e) => {
-                        if (!e.target.files?.length) return;
-                        handleUpload(e.target.files[0]);
-                      }}
-                      hidden
-                    />
                   </>
                 ),
               },
@@ -127,6 +118,14 @@ export default function MessageInput({ onMessage }: UserMessageInputProps) {
           />
         </Paper>
       </Container>
+      <ImagePreviewModalPage
+        isOpen={imagePreviewModal}
+        onClose={() => setImagePreviewModal(false)}
+        onUpload={handleUpload}
+        imageURL={imageURLInput}
+        setImageURLInput={setImageURLInput}
+        setFile={setFile}
+      />
     </Box>
   );
 }
