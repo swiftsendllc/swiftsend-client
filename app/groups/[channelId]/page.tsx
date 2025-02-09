@@ -40,7 +40,7 @@ export default function MessagePage() {
       console.log("Socket disconnected:", socket.id);
       socket.off("groupMessage");
     };
-  }, [setMessages]);
+  }, [setMessages]); //eslint-disable-line
 
   useEffect(() => {
     if (channelId) loadGroupMessages();

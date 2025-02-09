@@ -21,7 +21,7 @@ export default function GroupMessageInputPage({
   onSend,
 }: SendGroupMessageInput) {
   const { channelId } = useParams();
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const { sendGroupMessage } = useMessageAPI();
   const { uploadFile } = useAPI();
   const [messageInput, setMessageInput] = useState<string>("");
