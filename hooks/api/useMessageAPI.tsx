@@ -2,6 +2,7 @@ import { authCookieKey, ENV } from "@/library/constants";
 import { getCookie } from "cookies-next";
 import {
   EditMessageInput,
+  GroupCreateInput,
   MessageUserInput,
   SendGroupMessageInput,
 } from "../entities/messages.entities";
@@ -266,10 +267,11 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const createGroup = async () => {
+  const createGroup = async (body: Partial<GroupCreateInput>) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups/create`, {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
@@ -298,10 +300,45 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const getGroupById = async (channelId: string) => {
+  const getGroupById = async (groupId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups/${groupId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const addMemberToGroup = async (groupId: string, receiversId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/${channelId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/add/${groupId}/${receiversId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const getGroupMessages = async (groupId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/get/${groupId}`,
       {
         method: "GET",
         headers: {
@@ -317,51 +354,16 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const addMemberToGroup = async (channelId: string, receiversId: string) => {
+  const sendGroupMessage = async (
+    groupId: string,
+    body: Partial<SendGroupMessageInput>
+  ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/add/${channelId}/${receiversId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-    return data;
-  };
-
-  const getGroupMessages = async (channelId: string) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/get/${channelId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-    return data;
-  };
-
-  const sendGroupMessage = async (channelId: string, body:Partial<SendGroupMessageInput>) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/send/${channelId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/send/${groupId}`,
       {
         method: "POST",
-        body:JSON.stringify(body),
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -379,6 +381,25 @@ const useMessageAPI = () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/delete/${messageId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const deleteGroup = async (groupId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/delete/${groupId}`,
       {
         method: "DELETE",
         headers: {
@@ -415,6 +436,7 @@ const useMessageAPI = () => {
     createGroup,
     getGroupById,
     addMemberToGroup,
+    deleteGroup
   };
 };
 export default useMessageAPI;

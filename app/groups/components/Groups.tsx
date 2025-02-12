@@ -1,21 +1,13 @@
 "use client";
 
-import { ChannelHeaderPage } from "@/app/channels/components/ChannelHeader";
 import { GroupsContext } from "@/hooks/context/groups-context";
 import { UserContext } from "@/hooks/context/user-context";
 import { GroupsEntity } from "@/hooks/entities/messages.entities";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import {
-  Alert,
-  AlertTitle,
-  Container,
-  Divider,
-  LinearProgress,
-  Stack,
-  Tab,
-} from "@mui/material";
+import { Container, Divider, Stack, Tab, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
+import { GroupHeaderPage } from "./GroupHeader";
 import { GroupsListPage } from "./GroupsList";
 
 export default function Groups() {
@@ -32,7 +24,7 @@ export default function Groups() {
   return (
     <>
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mb: 5, mt: 2 }}>
-        <ChannelHeaderPage user={user} />
+        <GroupHeaderPage user={user} />
         <Divider sx={{ mt: 1 }} />
         <TabContext value={value}>
           <Stack direction="row" spacing={1}>
@@ -54,16 +46,7 @@ export default function Groups() {
                 sx={{ height: "100vh" }}
                 overflow="hidden"
               >
-                <Alert severity="warning" variant="filled">
-                  <AlertTitle>WARNING</AlertTitle>
-                </Alert>
-                <Stack
-                  sx={{ width: "100%", color: "grey.500" }}
-                  spacing={2}
-                  p={5}
-                >
-                  <LinearProgress color="warning" />
-                </Stack>
+                <Typography>YOUR GROUPS WILL APPEAR HERE!</Typography>
               </Stack>
             ) : (
               <GroupsListPage
