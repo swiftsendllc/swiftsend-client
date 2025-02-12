@@ -20,7 +20,7 @@ interface SendGroupMessageInput {
 export default function GroupMessageInputPage({
   onSend,
 }: SendGroupMessageInput) {
-  const { channelId } = useParams();
+  const { groupId } = useParams();
   const [, setLoading] = useState(false);
   const { sendGroupMessage } = useMessageAPI();
   const { uploadFile } = useAPI();
@@ -31,7 +31,7 @@ export default function GroupMessageInputPage({
 
   const handleMessage = async () => {
     try {
-      const newMessage = await sendGroupMessage(channelId as string, {
+      const newMessage = await sendGroupMessage(groupId as string, {
         message: messageInput,
       });
 
@@ -50,7 +50,7 @@ export default function GroupMessageInputPage({
       const formData = new FormData();
       formData.append("file", file);
       const { url } = await uploadFile(formData);
-      const newImage = await sendGroupMessage(channelId as string, {
+      const newImage = await sendGroupMessage(groupId as string, {
         imageURL: url,
       });
       setImageURLInput(url);

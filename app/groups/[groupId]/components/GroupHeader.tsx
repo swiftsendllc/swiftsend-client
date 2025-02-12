@@ -41,12 +41,12 @@ export const GroupHeaderPage = ({ group }: { group: GroupsEntity }) => {
 
                 <Avatar
                   aria-label="recipe"
-                  src={group.channelAvatar || "/svg/app_icon.svg"}
-                  alt={group.channelName}
+                  src={group.groupAvatar}
+                  alt={group.groupAvatar}
                 />
               </>
             }
-            title={group.channelName}
+            title={group.groupName}
             subheader={group.description}
             action={
               <>

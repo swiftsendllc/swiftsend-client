@@ -5,13 +5,14 @@ import { GroupsEntity } from "../entities/messages.entities";
 
 const emptyGroup = {
   _id: "",
-  channelAvatar: "",
-  channelName: "",
+  groupName: "",
+  groupAvatar: "",
   description: "",
   createdAt: new Date(),
-  senderId: "",
+  admin: "",
   participants: [],
-  members:[]
+  members:[],
+  moderators:[]
 } satisfies GroupsEntity;
 
 export const GroupContext = createContext<

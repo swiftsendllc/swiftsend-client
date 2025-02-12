@@ -62,32 +62,38 @@ export interface MessageReactionsEntity {
 }
 
 export interface GroupMessagesEntity {
-  _id:string
+  _id: string;
   senderId: string;
   receiversId: string[];
-  channelId: string;
+  groupId: string;
   message: string | null;
-  imageURL: string ;
+  imageURL: string;
   createdAt: Date | null;
   deletedAt: Date | null;
   editedAt: Date | null;
   deleted: boolean;
   edited: boolean;
-  sender: UserProfilesEntity
-  receivers:UserProfilesEntity[]
+  sender: UserProfilesEntity;
+  receivers: UserProfilesEntity[];
 }
 export interface GroupsEntity {
   _id: string;
-  channelAvatar: string;
-  channelName: string;
+  groupAvatar: string;
+  groupName: string;
   description: string;
   createdAt: Date;
-  senderId: string;
+  admin: string;
+  moderators: string[];
   participants: string[];
-  members: UserProfilesEntity[]
+  members: UserProfilesEntity[];
 }
 export interface SendGroupMessageInput {
   message: string | null;
   imageURL: string | null;
 }
 
+export interface GroupCreateInput {
+  groupName: string;
+  description: string| null;
+  groupAvatar: string | null;
+}

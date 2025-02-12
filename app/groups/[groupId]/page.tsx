@@ -12,7 +12,7 @@ import GroupMessageInputPage from "./components/GroupMessageInput";
 import { GroupMessageThreadPage } from "./components/GroupMessageThread";
 
 export default function MessagePage() {
-  const { channelId } = useParams();
+  const { groupId } = useParams();
   const [, setLoading] = useState(false);
   const { socket } = useSocket();
   const { getGroupMessages } = useMessageAPI();
@@ -21,7 +21,7 @@ export default function MessagePage() {
   const loadGroupMessages = async () => {
     setLoading(true);
     try {
-      const messages = await getGroupMessages(channelId as string);
+      const messages = await getGroupMessages(groupId as string);
       setMessages(messages);
     } catch (error) {
       console.error(error);
@@ -43,8 +43,8 @@ export default function MessagePage() {
   }, [setMessages]); //eslint-disable-line
 
   useEffect(() => {
-    if (channelId) loadGroupMessages();
-  }, [channelId]); //eslint-disable-line
+    if (groupId) loadGroupMessages();
+  }, [groupId]); //eslint-disable-line
   return (
     <>
       <Container

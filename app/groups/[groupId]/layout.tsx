@@ -5,11 +5,11 @@ import { LinearProgress } from "@mui/material";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-const getGroupById = async (channelId: string) => {
+const getGroupById = async (groupId: string) => {
   try {
     const accessToken = cookies().get(authCookieKey)?.value;
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/${channelId}`,
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/${groupId}`,
       {
         method: "GET",
         headers: {
@@ -33,7 +33,7 @@ export default async function Layout({
   children: React.ReactNode;
   params: Record<string, string>;
 }>) {
-  const group = await getGroupById(params.channelId);
+  const group = await getGroupById(params.groupId);
   if (!group?._id) {
     return (
       <>
