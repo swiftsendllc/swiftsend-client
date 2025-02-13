@@ -12,6 +12,7 @@ import {
   CardHeader,
   Container,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -46,7 +47,14 @@ export const GroupHeaderPage = ({ group }: { group: GroupsEntity }) => {
                 />
               </>
             }
-            title={group.groupName}
+            title={
+              <IconButton
+                sx={{ padding: 0 }}
+                onClick={() => router.push(`/groups/${group._id}/info`)}
+              >
+                <Typography sx={{ p: 0, m: 0 }}>{group.groupName}</Typography>
+              </IconButton>
+            }
             subheader={group.description}
             action={
               <>

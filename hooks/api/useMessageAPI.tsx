@@ -415,6 +415,29 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const updateGroup = async (
+    groupId: string,
+    input: Partial<GroupCreateInput>
+  ) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/update/${groupId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(input),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   return {
     getChannels,
     getChannelById,
@@ -436,7 +459,8 @@ const useMessageAPI = () => {
     createGroup,
     getGroupById,
     addMemberToGroup,
-    deleteGroup
+    deleteGroup,
+    updateGroup,
   };
 };
 export default useMessageAPI;
