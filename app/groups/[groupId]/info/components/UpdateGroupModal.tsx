@@ -21,7 +21,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export const UpgradeGroupModalPage = ({
+export const UpdateGroupModal = ({
   isOpen,
   onClose,
 }: {
@@ -34,6 +34,7 @@ export const UpgradeGroupModalPage = ({
   const { updateGroup } = useMessageAPI();
   const [group] = useContext(GroupContext);
   const [didChange, setDidChange] = useState<boolean>(false);
+  const [groupAvatar] = useState<string>(group.groupAvatar);
   const [groupName, setGroupName] = useState<string>(group.groupName);
   const [description, setDescription] = useState<string>(group.description);
 
@@ -51,7 +52,12 @@ export const UpgradeGroupModalPage = ({
   const handleChange = async () => {
     setLoading(true);
     try {
-      await updateGroup(group._id, { groupName, description });
+      await updateGroup(group._id, {
+        groupName,
+        description,
+        groupAvatar,
+      });
+
       handleClose();
     } catch (error) {
       console.log(error);

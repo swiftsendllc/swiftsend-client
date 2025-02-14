@@ -2,17 +2,27 @@
 
 import { UserContext } from "@/hooks/context/user-context";
 import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
-import { ListItemButton, ListItemText, Stack, Typography } from "@mui/material";
+import AddReactionIcon from "@mui/icons-material/AddReaction";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  IconButton,
+  ListItemButton,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
 import moment from "moment";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import MessageInfoModal from "./MessageInfoModal";
 
-export const GroupMessageThreadListPage = ({
+export const MessageThreadListPage = ({
   message,
 }: {
   message: GroupMessagesEntity;
 }) => {
   const [user] = useContext(UserContext);
   const isUser = message.senderId === user.userId;
+  const [messageInfoModal, setMessageInfoModal] = useState<boolean>(false);
   return (
     <>
       <ListItemButton
@@ -70,9 +80,30 @@ export const GroupMessageThreadListPage = ({
                         .fromNow()
                         .toLocaleUpperCase()}`}
                 </Typography>
+                <Stack direction="row" justifyContent="right" padding={0}>
+                  {!isUser && !message.deleted && (
+                    <IconButton sx={{ mt: 0, p: 0 }}>
+                      <AddReactionIcon sx={{ width: 13, height: 13 }} />
+                    </IconButton>
+                  )}
+
+                  {isUser && !message.deleted && (
+                    <IconButton
+                      sx={{ mt: 0, p: 0 }}
+                      onClick={() => setMessageInfoModal(true)}
+                    >
+                      <EditIcon sx={{ width: 13, height: 13 }} />
+                    </IconButton>
+                  )}
+                </Stack>
               </Stack>
             </>
           }
+        />
+        <MessageInfoModal
+          message={message}
+          isOpen={messageInfoModal}
+          onClose={() => setMessageInfoModal(false)}
         />
       </ListItemButton>
     </>

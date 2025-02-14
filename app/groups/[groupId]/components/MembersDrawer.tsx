@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export const GroupMembersDrawerPage = ({
+export const MembersDrawerPage = ({
   isOpen,
   onClose,
   group,

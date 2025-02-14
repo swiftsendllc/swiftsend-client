@@ -4,10 +4,10 @@ import { UserContext } from "@/hooks/context/user-context";
 import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
 import { Avatar, ListItem, ListItemAvatar } from "@mui/material";
 import { useContext } from "react";
-import { GroupMessageThreadImagePage } from "./GroupMessageThreadImage";
-import { GroupMessageThreadListPage } from "./GroupMessageThreadList";
+import { MessageThreadImagePage } from "./MessageThreadImage";
+import { MessageThreadListPage } from "./MessageThreadList";
 
-export const GroupMessageThreadPage = ({
+export const MessageThreadPage = ({
   messages,
 }: {
   messages: GroupMessagesEntity[];
@@ -40,9 +40,9 @@ export const GroupMessageThreadPage = ({
               </>
             )}
             {message.imageURL ? (
-              <GroupMessageThreadImagePage message={message} />
+              <MessageThreadImagePage message={message} />
             ) : (
-              <GroupMessageThreadListPage message={message} />
+              <MessageThreadListPage message={message} />
             )}
             {isUser && (
               <ListItemAvatar>
