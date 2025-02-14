@@ -17,7 +17,7 @@ interface SendGroupMessageInput {
   onSend: (msg: GroupMessagesEntity) => unknown;
 }
 
-export default function GroupMessageInputPage({
+export default function MessageInputPage({
   onSend,
 }: SendGroupMessageInput) {
   const { groupId } = useParams();

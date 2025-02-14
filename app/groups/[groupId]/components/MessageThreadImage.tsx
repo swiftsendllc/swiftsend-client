@@ -15,7 +15,7 @@ import { UserContext } from "@/hooks/context/user-context";
 import Image from "next/image";
 import { useContext } from "react";
 
-export const GroupMessageThreadImagePage = ({
+export const MessageThreadImagePage = ({
   message,
 }: {
   message: GroupMessagesEntity;

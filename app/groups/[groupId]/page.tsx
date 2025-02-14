@@ -7,9 +7,9 @@ import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
 import { Container, List } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { GroupHeaderPage } from "./components/GroupHeader";
-import GroupMessageInputPage from "./components/GroupMessageInput";
-import { GroupMessageThreadPage } from "./components/GroupMessageThread";
+import { HeaderPage } from "./components/Header";
+import { MessageThreadPage } from "./components/MessageThread";
+import MessageInputPage from "./components/MessageInput";
 
 export default function MessagePage() {
   const { groupId } = useParams();
@@ -54,7 +54,7 @@ export default function MessagePage() {
           marginBottom: 60,
         }}
       >
-        <GroupHeaderPage group={group} />
+        <HeaderPage group={group} />
         <List
           sx={{
             marginTop: 10,
@@ -66,9 +66,9 @@ export default function MessagePage() {
           }}
           id="scroll-id"
         >
-          <GroupMessageThreadPage messages={messages} />
+          <MessageThreadPage messages={messages} />
         </List>
-        {messages && <GroupMessageInputPage onSend={loadGroupMessages} />}
+        {messages && <MessageInputPage onSend={loadGroupMessages} />}
       </Container>
     </>
   );

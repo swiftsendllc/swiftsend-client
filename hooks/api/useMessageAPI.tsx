@@ -316,12 +316,87 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const getGroupMedia = async (groupId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/media/${groupId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const addMemberToGroup = async (groupId: string, receiversId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${ENV("NEXT_PUBLIC_API_URL")}/groups/add/${groupId}/${receiversId}`,
       {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const updateMemberToModerator = async (groupId: string, memberId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/update/${groupId}/${memberId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const demoteModeratorToMember = async (groupId: string, memberId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/demote/${groupId}/${memberId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+  const kickMemberFromGroup = async (groupId: string, memberId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/kick/${groupId}/${memberId}`,
+      {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -461,6 +536,10 @@ const useMessageAPI = () => {
     addMemberToGroup,
     deleteGroup,
     updateGroup,
+    updateMemberToModerator,
+    demoteModeratorToMember,
+    kickMemberFromGroup,
+    getGroupMedia,
   };
 };
 export default useMessageAPI;

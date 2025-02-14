@@ -16,8 +16,8 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { GroupMembersDrawerPage } from "./GroupMembersDrawer";
-export const GroupHeaderPage = ({ group }: { group: GroupsEntity }) => {
+import { MembersDrawerPage } from "./MembersDrawer";
+export const HeaderPage = ({ group }: { group: GroupsEntity }) => {
   const router = useRouter();
   const [memberDrawer, setMemberDrawer] = useState<boolean>(false);
   return (
@@ -71,7 +71,7 @@ export const GroupHeaderPage = ({ group }: { group: GroupsEntity }) => {
             }
           />
         </Card>
-        <GroupMembersDrawerPage
+        <MembersDrawerPage
           isOpen={memberDrawer}
           onClose={() => setMemberDrawer(false)}
           group={group}
