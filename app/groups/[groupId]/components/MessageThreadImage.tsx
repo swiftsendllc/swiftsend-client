@@ -13,15 +13,19 @@ import moment from "moment";
 
 import { UserContext } from "@/hooks/context/user-context";
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import MessageInfoModal from "./MessageInfoModal";
 
 export const MessageThreadImagePage = ({
+  setMessages,
   message,
 }: {
   message: GroupMessagesEntity;
+  setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
 }) => {
   const [user] = useContext(UserContext);
   const isUser = user.userId === message.senderId;
+  const [messageInfoModal, setMessageInfoModal] = useState<boolean>(false);
   return (
     <>
       <Stack direction="column" justifyContent="left">
@@ -51,7 +55,7 @@ export const MessageThreadImagePage = ({
           icon={
             <>
               {isUser ? (
-                <IconButton>
+                <IconButton onClick={() => setMessageInfoModal(true)}>
                   <EditIcon sx={{ width: 15, height: 15 }} />
                 </IconButton>
               ) : undefined}
@@ -60,6 +64,12 @@ export const MessageThreadImagePage = ({
           variant="outlined"
         />
       </Stack>
+      <MessageInfoModal
+        setMessages={setMessages}
+        isOpen={messageInfoModal}
+        onClose={() => setMessageInfoModal(false)}
+        message={message}
+      />
     </>
   );
 };

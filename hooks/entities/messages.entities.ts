@@ -75,6 +75,9 @@ export interface GroupMessagesEntity {
   edited: boolean;
   sender: UserProfilesEntity;
   receivers: UserProfilesEntity[];
+  reactions: GroupReactionsEntity[];
+  isReacted: boolean;
+  group: GroupsEntity;
 }
 export interface GroupsEntity {
   _id: string;
@@ -94,6 +97,13 @@ export interface SendGroupMessageInput {
 
 export interface GroupCreateInput {
   groupName: string;
-  description: string| null;
+  description: string | null;
   groupAvatar: string | null;
+}
+export interface GroupReactionsEntity {
+  _id:string
+  reaction: string;
+  messageId: string;
+  senderId: string;
+  createdAt: Date;
 }
