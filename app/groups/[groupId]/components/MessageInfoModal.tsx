@@ -1,5 +1,6 @@
 "use client";
 
+import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
 import {
   DeleteForeverOutlined,
@@ -7,9 +8,16 @@ import {
   Forward10Outlined,
   ReportOffRounded,
 } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
+  Button,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
   Icon,
   List,
   ListItemButton,
@@ -17,25 +25,79 @@ import {
   ListItemText,
   Paper,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function MessageInfoModal({
   isOpen,
   onClose,
-}: // message,
-{
+  message,
+  setMessages,
+}: {
   message: GroupMessagesEntity;
   isOpen: boolean;
   onClose?: () => unknown;
+  setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
 }) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
+  const { deleteGroupMessage, editGroupMessage } = useMessageAPI();
+  const [editMessageModal, setEditMessageModal] = useState<boolean>(false);
+  const [didChange, setDidChange] = useState<boolean>(false);
+  const [editedMessage, setEditedMessage] = useState(message.message);
+
+  useEffect(() => {
+    setDidChange(editedMessage !== message.message);
+  }, [editedMessage, message]);
+
+  const handleDeleteMessage = async () => {
+    try {
+      await deleteGroupMessage(message._id);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === message._id
+            ? { ...msg, deleted: true, deletedAt: new Date() }
+            : msg
+        )
+      );
+      toast.success("DELETED");
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      toast.error("FAILED TO DELETE MESSAGE!");
+    }
+  };
+
+  const handleEditMessage = async () => {
+    try {
+      await editGroupMessage(message._id, { message: editedMessage || "" });
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === message._id
+            ? {
+                ...msg,
+                message: editedMessage,
+                edited: true,
+                editedAt: new Date(),
+              }
+            : msg
+        )
+      );
+      toast.success("EDITED");
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      toast.error("FAILED TO EDIT MESSAGE!");
+    }
+  };
 
   const handleClose = () => {
     setOpen(false);
     onClose?.();
+    setEditMessageModal(false);
   };
 
   const options = [
@@ -43,13 +105,13 @@ export default function MessageInfoModal({
       label: "Delete",
       leftIcon: <DeleteForeverOutlined />,
       rightIcon: <KeyboardArrowRightIcon />,
-      action: () => undefined,
+      action: () => handleDeleteMessage(),
     },
     {
       label: "Edit",
       leftIcon: <EditLocationAlt />,
       rightIcon: <KeyboardArrowRightIcon />,
-      action: () => undefined,
+      action: () => setEditMessageModal(true),
     },
     {
       label: "Report",
@@ -87,6 +149,7 @@ export default function MessageInfoModal({
                 <ListItemButton
                   key={idx}
                   sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }}
+                  onClick={option.action}
                 >
                   <ListItemIcon sx={{ pr: 1 }}>{option.leftIcon}</ListItemIcon>
                   <ListItemText disableTypography>
@@ -105,6 +168,57 @@ export default function MessageInfoModal({
             </>
           ))}
         </List>
+      </Dialog>
+      <Dialog
+        open={editMessageModal}
+        onClose={() => setEditMessageModal(false)}
+        keepMounted
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{
+          style: {
+            margin: 0,
+            width: "100%",
+          },
+        }}
+        aria-describedby="edit-dialog-open"
+      >
+        <FormControl
+          variant="standard"
+          fullWidth
+          component="form"
+          sx={{ margin: 0, padding: 0 }}
+        >
+          <DialogTitle sx={{ pb: 0 }}>Edit your message</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Don&apos;t worry, edit message, if anything is wrong
+            </DialogContentText>
+            <Stack>
+              <TextField
+                id="edit-message-field"
+                value={editedMessage}
+                type="text"
+                placeholder="Edit your message"
+                variant="standard"
+                onChange={(event) => {
+                  setEditedMessage(event.target.value);
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: <EditIcon />,
+                  },
+                }}
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>CANCEL</Button>
+            <Button onClick={handleEditMessage} disabled={!didChange}>
+              CONFIRM
+            </Button>
+          </DialogActions>
+        </FormControl>
       </Dialog>
     </>
   );

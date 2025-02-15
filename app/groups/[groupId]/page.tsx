@@ -1,23 +1,24 @@
 "use client";
 
+import { GetSocketMessagesForGroup } from "@/app/groups/[groupId]/components/GetSocketMessagesForGroup";
 import useMessageAPI from "@/hooks/api/useMessageAPI";
 import { GroupContext } from "@/hooks/context/group-context";
-import { useSocket } from "@/hooks/context/socket-context";
 import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
 import { Container, List } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { HeaderPage } from "./components/Header";
-import { MessageThreadPage } from "./components/MessageThread";
 import MessageInputPage from "./components/MessageInput";
+import { MessageThreadPage } from "./components/MessageThread";
 
 export default function MessagePage() {
   const { groupId } = useParams();
   const [, setLoading] = useState(false);
-  const { socket } = useSocket();
   const { getGroupMessages } = useMessageAPI();
   const [group] = useContext(GroupContext);
   const [messages, setMessages] = useState<GroupMessagesEntity[]>([]);
+  GetSocketMessagesForGroup({ setMessages });
+
   const loadGroupMessages = async () => {
     setLoading(true);
     try {
@@ -29,18 +30,6 @@ export default function MessagePage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    socket.on("groupMessage", (groupMessage: GroupMessagesEntity) => {
-      console.log("groupMessage received:", groupMessage);
-      setMessages((prev) => [...prev, groupMessage]);
-    });
-
-    return () => {
-      console.log("Socket disconnected:", socket.id);
-      socket.off("groupMessage");
-    };
-  }, [setMessages]); //eslint-disable-line
 
   useEffect(() => {
     if (groupId) loadGroupMessages();
@@ -66,7 +55,7 @@ export default function MessagePage() {
           }}
           id="scroll-id"
         >
-          <MessageThreadPage messages={messages} />
+          <MessageThreadPage messages={messages} setMessages={setMessages} />
         </List>
         {messages && <MessageInputPage onSend={loadGroupMessages} />}
       </Container>

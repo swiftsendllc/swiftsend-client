@@ -452,10 +452,77 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const editGroupMessage = async (
+    messageId: string,
+    input: { message: string }
+  ) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/edit/${messageId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(input),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const deleteGroupMessage = async (messageId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/delete/${messageId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const sendGroupReaction = async (input: {
+    messageId: string;
+    reaction: string;
+  }) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/reactions/send`,
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const deleteGroupReaction = async (reactionId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV(
+        "NEXT_PUBLIC_API_URL"
+      )}/groups/messages/reactions/delete/${reactionId}`,
       {
         method: "DELETE",
         headers: {
@@ -540,6 +607,9 @@ const useMessageAPI = () => {
     demoteModeratorToMember,
     kickMemberFromGroup,
     getGroupMedia,
+    editGroupMessage,
+    sendGroupReaction,
+    deleteGroupReaction,
   };
 };
 export default useMessageAPI;
