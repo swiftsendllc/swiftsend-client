@@ -1,24 +1,24 @@
-"use client";
-import UnFollowModal from "@/app/[username]/components/UnFollowModal";
-import UploadModal from "@/app/[username]/components/UploadModal";
-import useAPI from "@/hooks/api/useAPI";
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserContext } from "@/hooks/context/user-context";
-import AddIcon from "@mui/icons-material/Add";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import EditIcon from "@mui/icons-material/Edit";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import GridOnSharpIcon from "@mui/icons-material/GridOnSharp";
-import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
-import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
-import MovieSharpIcon from "@mui/icons-material/MovieSharp";
-import NavigationIcon from "@mui/icons-material/Navigation";
-import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
-import PersonPinRoundedIcon from "@mui/icons-material/PersonPinRounded";
-import ShoppingBasketSharpIcon from "@mui/icons-material/ShoppingBasketSharp";
-import ViewListIcon from "@mui/icons-material/ViewList";
+'use client';
+import UnFollowModal from '@/app/[username]/components/UnFollowModal';
+import UploadModal from '@/app/[username]/components/UploadModal';
+import useAPI from '@/hooks/api/useAPI';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { CreatorContext } from '@/hooks/context/creator-context';
+import { UserContext } from '@/hooks/context/user-context';
+import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import EditIcon from '@mui/icons-material/Edit';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import GridOnSharpIcon from '@mui/icons-material/GridOnSharp';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import MovieSharpIcon from '@mui/icons-material/MovieSharp';
+import NavigationIcon from '@mui/icons-material/Navigation';
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import PersonPinRoundedIcon from '@mui/icons-material/PersonPinRounded';
+import ShoppingBasketSharpIcon from '@mui/icons-material/ShoppingBasketSharp';
+import ViewListIcon from '@mui/icons-material/ViewList';
 import {
   Avatar,
   Box,
@@ -28,13 +28,13 @@ import {
   Fab,
   IconButton,
   Stack,
-  Typography,
-} from "@mui/material";
-import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import { MusicModal } from "./MusicModal";
-import { StyledBadge } from "./SearchComponents";
+  Typography
+} from '@mui/material';
+import Link from 'next/link';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useContext, useState } from 'react';
+import { MusicModal } from './MusicModal';
+import { StyledBadge } from './SearchComponents';
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
@@ -52,38 +52,38 @@ export default function AccountPage() {
 
   const stats = [
     {
-      title: "entries",
-      count: creator.postCount,
+      title: 'entries',
+      count: creator.postCount
     },
     {
-      title: "connections",
+      title: 'connections',
       count: creator.followerCount,
-      value: `/${creator.username}/connections`,
+      value: `/${creator.username}/connections`
     },
     {
-      title: "connected",
+      title: 'connected',
       count: creator.followingCount,
-      value: `/${creator.username}/connected`,
-    },
+      value: `/${creator.username}/connected`
+    }
   ];
 
   const grid = [
     {
       value: `/${creator.username}`,
-      icon: <GridOnSharpIcon color="inherit" />,
+      icon: <GridOnSharpIcon color="inherit" />
     },
     {
       value: `/${creator.username}/subscribers`,
-      icon: <ShoppingBasketSharpIcon />,
+      icon: <ShoppingBasketSharpIcon />
     },
     {
       value: `/${creator.username}/reels`,
-      icon: <MovieSharpIcon />,
+      icon: <MovieSharpIcon />
     },
     {
       value: `/${creator.username}/tags`,
-      icon: <PersonPinRoundedIcon />,
-    },
+      icon: <PersonPinRoundedIcon />
+    }
   ];
 
   const pathName =
@@ -129,10 +129,10 @@ export default function AccountPage() {
                 fontWeight={50}
                 textAlign="left"
                 sx={{
-                  display: "inline-block",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  display: 'inline-block',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {creator.username}
@@ -145,10 +145,10 @@ export default function AccountPage() {
               color="inherit"
               textAlign="left"
               sx={{
-                display: "inline-block",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+                display: 'inline-block',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
               }}
             >
               {creator.username}
@@ -204,8 +204,8 @@ export default function AccountPage() {
                 isOnline={creator.isOnline}
                 overlap="circular"
                 anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
+                  vertical: 'bottom',
+                  horizontal: 'right'
                 }}
                 badgeContent
                 variant="dot"
@@ -254,14 +254,14 @@ export default function AccountPage() {
               <Card
                 sx={{
                   backgroundImage: "url('/photos/f49y3HRM_400x400.png')",
-                  backgroundSize: "contain",
-                  backgroundPosition: "right",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'right',
+                  backgroundRepeat: 'no-repeat',
                   height: 50,
-                  width: "100%",
+                  width: '100%'
                 }}
               >
-                <CardContent sx={{ p: 0, width: "100%" }}>
+                <CardContent sx={{ p: 0, width: '100%' }}>
                   <IconButton onClick={() => setMusicModal(true)}>
                     <Typography
                       variant="subtitle2"
@@ -283,13 +283,13 @@ export default function AccountPage() {
             </Typography>
 
             <Link
-              href={creator.websiteURL ?? "/"}
+              href={creator.websiteURL ?? '/'}
               target="_blank"
               style={{
-                color: "var(--success)",
-                display: "inline-block",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+                color: 'var(--success)',
+                display: 'inline-block',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
               }}
             >
               {creator.websiteURL}
@@ -314,8 +314,8 @@ export default function AccountPage() {
                   aria-label="add"
                   variant="extended"
                   sx={{
-                    width: "100%",
-                    borderRadius: "30px",
+                    width: '100%',
+                    borderRadius: '30px'
                   }}
                   color="inherit"
                   onClick={() => setUnFollowModal(true)}
@@ -326,18 +326,18 @@ export default function AccountPage() {
                 <Fab
                   aria-label="add"
                   variant="extended"
-                  sx={{ width: "100%", borderRadius: "30px" }}
+                  sx={{ width: '100%', borderRadius: '30px' }}
                   color="primary"
                   onClick={() => handleFollow(creator.userId)}
                 >
                   <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
-                  Connect{" "}
+                  Connect{' '}
                 </Fab>
               )}
 
               <Fab
                 variant="extended"
-                sx={{ width: "100%", borderRadius: "30px" }}
+                sx={{ width: '100%', borderRadius: '30px' }}
                 color="secondary"
                 onClick={() => loadChannel(creator.userId)}
               >
@@ -359,14 +359,14 @@ export default function AccountPage() {
                 variant="extended"
                 href={`/${user.username}/profile`}
                 LinkComponent={Link}
-                sx={{ width: "100%", borderRadius: "30px" }}
+                sx={{ width: '100%', borderRadius: '30px' }}
               >
                 <EditIcon sx={{ width: 30, height: 30 }} />
-                Profile{" "}
+                Profile{' '}
               </Fab>
               <Fab
                 variant="extended"
-                sx={{ width: "100%", borderRadius: "30px" }}
+                sx={{ width: '100%', borderRadius: '30px' }}
               >
                 <DashboardIcon sx={{ width: 20, height: 30 }} />
                 Dashboard
@@ -388,7 +388,7 @@ export default function AccountPage() {
                 <IconButton href={item.value} LinkComponent={Link}>
                   <Fab
                     variant="extended"
-                    color={pathName === item.value ? "primary" : "inherit"}
+                    color={pathName === item.value ? 'primary' : 'inherit'}
                   >
                     {item.icon}
                   </Fab>

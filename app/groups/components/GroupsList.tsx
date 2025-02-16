@@ -6,13 +6,13 @@ import { Avatar, Button, Card, CardHeader } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-export const GroupsListPage = ({
+export default function GroupsList({
   groups,
   setSelectedGroup,
 }: {
   groups: GroupsEntity[];
   setSelectedGroup: React.Dispatch<React.SetStateAction<GroupsEntity | null>>;
-}) => {
+}) {
   const router = useRouter();
 
   return (
@@ -52,4 +52,4 @@ export const GroupsListPage = ({
       ))}
     </>
   );
-};
+}

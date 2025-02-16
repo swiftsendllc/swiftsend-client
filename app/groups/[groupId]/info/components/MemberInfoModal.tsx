@@ -26,7 +26,7 @@ import {
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export const MemberInfoModal = ({
+export default function MemberInfoModal({
   group,
   isOpen,
   onClose,
@@ -36,7 +36,7 @@ export const MemberInfoModal = ({
   isOpen: boolean;
   onClose?: () => unknown;
   selectedMember: UserProfilesEntity;
-}) => {
+}) {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -247,4 +247,4 @@ export const MemberInfoModal = ({
       )}
     </>
   );
-};
+}

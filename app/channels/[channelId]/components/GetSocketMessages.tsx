@@ -14,7 +14,6 @@ export const GetSocketMessages = ({
   const { socket } = useSocket();
 
   useEffect(() => {
-    console.log("Socket connected:", socket.id);
     socket.on("newMessage", (newMessage: MessagesEntity) => {
       setMessages((prev) => [newMessage, ...prev]);
     });
@@ -91,7 +90,6 @@ export const GetSocketMessages = ({
     );
 
     socket.on("messageReactions", (messageReaction: MessageReactionsEntity) => {
-      console.log("message reactions:", messageReaction);
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === messageReaction.messageId
@@ -107,7 +105,6 @@ export const GetSocketMessages = ({
     socket.on(
       "deletedReactions",
       (deletedReaction: { userId: string; reactionId: string }) => {
-        console.log("the deleted :", deletedReaction);
         setMessages((prev) =>
           prev.map((msg) =>
             msg.reactions.map(

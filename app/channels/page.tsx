@@ -1,5 +1,5 @@
-import { ChannelPage } from "./components/Channels";
+import ChannelsPage from "./components/Channels";
 
-export default function Channel() {
-  return <ChannelPage />;
+export default function Channels() {
+  return <ChannelsPage />;
 }

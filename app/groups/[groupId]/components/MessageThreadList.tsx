@@ -19,13 +19,13 @@ import toast from "react-hot-toast";
 import EmojiModal from "./EmojiModal";
 import MessageInfoModal from "./MessageInfoModal";
 
-export const MessageThreadListPage = ({
+export default function MessageThreadList({
   message,
   setMessages,
 }: {
   message: GroupMessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-}) => {
+}) {
   const [user] = useContext(UserContext);
   const isUser = message.senderId === user.userId;
   const [messageInfoModal, setMessageInfoModal] = useState<boolean>(false);
@@ -163,4 +163,4 @@ export const MessageThreadListPage = ({
       </ListItemButton>
     </>
   );
-};
+}

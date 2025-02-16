@@ -192,7 +192,7 @@ export default function MessageInfoModal({
           <DialogTitle sx={{ pb: 0 }}>Edit your message</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Don&apos;t worry, edit message, if anything is wrong
+              Don&apos;t worry, edit your message, if anything is wrong
             </DialogContentText>
             <Stack>
               <TextField

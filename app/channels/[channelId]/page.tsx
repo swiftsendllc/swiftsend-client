@@ -11,10 +11,10 @@ import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { ChatHeaderPage } from "./components/ChatHeader";
-import { EncryptionNoticePage } from "./components/EncryptionNotice";
+import ChatHeader from "./components/ChatHeader";
+import EncryptionNotice from "./components/EncryptionNotice";
 import { GetSocketMessages } from "./components/GetSocketMessages";
-import { MessageThreadPage } from "./components/MessageThread";
+import MessageThread from "./components/MessageThread";
 
 export default function MessagePage() {
   const limit = 20;
@@ -79,7 +79,7 @@ export default function MessagePage() {
           marginBottom: 60,
         }}
       >
-        <ChatHeaderPage
+        <ChatHeader
           channel={channel}
           loading={loading}
           checkBox={checkBox}
@@ -91,7 +91,7 @@ export default function MessagePage() {
           setMessages={setMessages}
         />
         {messages.length === 0 ? (
-          <EncryptionNoticePage />
+          <EncryptionNotice />
         ) : (
           <>
             <List
@@ -120,7 +120,7 @@ export default function MessagePage() {
                 initialScrollY={500}
                 scrollableTarget="scroll-id"
               >
-                <MessageThreadPage
+                <MessageThread
                   user={user}
                   channel={channel}
                   messages={messages}

@@ -1,27 +1,23 @@
-"use client";
+'use client';
 import {
   ChannelsEntity,
-  MessagesEntity,
-} from "@/hooks/entities/messages.entities";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
+  MessagesEntity
+} from '@/hooks/entities/messages.entities';
+import { UserProfilesEntity } from '@/hooks/entities/users.entities';
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { Avatar, ListItem, ListItemAvatar } from "@mui/material";
-import React, { SetStateAction, useState } from "react";
-import toast from "react-hot-toast";
-import InfoMessageDrawer from "./InfoMessageDrawer";
-import { MessageReactionPage } from "./MessageReaction";
-import { MessageThreadImagePage } from "./MessageThreadImage";
-import { MessageThreadListPage } from "./MessageThreadList";
+import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import React, { SetStateAction } from 'react';
+import MessageThreadImage from './MessageThreadImage';
+import MessageThreadList from './MessageThreadList';
 
-export const MessageThreadPage = ({
+export default function MessageThread({
   user,
   channel,
   messages,
   checkBox,
   setMessages,
   selectedMessageIds,
-  setSelectedMessageIds,
+  setSelectedMessageIds
 }: {
   checkBox: boolean;
   channel: ChannelsEntity;
@@ -30,37 +26,7 @@ export const MessageThreadPage = ({
   selectedMessageIds: string[];
   setMessages: React.Dispatch<SetStateAction<MessagesEntity[]>>;
   setSelectedMessageIds: React.Dispatch<SetStateAction<string[]>>;
-}) => {
-  const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(
-    null
-  );
-  const [infoMessageDrawer, setInfoMessageDrawer] = useState(false);
-  const [emojiDrawer, setEmojiDrawer] = useState(false);
-  const { deleteMessageReactions } = useMessageAPI();
-
-  const handleDeleteMessageReactions = async (reactionId: string) => {
-    try {
-      await deleteMessageReactions(reactionId);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.reactions.map((reaction) => reaction._id === reactionId)
-            ? {
-                ...msg,
-                reactions: msg.reactions.filter(
-                  (reaction) => reaction._id !== reactionId
-                ),
-              }
-            : msg
-        )
-      );
-
-      toast.success("DELETED");
-    } catch (error) {
-      console.error(error);
-      toast.error("FAILED TO DELETE REACTIONS!");
-    }
-  };
-
+}) {
   const handleToggleCheckBox = (messageId: string) => {
     setSelectedMessageIds((prev) => {
       const newSelectedMessageIds = prev.includes(messageId)
@@ -73,25 +39,16 @@ export const MessageThreadPage = ({
 
   return (
     <>
-      {selectedMessage && (
-        <InfoMessageDrawer
-          isOpen={infoMessageDrawer}
-          onClose={() => setInfoMessageDrawer(false)}
-          selectedMessage={selectedMessage}
-          setMessages={setMessages}
-        />
-      )}
-
       {messages.map((message, idx) => {
         const isUser = user.userId === message.senderId;
         return (
           <ListItem
             key={idx}
             sx={{
-              display: "flex",
-              justifyContent: isUser ? "flex-end" : "flex-start",
-              textAlign: isUser ? "right" : "left",
-              py: 1,
+              display: 'flex',
+              justifyContent: isUser ? 'flex-end' : 'flex-start',
+              textAlign: isUser ? 'right' : 'left',
+              py: 1
             }}
             disablePadding
           >
@@ -104,26 +61,17 @@ export const MessageThreadPage = ({
               </ListItemAvatar>
             )}
             {message.imageURL ? (
-              <MessageThreadImagePage
-                message={message}
-                setSelectedMessage={setSelectedMessage}
-                setInfoMessageDrawer={setInfoMessageDrawer}
-              />
+              <MessageThreadImage message={message} setMessages={setMessages} />
             ) : (
               <>
-                <MessageThreadListPage
+                <MessageThreadList
                   idx={idx}
                   setSelectedMessageIds={setSelectedMessageIds}
                   message={message}
+                  setMessages={setMessages}
                   checkBox={checkBox}
-                  setInfoMessageDrawer={setInfoMessageDrawer}
-                  setSelectedMessage={setSelectedMessage}
-                  setEmojiDrawer={setEmojiDrawer}
                   selectedMessageIds={selectedMessageIds}
                   onToggleCheckBox={() => handleToggleCheckBox(message._id)}
-                  onDeleteMessageReactions={(reactionId) =>
-                    handleDeleteMessageReactions(reactionId)
-                  }
                 />
               </>
             )}
@@ -132,17 +80,9 @@ export const MessageThreadPage = ({
                 <Avatar alt={user.fullName} src={user.avatarURL} />
               </ListItemAvatar>
             )}
-            {selectedMessage && (
-              <MessageReactionPage
-                isOpen={emojiDrawer}
-                onClose={() => setEmojiDrawer(false)}
-                selectedMessage={selectedMessage}
-                setMessages={setMessages}
-              />
-            )}
           </ListItem>
         );
       })}
     </>
   );
-};
+}
