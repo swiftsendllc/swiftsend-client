@@ -22,7 +22,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function GroupCreateModalPage({
+export default function GroupCreateModal({
   isOpen,
   onClose,
 }: {

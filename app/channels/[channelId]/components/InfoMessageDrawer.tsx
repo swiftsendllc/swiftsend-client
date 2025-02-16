@@ -1,303 +1,205 @@
-"use client"
+'use client';
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { ChannelContext } from "@/hooks/context/channel-context";
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import ShortcutIcon from '@mui/icons-material/Shortcut';
 import {
-  ChannelsEntity,
-  EditMessageInput,
-  MessagesEntity,
-  MessageUserInput,
-} from "@/hooks/entities/messages.entities";
-
-import { FiberManualRecord } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
-import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import SendIcon from "@mui/icons-material/Send";
-import ShortcutIcon from "@mui/icons-material/Shortcut";
-import {
-  Avatar,
-  Badge,
-  Box,
   Button,
-  Card,
-  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
-  Drawer,
   FormControl,
   List,
-  ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
+  Paper,
   Stack,
   TextField,
-} from "@mui/material";
-import { Fragment, useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function InfoMessageDrawer({
   isOpen,
   onClose,
-  selectedMessage,
-  setMessages,
+  message,
+  setMessages
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  selectedMessage: MessagesEntity;
+  message: MessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(isOpen);
+  useEffect(() => setOpen(isOpen), [isOpen]);
+  const [didChange, setDidChange] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [channelDialogOpen, setChannelDialogOpen] = useState(false);
-  const [, setOpen] = useState(isOpen);
-  useEffect(() => setDrawerOpen(isOpen), [isOpen]);
-  const [channel] = useContext(ChannelContext);
-  const [forwardedMessage] = useState<Partial<MessageUserInput>>({
-    message: selectedMessage.message,
-  });
-  const { deleteMessage, editMessage, forwardMessage } = useMessageAPI();
-  const [channels] = useState<ChannelsEntity[]>([]);
-  const [editedMessage, setEditedMessage] = useState<Partial<EditMessageInput>>(
-    {
-      message: selectedMessage.message,
-    }
-  );
-  useEffect(() => {
-    setEditedMessage({ message: selectedMessage.message });
-  }, [selectedMessage]);
+  const { deleteMessage, editMessage } = useMessageAPI();
+  const [editedMessage, setEditedMessage] = useState(message.message);
 
   const handleClose = () => {
     onClose?.();
     setOpen(false);
+    setEditDialogOpen(false);
   };
 
-  const handleDelete = async (deleted: boolean) => {
+  useEffect(() => {
+    setDidChange(editedMessage !== message.message);
+  }, [editedMessage, message]);
+
+  const handleDelete = async () => {
     try {
-      await deleteMessage(selectedMessage._id, deleted);
-      if (deleted) {
-        setMessages((pre) =>
-          pre.map((msg) =>
-            msg._id === selectedMessage._id ? { ...msg, deleted: true } : msg
-          )
-        );
-      }
-      onClose?.();
-      toast.success("Deleted for everyone");
+      await deleteMessage(message._id);
+      setMessages((pre) =>
+        pre.map((msg) =>
+          msg._id === message._id
+            ? { ...msg, deleted: true, deletedAt: new Date() }
+            : msg
+        )
+      );
+      handleClose();
+      toast.success('DELETED');
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete message!");
+      toast.error('FAILED TO DELETE MESSAGE!');
     }
   };
 
   const handleEdit = async () => {
     try {
-      if (!editedMessage.message) return;
-      await editMessage(selectedMessage._id, editedMessage);
+      await editMessage(message._id, { message: editedMessage });
       setMessages((pre) =>
         pre.map((msg) =>
-          msg._id === selectedMessage._id ? { ...msg, ...editedMessage } : msg
+          msg._id === message._id
+            ? {
+                ...msg,
+                message: editedMessage,
+                edited: true,
+                editedAt: new Date()
+              }
+            : msg
         )
       );
-
-      toast.success("Edited");
-      setEditDialogOpen(false);
+      handleClose();
+      toast.success('EDITED');
     } catch (error) {
       console.log(error);
-      toast.error("Failed to edit message!");
+      toast.error('FAILED TO EDIT MESSAGE!');
     }
   };
 
-  const handleForward = async (receiverId: string) => {
-    try {
-      if (!forwardedMessage.message) return;
-      const forwarded = await forwardMessage(
-        selectedMessage._id,
-        forwardedMessage,
-        receiverId
-      );
-      setMessages((prev) => [...prev, forwarded]);
-      setChannelDialogOpen(false);
-      toast.success("Forwarded");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to load message!");
+  const options = [
+    {
+      label: 'Delete',
+      icon: <DeleteSweepOutlinedIcon sx={{ color: 'var(--error)' }} />,
+      action: () => handleDelete()
+    },
+    {
+      label: 'Edit',
+      icon: <EditIcon sx={{ color: 'var(--warning)' }} />,
+      action: () => setEditDialogOpen(true)
+    },
+    {
+      label: 'Forward',
+      icon: <ShortcutIcon sx={{ color: 'var(--success)' }} />
     }
-  };
-
-  const messageInfoOptions = [
-    {
-      label: "Delete",
-      icon: <DeleteSweepOutlinedIcon sx={{ color: "var(--error)" }} />,
-      action: () => handleDelete(true),
-    },
-    {
-      label: "Edit",
-      icon: <EditIcon sx={{ color: "var(--warning)" }} />,
-      action: () => setEditDialogOpen(true),
-    },
-    {
-      label: "Forward",
-      icon: <ShortcutIcon sx={{ color: "var(--success)" }} />,
-      action: () => setChannelDialogOpen(true),
-    },
   ];
 
   return (
     <>
-      <Box role="presentation" sx={{ width: "auto" }}>
-        <Drawer
-          open={drawerOpen}
-          keepMounted
-          anchor="bottom"
-          sx={{
-            maxWidth: "xs",
-          }}
-          onClose={handleClose}
-        >
-          <List>
-            {messageInfoOptions.map((option, idx) => {
-              const initial = new Date(selectedMessage.createdAt).getTime();
-              const current = new Date().getTime();
-              const isDisabled = current - initial >= 2 * 60 * 1000;
-
-              return (
-                <Fragment key={idx}>
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      onClick={option.action}
-                      disabled={isDisabled && option.label === "Edit"}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        keepMounted
+        maxWidth="xs"
+        PaperProps={{
+          style: {
+            margin: 0,
+            width: '100%'
+          }
+        }}
+      >
+        <List sx={{ width: '100%', padding: 0 }}>
+          {options.map((option, idx) => (
+            <>
+              <Paper elevation={3}>
+                <ListItemButton
+                  key={idx}
+                  sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }}
+                  onClick={option.action}
+                >
+                  <ListItemText disableTypography>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignContent="center"
+                      alignItems="center"
                     >
-                      <ListItemIcon>{option.icon}</ListItemIcon>
-                      <ListItemText primary={option.label} />
-                    </ListItemButton>
-                  </ListItem>
-                </Fragment>
-              );
-            })}
-          </List>
-        </Drawer>
-      </Box>
+                      <Typography variant="body1">{option.label}</Typography>
+                    </Stack>
+                  </ListItemText>
+                </ListItemButton>
+              </Paper>
+            </>
+          ))}
+        </List>
+      </Dialog>
       <Dialog
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
-        PaperProps={{
-          style: {
-            margin: "0",
-            width: "100%",
-          },
-        }}
-      >
-        <FormControl
-          component="form"
-          variant="standard"
-          fullWidth
-          sx={{
-            margin: 0,
-            padding: 0,
-          }}
-        >
-          <DialogContent>
-            <TextField
-              focused
-              autoFocus
-              label="Edit message"
-              fullWidth
-              value={editedMessage.message || " "}
-              onChange={(e) => setEditedMessage({ message: e.target.value })}
-            />
-          </DialogContent>
-          <DialogActions
-            sx={{
-              padding: 0,
-              margin: 0,
-              paddingLeft: 0,
-              justifyContent: "flex",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Stack
-              direction="row"
-              sx={{
-                justifyContent: "space-between",
-                alignContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                variant="contained"
-                onClick={() => setEditDialogOpen(false)}
-              >
-                <CloseIcon /> Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                disabled={!editedMessage.message}
-                onClick={() => {
-                  handleEdit();
-                  handleClose();
-                }}
-              >
-                <DoneOutlineIcon /> Save
-              </Button>
-            </Stack>
-          </DialogActions>
-        </FormControl>
-      </Dialog>
-      <Dialog
-        open={channelDialogOpen}
         keepMounted
         fullWidth
-        onClose={() => setChannelDialogOpen(false)}
+        maxWidth="xs"
+        PaperProps={{
+          style: {
+            margin: 0,
+            width: '100%'
+          }
+        }}
+        aria-describedby="edit-dialog-open"
       >
-        <DialogTitle fontWeight={200}>Forward this message to: </DialogTitle>
-        {channels
-          .filter(
-            (channelUser) =>
-              channelUser.receiver.userId !== channel.receiver.userId
-          )
-          .map((channelUser, idx) => (
-            <Card key={idx} sx={{ width: "100%", p: 0 }}>
-              <CardHeader
-                avatar={
-                  <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                    badgeContent={
-                      <FiberManualRecord
-                        sx={{
-                          color: "#80EF80",
-                          border: "80EF80",
-                          fontSize: "15px",
-                        }}
-                      />
-                    }
-                  >
-                    <Avatar
-                      src={channelUser.receiver.avatarURL}
-                      alt={channelUser.receiver.username}
-                    />
-                  </Badge>
-                }
-                action={
-                  <Button
-                    variant="contained"
-                    onClick={() => handleForward(channelUser.receiver.userId)}
-                  >
-                    Send
-                    <SendIcon sx={{ width: 15, height: 15, ml: 1 }} />
-                  </Button>
-                }
-                title={channelUser.receiver.fullName}
+        <FormControl
+          variant="standard"
+          fullWidth
+          component="form"
+          sx={{ margin: 0, padding: 0 }}
+        >
+          <DialogTitle sx={{ pb: 0 }}>Edit your message</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Don&apos;t worry, edit your message, if anything is wrong
+            </DialogContentText>
+            <Stack>
+              <TextField
+                id="edit-message-field"
+                value={editedMessage}
+                type="text"
+                placeholder="Edit your message"
+                variant="standard"
+                onChange={(event) => {
+                  setEditedMessage(event.target.value);
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: <EditIcon />
+                  }
+                }}
               />
-            </Card>
-          ))}
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>CANCEL</Button>
+            <Button onClick={handleEdit} disabled={!didChange}>
+              CONFIRM
+            </Button>
+          </DialogActions>
+        </FormControl>
       </Dialog>
     </>
   );

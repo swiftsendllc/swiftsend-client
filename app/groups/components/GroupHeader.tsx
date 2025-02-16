@@ -5,9 +5,13 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Avatar, Fab, Stack, TextField } from "@mui/material";
 import { useState } from "react";
-import GroupCreateModalPage from "./GroupCreateModal";
+import GroupCreateModal from "./GroupCreateModal";
 
-export const GroupHeaderPage = ({ user }: { user: UserProfilesEntity }) => {
+export default function GroupHeader({
+  user,
+}: {
+  user: UserProfilesEntity;
+}) {
   const [groupCreateModal, setGroupCreateModal] = useState<boolean>(false);
 
   return (
@@ -53,11 +57,11 @@ export const GroupHeaderPage = ({ user }: { user: UserProfilesEntity }) => {
         >
           <SettingsIcon />
         </Fab>
-        <GroupCreateModalPage
+        <GroupCreateModal
           isOpen={groupCreateModal}
           onClose={() => setGroupCreateModal(false)}
         />
       </Stack>
     </>
   );
-};
+}

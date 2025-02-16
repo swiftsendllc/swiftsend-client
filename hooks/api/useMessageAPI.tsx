@@ -1,21 +1,20 @@
-import { authCookieKey, ENV } from "@/library/constants";
-import { getCookie } from "cookies-next";
+import { authCookieKey, ENV } from '@/library/constants';
+import { getCookie } from 'cookies-next';
 import {
-  EditMessageInput,
   GroupCreateInput,
   MessageUserInput,
-  SendGroupMessageInput,
-} from "../entities/messages.entities";
+  SendGroupMessageInput
+} from '../entities/messages.entities';
 
 const useMessageAPI = () => {
   const getChannels = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/channels`, {
-      method: "GET",
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/channels`, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -27,13 +26,13 @@ const useMessageAPI = () => {
   const getChannelById = async (channelId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${channelId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/channels/${channelId}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -46,13 +45,13 @@ const useMessageAPI = () => {
   const createChannel = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/create/${userId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/channels/create/${userId}`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -70,14 +69,14 @@ const useMessageAPI = () => {
     const { offset, limit } = query;
     const res = await fetch(
       `${ENV(
-        "NEXT_PUBLIC_API_URL"
+        'NEXT_PUBLIC_API_URL'
       )}/channels/${channelId}/messages?offset=${offset}&limit=${limit}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -90,13 +89,13 @@ const useMessageAPI = () => {
   const getChannelMedia = async (channelId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${channelId}/media`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/channels/${channelId}/media`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -108,13 +107,13 @@ const useMessageAPI = () => {
 
   const sendMessage = async (body: Partial<MessageUserInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/messages`, {
-      method: "POST",
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/messages`, {
+      method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -129,14 +128,14 @@ const useMessageAPI = () => {
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/reactions`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/messages/reactions`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -149,13 +148,13 @@ const useMessageAPI = () => {
   const deleteMessageReactions = async (reactionId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/reactions/${reactionId}/delete`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/messages/reactions/${reactionId}/delete`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -172,14 +171,14 @@ const useMessageAPI = () => {
   ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/${_id}/${receiverId}/forward`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/messages/${_id}/${receiverId}/forward`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -189,17 +188,17 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const editMessage = async (_id: string, body: Partial<EditMessageInput>) => {
+  const editMessage = async (_id: string, input: { message: string }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/${_id}/edit`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/messages/${_id}/edit`,
       {
-        method: "PATCH",
-        body: JSON.stringify(body),
+        method: 'PATCH',
+        body: JSON.stringify(input),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -209,16 +208,16 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const deleteMessage = async (_id: string, deleted: boolean) => {
+  const deleteMessage = async (messageId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/messages/${_id}/${deleted}/delete`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/messages/delete/${messageId}`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -231,14 +230,14 @@ const useMessageAPI = () => {
   const deleteMessages = async (messageIds: string[]) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/messages/delete/`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/channels/messages/delete/`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         body: JSON.stringify({ messageIds }),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -251,13 +250,13 @@ const useMessageAPI = () => {
   const deleteChannel = async (_id: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/channels/${_id}/delete`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/channels/${_id}/delete`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -269,13 +268,13 @@ const useMessageAPI = () => {
 
   const createGroup = async (body: Partial<GroupCreateInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups/create`, {
-      method: "POST",
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/groups/create`, {
+      method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -286,12 +285,12 @@ const useMessageAPI = () => {
 
   const getGroups = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups`, {
-      method: "GET",
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/groups`, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -302,12 +301,12 @@ const useMessageAPI = () => {
 
   const getGroupById = async (groupId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/groups/${groupId}`, {
-      method: "GET",
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/groups/${groupId}`, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -319,13 +318,13 @@ const useMessageAPI = () => {
   const getGroupMedia = async (groupId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/media/${groupId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/media/${groupId}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -338,13 +337,13 @@ const useMessageAPI = () => {
   const addMemberToGroup = async (groupId: string, receiversId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/add/${groupId}/${receiversId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/add/${groupId}/${receiversId}`,
       {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -357,13 +356,13 @@ const useMessageAPI = () => {
   const updateMemberToModerator = async (groupId: string, memberId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/update/${groupId}/${memberId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/update/${groupId}/${memberId}`,
       {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -376,13 +375,13 @@ const useMessageAPI = () => {
   const demoteModeratorToMember = async (groupId: string, memberId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/demote/${groupId}/${memberId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/demote/${groupId}/${memberId}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -394,13 +393,13 @@ const useMessageAPI = () => {
   const kickMemberFromGroup = async (groupId: string, memberId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/kick/${groupId}/${memberId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/kick/${groupId}/${memberId}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -413,13 +412,13 @@ const useMessageAPI = () => {
   const getGroupMessages = async (groupId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/get/${groupId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/get/${groupId}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -435,14 +434,14 @@ const useMessageAPI = () => {
   ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/send/${groupId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/send/${groupId}`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -458,14 +457,14 @@ const useMessageAPI = () => {
   ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/edit/${messageId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/edit/${messageId}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         body: JSON.stringify(input),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -478,13 +477,13 @@ const useMessageAPI = () => {
   const deleteGroupMessage = async (messageId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/delete/${messageId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/delete/${messageId}`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -500,14 +499,14 @@ const useMessageAPI = () => {
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/messages/reactions/send`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/reactions/send`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(input),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -521,14 +520,14 @@ const useMessageAPI = () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${ENV(
-        "NEXT_PUBLIC_API_URL"
+        'NEXT_PUBLIC_API_URL'
       )}/groups/messages/reactions/delete/${reactionId}`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -541,13 +540,13 @@ const useMessageAPI = () => {
   const deleteGroup = async (groupId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/delete/${groupId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/delete/${groupId}`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -563,14 +562,14 @@ const useMessageAPI = () => {
   ) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/groups/update/${groupId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/update/${groupId}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         body: JSON.stringify(input),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
     );
     const data = await res.json();
@@ -609,7 +608,7 @@ const useMessageAPI = () => {
     getGroupMedia,
     editGroupMessage,
     sendGroupReaction,
-    deleteGroupReaction,
+    deleteGroupReaction
   };
 };
 export default useMessageAPI;

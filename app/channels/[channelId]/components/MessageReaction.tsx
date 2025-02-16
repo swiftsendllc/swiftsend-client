@@ -1,24 +1,31 @@
-"use client";
+'use client';
 
-import { reactions } from "@/components/SearchComponents";
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { MessagesEntity } from "@/hooks/entities/messages.entities";
-import { List, ListItemButton, ListItemText, Popover } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { reactions } from '@/components/SearchComponents';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import {
+  Dialog,
+  DialogContent,
+  List,
+  ListItemButton,
+  ListItemText,
+  Paper
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-export const MessageReactionPage = ({
+export default function MessageReaction({
   isOpen,
   onClose,
-  selectedMessage,
-  setMessages,
+  message,
+  setMessages
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-  selectedMessage: MessagesEntity;
+  message: MessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
-}) => {
-  const [open, setOpen] = useState(isOpen);
+}) {
+  const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { sendMessageReactions } = useMessageAPI();
 
@@ -26,62 +33,62 @@ export const MessageReactionPage = ({
     setOpen(false);
     onClose?.();
   };
+
   const handleEmojiReaction = async (reaction: string) => {
     try {
       const reactionData = await sendMessageReactions({
-        messageId: selectedMessage._id,
-        reaction,
+        messageId: message._id,
+        reaction
       });
       const newReactionData = reactionData;
       setMessages((prev) =>
         prev.map((msg) => {
-          if (msg._id === selectedMessage._id) {
+          if (msg._id === message._id) {
             const updatedMessageReaction = [...msg.reactions, newReactionData];
             return { ...msg, reactions: updatedMessageReaction };
           }
           return msg;
         })
       );
-      toast.success("REACTED");
+      handleClose();
+      toast.success('REACTED');
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO REACT MESSAGE!");
+      toast.error('FAILED TO REACT MESSAGE!');
     }
   };
 
   return (
     <>
-      <Popover
+      <Dialog
         open={open}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
         onClose={handleClose}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{
+          style: {
+            margin: 0,
+            width: '100%'
+          }
+        }}
+        sx={{ mb: 1.5 }}
+        aria-describedby="message-reaction-dialog"
       >
-        <List
-          sx={{
-            display: "flex",
-          }}
-        >
-          {reactions.map((option, idx) => (
-            <Fragment key={idx}>
-              <ListItemButton
-                onClick={() => {
-                  handleEmojiReaction(option.label);
-                  handleClose();
-                }}
-              >
-                <ListItemText primary={option.icon} />
-              </ListItemButton>
-            </Fragment>
-          ))}
-        </List>
-      </Popover>
+        <Paper>
+          <DialogContent sx={{ padding: 0 }}>
+            <List sx={{ display: 'flex', padding: 0, margin: 0 }}>
+              {reactions.map((option, idx) => (
+                <ListItemButton
+                  key={idx}
+                  onClick={() => handleEmojiReaction(option.label)}
+                >
+                  <ListItemText primary={option.icon} />
+                </ListItemButton>
+              ))}
+            </List>
+          </DialogContent>
+        </Paper>
+      </Dialog>
     </>
   );
-};
+}

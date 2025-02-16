@@ -1,29 +1,30 @@
-"use client";
+'use client';
 
-import { MessagesEntity } from "@/hooks/entities/messages.entities";
-import EditIcon from "@mui/icons-material/Edit";
-import { Chip, IconButton, Stack, Typography } from "@mui/material";
-import moment from "moment";
+import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import EditIcon from '@mui/icons-material/Edit';
+import { Chip, IconButton, Stack, Typography } from '@mui/material';
+import moment from 'moment';
 
-import { UserContext } from "@/hooks/context/user-context";
-import { Dispatch, SetStateAction, useContext } from "react";
-import { ImageThumbnailPage } from "./ImageThumbnail";
+import { UserContext } from '@/hooks/context/user-context';
+import { useContext, useState } from 'react';
+import ImageThumbnail from './ImageThumbnail';
+import InfoMessageDrawer from './InfoMessageDrawer';
 
-export const MessageThreadImagePage = ({
+export default function MessageThreadImage({
   message,
-  setSelectedMessage,
-  setInfoMessageDrawer,
+  setMessages
 }: {
   message: MessagesEntity;
-  setSelectedMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
-  setInfoMessageDrawer: Dispatch<SetStateAction<boolean>>;
-}) => {
+  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
+}) {
   const [user] = useContext(UserContext);
   const isUser = user.userId === message.senderId;
+  const [infoMessageDrawer, setInfoMessageDrawer] = useState<boolean>(false);
+
   return (
     <>
       <Stack direction="column" justifyContent="left">
-        <ImageThumbnailPage message={message} />
+        <ImageThumbnail message={message} />
         <Chip
           label={
             <Typography variant="caption" component="span" fontSize="0.55rem">
@@ -32,10 +33,10 @@ export const MessageThreadImagePage = ({
                     .fromNow()
                     .toLocaleUpperCase()} DELETED`
                 : message.edited
-                ? `${moment(message.editedAt)
-                    .fromNow()
-                    .toLocaleUpperCase()} EDITED`
-                : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
+                  ? `${moment(message.editedAt)
+                      .fromNow()
+                      .toLocaleUpperCase()} EDITED`
+                  : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
             </Typography>
           }
           icon={
@@ -43,7 +44,6 @@ export const MessageThreadImagePage = ({
               {isUser ? (
                 <IconButton
                   onClick={() => {
-                    setSelectedMessage(message);
                     setInfoMessageDrawer(true);
                   }}
                 >
@@ -54,7 +54,13 @@ export const MessageThreadImagePage = ({
           }
           variant="outlined"
         />
+        <InfoMessageDrawer
+          isOpen={infoMessageDrawer}
+          onClose={() => setInfoMessageDrawer(false)}
+          message={message}
+          setMessages={setMessages}
+        />
       </Stack>
     </>
   );
-};
+}

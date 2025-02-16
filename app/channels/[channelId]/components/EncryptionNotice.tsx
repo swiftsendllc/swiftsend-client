@@ -2,8 +2,7 @@
 
 import { Box, Button, Stack, Typography } from "@mui/material";
 
-export const EncryptionNoticePage = () => {
-  
+export default function EncryptionNotice() {
   return (
     <>
       <Stack
@@ -16,7 +15,6 @@ export const EncryptionNoticePage = () => {
         }}
         position="relative"
         marginY={10}
-
       >
         <Box textAlign="center">
           <Typography variant="h4" fontWeight={500}>
@@ -29,20 +27,17 @@ export const EncryptionNoticePage = () => {
             Send a swift or send anything
           </Typography>
           <Typography variant="body2" sx={{ mt: 1 }} color="info">
-            Messages are end to end encrypted.<br/> No one outside of this messages
-            can read or write
+            Messages are end to end encrypted.
+            <br /> No one outside of this messages can read or write
           </Typography>
         </Box>
 
         <Box sx={{ mt: 4 }}>
-          <Button
-            variant="contained"
-            color="primary"
-          >
+          <Button variant="contained" color="primary">
             Send a wave 👋
           </Button>
         </Box>
       </Stack>
     </>
   );
-};
+}

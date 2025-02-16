@@ -38,8 +38,8 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import DeleteGroupModal from "./components/DeleteGroupModal";
-import { MemberInfoModal } from "./components/MemberInfoModal";
-import { UpdateGroupModal } from "./components/UpdateGroupModal";
+import MemberInfoModal from "./components/MemberInfoModal";
+import UpdateGroupModal from "./components/UpdateGroupModal";
 
 export default function GroupInfoPage() {
   const [group] = useContext(GroupContext);
@@ -48,11 +48,11 @@ export default function GroupInfoPage() {
   const { uploadFile } = useAPI();
   const { updateGroup } = useMessageAPI();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [updateGroupModal, setUpdateGroupModal] = useState<boolean>(false);
+  const [updateGroupOpen, setUpdateGroupOpen] = useState<boolean>(false);
   const [selectedMember, setSelectedMember] =
     useState<UserProfilesEntity | null>(null);
-  const [memberInfoModal, setMemberInfoModal] = useState<boolean>(false);
-  const [deleteGroupModal, setDeleteGroupModal] = useState<boolean>(false);
+  const [memberInfoOpen, setMemberInfoOpen] = useState<boolean>(false);
+  const [deleteGroupOpen, setDeleteGroupOpen] = useState<boolean>(false);
 
   const handleUpload = async (file: File) => {
     try {
@@ -150,7 +150,7 @@ export default function GroupInfoPage() {
             <List sx={{ padding: 0 }}>
               <ListItemButton
                 sx={{ padding: 0, py: 1, borderRadius: 2 }}
-                onClick={() => setUpdateGroupModal(true)}
+                onClick={() => setUpdateGroupOpen(true)}
               >
                 <ListItemIcon sx={{ pr: 1 }}>
                   <DriveFileRenameOutlineIcon />
@@ -239,7 +239,7 @@ export default function GroupInfoPage() {
                 <ListItemButton
                   onClick={() => {
                     if (group.admin === creator.userId) {
-                      setMemberInfoModal(true);
+                      setMemberInfoOpen(true);
                       setSelectedMember(member);
                     }
                   }}
@@ -294,7 +294,7 @@ export default function GroupInfoPage() {
         <Divider />
         {group.admin === creator.userId && (
           <Box padding={1}>
-            <Button color="error" onClick={() => setDeleteGroupModal(true)}>
+            <Button color="error" onClick={() => setDeleteGroupOpen(true)}>
               <DeleteForeverTwoTone />
               Delete group
             </Button>
@@ -312,19 +312,19 @@ export default function GroupInfoPage() {
           </Typography>
         </Box>
         <UpdateGroupModal
-          isOpen={updateGroupModal}
-          onClose={() => setUpdateGroupModal(false)}
+          isOpen={updateGroupOpen}
+          onClose={() => setUpdateGroupOpen(false)}
         />
         <MemberInfoModal
-          isOpen={memberInfoModal}
-          onClose={() => setMemberInfoModal(false)}
+          isOpen={memberInfoOpen}
+          onClose={() => setMemberInfoOpen(false)}
           group={group}
           selectedMember={selectedMember as UserProfilesEntity}
         />
         <DeleteGroupModal
           group={group}
-          isOpen={deleteGroupModal}
-          onClose={() => setDeleteGroupModal(false)}
+          isOpen={deleteGroupOpen}
+          onClose={() => setDeleteGroupOpen(false)}
         />
       </Container>
     </>

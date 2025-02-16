@@ -4,16 +4,16 @@ import { UserContext } from "@/hooks/context/user-context";
 import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
 import { Avatar, ListItem, ListItemAvatar } from "@mui/material";
 import React, { useContext } from "react";
-import { MessageThreadImagePage } from "./MessageThreadImage";
-import { MessageThreadListPage } from "./MessageThreadList";
+import MessageThreadList from "./MessageThreadList";
+import MessageThreadImage from "./MessageThreadImage";
 
-export const MessageThreadPage = ({
+export default function MessageThread({
   messages,
   setMessages,
 }: {
   messages: GroupMessagesEntity[];
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-}) => {
+}) {
   const [user] = useContext(UserContext);
   return (
     <>
@@ -42,13 +42,13 @@ export const MessageThreadPage = ({
               </>
             )}
             {message.imageURL ? (
-              <MessageThreadImagePage
+              <MessageThreadImage
                 message={message}
                 setMessages={setMessages}
               />
             ) : (
               <>
-                <MessageThreadListPage
+                <MessageThreadList
                   message={message}
                   setMessages={setMessages}
                 />

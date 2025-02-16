@@ -21,13 +21,13 @@ import {
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export const UpdateGroupModal = ({
+export default function UpdateGroupModal({
   isOpen,
   onClose,
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
-}) => {
+}) {
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -158,4 +158,4 @@ export const UpdateGroupModal = ({
       </Dialog>
     </>
   );
-};
+}

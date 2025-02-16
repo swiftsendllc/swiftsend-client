@@ -1,9 +1,9 @@
-import Groups from "./components/Groups";
+import GroupsPage from "./components/Groups";
 
-export default function GroupsPage() {
+export default function Groups() {
   return (
     <>
-      <Groups />
+      <GroupsPage />
     </>
   );
 }

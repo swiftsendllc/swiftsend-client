@@ -16,13 +16,13 @@ import Image from "next/image";
 import { useContext, useState } from "react";
 import MessageInfoModal from "./MessageInfoModal";
 
-export const MessageThreadImagePage = ({
+export default function MessageThreadImage({
   setMessages,
   message,
 }: {
   message: GroupMessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-}) => {
+}) {
   const [user] = useContext(UserContext);
   const isUser = user.userId === message.senderId;
   const [messageInfoModal, setMessageInfoModal] = useState<boolean>(false);
@@ -72,4 +72,4 @@ export const MessageThreadImagePage = ({
       />
     </>
   );
-};
+}

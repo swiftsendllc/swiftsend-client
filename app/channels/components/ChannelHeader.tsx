@@ -5,7 +5,11 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Avatar, Fab, Stack, TextField } from "@mui/material";
 
-export const ChannelHeaderPage = ({ user }: { user: UserProfilesEntity }) => {
+export default function ChannelHeader({
+  user,
+}: {
+  user: UserProfilesEntity;
+}) {
   return (
     <>
       <Stack
@@ -49,4 +53,4 @@ export const ChannelHeaderPage = ({ user }: { user: UserProfilesEntity }) => {
       </Stack>
     </>
   );
-};
+}

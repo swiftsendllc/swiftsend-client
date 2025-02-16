@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { InfoChannelDrawer } from "./InfoChannelDrawer";
-export const ChatHeaderPage = ({
+export default function ChatHeader({
   channel,
   loading,
   messages,
@@ -47,7 +47,7 @@ export const ChatHeaderPage = ({
   setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
-}) => {
+}) {
   const [infoChannelDrawer, setInfoChannelDrawer] = useState(false);
   const router = useRouter();
   const { deleteMessages } = useMessageAPI();
@@ -179,4 +179,4 @@ export const ChatHeaderPage = ({
       />
     </Box>
   );
-};
+}

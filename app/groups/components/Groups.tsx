@@ -7,10 +7,10 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Container, Divider, Stack, Tab, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
-import { GroupHeaderPage } from "./GroupHeader";
-import { GroupsListPage } from "./GroupsList";
+import GroupsList from "./GroupsList";
+import GroupHeader from "./GroupHeader";
 
-export default function Groups() {
+export default function GroupsPage() {
   const [user] = useContext(UserContext);
   const [groups] = useContext(GroupsContext);
   const [value, setValue] = useState<string>("3");
@@ -24,7 +24,7 @@ export default function Groups() {
   return (
     <>
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mb: 5, mt: 2 }}>
-        <GroupHeaderPage user={user} />
+        <GroupHeader user={user} />
         <Divider sx={{ mt: 1 }} />
         <TabContext value={value}>
           <Stack direction="row" spacing={1}>
@@ -49,7 +49,7 @@ export default function Groups() {
                 <Typography>YOUR GROUPS WILL APPEAR HERE!</Typography>
               </Stack>
             ) : (
-              <GroupsListPage
+              <GroupsList
                 setSelectedGroup={setSelectedGroup}
                 groups={groups}
               />

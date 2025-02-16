@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export const MembersDrawerPage = ({
+export default function MembersDrawerPage({
   isOpen,
   onClose,
   group,
@@ -23,7 +23,7 @@ export const MembersDrawerPage = ({
   isOpen: boolean;
   onClose?: () => unknown;
   group: GroupsEntity;
-}) => {
+}) {
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
@@ -105,4 +105,4 @@ export const MembersDrawerPage = ({
       </Container>
     </>
   );
-};
+}
