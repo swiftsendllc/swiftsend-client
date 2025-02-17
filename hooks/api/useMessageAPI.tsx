@@ -334,10 +334,10 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const addMemberToGroup = async (groupId: string, receiversId: string) => {
+  const addMemberToGroup = async (groupId: string, memberId: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV('NEXT_PUBLIC_API_URL')}/groups/add/${groupId}/${receiversId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/add/${groupId}/${memberId}`,
       {
         method: 'PUT',
         headers: {

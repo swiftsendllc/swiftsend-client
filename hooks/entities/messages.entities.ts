@@ -1,4 +1,4 @@
-import { UserProfilesEntity } from "./users.entities";
+import { UserProfilesEntity } from './users.entities';
 
 export interface ChannelsEntity {
   _id: string;
@@ -101,7 +101,7 @@ export interface GroupCreateInput {
   groupAvatar: string | null;
 }
 export interface GroupReactionsEntity {
-  _id:string
+  _id: string;
   reaction: string;
   messageId: string;
   senderId: string;

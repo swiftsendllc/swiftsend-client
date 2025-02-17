@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import useAPI from "@/hooks/api/useAPI";
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import DescriptionIcon from "@mui/icons-material/Description";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { LoadingButton } from "@mui/lab";
+import useAPI from '@/hooks/api/useAPI';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { GroupsEntity } from '@/hooks/entities/messages.entities';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import DescriptionIcon from '@mui/icons-material/Description';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Button,
@@ -17,43 +18,45 @@ import {
   Divider,
   FormControl,
   Stack,
-  TextField,
-} from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+  TextField
+} from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function GroupCreateModal({
   isOpen,
   onClose,
+  onCreate
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
+  onCreate: (grp: GroupsEntity) => unknown;
 }) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [loading, setLoading] = useState<boolean>(false);
   const { createGroup } = useMessageAPI();
-  const [groupName, setGroupName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [groupName, setGroupName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [file, setFile] = useState<File>();
   const { uploadFile } = useAPI();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [groupAvatar, setGroupAvatar] = useState<string>("");
+  const [groupAvatar, setGroupAvatar] = useState<string>('');
 
   const handleClose = () => {
     setOpen(false);
     onClose?.();
     setFile(undefined);
-    setGroupName("");
-    setGroupAvatar("");
-    setDescription("");
+    setGroupName('');
+    setGroupAvatar('');
+    setDescription('');
   };
 
   const handleUpload = async () => {
     if (!file) return null;
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
       const { url } = await uploadFile(formData);
       return url;
     } catch {
@@ -67,17 +70,18 @@ export default function GroupCreateModal({
       const url = await handleUpload();
       if (url) setGroupAvatar(url);
 
-      await createGroup({
+      const group = await createGroup({
         groupName: groupName,
         description: description,
-        groupAvatar: url ?? null,
+        groupAvatar: url ?? null
       });
+      onCreate(group);
 
-      toast.success("SUCCESSFULLY CREATED GROUP");
+      toast.success('SUCCESSFULLY CREATED GROUP');
       onClose?.();
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO CREATE GROUP!");
+      toast.error('FAILED TO CREATE GROUP!');
     } finally {
       setLoading(false);
     }
@@ -94,8 +98,8 @@ export default function GroupCreateModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         aria-describedby="dialog-open-modal"
       >
@@ -119,14 +123,14 @@ export default function GroupCreateModal({
                 variant="standard"
                 value={groupName}
                 onChange={(event) => {
-                  setGroupName(event.target.value || "");
+                  setGroupName(event.target.value || '');
                 }}
                 slotProps={{
                   input: {
                     startAdornment: (
                       <DriveFileRenameOutlineIcon sx={{ padding: 1 }} />
-                    ),
-                  },
+                    )
+                  }
                 }}
                 sx={{ mb: 1.5 }}
               />
@@ -165,8 +169,8 @@ export default function GroupCreateModal({
               value={description}
               slotProps={{
                 input: {
-                  startAdornment: <DescriptionIcon sx={{ padding: 1 }} />,
-                },
+                  startAdornment: <DescriptionIcon sx={{ padding: 1 }} />
+                }
               }}
               onChange={(event) => {
                 event.preventDefault();
