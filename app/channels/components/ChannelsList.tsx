@@ -6,6 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { Avatar, Button, Card, CardHeader } from '@mui/material';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import AddToGroupModal from './AddToGroupModal';
 
 export default function ChannelsList({
   channels
@@ -13,21 +15,23 @@ export default function ChannelsList({
   channels: ChannelsEntity[];
 }) {
   const router = useRouter();
+  const [addToGroupModal, setAddToGroupModal] = useState<boolean>(false);
+  const [memberId, setMemberId] = useState<string>('');
   return (
     <>
-      {channels.map((channelUser, idx) => (
+      {channels.map((channel, idx) => (
         <Card
           key={idx}
           sx={{ mb: 0.3, width: '100%', p: 0 }}
           onClick={() => {
-            router.push(`/channels/${channelUser._id}`);
+            router.push(`/channels/${channel._id}`);
           }}
         >
           <CardHeader
             avatar={
               <>
                 <StyledBadge
-                  isOnline={channelUser.receiver.isOnline}
+                  isOnline={channel.receiver.isOnline}
                   overlap="circular"
                   anchorOrigin={{
                     vertical: 'bottom',
@@ -38,8 +42,8 @@ export default function ChannelsList({
                 >
                   <Avatar
                     aria-label="recipe"
-                    src={channelUser.receiver.avatarURL}
-                    alt={channelUser.receiver.fullName}
+                    src={channel.receiver.avatarURL}
+                    alt={channel.receiver.fullName}
                   />
                 </StyledBadge>
               </>
@@ -49,31 +53,41 @@ export default function ChannelsList({
                 sx={{ height: 20, fontWeight: 200 }}
                 aria-label="settings"
                 variant="text"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setMemberId(channel.receiver.userId);
+                  setAddToGroupModal(true);
+                }}
               >
                 <AddIcon />
               </Button>
             }
-            title={channelUser.receiver.fullName}
+            title={channel.receiver.fullName}
             subheader={
-              channelUser.lastMessage?.imageURL
+              channel.lastMessage?.imageURL
                 ? 'Image'
-                : channelUser.lastMessage?.deleted
+                : channel.lastMessage?.deleted
                   ? 'This message was deleted'
-                  : channelUser.lastMessage?.edited
+                  : channel.lastMessage?.edited
                     ? `${
-                        channelUser.lastMessage.message.slice(0, 10) || ''
-                      }... • ${moment(channelUser.lastMessage.editedAt).format(
+                        channel.lastMessage.message.slice(0, 10) || ''
+                      }... • ${moment(channel.lastMessage.editedAt).format(
                         'hh:mm A'
                       )}`
                     : `${
-                        channelUser.lastMessage?.message.slice(0, 10) || ''
+                        channel.lastMessage?.message.slice(0, 10) || ''
                       }... • ${moment(
-                        channelUser.lastMessage?.createdAt
+                        channel.lastMessage?.createdAt
                       ).format('hh:mm A')}`
             }
           />
         </Card>
       ))}
+      <AddToGroupModal
+        isOpen={addToGroupModal}
+        onClose={() => setAddToGroupModal(false)}
+        memberId={memberId}
+      />
     </>
   );
 }

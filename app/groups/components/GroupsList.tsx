@@ -8,10 +8,8 @@ import React from "react";
 
 export default function GroupsList({
   groups,
-  setSelectedGroup,
 }: {
   groups: GroupsEntity[];
-  setSelectedGroup: React.Dispatch<React.SetStateAction<GroupsEntity | null>>;
 }) {
   const router = useRouter();
 
@@ -22,7 +20,6 @@ export default function GroupsList({
           key={idx}
           sx={{ mb: 0.3, width: "100%", p: 0 }}
           onClick={() => {
-            setSelectedGroup(group);
             router.push(`/groups/${group._id}`);
           }}
         >

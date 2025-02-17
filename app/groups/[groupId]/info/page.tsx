@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { GroupContext } from "@/hooks/context/group-context";
+import { GroupContext } from '@/hooks/context/group-context';
 import {
   ArrowBackOutlined,
   CameraAlt,
   DeleteForeverTwoTone,
-  LogoutOutlined,
-} from "@mui/icons-material";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import ImageIcon from "@mui/icons-material/Image";
+  LogoutOutlined
+} from '@mui/icons-material';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import ImageIcon from '@mui/icons-material/Image';
 
-import useAPI from "@/hooks/api/useAPI";
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { UserContext } from "@/hooks/context/user-context";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import useAPI from '@/hooks/api/useAPI';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { UserContext } from '@/hooks/context/user-context';
+import { UserProfilesEntity } from '@/hooks/entities/users.entities';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {
   Avatar,
   Badge,
@@ -31,18 +31,18 @@ import {
   ListItemText,
   Paper,
   Stack,
-  Typography,
-} from "@mui/material";
-import moment from "moment";
-import { useRouter } from "next/navigation";
-import { useContext, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import DeleteGroupModal from "./components/DeleteGroupModal";
-import MemberInfoModal from "./components/MemberInfoModal";
-import UpdateGroupModal from "./components/UpdateGroupModal";
+  Typography
+} from '@mui/material';
+import moment from 'moment';
+import { useRouter } from 'next/navigation';
+import { useContext, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import DeleteGroupModal from './components/DeleteGroupModal';
+import MemberInfoModal from './components/MemberInfoModal';
+import UpdateGroupModal from './components/UpdateGroupModal';
 
 export default function GroupInfoPage() {
-  const [group] = useContext(GroupContext);
+  const [group, setGroups] = useContext(GroupContext);
   const [creator] = useContext(UserContext);
   const router = useRouter();
   const { uploadFile } = useAPI();
@@ -57,12 +57,15 @@ export default function GroupInfoPage() {
   const handleUpload = async (file: File) => {
     try {
       const formdata = new FormData();
-      formdata.append("file", file);
+      formdata.append('file', file);
+
       const { url } = await uploadFile(formdata);
       await updateGroup(group._id, { groupAvatar: url });
+
+      setGroups((prev) => ({ ...prev, groupAvatar: url }));
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO UPLOAD!");
+      toast.error('FAILED TO UPLOAD!');
     }
   };
 
@@ -85,10 +88,10 @@ export default function GroupInfoPage() {
             <AdminPanelSettingsIcon
               color={
                 group.admin === creator.userId
-                  ? "info"
+                  ? 'info'
                   : group.moderators.includes(creator.userId)
-                  ? "warning"
-                  : "primary"
+                    ? 'warning'
+                    : 'primary'
               }
             />
           </IconButton>
@@ -97,7 +100,7 @@ export default function GroupInfoPage() {
         <Box mt={1}>
           <Badge
             overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             badgeContent={
               <>
                 <IconButton
@@ -218,7 +221,7 @@ export default function GroupInfoPage() {
                     alignItems="center"
                   >
                     <Typography color="text.secondary">
-                      Transfer leadership{" "}
+                      Transfer leadership{' '}
                     </Typography>
                     <Typography>
                       <KeyboardArrowRightIcon />
@@ -235,7 +238,7 @@ export default function GroupInfoPage() {
         <Box>
           {group.members.map((member, idx) => (
             <List key={idx}>
-              <Paper elevation={3} sx={{ backgroundColor: "InfoText" }}>
+              <Paper elevation={3} sx={{ backgroundColor: 'InfoText' }}>
                 <ListItemButton
                   onClick={() => {
                     if (group.admin === creator.userId) {
@@ -303,24 +306,67 @@ export default function GroupInfoPage() {
         <Box>
           <Divider />
           <Typography color="info">
-            {" "}
-            Created at {moment(group.createdAt).format("LT L")}
+            {' '}
+            Created at {moment(group.createdAt).format('LT L')}
           </Typography>
           <Typography color="info">
-            {" "}
+            {' '}
             Created by {group.admin === creator.userId && creator.fullName}
           </Typography>
         </Box>
         <UpdateGroupModal
           isOpen={updateGroupOpen}
           onClose={() => setUpdateGroupOpen(false)}
+          onUpdate={(grp) =>
+            setGroups((prev) => ({
+              ...prev,
+              groupName: grp.groupName,
+              description: grp.description
+            }))
+          }
         />
-        <MemberInfoModal
-          isOpen={memberInfoOpen}
-          onClose={() => setMemberInfoOpen(false)}
-          group={group}
-          selectedMember={selectedMember as UserProfilesEntity}
-        />
+        {selectedMember && (
+          <MemberInfoModal
+            isOpen={memberInfoOpen}
+            onClose={() => setMemberInfoOpen(false)}
+            group={group}
+            onPromote={() =>
+              /*
+                setGroups((prev) => {
+                const newModerator = [...prev.moderators]; // creates a shallow copy of the array
+                if (selectedMember) newModerator.push(selectedMember.userId);
+                return {
+                  ...prev,
+                  moderators: newModerator
+                };
+              })
+              */
+
+              setGroups((prev) => ({
+                ...prev,
+                moderators: [...prev.moderators, selectedMember.userId]
+              }))
+            }
+            onDelete={() =>
+              setGroups((prev) => ({
+                ...prev,
+                members: prev.members.filter(
+                  (member) => member.userId !== selectedMember.userId
+                )
+              }))
+            }
+            onDemote={() =>
+              setGroups((prev) => ({
+                ...prev,
+                moderators: prev.moderators.filter(
+                  (memberId) => memberId !== selectedMember.userId
+                )
+              }))
+            }
+            selectedMember={selectedMember as UserProfilesEntity}
+          />
+        )}
+
         <DeleteGroupModal
           group={group}
           isOpen={deleteGroupOpen}

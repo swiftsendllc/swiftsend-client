@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
-import { GroupsContext } from "@/hooks/context/groups-context";
-import { UserContext } from "@/hooks/context/user-context";
-import { GroupsEntity } from "@/hooks/entities/messages.entities";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Container, Divider, Stack, Tab, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import GroupsList from "./GroupsList";
-import GroupHeader from "./GroupHeader";
+import { GroupsContext } from '@/hooks/context/groups-context';
+import { UserContext } from '@/hooks/context/user-context';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Container, Divider, Stack, Tab, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useContext, useState } from 'react';
+import GroupHeader from './GroupHeader';
+import GroupsList from './GroupsList';
 
 export default function GroupsPage() {
   const [user] = useContext(UserContext);
-  const [groups] = useContext(GroupsContext);
-  const [value, setValue] = useState<string>("3");
-  const [, setSelectedGroup] = useState<GroupsEntity | null>(null);
+  const [groups, setGroups] = useContext(GroupsContext);
+  const [value, setValue] = useState<string>('3');
   const router = useRouter();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -24,7 +22,7 @@ export default function GroupsPage() {
   return (
     <>
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mb: 5, mt: 2 }}>
-        <GroupHeader user={user} />
+        <GroupHeader user={user} setGroups={setGroups} />
         <Divider sx={{ mt: 1 }} />
         <TabContext value={value}>
           <Stack direction="row" spacing={1}>
@@ -32,7 +30,7 @@ export default function GroupsPage() {
               <Tab
                 label="Chats "
                 value="2"
-                onClick={() => router.push("/channels")}
+                onClick={() => router.push('/channels')}
               />
               <Tab label="Groups " value="3" />
             </TabList>
@@ -43,16 +41,13 @@ export default function GroupsPage() {
                 alignContent="center"
                 alignItems="center"
                 justifyContent="center"
-                sx={{ height: "100vh" }}
+                sx={{ height: '100vh' }}
                 overflow="hidden"
               >
                 <Typography>YOUR GROUPS WILL APPEAR HERE!</Typography>
               </Stack>
             ) : (
-              <GroupsList
-                setSelectedGroup={setSelectedGroup}
-                groups={groups}
-              />
+              <GroupsList groups={groups} />
             )}
           </TabPanel>
         </TabContext>

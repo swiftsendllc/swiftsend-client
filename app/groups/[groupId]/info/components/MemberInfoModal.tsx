@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { GroupsEntity } from "@/hooks/entities/messages.entities";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
-import { LoadingButton } from "@mui/lab";
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { GroupsEntity } from '@/hooks/entities/messages.entities';
+import { UserProfilesEntity } from '@/hooks/entities/users.entities';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Box,
@@ -21,21 +21,27 @@ import {
   ListItemText,
   Paper,
   Stack,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function MemberInfoModal({
   group,
   isOpen,
   onClose,
   selectedMember,
+  onDelete,
+  onDemote,
+  onPromote
 }: {
   group: GroupsEntity;
   isOpen: boolean;
   onClose?: () => unknown;
   selectedMember: UserProfilesEntity;
+  onDelete: () => unknown;
+  onDemote: () => unknown;
+  onPromote: () => unknown;
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(isOpen);
@@ -43,7 +49,7 @@ export default function MemberInfoModal({
   const {
     updateMemberToModerator,
     kickMemberFromGroup,
-    demoteModeratorToMember,
+    demoteModeratorToMember
   } = useMessageAPI();
   const handleClose = () => {
     setOpen(false);
@@ -54,11 +60,12 @@ export default function MemberInfoModal({
     setLoading(true);
     try {
       await updateMemberToModerator(group._id, memberId);
+      onPromote()
       handleClose();
-      toast.success("UPGRADED TO MODERATOR");
+      toast.success('UPGRADED TO MODERATOR');
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO UPGRADE!");
+      toast.error('FAILED TO UPGRADE!');
     } finally {
       setLoading(false);
     }
@@ -67,28 +74,30 @@ export default function MemberInfoModal({
   const handleDemoteModeratorToMember = async (memberId: string) => {
     try {
       await demoteModeratorToMember(group._id, memberId);
+      onDemote();
       handleClose();
-      toast.success("DEMOTED");
+      toast.success('DEMOTED');
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO DEMOTE!");
+      toast.error('FAILED TO DEMOTE!');
     }
   };
 
   const handleKickMember = async (memberId: string) => {
     try {
       await kickMemberFromGroup(group._id, memberId);
+      onDelete();
       handleClose();
-      toast.success("KICKED IN THE ASS 🍑 ");
+      toast.success('KICKED IN THE ASS 🍑 ');
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO KICK");
+      toast.error('FAILED TO KICK');
     }
   };
 
   return (
     <>
-      {group.moderators.includes(selectedMember?.userId) ? (
+      {group.moderators.includes(selectedMember.userId) ? (
         <Dialog
           fullWidth
           keepMounted
@@ -98,8 +107,8 @@ export default function MemberInfoModal({
           PaperProps={{
             style: {
               margin: 0,
-              width: "100%",
-            },
+              width: '100%'
+            }
           }}
           aria-describedby="dialog-open-modal"
         >
@@ -114,14 +123,14 @@ export default function MemberInfoModal({
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                SHOW {selectedMember?.fullName}, WHO IS THE JUDGE
+                SHOW {selectedMember.fullName}, WHO IS THE JUDGE
               </DialogContentText>
               <Paper elevation={3}>
                 <ListItemButton>
                   <ListItemIcon>
                     <Avatar
-                      src={selectedMember?.avatarURL}
-                      alt={selectedMember?.avatarURL}
+                      src={selectedMember.avatarURL}
+                      alt={selectedMember.avatarURL}
                     />
                   </ListItemIcon>
                   <ListItemText>
@@ -131,7 +140,7 @@ export default function MemberInfoModal({
                       alignContent="center"
                       alignItems="center"
                     >
-                      <Typography>{selectedMember?.fullName}</Typography>
+                      <Typography>{selectedMember.fullName}</Typography>
                       <Box
                         display="flex"
                         alignContent="center"
@@ -176,8 +185,8 @@ export default function MemberInfoModal({
           PaperProps={{
             style: {
               margin: 0,
-              width: "100%",
-            },
+              width: '100%'
+            }
           }}
           aria-describedby="dialog-open-modal"
         >
@@ -192,14 +201,14 @@ export default function MemberInfoModal({
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Share your workload with {selectedMember?.fullName}
+                Share your workload with {selectedMember.fullName}
               </DialogContentText>
               <Paper elevation={3}>
                 <ListItemButton>
                   <ListItemIcon>
                     <Avatar
-                      src={selectedMember?.avatarURL}
-                      alt={selectedMember?.avatarURL}
+                      src={selectedMember.avatarURL}
+                      alt={selectedMember.avatarURL}
                     />
                   </ListItemIcon>
                   <ListItemText>
@@ -209,7 +218,7 @@ export default function MemberInfoModal({
                       alignContent="center"
                       alignItems="center"
                     >
-                      <Typography>{selectedMember?.fullName}</Typography>
+                      <Typography>{selectedMember.fullName}</Typography>
                       <Box
                         display="flex"
                         alignContent="center"

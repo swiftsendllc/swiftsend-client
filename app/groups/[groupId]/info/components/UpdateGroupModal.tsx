@@ -1,10 +1,11 @@
-"use client";
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { GroupContext } from "@/hooks/context/group-context";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import DescriptionIcon from "@mui/icons-material/Description";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { LoadingButton } from "@mui/lab";
+'use client';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { GroupContext } from '@/hooks/context/group-context';
+import { GroupsEntity } from '@/hooks/entities/messages.entities';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import DescriptionIcon from '@mui/icons-material/Description';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Button,
@@ -16,17 +17,19 @@ import {
   Divider,
   FormControl,
   Stack,
-  TextField,
-} from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  TextField
+} from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function UpdateGroupModal({
   isOpen,
   onClose,
+  onUpdate
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
+  onUpdate: (grp: GroupsEntity) => unknown;
 }) {
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -52,16 +55,16 @@ export default function UpdateGroupModal({
   const handleChange = async () => {
     setLoading(true);
     try {
-      await updateGroup(group._id, {
+      const updatedGroup = await updateGroup(group._id, {
         groupName,
         description,
-        groupAvatar,
+        groupAvatar
       });
-
+      onUpdate(updatedGroup);
       handleClose();
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO UPDATE!");
+      toast.error('FAILED TO UPDATE!');
     } finally {
       setLoading(false);
     }
@@ -78,8 +81,8 @@ export default function UpdateGroupModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         aria-describedby="dialog-open-modal"
       >
@@ -109,8 +112,8 @@ export default function UpdateGroupModal({
                   input: {
                     startAdornment: (
                       <DriveFileRenameOutlineIcon sx={{ padding: 1 }} />
-                    ),
-                  },
+                    )
+                  }
                 }}
                 sx={{ mb: 1.5 }}
               />
@@ -134,8 +137,8 @@ export default function UpdateGroupModal({
               value={description}
               slotProps={{
                 input: {
-                  startAdornment: <DescriptionIcon sx={{ padding: 1 }} />,
-                },
+                  startAdornment: <DescriptionIcon sx={{ padding: 1 }} />
+                }
               }}
               onChange={(event) => {
                 event.preventDefault();
