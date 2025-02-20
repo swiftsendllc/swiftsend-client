@@ -28,12 +28,14 @@ export default function InfoMessageDrawer({
   isOpen,
   onClose,
   message,
-  setMessages
+  onEdit,
+  onDelete
 }: {
+  onDelete: () => unknown;
+  onEdit: (edited_message: string) => unknown;
   isOpen: boolean;
   onClose?: () => unknown;
   message: MessagesEntity;
-  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -55,13 +57,7 @@ export default function InfoMessageDrawer({
   const handleDelete = async () => {
     try {
       await deleteMessage(message._id);
-      setMessages((pre) =>
-        pre.map((msg) =>
-          msg._id === message._id
-            ? { ...msg, deleted: true, deletedAt: new Date() }
-            : msg
-        )
-      );
+      onDelete();
       handleClose();
       toast.success('DELETED');
     } catch (error) {
@@ -73,18 +69,7 @@ export default function InfoMessageDrawer({
   const handleEdit = async () => {
     try {
       await editMessage(message._id, { message: editedMessage });
-      setMessages((pre) =>
-        pre.map((msg) =>
-          msg._id === message._id
-            ? {
-                ...msg,
-                message: editedMessage,
-                edited: true,
-                editedAt: new Date()
-              }
-            : msg
-        )
-      );
+      onEdit(editedMessage);
       handleClose();
       toast.success('EDITED');
     } catch (error) {

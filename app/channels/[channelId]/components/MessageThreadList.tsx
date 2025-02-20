@@ -7,6 +7,7 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 
+import useMessageAPI from '@/hooks/api/useMessageAPI';
 import {
   Box,
   Checkbox,
@@ -18,10 +19,9 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 import InfoMessageDrawer from './InfoMessageDrawer';
 import MessageReaction from './MessageReaction';
-import useMessageAPI from '@/hooks/api/useMessageAPI';
-import toast from 'react-hot-toast';
 
 export default function MessageThreadList({
   idx,
@@ -29,7 +29,7 @@ export default function MessageThreadList({
   checkBox,
   selectedMessageIds,
   onToggleCheckBox,
-  setMessages,
+  setMessages
 }: {
   idx: number;
   message: MessagesEntity;
@@ -187,13 +187,43 @@ export default function MessageThreadList({
           isOpen={infoMessageDrawer}
           onClose={() => setInfoMessageDrawer(false)}
           message={message}
-          setMessages={setMessages}
+          onDelete={() =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? { ...msg, deleted: true, deletedAt: new Date() }
+                  : msg
+              )
+            )
+          }
+          onEdit={(edited_message) =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? {
+                      ...msg,
+                      message: edited_message,
+                      edited: true,
+                      editedAt: new Date()
+                    }
+                  : msg
+              )
+            )
+          }
         />
         <MessageReaction
           isOpen={emojiDrawer}
           onClose={() => setEmojiDrawer(false)}
           message={message}
-          setMessages={setMessages}
+          onReaction={(reaction) =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? { ...msg, reactions: [...msg.reactions, reaction] }
+                  : msg
+              )
+            )
+          }
         />
       </ListItemButton>
     </>

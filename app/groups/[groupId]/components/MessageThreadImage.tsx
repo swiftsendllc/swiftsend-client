@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
-import EditIcon from "@mui/icons-material/Edit";
+import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   Chip,
   IconButton,
   ImageListItem,
   Stack,
-  Typography,
-} from "@mui/material";
-import moment from "moment";
+  Typography
+} from '@mui/material';
+import moment from 'moment';
 
-import { UserContext } from "@/hooks/context/user-context";
-import Image from "next/image";
-import { useContext, useState } from "react";
-import MessageInfoModal from "./MessageInfoModal";
+import { UserContext } from '@/hooks/context/user-context';
+import Image from 'next/image';
+import { useContext, useState } from 'react';
+import MessageInfoModal from './MessageInfoModal';
 
 export default function MessageThreadImage({
   setMessages,
-  message,
+  message
 }: {
   message: GroupMessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
@@ -46,10 +46,10 @@ export default function MessageThreadImage({
                     .fromNow()
                     .toLocaleUpperCase()} DELETED`
                 : message.edited
-                ? `${moment(message.editedAt)
-                    .fromNow()
-                    .toLocaleUpperCase()} EDITED`
-                : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
+                  ? `${moment(message.editedAt)
+                      .fromNow()
+                      .toLocaleUpperCase()} EDITED`
+                  : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
             </Typography>
           }
           icon={
@@ -65,10 +65,32 @@ export default function MessageThreadImage({
         />
       </Stack>
       <MessageInfoModal
-        setMessages={setMessages}
         isOpen={messageInfoModal}
         onClose={() => setMessageInfoModal(false)}
         message={message}
+        onDelete={() =>
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg._id === message._id
+                ? { ...msg, deleted: true, deletedAt: new Date() }
+                : msg
+            )
+          )
+        }
+        onEdit={(edited_message) =>
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg._id === message._id
+                ? {
+                    ...msg,
+                    edited: true,
+                    editedAt: new Date(),
+                    message: edited_message
+                  }
+                : msg
+            )
+          )
+        }
       />
     </>
   );

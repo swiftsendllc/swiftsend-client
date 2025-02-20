@@ -66,7 +66,7 @@ export interface GroupMessagesEntity {
   senderId: string;
   receiversId: string[];
   groupId: string;
-  message: string | null;
+  message: string ;
   imageURL: string;
   createdAt: Date | null;
   deletedAt: Date | null;

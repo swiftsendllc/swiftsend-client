@@ -17,6 +17,7 @@ export default function ChannelsList({
   const router = useRouter();
   const [addToGroupModal, setAddToGroupModal] = useState<boolean>(false);
   const [memberId, setMemberId] = useState<string>('');
+
   return (
     <>
       {channels.map((channel, idx) => (
@@ -76,9 +77,9 @@ export default function ChannelsList({
                       )}`
                     : `${
                         channel.lastMessage?.message.slice(0, 10) || ''
-                      }... • ${moment(
-                        channel.lastMessage?.createdAt
-                      ).format('hh:mm A')}`
+                      }... • ${moment(channel.lastMessage?.createdAt).format(
+                        'hh:mm A'
+                      )}`
             }
           />
         </Card>

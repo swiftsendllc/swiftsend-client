@@ -58,7 +58,29 @@ export default function MessageThreadImage({
           isOpen={infoMessageDrawer}
           onClose={() => setInfoMessageDrawer(false)}
           message={message}
-          setMessages={setMessages}
+          onDelete={() => {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? { ...msg, deleted: true, deletedAt: new Date() }
+                  : msg
+              )
+            );
+          }}
+          onEdit={(edit_msg) =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? {
+                      ...msg,
+                      message: edit_msg,
+                      edited: true,
+                      editedAt: new Date()
+                    }
+                  : msg
+              )
+            )
+          }
         />
       </Stack>
     </>

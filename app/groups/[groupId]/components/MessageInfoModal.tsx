@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
 import {
   DeleteForeverOutlined,
   EditLocationAlt,
   Forward10Outlined,
-  ReportOffRounded,
-} from "@mui/icons-material";
-import EditIcon from "@mui/icons-material/Edit";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+  ReportOffRounded
+} from '@mui/icons-material';
+import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {
   Button,
   Dialog,
@@ -26,21 +26,23 @@ import {
   Paper,
   Stack,
   TextField,
-  Typography,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function MessageInfoModal({
   isOpen,
   onClose,
   message,
-  setMessages,
+  onDelete,
+  onEdit
 }: {
+  onEdit: (edited_message: string) => unknown;
+  onDelete: () => unknown;
   message: GroupMessagesEntity;
   isOpen: boolean;
   onClose?: () => unknown;
-  setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
 }) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -56,41 +58,24 @@ export default function MessageInfoModal({
   const handleDeleteMessage = async () => {
     try {
       await deleteGroupMessage(message._id);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === message._id
-            ? { ...msg, deleted: true, deletedAt: new Date() }
-            : msg
-        )
-      );
-      toast.success("DELETED");
+      onDelete();
+      toast.success('DELETED');
       handleClose();
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO DELETE MESSAGE!");
+      toast.error('FAILED TO DELETE MESSAGE!');
     }
   };
 
   const handleEditMessage = async () => {
     try {
-      await editGroupMessage(message._id, { message: editedMessage || "" });
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === message._id
-            ? {
-                ...msg,
-                message: editedMessage,
-                edited: true,
-                editedAt: new Date(),
-              }
-            : msg
-        )
-      );
-      toast.success("EDITED");
+      await editGroupMessage(message._id, { message: editedMessage });
+      onEdit(editedMessage);
+      toast.success('EDITED');
       handleClose();
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO EDIT MESSAGE!");
+      toast.error('FAILED TO EDIT MESSAGE!');
     }
   };
 
@@ -102,29 +87,29 @@ export default function MessageInfoModal({
 
   const options = [
     {
-      label: "Delete",
+      label: 'Delete',
       leftIcon: <DeleteForeverOutlined />,
       rightIcon: <KeyboardArrowRightIcon />,
-      action: () => handleDeleteMessage(),
+      action: () => handleDeleteMessage()
     },
     {
-      label: "Edit",
+      label: 'Edit',
       leftIcon: <EditLocationAlt />,
       rightIcon: <KeyboardArrowRightIcon />,
-      action: () => setEditMessageModal(true),
+      action: () => setEditMessageModal(true)
     },
     {
-      label: "Report",
+      label: 'Report',
       leftIcon: <ReportOffRounded />,
       rightIcon: <KeyboardArrowRightIcon />,
-      action: () => undefined,
+      action: () => undefined
     },
     {
-      label: "Forward",
+      label: 'Forward',
       leftIcon: <Forward10Outlined />,
       rightIcon: <KeyboardArrowRightIcon />,
-      action: () => undefined,
-    },
+      action: () => undefined
+    }
   ];
 
   return (
@@ -138,11 +123,11 @@ export default function MessageInfoModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
       >
-        <List sx={{ width: "100%", padding: 0 }}>
+        <List sx={{ width: '100%', padding: 0 }}>
           {options.map((option, idx) => (
             <>
               <Paper elevation={3}>
@@ -178,8 +163,8 @@ export default function MessageInfoModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         aria-describedby="edit-dialog-open"
       >
@@ -206,8 +191,8 @@ export default function MessageInfoModal({
                 }}
                 slotProps={{
                   input: {
-                    startAdornment: <EditIcon />,
-                  },
+                    startAdornment: <EditIcon />
+                  }
                 }}
               />
             </Stack>

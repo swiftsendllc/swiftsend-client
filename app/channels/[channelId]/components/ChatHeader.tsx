@@ -1,17 +1,17 @@
-"use  client";
+'use  client';
 
-import { StyledBadge } from "@/components/SearchComponents";
-import useMessageAPI from "@/hooks/api/useMessageAPI";
+import { StyledBadge } from '@/components/SearchComponents';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
 import {
   ChannelsEntity,
-  MessagesEntity,
-} from "@/hooks/entities/messages.entities";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import SettingsIcon from "@mui/icons-material/Settings";
-import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
+  MessagesEntity
+} from '@/hooks/entities/messages.entities';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import SettingsIcon from '@mui/icons-material/Settings';
+import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import {
   Avatar,
   Box,
@@ -20,13 +20,13 @@ import {
   Container,
   IconButton,
   LinearProgress,
-  Typography,
-} from "@mui/material";
-import moment from "moment";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { InfoChannelDrawer } from "./InfoChannelDrawer";
+  Typography
+} from '@mui/material';
+import moment from 'moment';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { InfoChannelDrawer } from './InfoChannelDrawer';
 export default function ChatHeader({
   channel,
   loading,
@@ -36,14 +36,14 @@ export default function ChatHeader({
   setBackgroundImage,
   selectedMessageIds,
   setSelectedMessageIds,
-  setMessages,
+  onDelete
 }: {
+  onDelete: () => unknown;
   loading: boolean;
   checkBox: boolean;
   channel: ChannelsEntity;
   messages: MessagesEntity[];
   selectedMessageIds: string[];
-  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
   setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -56,38 +56,27 @@ export default function ChatHeader({
   const handleDeleteMessages = async () => {
     try {
       await deleteMessages(selectedMessageIds);
-      setMessages((pre) =>
-        pre.map((msg) =>
-          selectedMessageIds.includes(msg._id)
-            ? {
-                ...msg,
-                messageIds: selectedMessageIds,
-                deleted: true,
-                deletedAt: new Date(),
-              }
-            : msg
-        )
-      );
+      onDelete();
       toast.success(`${selectedMessageIds.length} MARKED AS DELETED`);
       setCheckBox(false);
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO DELETE MESSAGES!");
+      toast.error('FAILED TO DELETE MESSAGES!');
     }
   };
   return (
     <Box
       width="100%"
       sx={{
-        position: "fixed",
+        position: 'fixed',
         zIndex: 8,
         left: 0,
         top: 0,
-        right: 0,
+        right: 0
       }}
     >
       <Container maxWidth="xs" style={{ padding: 0 }}>
-        <Card style={{ width: "100%", padding: 0 }}>
+        <Card style={{ width: '100%', padding: 0 }}>
           <CardHeader
             avatar={
               <>
@@ -98,8 +87,8 @@ export default function ChatHeader({
                   isOnline={channel.receiver.isOnline}
                   overlap="circular"
                   anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
+                    vertical: 'bottom',
+                    horizontal: 'right'
                   }}
                   badgeContent
                   variant="dot"
@@ -120,7 +109,7 @@ export default function ChatHeader({
                   new Date(channel.receiver.lastSeen).getTime() >=
                 24 * 60 * 60 * 1000 ? (
                 ` Seen ${moment(channel.receiver.lastSeen)
-                  .format("LTL")
+                  .format('LTL')
                   .toLocaleUpperCase()}`
               ) : (
                 `LAST SEEN AT ${moment(channel.receiver.lastSeen)
@@ -151,7 +140,7 @@ export default function ChatHeader({
                           handleDeleteMessages();
                         }}
                       >
-                        <DeleteSweepIcon color={l ? "disabled" : "error"} />
+                        <DeleteSweepIcon color={l ? 'disabled' : 'error'} />
                       </IconButton>
 
                       <IconButton
