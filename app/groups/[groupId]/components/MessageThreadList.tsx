@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { UserContext } from "@/hooks/context/user-context";
-import { GroupMessagesEntity } from "@/hooks/entities/messages.entities";
-import AddReactionIcon from "@mui/icons-material/AddReaction";
-import EditIcon from "@mui/icons-material/Edit";
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { UserContext } from '@/hooks/context/user-context';
+import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
+import AddReactionIcon from '@mui/icons-material/AddReaction';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   Box,
   IconButton,
   ListItemButton,
   ListItemText,
   Stack,
-  Typography,
-} from "@mui/material";
-import moment from "moment";
-import React, { useContext, useState } from "react";
-import toast from "react-hot-toast";
-import EmojiModal from "./EmojiModal";
-import MessageInfoModal from "./MessageInfoModal";
+  Typography
+} from '@mui/material';
+import moment from 'moment';
+import React, { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
+import EmojiModal from './EmojiModal';
+import MessageInfoModal from './MessageInfoModal';
 
 export default function MessageThreadList({
   message,
-  setMessages,
+  setMessages
 }: {
   message: GroupMessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
@@ -42,14 +42,14 @@ export default function MessageThreadList({
                 ...msg,
                 reactions: msg.reactions.filter(
                   (reaction) => reaction._id !== reactionId
-                ),
+                )
               }
             : msg
         )
       );
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO DELETE REACTION!");
+      toast.error('FAILED TO DELETE REACTION!');
     }
   };
 
@@ -57,11 +57,11 @@ export default function MessageThreadList({
     <>
       <ListItemButton
         sx={{
-          backgroundColor: isUser ? "#4dabf5" : "#4caf50",
-          borderColor: isUser ? "#4dabf5" : "#4caf50",
-          borderRadius: "10px",
-          maxWidth: "60%",
-          padding: "8px",
+          backgroundColor: isUser ? '#4dabf5' : '#4caf50',
+          borderColor: isUser ? '#4dabf5' : '#4caf50',
+          borderRadius: '10px',
+          maxWidth: '60%',
+          padding: '8px'
         }}
       >
         <ListItemText
@@ -74,8 +74,8 @@ export default function MessageThreadList({
               )}
               <Typography variant="body2" component="span" textAlign="left">
                 {message.deleted && !message.imageURL
-                  ? "THIS MESSAGE IS DELETED"
-                  : message.message || "UNKNOWN MESSAGE"}{" "}
+                  ? 'THIS MESSAGE IS DELETED'
+                  : message.message || 'UNKNOWN MESSAGE'}{' '}
               </Typography>
             </Stack>
           }
@@ -96,12 +96,12 @@ export default function MessageThreadList({
                         .fromNow()
                         .toLocaleUpperCase()} DELETED`
                     : message.edited
-                    ? `${moment(message.editedAt)
-                        .fromNow()
-                        .toLocaleUpperCase()} EDITED`
-                    : `${moment(message.createdAt)
-                        .fromNow()
-                        .toLocaleUpperCase()}`}
+                      ? `${moment(message.editedAt)
+                          .fromNow()
+                          .toLocaleUpperCase()} EDITED`
+                      : `${moment(message.createdAt)
+                          .fromNow()
+                          .toLocaleUpperCase()}`}
                 </Typography>
 
                 <Stack direction="row" justifyContent="right" padding={0}>
@@ -149,16 +149,46 @@ export default function MessageThreadList({
           }
         />
         <MessageInfoModal
-          setMessages={setMessages}
           message={message}
           isOpen={messageInfoModal}
           onClose={() => setMessageInfoModal(false)}
+          onDelete={() =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? { ...msg, deleted: true, deletedAt: new Date() }
+                  : msg
+              )
+            )
+          }
+          onEdit={(edited_message) =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? {
+                      ...msg,
+                      edited: true,
+                      editedAt: new Date(),
+                      message: edited_message
+                    }
+                  : msg
+              )
+            )
+          }
         />
         <EmojiModal
           isOpen={emojiModal}
           onClose={() => setEmojiModal(false)}
           message={message}
-          setMessages={setMessages}
+          onReaction={(newReaction) =>
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === message._id
+                  ? { ...msg, reactions: [...msg.reactions, newReaction] }
+                  : msg
+              )
+            )
+          }
         />
       </ListItemButton>
     </>

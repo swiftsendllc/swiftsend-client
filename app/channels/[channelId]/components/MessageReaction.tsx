@@ -2,7 +2,7 @@
 
 import { reactions } from '@/components/SearchComponents';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
-import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import {
   Dialog,
   DialogContent,
@@ -11,19 +11,19 @@ import {
   ListItemText,
   Paper
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function MessageReaction({
   isOpen,
   onClose,
   message,
-  setMessages
+  onReaction
 }: {
+  onReaction: (reaction: MessageReactionsEntity) => unknown;
   isOpen: boolean;
   onClose?: () => unknown;
   message: MessagesEntity;
-  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
 }) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -40,16 +40,7 @@ export default function MessageReaction({
         messageId: message._id,
         reaction
       });
-      const newReactionData = reactionData;
-      setMessages((prev) =>
-        prev.map((msg) => {
-          if (msg._id === message._id) {
-            const updatedMessageReaction = [...msg.reactions, newReactionData];
-            return { ...msg, reactions: updatedMessageReaction };
-          }
-          return msg;
-        })
-      );
+      onReaction(reactionData);
       handleClose();
       toast.success('REACTED');
     } catch (error) {

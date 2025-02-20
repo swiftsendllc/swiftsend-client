@@ -47,7 +47,7 @@ export default function AddToGroupModal({
   const handleAddMemberToGroup = async (groupId: string, memberId: string) => {
     try {
       await addMemberToGroup(groupId, memberId);
-      handleClose()
+      handleClose();
       toast.success('ADDED TO GROUP');
     } catch (error) {
       console.log(error);
@@ -97,13 +97,25 @@ export default function AddToGroupModal({
                       alignContent={'center'}
                       alignItems={'center'}
                     >
-                      <Typography variant="body2">{group.groupName}</Typography>
+                      <Stack direction={'column'}>
+                        <Typography variant="body2">
+                          {group.groupName}
+                        </Typography>
+
+                        <Typography variant="caption">
+                          {group.description}
+                        </Typography>
+                      </Stack>
+
                       <Button
                         onClick={() =>
                           handleAddMemberToGroup(group._id, memberId)
                         }
+                        disabled={group.participants.includes(memberId)}
                       >
-                        ADD
+                        {group.participants.includes(memberId)
+                          ? 'ADDED'
+                          : 'ADD'}
                       </Button>
                     </Stack>
                   </ListItemText>
