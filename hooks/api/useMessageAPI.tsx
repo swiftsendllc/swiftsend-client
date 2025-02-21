@@ -409,10 +409,11 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const getGroupMessages = async (groupId: string) => {
+  const getGroupMessages = async (groupId: string, query:{offset:number, limit:number}) => {
     const accessToken = getCookie(authCookieKey);
+    const {offset, limit} = query
     const res = await fetch(
-      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/get/${groupId}`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/get/${groupId}?offset=${offset}&limit=${limit}`,
       {
         method: 'GET',
         headers: {

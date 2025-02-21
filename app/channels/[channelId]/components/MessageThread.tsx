@@ -65,7 +65,6 @@ export default function MessageThread({
             ) : (
               <>
                 <MessageThreadList
-                  idx={idx}
                   setSelectedMessageIds={setSelectedMessageIds}
                   message={message}
                   setMessages={setMessages}

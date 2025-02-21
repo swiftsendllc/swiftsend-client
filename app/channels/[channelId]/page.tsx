@@ -148,9 +148,7 @@ export default function MessagePage() {
         )}
         {messages && (
           <MessageInput
-            onMessage={(msg) => {
-              setMessages((prev) => [msg, ...prev]);
-            }}
+            onMessage={(msg) => setMessages((prev) => [msg, ...prev])}
           />
         )}
       </Container>
