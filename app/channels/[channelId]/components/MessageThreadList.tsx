@@ -6,6 +6,7 @@ import { DoneAll } from '@mui/icons-material';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
+import ReplyIcon from '@mui/icons-material/Reply';
 
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import {
@@ -24,14 +25,12 @@ import InfoMessageDrawer from './InfoMessageDrawer';
 import MessageReaction from './MessageReaction';
 
 export default function MessageThreadList({
-  idx,
   message,
   checkBox,
   selectedMessageIds,
   onToggleCheckBox,
   setMessages
 }: {
-  idx: number;
   message: MessagesEntity;
   checkBox: boolean;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
@@ -78,13 +77,6 @@ export default function MessageThreadList({
           padding: '8px'
         }}
       >
-        <Stack
-          key={idx}
-          direction={isUser ? 'row' : 'row-reverse'}
-          display="flex"
-          p={0}
-          m={0}
-        ></Stack>
         <ListItemText
           primary={
             <Stack direction="row-reverse" justifyContent="space-between">
@@ -146,12 +138,17 @@ export default function MessageThreadList({
                       </Box>
                     ))}
                   {!isUser && !message.deleted && (
-                    <IconButton
-                      sx={{ mt: 0 }}
-                      onClick={() => setEmojiDrawer(true)}
-                    >
-                      <AddReactionIcon sx={{ width: 13, height: 13 }} />
-                    </IconButton>
+                    <>
+                      <IconButton
+                        sx={{ mt: 0 }}
+                        onClick={() => setEmojiDrawer(true)}
+                      >
+                        <AddReactionIcon sx={{ width: 13, height: 13 }} />
+                      </IconButton>
+                      <IconButton sx={{ mt: 0 }}>
+                        <ReplyIcon sx={{ width: 13, height: 13 }} />
+                      </IconButton>
+                    </>
                   )}
 
                   {isUser && !message.deleted && (

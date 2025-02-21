@@ -1,24 +1,24 @@
-import { useSocket } from "@/hooks/context/socket-context";
+import { useSocket } from '@/hooks/context/socket-context';
 import {
   GroupMessagesEntity,
-  GroupReactionsEntity,
-} from "@/hooks/entities/messages.entities";
-import React, { useEffect } from "react";
+  GroupReactionsEntity
+} from '@/hooks/entities/messages.entities';
+import React, { useEffect } from 'react';
 
 export const GetSocketMessagesForGroup = ({
-  setMessages,
+  setMessages
 }: {
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
 }) => {
   const { socket } = useSocket();
   useEffect(() => {
-    socket.on("groupMessage", (groupMessage: GroupMessagesEntity) => {
-      console.log("groupMessage received:", groupMessage);
-      setMessages((prev) => [...prev, groupMessage]);
+    socket.on('groupMessage', (groupMessage: GroupMessagesEntity) => {
+      console.log('groupMessage received:', groupMessage);
+      setMessages((prev) => [groupMessage, ...prev]);
     });
 
     socket.on(
-      "group_message_edited",
+      'group_message_edited',
       (editedMessage: {
         message: string;
         edited: boolean;
@@ -32,7 +32,7 @@ export const GetSocketMessagesForGroup = ({
                   ...msg,
                   message: editedMessage.message,
                   editedAt: editedMessage.editedAt,
-                  edited: true,
+                  edited: true
                 }
               : msg
           )
@@ -41,7 +41,7 @@ export const GetSocketMessagesForGroup = ({
     );
 
     socket.on(
-      "group_message_deleted",
+      'group_message_deleted',
       (deletedMessage: {
         _id: string;
         message: string;
@@ -53,9 +53,9 @@ export const GetSocketMessagesForGroup = ({
             msg._id === deletedMessage._id
               ? {
                   ...msg,
-                  message: "",
+                  message: '',
                   deleted: true,
-                  deletedAt: deletedMessage.deletedAt,
+                  deletedAt: deletedMessage.deletedAt
                 }
               : msg
           )
@@ -63,7 +63,7 @@ export const GetSocketMessagesForGroup = ({
       }
     );
 
-    socket.on("group_message_reacted", (reaction: GroupReactionsEntity) => {
+    socket.on('group_message_reacted', (reaction: GroupReactionsEntity) => {
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === reaction.messageId
@@ -74,7 +74,7 @@ export const GetSocketMessagesForGroup = ({
     });
 
     socket.on(
-      "group_reaction_deleted",
+      'group_reaction_deleted',
       (deleteGroupReaction: { userId: string; reactionId: string }) => {
         setMessages((prev) =>
           prev.map((msg) =>
@@ -86,7 +86,7 @@ export const GetSocketMessagesForGroup = ({
                   reactions: msg.reactions.filter(
                     (reaction) =>
                       reaction._id !== deleteGroupReaction.reactionId
-                  ),
+                  )
                 }
               : msg
           )
@@ -95,13 +95,12 @@ export const GetSocketMessagesForGroup = ({
     );
 
     return () => {
-      console.log("Socket disconnected:", socket.id);
-      socket.off("groupMessage");
-      socket.off("group_message_edited");
-      socket.off("group_message_deleted");
-      socket.off("group_message_reacted");
-      socket.off("group_reaction_deleted");
-
+      console.log('Socket disconnected:', socket.id);
+      socket.off('groupMessage');
+      socket.off('group_message_edited');
+      socket.off('group_message_deleted');
+      socket.off('group_message_reacted');
+      socket.off('group_reaction_deleted');
     };
   }, [setMessages]); //eslint-disable-line
 };

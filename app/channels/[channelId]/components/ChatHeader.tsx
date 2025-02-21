@@ -6,6 +6,7 @@ import {
   ChannelsEntity,
   MessagesEntity
 } from '@/hooks/entities/messages.entities';
+import { formatDate } from '@/library/helper';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
@@ -22,7 +23,6 @@ import {
   LinearProgress,
   Typography
 } from '@mui/material';
-import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -101,20 +101,19 @@ export default function ChatHeader({
                 </StyledBadge>
               </>
             }
-            title={channel.receiver.fullName}
+            title={
+              <IconButton
+                sx={{ p: 0, m: 0 }}
+                onClick={() => router.push(`/${channel.receiver.username}`)}
+              >
+                <Typography>{channel.receiver.fullName}</Typography>
+              </IconButton>
+            }
             subheader={
               channel.receiver.isOnline ? (
                 <Typography variant="body2">ONLINE</Typography>
-              ) : new Date().getTime() -
-                  new Date(channel.receiver.lastSeen).getTime() >=
-                24 * 60 * 60 * 1000 ? (
-                ` Seen ${moment(channel.receiver.lastSeen)
-                  .format('LTL')
-                  .toLocaleUpperCase()}`
               ) : (
-                `LAST SEEN AT ${moment(channel.receiver.lastSeen)
-                  .fromNow()
-                  .toLocaleUpperCase()}`
+                formatDate(channel.receiver.lastSeen)
               )
             }
             action={
