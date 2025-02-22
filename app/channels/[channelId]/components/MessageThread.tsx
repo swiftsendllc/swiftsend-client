@@ -1,8 +1,5 @@
 'use client';
-import {
-  ChannelsEntity,
-  MessagesEntity
-} from '@/hooks/entities/messages.entities';
+import { ChannelsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
 
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
@@ -12,13 +9,16 @@ import MessageThreadList from './MessageThreadList';
 
 export default function MessageThread({
   user,
-  channel,
   messages,
   checkBox,
+  channel,
   setMessages,
   selectedMessageIds,
-  setSelectedMessageIds
+  setSelectedMessageIds,
+  setIsReplying,
+  setReplyMessage
 }: {
+  setReplyMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   checkBox: boolean;
   channel: ChannelsEntity;
   user: UserProfilesEntity;
@@ -26,6 +26,7 @@ export default function MessageThread({
   selectedMessageIds: string[];
   setMessages: React.Dispatch<SetStateAction<MessagesEntity[]>>;
   setSelectedMessageIds: React.Dispatch<SetStateAction<string[]>>;
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const handleToggleCheckBox = (messageId: string) => {
     setSelectedMessageIds((prev) => {
@@ -71,6 +72,8 @@ export default function MessageThread({
                   checkBox={checkBox}
                   selectedMessageIds={selectedMessageIds}
                   onToggleCheckBox={() => handleToggleCheckBox(message._id)}
+                  setIsReplying={setIsReplying}
+                  setReplyMessage={setReplyMessage}
                 />
               </>
             )}
