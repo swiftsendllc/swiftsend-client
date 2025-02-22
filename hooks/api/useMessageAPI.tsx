@@ -122,6 +122,31 @@ const useMessageAPI = () => {
     return data;
   };
 
+  const sendMessageReply = async (input: {
+    message: string | null;
+    messageId: string;
+    imageURL:string | null;
+    receiverId:string
+  }) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV('NEXT_PUBLIC_API_URL')}/channels/messages/reply`,
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
   const sendMessageReactions = async (body: {
     messageId: string;
     reaction: string;
@@ -409,9 +434,12 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const getGroupMessages = async (groupId: string, query:{offset:number, limit:number}) => {
+  const getGroupMessages = async (
+    groupId: string,
+    query: { offset: number; limit: number }
+  ) => {
     const accessToken = getCookie(authCookieKey);
-    const {offset, limit} = query
+    const { offset, limit } = query;
     const res = await fetch(
       `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/get/${groupId}?offset=${offset}&limit=${limit}`,
       {
@@ -609,7 +637,8 @@ const useMessageAPI = () => {
     getGroupMedia,
     editGroupMessage,
     sendGroupReaction,
-    deleteGroupReaction
+    deleteGroupReaction,
+    sendMessageReply
   };
 };
 export default useMessageAPI;

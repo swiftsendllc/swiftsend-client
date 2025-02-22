@@ -29,12 +29,22 @@ export interface MessagesEntity {
   createdAt: Date;
   deletedAt: Date;
   editedAt: Date;
-  user: UserProfilesEntity;
+  receiver: UserProfilesEntity;
   deleted: boolean;
   edited: boolean;
   seen: boolean;
+  repliedTo: string;
+  reply: RepliesEntity;
   delivered: boolean;
   reactions: MessageReactionsEntity[];
+}
+export interface RepliesEntity {
+  replierId: string;
+  messageId: string;
+  repliedAt: Date;
+  message: string | null;
+  imageURL: string | null;
+  receiverId: string;
 }
 
 export interface EditMessageInput {
@@ -66,7 +76,7 @@ export interface GroupMessagesEntity {
   senderId: string;
   receiversId: string[];
   groupId: string;
-  message: string ;
+  message: string;
   imageURL: string;
   createdAt: Date | null;
   deletedAt: Date | null;

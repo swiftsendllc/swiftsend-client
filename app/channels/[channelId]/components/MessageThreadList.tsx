@@ -19,7 +19,7 @@ import {
   Typography
 } from '@mui/material';
 import moment from 'moment';
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import InfoMessageDrawer from './InfoMessageDrawer';
 import MessageReaction from './MessageReaction';
@@ -29,14 +29,18 @@ export default function MessageThreadList({
   checkBox,
   selectedMessageIds,
   onToggleCheckBox,
-  setMessages
+  setMessages,
+  setIsReplying,
+  setReplyMessage
 }: {
-  message: MessagesEntity;
   checkBox: boolean;
-  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
-  setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
+  message: MessagesEntity;
   selectedMessageIds: string[];
   onToggleCheckBox: (message: string) => unknown;
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
+  setReplyMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
+  setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const [user] = useContext(UserContext);
   const isUser = user.userId === message.senderId;
@@ -81,7 +85,7 @@ export default function MessageThreadList({
           primary={
             <Stack direction="row-reverse" justifyContent="space-between">
               <Typography variant="body2" component="span" textAlign="left">
-                {message.deleted && !message.imageURL
+                {message.deleted && !message.imageURL && !message.repliedTo
                   ? 'THIS MESSAGE IS DELETED'
                   : message.message || 'UNKNOWN MESSAGE'}{' '}
               </Typography>
@@ -145,7 +149,13 @@ export default function MessageThreadList({
                       >
                         <AddReactionIcon sx={{ width: 13, height: 13 }} />
                       </IconButton>
-                      <IconButton sx={{ mt: 0 }}>
+                      <IconButton
+                        sx={{ mt: 0 }}
+                        onClick={() => {
+                          setReplyMessage(message);
+                          setIsReplying(true);
+                        }}
+                      >
                         <ReplyIcon sx={{ width: 13, height: 13 }} />
                       </IconButton>
                     </>
@@ -180,6 +190,7 @@ export default function MessageThreadList({
             </>
           }
         />
+
         <InfoMessageDrawer
           isOpen={infoMessageDrawer}
           onClose={() => setInfoMessageDrawer(false)}

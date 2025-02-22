@@ -29,6 +29,8 @@ export default function MessagePage() {
   const [backgroundImage, setBackgroundImage] = useState<string | null>('');
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
   GetSocketMessages({ setMessages });
+  const [isReplying, setIsReplying] = useState<boolean>(false);
+  const [replyMessage, setReplyMessage] = useState<MessagesEntity | null>(null);
 
   useEffect(() => {
     const backgroundImageCookie = getCookie('imageURL');
@@ -135,12 +137,14 @@ export default function MessagePage() {
               >
                 <MessageThread
                   user={user}
-                  channel={channel}
                   messages={messages}
                   checkBox={checkBox}
+                  channel={channel}
                   setMessages={setMessages}
                   selectedMessageIds={selectedMessageIds}
                   setSelectedMessageIds={setSelectedMessageIds}
+                  setIsReplying={setIsReplying}
+                  setReplyMessage={setReplyMessage}
                 />
               </InfiniteScroll>
             </List>
@@ -149,6 +153,9 @@ export default function MessagePage() {
         {messages && (
           <MessageInput
             onMessage={(msg) => setMessages((prev) => [msg, ...prev])}
+            replyMessage={replyMessage}
+            isReplying={isReplying}
+            setIsReplying={setIsReplying}
           />
         )}
       </Container>
