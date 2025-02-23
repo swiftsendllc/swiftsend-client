@@ -187,6 +187,15 @@ export default function MessageThreadList({
                   )}
                 </Stack>
               </Stack>
+              {message.repliedMessage && (
+                <Typography
+                  textAlign="left"
+                  fontSize={'0.65rem'}
+                  fontStyle={'italic'}
+                >
+                  Replied on: {message.repliedMessage.message}
+                </Typography>
+              )}
             </>
           }
         />

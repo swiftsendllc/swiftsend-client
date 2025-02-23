@@ -125,12 +125,39 @@ const useMessageAPI = () => {
   const sendMessageReply = async (input: {
     message: string | null;
     messageId: string;
-    imageURL:string | null;
-    receiverId:string
+    imageURL: string | null;
+    receiverId: string;
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
       `${ENV('NEXT_PUBLIC_API_URL')}/channels/messages/reply`,
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const groupMessageReply = async (
+    groupId: string,
+    input: {
+      message: string | null;
+      imageURL: string | null;
+      messageId: string;
+    }
+  ) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(
+      `${ENV('NEXT_PUBLIC_API_URL')}/groups/messages/reply/${groupId}`,
       {
         method: 'POST',
         body: JSON.stringify(input),
@@ -638,7 +665,8 @@ const useMessageAPI = () => {
     editGroupMessage,
     sendGroupReaction,
     deleteGroupReaction,
-    sendMessageReply
+    sendMessageReply,
+    groupMessageReply
   };
 };
 export default useMessageAPI;

@@ -5,7 +5,10 @@ import { UserContext } from '@/hooks/context/user-context';
 import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import EditIcon from '@mui/icons-material/Edit';
+import ReplyIcon from '@mui/icons-material/Reply';
+
 import {
+  Avatar,
   Box,
   IconButton,
   ListItemButton,
@@ -21,10 +24,16 @@ import MessageInfoModal from './MessageInfoModal';
 
 export default function MessageThreadList({
   message,
-  setMessages
+  setMessages,
+  setIsReplying,
+  setReplyMessage
 }: {
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
   message: GroupMessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
+  setReplyMessage: React.Dispatch<
+    React.SetStateAction<GroupMessagesEntity | null>
+  >;
 }) {
   const [user] = useContext(UserContext);
   const isUser = message.senderId === user.userId;
@@ -123,16 +132,27 @@ export default function MessageThreadList({
                       </Box>
                     ))}
                   {!isUser && !message.deleted && (
-                    <IconButton
-                      sx={{ mt: 0, p: 0 }}
-                      onClick={() => {
-                        if (!message.isReacted) {
-                          return setEmojiModal(true);
-                        }
-                      }}
-                    >
-                      <AddReactionIcon sx={{ width: 13, height: 13 }} />
-                    </IconButton>
+                    <>
+                      <IconButton
+                        sx={{ mt: 0, p: 0 }}
+                        onClick={() => {
+                          if (!message.isReacted) {
+                            return setEmojiModal(true);
+                          }
+                        }}
+                      >
+                        <AddReactionIcon sx={{ width: 13, height: 13 }} />
+                      </IconButton>
+                      <IconButton
+                        sx={{ mt: 0 }}
+                        onClick={() => {
+                          setReplyMessage(message);
+                          setIsReplying(true);
+                        }}
+                      >
+                        <ReplyIcon sx={{ width: 13, height: 13 }} />
+                      </IconButton>
+                    </>
                   )}
 
                   {isUser && !message.deleted && (
@@ -145,6 +165,30 @@ export default function MessageThreadList({
                   )}
                 </Stack>
               </Stack>
+              {message.repliedMessage && (
+                <>
+                  <Stack
+                    direction={'row'}
+                    alignContent={'center'}
+                    alignItems={'center'}
+                    spacing={1}
+                  >
+                     <Avatar
+                      src={message.repliedMessageSender.avatarURL}
+                      alt={message.repliedMessageSender.avatarURL}
+                      sx={{ width: 10, height: 10 }}
+                    />
+                    <Typography
+                      textAlign="left"
+                      fontSize={'0.65rem'}
+                      fontStyle={'italic'}
+                    >
+                      Replied on: {message.repliedMessage.message}
+                    </Typography>
+
+                  </Stack>
+                </>
+              )}
             </>
           }
         />

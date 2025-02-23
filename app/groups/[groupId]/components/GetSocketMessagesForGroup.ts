@@ -17,6 +17,10 @@ export const GetSocketMessagesForGroup = ({
       setMessages((prev) => [groupMessage, ...prev]);
     });
 
+    socket.on('groupReplyMessage', (groupReplyMessage: GroupMessagesEntity) => {
+      setMessages((prev) => [groupReplyMessage, ...prev]);
+    });
+
     socket.on(
       'group_message_edited',
       (editedMessage: {
