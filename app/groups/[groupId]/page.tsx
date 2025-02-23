@@ -21,12 +21,14 @@ export default function MessagePage() {
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [messages, setMessages] = useState<GroupMessagesEntity[]>([]);
   GetSocketMessagesForGroup({ setMessages });
+  const [replyMessage, setReplyMessage] = useState<GroupMessagesEntity | null>(null);
+  const [isReplying, setIsReplying] = useState<boolean>(false)
 
   const loadGroupMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
     setLoading(true);
     try {
-      const messages = await getGroupMessages(groupId as string,{
+      const messages = await getGroupMessages(groupId as string, {
         offset,
         limit
       });
@@ -88,12 +90,21 @@ export default function MessagePage() {
             next={loadMoreMessages}
             scrollableTarget="scroll-id"
           >
-            <MessageThread messages={messages} setMessages={setMessages} />
+            <MessageThread
+              messages={messages}
+              setMessages={setMessages}
+              setReplyMessage={setReplyMessage}
+              setIsReplying={setIsReplying}
+            />
           </InfiniteScroll>
         </List>
         {messages && (
           <MessageInputPage
             onSend={(msg) => setMessages((prev) => [msg, ...prev])}
+            isReplying={isReplying}
+            replyMessage={replyMessage}
+            setIsReplying={setIsReplying}
+
           />
         )}
       </Container>

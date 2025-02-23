@@ -34,7 +34,8 @@ export interface MessagesEntity {
   edited: boolean;
   seen: boolean;
   repliedTo: string;
-  reply: RepliesEntity;
+  repliedMessage:MessagesEntity
+  replies: RepliesEntity[];
   delivered: boolean;
   reactions: MessageReactionsEntity[];
 }
@@ -84,6 +85,8 @@ export interface GroupMessagesEntity {
   deleted: boolean;
   edited: boolean;
   sender: UserProfilesEntity;
+  repliedMessage:GroupMessagesEntity
+  repliedMessageSender:UserProfilesEntity
   receivers: UserProfilesEntity[];
   reactions: GroupReactionsEntity[];
   isReacted: boolean;

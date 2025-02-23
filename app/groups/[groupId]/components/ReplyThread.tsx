@@ -1,6 +1,6 @@
 'use client';
 
-import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import { GroupMessagesEntity, } from '@/hooks/entities/messages.entities';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Avatar,
@@ -17,7 +17,7 @@ export default function ReplyThread({
   onClose,
   replyMessage
 }: {
-  replyMessage: MessagesEntity | null;
+  replyMessage: GroupMessagesEntity | null;
   isReplying: boolean;
   onClose?: () => unknown;
 }) {
@@ -48,11 +48,11 @@ export default function ReplyThread({
                 avatar={
                   <Avatar
                     aria-label="recipe"
-                    src={replyMessage.receiver.avatarURL}
-                    alt={replyMessage.receiver.fullName}
+                    src={replyMessage.sender.avatarURL}
+                    alt={replyMessage.sender.fullName}
                   />
                 }
-                title={replyMessage.receiver.fullName}
+                title={replyMessage.sender.fullName}
                 subheader={replyMessage.message}
                 action={
                   <IconButton

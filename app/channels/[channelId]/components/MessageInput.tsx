@@ -28,20 +28,20 @@ export default function MessageInput({
 }: UserMessageInputProps) {
   const { sendMessage, sendMessageReply } = useMessageAPI();
   const [loading, setLoading] = useState(false);
-  const [messageInput, setMessageInput] = useState('');
+  const [messageInput, setMessageInput] = useState<string>('');
   const [channel] = useContext(ChannelContext);
 
-  const [imageURL, setImageURL] = useState('');
+  const [imageURL, setImageURL] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile } = useAPI();
 
   const handleMessage = async () => {
     setLoading(true);
     try {
-      const msg = (await sendMessage({
+      const msg = await sendMessage({
         message: messageInput,
         receiverId: channel.receiver.userId
-      })) as MessagesEntity;
+      });
       setMessageInput('');
       onMessage(msg);
     } catch (error) {
@@ -82,7 +82,7 @@ export default function MessageInput({
         });
         onMessage(reply);
         setIsReplying(false);
-        setMessageInput("")
+        setMessageInput('');
       } catch (error) {
         console.error(error);
         toast.error('FAILED TO REPLY!');
@@ -94,7 +94,7 @@ export default function MessageInput({
       <ReplyThread
         replyMessage={replyMessage}
         isReplying={isReplying}
-        setIsReplying={setIsReplying}
+        onClose={() => setIsReplying(false)}
       />
       <Box
         width="100%"
@@ -112,12 +112,13 @@ export default function MessageInput({
               fullWidth
               variant="outlined"
               placeholder={`Message ${channel.receiver.fullName}`}
-              value={messageInput || ''}
+              value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
-                  handleMessage();
+                  if (messageInput.trim() !== '')
+                    (isReplying ? handleReply : handleMessage)();
                 }
               }}
               slotProps={{
@@ -136,11 +137,7 @@ export default function MessageInput({
                         startIcon={null}
                         disabled={!messageInput}
                         onClick={() => {
-                          if (isReplying) {
-                            handleReply();
-                          } else {
-                            handleMessage();
-                          }
+                          (isReplying ? handleReply : handleMessage)();
                         }}
                       >
                         <SendIcon />
