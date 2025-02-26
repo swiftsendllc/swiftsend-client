@@ -16,6 +16,7 @@ export interface PostsEntity {
   user: UserProfilesEntity;
   comments?: CommentsEntity[];
   saves?: SavesEntity;
+  price:number
 }
 
 export interface CreatePostInput {

@@ -23,3 +23,13 @@ body {
   stroke-width: 5;
   stroke-linecap: round;
 }
+.payment-card {
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  width: 100%;
+  display: table-column;
+  align-items: center;
+  justify-content: space-around;
+}

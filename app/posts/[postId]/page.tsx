@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { PostCard } from "@/app/posts/components/Post";
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity } from "@/hooks/entities/posts.entities";
-import { Container } from "@mui/material";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { PostCard } from '@/app/posts/components/Post';
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { PostsEntity } from '@/hooks/entities/posts.entities';
+import { Container } from '@mui/material';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function SinglePost() {
   const { getPost } = usePostAPI();

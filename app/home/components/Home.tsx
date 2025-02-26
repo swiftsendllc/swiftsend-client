@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity } from "@/hooks/entities/posts.entities";
-import { Container, Divider, LinearProgress, List } from "@mui/material";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { PostCard } from "../../posts/components/Post";
-import { HomeHeaderPage } from "./HomeHeader";
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { PostsEntity } from '@/hooks/entities/posts.entities';
+import { Container, Divider, LinearProgress, List } from '@mui/material';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { PostCard } from '../../posts/components/Post';
+import { HomeHeaderPage } from './HomeHeader';
 
 export default function HomePage() {
   const limit = 10;
@@ -30,14 +30,14 @@ export default function HomePage() {
       }
     } catch (error) {
       console.log(error);
-      toast.success("Loading feed...");
+      toast.success('Loading feed...');
     } finally {
       setLoading(false);
     }
   };
 
   const loadMorePosts = () => {
-    console.log("end");
+    console.log('end');
     if (hasMore && !loading) {
       loadPosts();
     }
@@ -54,19 +54,19 @@ export default function HomePage() {
         <Divider sx={{ mt: 1 }} />
         <List
           sx={{
-            height: "800px",
-            overflowY: "scroll",
-            display: "flex",
-            flexDirection: "column",
-            objectFit: "cover",
+            height: '800px',
+            overflowY: 'scroll',
+            display: 'flex',
+            flexDirection: 'column',
+            objectFit: 'cover'
           }}
           id="scroll-id"
         >
           <InfiniteScroll
             style={{
-              flexDirection: "column",
-              display: "flex",
-              overflow: "hidden",
+              flexDirection: 'column',
+              display: 'flex',
+              overflow: 'hidden'
             }}
             dataLength={posts.length}
             next={loadMorePosts}
