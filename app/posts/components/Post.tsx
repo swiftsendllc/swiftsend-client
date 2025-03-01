@@ -2,7 +2,7 @@
 
 import { CommentInput } from '@/app/comment/components/CommentInput';
 import { CommentStack } from '@/app/comment/components/CommentStack';
-import PaymentModalWrapped from '@/components/PaymentModal';
+import CardFormWrapper from '@/components/PaymentModal';
 import { StyledBadge } from '@/components/SearchComponents';
 import TopBackNav from '@/components/TopBackNav';
 import useAPI from '@/hooks/api/useAPI';
@@ -132,7 +132,7 @@ export const PostCard = ({
 
   return (
     <>
-      <PaymentModalWrapped
+      <CardFormWrapper
         isOpen={paymentPage}
         onClose={() => setPaymentPage(false)}
         post={post}
