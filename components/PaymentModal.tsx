@@ -4,16 +4,15 @@ import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import { LoadingButton } from '@mui/lab';
 import {
-  CardCvcElement,
   CardElement,
-  CardExpiryElement,
-  CardNumberElement,
   Elements,
   useElements,
   useStripe
 } from '@stripe/react-stripe-js';
 
+import { UserContext } from '@/hooks/context/user-context';
 import { ENV } from '@/library/constants';
+import AddCardIcon from '@mui/icons-material/AddCard';
 import {
   Box,
   Dialog,
@@ -21,13 +20,15 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
+  IconButton,
   Radio,
   RadioGroup,
   Typography
 } from '@mui/material';
 import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import AddCardModal from './AddCardModal';
 
 function PaymentModal({
   onClose,
@@ -39,9 +40,12 @@ function PaymentModal({
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { createPayment } = usePaymentAPI();
+  const { createPayment, getCard, attachPaymentMethod, confirmCard } =
+    usePaymentAPI();
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>('');
+  const [cardModal, setCardModal] = useState<boolean>(false);
+  const [user] = useContext(UserContext);
 
   const handleClose = () => {
     onClose?.();
@@ -63,30 +67,58 @@ function PaymentModal({
     }
   };
 
-  const handlePayment = async () => {
-    setLoading(true);
+  const handlePayment = async (event: React.FormEvent) => {
+    event.preventDefault();
     try {
+      setLoading(true);
       if (!stripe || !elements) {
-        console.log('stripe is loading');
+        throw new Error('Payment is still loading.Try again');
       }
-      const { clientSecret } = await createPayment(post.user.userId, {
-        amount: post.price,
-        contentId: post._id,
-        payment_method_type: [paymentMethod]
+
+      const newCard = elements.getElement(CardElement);
+      const { paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: newCard!,
+        metadata: {
+          userId: user.userId,
+          creatorId: post.user.userId,
+          contentId: post._id
+        },
+        billing_details: {
+          name: 'Chris Evans'
+        }
       });
-      const card = elements?.getElement(CardElement);
-      if (stripe && elements && card) {
-        await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card,
-            billing_details: {
-              name: 'Chris Evans'
-            }
-          }
+      const cardData = await getCard();
+
+      const attachPayment = await attachPaymentMethod({
+        paymentMethodId: paymentMethod!.id,
+        customerId: cardData.id!
+      });
+
+      if (attachPayment.nextActionUrl) {
+        await stripe.confirmCardSetup(attachPayment.clientSecret, {
+          payment_method: paymentMethod!.id
         });
       }
-      console.log();
-      toast.success('PURCHASED');
+
+      await confirmCard({
+        paymentMethodId: paymentMethod!.id,
+        customerId: cardData.id!
+      });
+
+      const paymentResponse = await createPayment(post.user.userId, {
+        amount: post.price,
+        contentId: post._id,
+        payment_method: paymentMethod!.id,
+        payment_method_types: ['card']
+      });
+
+      if (paymentResponse.requiresAction) {
+        await stripe.confirmCardPayment(paymentResponse.clientSecret, {
+          payment_method: paymentMethod!.id
+        });
+      }
+      toast.success('Card added');
       handleClose();
     } catch (error) {
       console.error(error);
@@ -98,6 +130,7 @@ function PaymentModal({
 
   return (
     <>
+      <AddCardModal isOpen={cardModal} onClose={() => setCardModal(false)} />
       <Dialog
         open={true}
         onClose={handleClose}
@@ -113,6 +146,9 @@ function PaymentModal({
         aria-describedby="payment-modal-page"
       >
         <DialogTitle>Complete Your Payment</DialogTitle>
+        <IconButton onClick={() => setCardModal(true)} sx={{ m: 0, p: 0 }}>
+          <AddCardIcon />
+        </IconButton>
         <DialogContent>
           <Box component="form" onSubmit={handlePayment} sx={{ mt: 2 }}>
             <Typography variant="subtitle1" gutterBottom>
@@ -134,7 +170,7 @@ function PaymentModal({
                 label="🏦 Debit card"
               />
               <FormControlLabel
-                value="Apple pay"
+                value="apple_pay"
                 control={<Radio />}
                 label="💻 Apple Pay"
               />
@@ -145,35 +181,13 @@ function PaymentModal({
                   p: 2,
                   border: '1px solid #ccd7e2',
                   borderRadius: '4px',
-                  mt: 2,
+                  mt: 2
                 }}
               >
                 <Typography variant="subtitle2" gutterBottom color="primary">
                   Card Number
                 </Typography>
-                <CardNumberElement options={CARD_ELEMENT_OPTIONS} />
-                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography
-                      variant="subtitle2"
-                      gutterBottom
-                      color="primary"
-                    >
-                      Expiration Date
-                    </Typography>
-                    <CardExpiryElement options={CARD_ELEMENT_OPTIONS} />
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography
-                      variant="subtitle2"
-                      gutterBottom
-                      color="primary"
-                    >
-                      Security Code
-                    </Typography>
-                    <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
-                  </Box>
-                </Box>
+                <CardElement options={CARD_ELEMENT_OPTIONS} />
               </Box>
             )}
           </Box>
@@ -190,6 +204,7 @@ function PaymentModal({
             onClick={handlePayment}
             variant="contained"
             sx={{ width: '100%' }}
+            disabled={!(stripe && elements)}
           >
             PAY
           </LoadingButton>

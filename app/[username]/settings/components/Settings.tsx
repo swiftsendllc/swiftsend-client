@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   forProfessionals,
@@ -8,15 +8,15 @@ import {
   payments,
   whatYouSee,
   whoCanSeeYourContent,
-  yourAppAndMedia,
-} from "@/components/SearchComponents";
-import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
+  yourAppAndMedia
+} from '@/components/SearchComponents';
+import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 
-import { UserContext } from "@/hooks/context/user-context";
-import { authCookieKey } from "@/library/constants";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { UserContext } from '@/hooks/context/user-context';
+import { authCookieKey } from '@/library/constants';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import {
   Autocomplete,
@@ -28,26 +28,28 @@ import {
   ListItemText,
   Stack,
   TextField,
-  Typography,
-} from "@mui/material";
-import { deleteCookie } from "cookies-next";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+  Typography
+} from '@mui/material';
+import { deleteCookie } from 'cookies-next';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-import Image from "next/image";
-import { useContext, useState } from "react";
-import toast from "react-hot-toast";
+import AddCardModal from '@/components/AddCardModal';
+import Image from 'next/image';
+import { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const minWidth = 35;
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [user] = useContext(UserContext);
+  const [addCardModal, setAddCardModal] = useState<boolean>(false);
 
   const yourAccounts = [
     {
-      label: "Accounts",
+      label: 'Accounts',
       leftIcon: (
         <Image
           width={30}
@@ -58,8 +60,8 @@ export default function SettingsPage() {
         />
       ),
       rightIcon: <KeyboardArrowRightOutlinedIcon />,
-      text: "Passwords, security, personal details, ad preferences",
-    },
+      text: 'Passwords, security, personal details, ad preferences'
+    }
   ];
   const settingsPage = [
     ...yourAccounts,
@@ -70,16 +72,20 @@ export default function SettingsPage() {
     ...whatYouSee,
     ...yourAppAndMedia,
     ...payments,
-    ...moreInfoAndSupport,
+    ...moreInfoAndSupport
   ];
 
   const handleLogout = () => {
     deleteCookie(authCookieKey);
-    router.push("/");
-    toast.success("Logged out ");
+    router.push('/');
+    toast.success('Logged out ');
   };
   return (
     <>
+      <AddCardModal
+        isOpen={addCardModal}
+        onClose={() => setAddCardModal(true)}
+      />
       <Stack mt={1} mb={3}>
         <Stack
           spacing={1}
@@ -104,11 +110,11 @@ export default function SettingsPage() {
           open={Boolean(query)}
           disablePortal
           options={settingsPage}
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
           renderInput={(params) => (
             <TextField
               {...params}
-              slotProps={{ input: { sx: { borderRadius: "30px" } } }}
+              slotProps={{ input: { sx: { borderRadius: '30px' } } }}
               label="Search"
             />
           )}
@@ -116,9 +122,9 @@ export default function SettingsPage() {
       </Stack>
       <Divider />
       <Typography fontWeight={400} variant="h6" color="text.secondary" mt={2}>
-        Your accounts{" "}
+        Your accounts{' '}
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {yourAccounts.map((option, idx) => (
           <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
@@ -164,7 +170,7 @@ export default function SettingsPage() {
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         How to use Swiftsend
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {howToUseSwiftsend.map((option, idx) => (
           <ListItemButton
             key={idx}
@@ -202,7 +208,7 @@ export default function SettingsPage() {
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         For professionals
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {forProfessionals.map((option, idx) => (
           <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
@@ -229,11 +235,11 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
-      <Divider />{" "}
+      <Divider />{' '}
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         Who can see your content
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {whoCanSeeYourContent.map((option, idx) => (
           <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
@@ -260,11 +266,11 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
-      <Divider />{" "}
+      <Divider />{' '}
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         How others can interact with you
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {howOthersCanInteractWithYou.map((option, idx) => (
           <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
@@ -291,11 +297,11 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
-      <Divider />{" "}
+      <Divider />{' '}
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         What you see
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {whatYouSee.map((option, idx) => (
           <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
@@ -322,11 +328,11 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
-      <Divider />{" "}
+      <Divider />{' '}
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         Your app and media
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {yourAppAndMedia.map((option, idx) => (
           <ListItemButton
             key={idx}
@@ -358,13 +364,17 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
-      <Divider />{" "}
+      <Divider />{' '}
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         Payments
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {payments.map((option, idx) => (
-          <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
+          <ListItemButton
+            key={idx}
+            sx={{ padding: 0, py: 1, borderRadius: 2 }}
+            onClick={() => setAddCardModal(true)}
+          >
             <ListItemIcon sx={{ pr: 1, minWidth }}>
               {option.leftIcon}
             </ListItemIcon>
@@ -389,11 +399,11 @@ export default function SettingsPage() {
           </ListItemButton>
         ))}
       </List>
-      <Divider />{" "}
+      <Divider />{' '}
       <Typography fontWeight={400} variant="h6" color="text.secondary">
         More info and support
       </Typography>
-      <List sx={{ width: "100%", mb: 1, padding: 0 }}>
+      <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {moreInfoAndSupport.map((option, idx) => (
           <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
@@ -421,22 +431,19 @@ export default function SettingsPage() {
         ))}
       </List>
       <Divider />
-      <List sx={{ width: "100%", mt: 1, mb: 2 }}>
-        <ListItemButton
-          sx={{ padding: 0, py: 1, borderRadius: 2 }}
-        >
+      <List sx={{ width: '100%', mt: 1, mb: 2 }}>
+        <ListItemButton sx={{ padding: 0, py: 1, borderRadius: 2 }}>
           <ListItemIcon sx={{ pr: 1, minWidth }}>
             <DarkModeIcon sx={{ width: 30, height: 30 }} color="primary" />
           </ListItemIcon>
           <ListItemText
             primary="Dark mode"
-            primaryTypographyProps={{ color: "primary" }}
+            primaryTypographyProps={{ color: 'primary' }}
           />
         </ListItemButton>
       </List>
-
       <Divider />
-      <List sx={{ width: "100%", mt: 1, mb: 2 }}>
+      <List sx={{ width: '100%', mt: 1, mb: 2 }}>
         <ListItemButton
           sx={{ padding: 0, py: 1, borderRadius: 2 }}
           onClick={handleLogout}
@@ -446,17 +453,17 @@ export default function SettingsPage() {
           </ListItemIcon>
           <ListItemText
             primary="Logout"
-            primaryTypographyProps={{ color: "error" }}
+            primaryTypographyProps={{ color: 'error' }}
           />
         </ListItemButton>
       </List>
       <Stack width="100%">
         <Typography variant="body1" color="text.secondary" textAlign="center">
-          {" "}
+          {' '}
           Made with ❤️ in India
         </Typography>
         <Typography variant="body1" color="text.secondary" textAlign="center">
-          {" "}
+          {' '}
           © {new Date().getFullYear()} All rights reserved
         </Typography>
         <Typography
