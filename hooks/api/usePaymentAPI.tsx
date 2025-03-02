@@ -76,7 +76,6 @@ const usePaymentAPI = () => {
 
   const attachPaymentMethod = async (input: {
     paymentMethodId: string;
-    customerId: string;
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
@@ -99,7 +98,6 @@ const usePaymentAPI = () => {
 
   const confirmCard = async (input: {
     paymentMethodId: string;
-    customerId: string;
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(

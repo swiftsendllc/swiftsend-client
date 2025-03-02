@@ -1,5 +1,6 @@
 'use client';
 
+import PaymentModalWrapper from '@/components/PaymentModal';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import { Container, Divider, LinearProgress, List } from '@mui/material';
@@ -15,6 +16,8 @@ export default function HomePage() {
   const { getTimelinePosts } = usePostAPI();
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
+  const [paymentModal, setPaymentModal] = useState<boolean>(false);
 
   const loadPosts = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : posts.length;
@@ -49,6 +52,17 @@ export default function HomePage() {
 
   return (
     <>
+      {selectedPost && (
+        <PaymentModalWrapper
+          isOpen={paymentModal}
+          onClose={() => {
+            setSelectedPost(null);
+            setPaymentModal(false);
+          }}
+          selectedPost={selectedPost}
+        />
+      )}
+
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>
         <HomeHeaderPage />
         <Divider sx={{ mt: 1 }} />
@@ -77,7 +91,12 @@ export default function HomePage() {
             scrollableTarget="scroll-id"
           >
             {posts.map((post) => (
-              <PostCard key={post._id} post={post} />
+              <PostCard
+                key={post._id}
+                post={post}
+                setPaymentModal={setPaymentModal}
+                setSelectedPost={setSelectedPost}
+              />
             ))}
           </InfiniteScroll>
         </List>
