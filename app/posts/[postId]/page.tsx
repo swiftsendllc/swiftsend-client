@@ -28,7 +28,13 @@ export default function SinglePost() {
   return (
     <Container maxWidth="xs">
       {post && (
-        <PostCard allowComments post={post} onMutation={() => loadPost()} />
+        <PostCard
+          allowComments
+          post={post}
+          onMutation={() => loadPost()}
+          setPaymentModal={() => false}
+          setSelectedPost={() => null}
+        />
       )}
     </Container>
   );
