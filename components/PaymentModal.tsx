@@ -11,10 +11,13 @@ import {
 } from '@stripe/react-stripe-js';
 
 import { UserContext } from '@/hooks/context/user-context';
+import { CardsEntity } from '@/hooks/entities/payments.entity';
 import { ENV } from '@/library/constants';
-import AddCardIcon from '@mui/icons-material/AddCard';
 import {
   Box,
+  Card,
+  CardHeader,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -32,16 +35,17 @@ import AddCardModal from './AddCardModal';
 
 function PaymentModal({
   onClose,
-  post
+  selectedPost,
+  cardData
 }: {
   isOpen: boolean;
   onClose: () => unknown;
-  post: PostsEntity;
+  selectedPost: PostsEntity;
+  cardData: CardsEntity | null;
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { createPayment, getCard, attachPaymentMethod, confirmCard } =
-    usePaymentAPI();
+  const { createPayment, attachPaymentMethod, confirmCard } = usePaymentAPI();
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [cardModal, setCardModal] = useState<boolean>(false);
@@ -74,50 +78,57 @@ function PaymentModal({
       if (!stripe || !elements) {
         throw new Error('Payment is still loading.Try again');
       }
+      console.log('started...');
+      let paymentMethodId = cardData?.id;
+      if (!paymentMethodId) {
+        const newCard = elements.getElement(CardElement);
+        const { paymentMethod } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: newCard!,
+          metadata: {
+            userId: user.userId,
+            creatorId: selectedPost.user.userId,
+            contentId: selectedPost._id
+          },
+          billing_details: {
+            name: 'Chris Evans'
+          }
+        });
+        paymentMethodId = paymentMethod!.id;
+      }
 
-      const newCard = elements.getElement(CardElement);
-      const { paymentMethod } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: newCard!,
-        metadata: {
-          userId: user.userId,
-          creatorId: post.user.userId,
-          contentId: post._id
-        },
-        billing_details: {
-          name: 'Chris Evans'
-        }
-      });
-      const cardData = await getCard();
+      console.log('started...created...');
 
       const attachPayment = await attachPaymentMethod({
-        paymentMethodId: paymentMethod!.id,
-        customerId: cardData.id!
+        paymentMethodId: paymentMethodId
       });
+      console.log('started...created...attached');
 
       if (attachPayment.nextActionUrl) {
         await stripe.confirmCardSetup(attachPayment.clientSecret, {
-          payment_method: paymentMethod!.id
+          payment_method: paymentMethodId
         });
       }
-
+      console.log('started...created...attached...confirm...');
       await confirmCard({
-        paymentMethodId: paymentMethod!.id,
-        customerId: cardData.id!
+        paymentMethodId: paymentMethodId
       });
 
-      const paymentResponse = await createPayment(post.user.userId, {
-        amount: post.price,
-        contentId: post._id,
-        payment_method: paymentMethod!.id,
+      const paymentResponse = await createPayment(selectedPost.user.userId, {
+        amount: selectedPost.price,
+        contentId: selectedPost._id,
+        payment_method: paymentMethodId,
         payment_method_types: ['card']
       });
+      console.log('started...created...attached...confirmed...payment...');
 
       if (paymentResponse.requiresAction) {
         await stripe.confirmCardPayment(paymentResponse.clientSecret, {
-          payment_method: paymentMethod!.id
+          payment_method: paymentMethodId
         });
       }
+      console.log('started...created...attached...confirmed...payment...done');
+
       toast.success('Card added');
       handleClose();
     } catch (error) {
@@ -146,9 +157,20 @@ function PaymentModal({
         aria-describedby="payment-modal-page"
       >
         <DialogTitle>Complete Your Payment</DialogTitle>
-        <IconButton onClick={() => setCardModal(true)} sx={{ m: 0, p: 0 }}>
-          <AddCardIcon />
-        </IconButton>
+        {cardData === null ? null : (
+          <Card sx={{ width: '100%' }}>
+            <CardHeader
+              title={cardData.card.brand}
+              subheader={cardData.card.last4}
+              action={
+                <IconButton onClick={handlePayment}>
+                  <Chip label="Pay" color="success" />
+                </IconButton>
+              }
+            />
+          </Card>
+        )}
+
         <DialogContent>
           <Box component="form" onSubmit={handlePayment} sx={{ mt: 2 }}>
             <Typography variant="subtitle1" gutterBottom>
@@ -184,7 +206,7 @@ function PaymentModal({
                   mt: 2
                 }}
               >
-                <Typography variant="subtitle2" gutterBottom color="primary">
+                <Typography variant="subtitle2" color="primary">
                   Card Number
                 </Typography>
                 <CardElement options={CARD_ELEMENT_OPTIONS} />
@@ -215,27 +237,47 @@ function PaymentModal({
 }
 const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
 
-const PaymentModalWrapped = ({
+const PaymentModalWrapper = ({
   isOpen,
   onClose,
-  post
+  selectedPost
 }: {
   isOpen: boolean;
   onClose: () => unknown;
-  post: PostsEntity;
+  selectedPost: PostsEntity | null;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
+  const { getCard } = usePaymentAPI();
+  const [cardData, setCardData] = useState<CardsEntity | null>(null);
+  const handleCard = async () => {
+    if (cardData) return;
+    try {
+      const cardData = await getCard();
+      if (cardData) setCardData(cardData);
+    } catch (error) {
+      console.error(error);
+      setCardData(null);
+    }
+  };
+  useEffect(() => {
+    if (isOpen) handleCard();
+  }, [isOpen]); //eslint-disable-line
 
   return (
     <>
-      {open && (
+      {open && selectedPost && (
         <Elements stripe={stripePromise!}>
-          <PaymentModal isOpen={true} onClose={onClose} post={post} />
+          <PaymentModal
+            isOpen={true}
+            onClose={onClose}
+            selectedPost={selectedPost}
+            cardData={cardData}
+          />
         </Elements>
       )}
     </>
   );
 };
 
-export default PaymentModalWrapped;
+export default PaymentModalWrapper;

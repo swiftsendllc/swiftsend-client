@@ -2,7 +2,6 @@
 
 import { CommentInput } from '@/app/comment/components/CommentInput';
 import { CommentStack } from '@/app/comment/components/CommentStack';
-import CardFormWrapper from '@/components/PaymentModal';
 import { StyledBadge } from '@/components/SearchComponents';
 import TopBackNav from '@/components/TopBackNav';
 import useAPI from '@/hooks/api/useAPI';
@@ -35,13 +34,15 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface PostProps {
   post: PostsEntity;
   allowComments?: boolean;
   onMutation?: () => unknown;
+  setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedPost: React.Dispatch<React.SetStateAction<PostsEntity | null>>;
 }
 
 interface LikeButtonProps {
@@ -62,7 +63,9 @@ interface FollowButtonProps {
 export const PostCard = ({
   post,
   allowComments = false,
-  onMutation
+  onMutation,
+  setPaymentModal,
+  setSelectedPost
 }: PostProps) => {
   const { followProfile } = useAPI();
   const { likePost, savePost } = usePostAPI();
@@ -76,7 +79,6 @@ export const PostCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
   const [, setComments] = useState(post.comments);
-  const [paymentPage, setPaymentPage] = useState<boolean>(false);
 
   const handleSee = () => {
     setIsExpanded((prev) => !prev);
@@ -132,11 +134,6 @@ export const PostCard = ({
 
   return (
     <>
-      <CardFormWrapper
-        isOpen={paymentPage}
-        onClose={() => setPaymentPage(false)}
-        post={post}
-      />
       {allowComments && <TopBackNav />}
       <Card key={post._id} sx={{ mb: 0.5, width: '100%', padding: 0, m: 0 }}>
         <CardHeader
@@ -211,7 +208,12 @@ export const PostCard = ({
             height={100}
           />
           {post.userId !== user.userId ? (
-            <IconButton onClick={() => setPaymentPage(true)}>
+            <IconButton
+              onClick={() => {
+                setSelectedPost(post);
+                setPaymentModal(true);
+              }}
+            >
               <MonetizationOnRoundedIcon />
             </IconButton>
           ) : null}
