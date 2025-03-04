@@ -78,7 +78,6 @@ function PaymentModal({
       if (!stripe || !elements) {
         throw new Error('Payment is still loading.Try again');
       }
-      console.log('started...');
       let paymentMethodId = cardData?.id;
       if (!paymentMethodId) {
         const newCard = elements.getElement(CardElement);
@@ -97,19 +96,15 @@ function PaymentModal({
         paymentMethodId = paymentMethod!.id;
       }
 
-      console.log('started...created...');
-
       const attachPayment = await attachPaymentMethod({
         paymentMethodId: paymentMethodId
       });
-      console.log('started...created...attached');
 
       if (attachPayment.nextActionUrl) {
         await stripe.confirmCardSetup(attachPayment.clientSecret, {
           payment_method: paymentMethodId
         });
       }
-      console.log('started...created...attached...confirm...');
       await confirmCard({
         paymentMethodId: paymentMethodId
       });
@@ -120,16 +115,14 @@ function PaymentModal({
         payment_method: paymentMethodId,
         payment_method_types: ['card']
       });
-      console.log('started...created...attached...confirmed...payment...');
 
       if (paymentResponse.requiresAction) {
         await stripe.confirmCardPayment(paymentResponse.clientSecret, {
           payment_method: paymentMethodId
         });
       }
-      console.log('started...created...attached...confirmed...payment...done');
 
-      toast.success('Card added');
+      toast.success('PURCHASED');
       handleClose();
     } catch (error) {
       console.error(error);

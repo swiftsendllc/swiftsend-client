@@ -1,57 +1,66 @@
-"use client";
+'use client';
 
-import { previewGrid } from "@/components/SearchComponents";
-import useAPI from "@/hooks/api/useAPI";
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { UserContext } from "@/hooks/context/user-context";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { LoadingButton } from "@mui/lab";
+import { previewGrid } from '@/components/SearchComponents';
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { UserContext } from '@/hooks/context/user-context';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { LoadingButton } from '@mui/lab';
 
 import {
+  Box,
   Button,
   Card,
   CardContent,
-  CardMedia,
   Container,
   Divider,
+  FormControlLabel,
   IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Stack,
+  Switch,
   TextField,
-  Typography,
-} from "@mui/material";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext, useRef, useState } from "react";
+  Typography
+} from '@mui/material';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useContext, useRef, useState } from 'react';
 
 export default function PostPreview() {
   const [loading, setLoading] = useState(false);
-  const [caption, setCaption] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const [caption, setCaption] = useState<string>('');
+  const [imageURL, setImageURL] = useState<string>('');
   const [file, setFile] = useState<File>();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile } = useAPI();
+  const { uploadFile } = usePostAPI();
   const { createPost } = usePostAPI();
-
+  const [isExclusive, setIsExclusive] = useState<boolean>(true);
+  const [price, setPrice] = useState<number>(200);
   const [user] = useContext(UserContext);
-
   const router = useRouter();
 
   const handleSubmit = async () => {
     if (!file) return;
-
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      const { url } = await uploadFile(formData);
-      await createPost({ caption, imageURL: url });
-      setImageURL(url);
+      formData.append('file', file);
+      const { originalUrl, blurredUrl } = await uploadFile(formData);
+      console.log('blurred url:', blurredUrl);
+      console.log('image url:', originalUrl);
+      await createPost({
+        caption,
+        imageURL: originalUrl,
+        blurredImageURL: blurredUrl,
+        isExclusive,
+        price
+      });
+      setImageURL(originalUrl);
       router.push(`/${user.username}`);
     } finally {
       setLoading(false);
@@ -60,7 +69,7 @@ export default function PostPreview() {
 
   const handleDeleteImage = () => {
     setFile(undefined);
-    setImageURL("");
+    setImageURL('');
   };
 
   return (
@@ -68,9 +77,9 @@ export default function PostPreview() {
       <Container
         maxWidth="xs"
         sx={{
-          alignContent: "center",
-          alignItems: "center",
-          mb: 6,
+          alignContent: 'center',
+          alignItems: 'center',
+          mb: 6
         }}
       >
         <Stack mt={2}>
@@ -87,14 +96,14 @@ export default function PostPreview() {
         <Stack>
           <Card sx={{ padding: 0, marginTop: 5 }}>
             {imageURL && (
-              <CardMedia
-                sx={{
-                  objectFit: "contain",
-                }}
-                component="img"
-                image={imageURL}
-                title="green iguana"
-              />
+              <Stack direction={'row'}>
+                <Image
+                  src={imageURL}
+                  width={200}
+                  height={200}
+                  alt={'original'}
+                />
+              </Stack>
             )}
 
             {imageURL ? (
@@ -142,14 +151,46 @@ export default function PostPreview() {
               />
             </CardContent>
           </Card>
-          <List sx={{ width: "100%", padding: 0, mb: 1 }}>
+          <List sx={{ width: '100%', padding: 0, mb: 1 }}>
+            <Box
+              display={'flex'}
+              flexDirection={'row'}
+              justifyContent={'space-between'}
+              alignContent={'center'}
+              alignItems={'center'}
+            >
+              <FormControlLabel
+                sx={{ display: 'block' }}
+                control={
+                  <Switch
+                    checked={isExclusive}
+                    onChange={() => setIsExclusive(!isExclusive)}
+                    name="exclusive-switch-button"
+                    color="primary"
+                  />
+                }
+                label={isExclusive ? 'Exclusive' : 'Not exclusive'}
+              />
+              {isExclusive && (
+                <TextField
+                  id="outlined-number"
+                  type="number"
+                  placeholder="Enter your price"
+                  sx={{ mt: 1.5 }}
+                  helperText={'Default price is 200 INR'}
+                  value={price}
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                />
+              )}
+            </Box>
+
             {previewGrid.map((option, idx) => (
               <div key={idx}>
                 <ListItemButton
                   sx={{
                     padding: 0,
                     py: 1,
-                    borderRadius: 2,
+                    borderRadius: 2
                   }}
                 >
                   <ListItemIcon sx={{ minWidth: 35, pr: 1 }}>
@@ -187,15 +228,15 @@ export default function PostPreview() {
             spacing={1}
             sx={{
               mb: 1,
-              justifyContent: "center",
-              alignContent: "center",
-              padding: 0,
+              justifyContent: 'center',
+              alignContent: 'center',
+              padding: 0
             }}
           >
             <Button
               variant="contained"
               fullWidth
-              style={{ color: "var(--warning)" }}
+              style={{ color: 'var(--warning)' }}
             >
               Discard
             </Button>

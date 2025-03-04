@@ -1,10 +1,11 @@
-import { UserProfilesEntity } from "./users.entities";
+import { UserProfilesEntity } from './users.entities';
 
 export interface PostsEntity {
   _id: string;
   userId: string;
   caption: string;
   imageURL: string;
+  blurredImageURL: string;
   likeCount: number;
   commentCount: number;
   isLiked: boolean;
@@ -16,12 +17,22 @@ export interface PostsEntity {
   user: UserProfilesEntity;
   comments?: CommentsEntity[];
   saves?: SavesEntity;
-  price:number
+  price: number;
+  isExclusive: boolean;
+  purchasedBy: string[];
+}
+
+export interface UploadEntity {
+  originalUrl: string;
+  blurredUrl: string;
 }
 
 export interface CreatePostInput {
   caption: string;
   imageURL: string;
+  blurredImageURL:string
+  isExclusive: boolean;
+  price: number;
 }
 export interface UpdatePostInput {
   caption: string;
