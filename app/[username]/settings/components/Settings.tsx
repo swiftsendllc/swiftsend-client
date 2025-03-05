@@ -34,7 +34,6 @@ import { deleteCookie } from 'cookies-next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import AddCardModal from '@/components/AddCardModal';
 import Image from 'next/image';
 import { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -45,7 +44,6 @@ export default function SettingsPage() {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [user] = useContext(UserContext);
-  const [addCardModal, setAddCardModal] = useState<boolean>(false);
 
   const yourAccounts = [
     {
@@ -82,10 +80,6 @@ export default function SettingsPage() {
   };
   return (
     <>
-      <AddCardModal
-        isOpen={addCardModal}
-        onClose={() => setAddCardModal(true)}
-      />
       <Stack mt={1} mb={3}>
         <Stack
           spacing={1}
@@ -370,11 +364,7 @@ export default function SettingsPage() {
       </Typography>
       <List sx={{ width: '100%', mb: 1, padding: 0 }}>
         {payments.map((option, idx) => (
-          <ListItemButton
-            key={idx}
-            sx={{ padding: 0, py: 1, borderRadius: 2 }}
-            onClick={() => setAddCardModal(true)}
-          >
+          <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }}>
             <ListItemIcon sx={{ pr: 1, minWidth }}>
               {option.leftIcon}
             </ListItemIcon>

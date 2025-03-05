@@ -26,6 +26,9 @@ export interface MessagesEntity {
   channelId: string;
   message: string;
   imageURL: string;
+  blurredImageURL:string
+  isExclusive:boolean
+  price:number
   createdAt: Date;
   deletedAt: Date;
   editedAt: Date;

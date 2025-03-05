@@ -31,16 +31,15 @@ import {
 import { loadStripe } from '@stripe/stripe-js';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import AddCardModal from './AddCardModal';
 
 function PaymentModal({
   onClose,
-  selectedPost,
+  selectedContent,
   cardData
 }: {
   isOpen: boolean;
   onClose: () => unknown;
-  selectedPost: PostsEntity;
+  selectedContent: PostsEntity;
   cardData: CardsEntity | null;
 }) {
   const stripe = useStripe();
@@ -48,7 +47,6 @@ function PaymentModal({
   const { createPayment, attachPaymentMethod, confirmCard } = usePaymentAPI();
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>('');
-  const [cardModal, setCardModal] = useState<boolean>(false);
   const [user] = useContext(UserContext);
 
   const handleClose = () => {
@@ -86,8 +84,8 @@ function PaymentModal({
           card: newCard!,
           metadata: {
             userId: user.userId,
-            creatorId: selectedPost.user.userId,
-            contentId: selectedPost._id
+            creatorId: selectedContent.user.userId,
+            contentId: selectedContent._id
           },
           billing_details: {
             name: 'Chris Evans'
@@ -109,9 +107,9 @@ function PaymentModal({
         paymentMethodId: paymentMethodId
       });
 
-      const paymentResponse = await createPayment(selectedPost.user.userId, {
-        amount: selectedPost.price,
-        contentId: selectedPost._id,
+      const paymentResponse = await createPayment(selectedContent.user.userId, {
+        amount: selectedContent.price,
+        contentId: selectedContent._id,
         payment_method: paymentMethodId,
         payment_method_types: ['card']
       });
@@ -134,7 +132,6 @@ function PaymentModal({
 
   return (
     <>
-      <AddCardModal isOpen={cardModal} onClose={() => setCardModal(false)} />
       <Dialog
         open={true}
         onClose={handleClose}
@@ -233,11 +230,11 @@ const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
 const PaymentModalWrapper = ({
   isOpen,
   onClose,
-  selectedPost
+  selectedContent
 }: {
   isOpen: boolean;
   onClose: () => unknown;
-  selectedPost: PostsEntity | null;
+  selectedContent: PostsEntity | null;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -259,12 +256,12 @@ const PaymentModalWrapper = ({
 
   return (
     <>
-      {open && selectedPost && (
+      {open && selectedContent && (
         <Elements stripe={stripePromise!}>
           <PaymentModal
             isOpen={true}
             onClose={onClose}
-            selectedPost={selectedPost}
+            selectedContent={selectedContent}
             cardData={cardData}
           />
         </Elements>

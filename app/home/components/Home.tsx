@@ -59,7 +59,7 @@ export default function HomePage() {
             setSelectedPost(null);
             setPaymentModal(false);
           }}
-          selectedPost={selectedPost}
+          selectedContent={selectedPost}
         />
       )}
 

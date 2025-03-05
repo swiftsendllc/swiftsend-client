@@ -1,14 +1,22 @@
 'use client';
 
-import useAPI from '@/hooks/api/useAPI';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
+import usePostAPI from '@/hooks/api/usePostAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
-import AddIcon from '@mui/icons-material/Add';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 import SendIcon from '@mui/icons-material/Send';
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Container, Paper, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Paper,
+  TextField,
+  Typography
+} from '@mui/material';
 import React, { useContext, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReplyThread from './ReplyThread';
@@ -30,20 +38,48 @@ export default function MessageInput({
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState<string>('');
   const [channel] = useContext(ChannelContext);
-
-  const [imageURL, setImageURL] = useState<string>('');
+  const [file, setFile] = useState<File>();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile } = useAPI();
+  const { uploadFile } = usePostAPI();
+  const [isExclusive, setIsExclusive] = useState<boolean>(false);
+  const [price, setPrice] = useState<number>(0);
+  const [imgURL, setImgURL] = useState<string>('');
+  const [blurImgURL, setBlurImgURL] = useState<string>('');
+
+  const handleUpload = async () => {
+    if (!file) return null;
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const urls = await uploadFile(formData);
+      toast.success('Uploaded');
+      return urls;
+    } catch (error) {
+      toast.error('error', error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleMessage = async () => {
     setLoading(true);
     try {
+      const urls = await handleUpload();
+      if (urls) {
+        setImgURL(urls.originalUrl);
+        setBlurImgURL(urls.blurredUrl);
+      }
       const msg = await sendMessage({
         message: messageInput,
-        receiverId: channel.receiver.userId
+        receiverId: channel.receiver.userId,
+        imageURL: imgURL ?? null,
+        blurredImageURL: blurImgURL ?? null,
+        isExclusive: isExclusive,
+        price: price
       });
-      setMessageInput('');
       onMessage(msg);
+      setMessageInput('');
     } catch (error) {
       console.log(error);
     } finally {
@@ -51,34 +87,22 @@ export default function MessageInput({
     }
   };
 
-  const handleUpload = async (file: File) => {
-    if (!file) return;
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { url } = await uploadFile(formData);
-      const image = await sendMessage({
-        imageURL: url,
-        receiverId: channel.receiver.userId
-      });
-      onMessage(image);
-      setImageURL(url);
-      toast.success('Uploaded');
-    } catch (error) {
-      console.log(error);
-      toast.error('Failed to upload image!');
-    } finally {
-      setLoading(false);
-    }
-  };
   const handleReply = async () => {
     if (replyMessage)
       try {
+        const urls = await handleUpload();
+        if (urls) {
+          setImgURL(urls.originalUrl);
+          setBlurImgURL(urls.blurredUrl);
+        }
         const reply = await sendMessageReply({
           message: messageInput,
           messageId: replyMessage._id,
           receiverId: replyMessage.senderId,
-          imageURL: imageURL ?? null
+          imageURL: imgURL ?? null,
+          blurredImageURL: blurImgURL ?? null,
+          isExclusive: replyMessage.isExclusive,
+          price: replyMessage.price ?? null
         });
         onMessage(reply);
         setIsReplying(false);
@@ -107,6 +131,26 @@ export default function MessageInput({
         }}
       >
         <Container maxWidth="xs" sx={{ padding: 0 }}>
+          {isExclusive && (
+            <Paper>
+              <Typography sx={{ py: 2 }}>This is a paid message</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <TextField
+                  type="text"
+                  label="Set Price ($)"
+                  variant="outlined"
+                  size="small"
+                  value={price}
+                  onChange={(e) => setPrice(+e.target.value.replace(/[^0-9]/g,''))}
+                  sx={{ flex: 1 }}
+                />
+                <Button variant="contained" color="success">
+                  Pay
+                </Button>
+              </Box>
+            </Paper>
+          )}
+
           <Paper>
             <TextField
               fullWidth
@@ -124,9 +168,11 @@ export default function MessageInput({
               slotProps={{
                 input: {
                   startAdornment: (
-                    <Box mr={1.5}>
-                      <AddIcon />
-                    </Box>
+                    <IconButton onClick={() => setIsExclusive((prev) => !prev)}>
+                      <AttachMoneyIcon
+                        color={isExclusive ? 'info' : 'action'}
+                      />
+                    </IconButton>
                   ),
                   endAdornment: (
                     <>
@@ -150,8 +196,9 @@ export default function MessageInput({
                         ref={inputRef}
                         accept="image/*"
                         onChange={(e) => {
-                          if (!e.target.files?.length) return;
-                          handleUpload(e.target.files[0]);
+                          const input = e.target;
+                          if (!input.files?.length) return;
+                          setFile(input.files[0]);
                         }}
                         hidden
                       />
