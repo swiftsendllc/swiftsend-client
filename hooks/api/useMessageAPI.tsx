@@ -105,11 +105,18 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const sendMessage = async (body: Partial<MessageUserInput>) => {
+  const sendMessage = async (input: {
+    message: string | null;
+    imageURL: string | null;
+    blurredImageURL: string | null;
+    receiverId: string;
+    isExclusive: boolean;
+    price: number;
+  }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/messages`, {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: JSON.stringify(input),
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
@@ -126,6 +133,9 @@ const useMessageAPI = () => {
     message: string | null;
     messageId: string;
     imageURL: string | null;
+    blurredImageURL: string | null;
+    isExclusive: boolean;
+    price: number;
     receiverId: string;
   }) => {
     const accessToken = getCookie(authCookieKey);
