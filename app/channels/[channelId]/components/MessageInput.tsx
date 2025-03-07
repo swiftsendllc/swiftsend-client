@@ -1,9 +1,11 @@
 'use client';
 
+import InputElement from '@/components/InputElement';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 import SendIcon from '@mui/icons-material/Send';
@@ -14,9 +16,10 @@ import {
   Container,
   IconButton,
   Paper,
-  TextField,
-  Typography
+  Stack,
+  TextField
 } from '@mui/material';
+import Image from 'next/image';
 import React, { useContext, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReplyThread from './ReplyThread';
@@ -38,19 +41,23 @@ export default function MessageInput({
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState<string>('');
   const [channel] = useContext(ChannelContext);
-  const [file, setFile] = useState<File>();
+  const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile } = usePostAPI();
   const [isExclusive, setIsExclusive] = useState<boolean>(false);
   const [price, setPrice] = useState<number>(0);
-  const [imgURL, setImgURL] = useState<string>('');
-  const [blurImgURL, setBlurImgURL] = useState<string>('');
+  const [objectUrls, setObjectUrls] = useState<string[]>([]);
 
   const handleUpload = async () => {
-    if (!file) return null;
+    console.log('started..');
+    if (!files) return null;
+    console.log('started..file..checked..');
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      files.map((file) => {
+        formData.append('files', file);
+      });
+      console.log('started..file..checked..appended');
       const urls = await uploadFile(formData);
       toast.success('Uploaded');
       return urls;
@@ -62,24 +69,32 @@ export default function MessageInput({
     }
   };
 
+  const handleCancel = () => {
+    setMessageInput('');
+    setObjectUrls([]);
+    setPrice(0);
+    setFiles([]);
+    setIsExclusive((prev) => !prev);
+  };
+
   const handleMessage = async () => {
     setLoading(true);
     try {
       const urls = await handleUpload();
-      if (urls) {
-        setImgURL(urls.originalUrl);
-        setBlurImgURL(urls.blurredUrl);
-      }
+
+      const imgUrls = urls?.map((file) => file.originalFile.url);
+      const blurImageUrls = urls?.map((file) => file.blurredFile.url);
+
       const msg = await sendMessage({
         message: messageInput,
         receiverId: channel.receiver.userId,
-        imageURL: imgURL ?? null,
-        blurredImageURL: blurImgURL ?? null,
+        imageUrls: imgUrls ?? null,
+        blurredImageUrls: blurImageUrls ?? null,
         isExclusive: isExclusive,
         price: price
       });
       onMessage(msg);
-      setMessageInput('');
+      handleCancel();
     } catch (error) {
       console.log(error);
     } finally {
@@ -91,22 +106,22 @@ export default function MessageInput({
     if (replyMessage)
       try {
         const urls = await handleUpload();
-        if (urls) {
-          setImgURL(urls.originalUrl);
-          setBlurImgURL(urls.blurredUrl);
-        }
+
+        const imgUrls = urls?.map((file) => file.originalFile.url);
+        const blurImageUrls = urls?.map((file) => file.blurredFile.url);
+
         const reply = await sendMessageReply({
           message: messageInput,
           messageId: replyMessage._id,
           receiverId: replyMessage.senderId,
-          imageURL: imgURL ?? null,
-          blurredImageURL: blurImgURL ?? null,
+          imageUrls: imgUrls ?? null,
+          blurredImageUrls: blurImageUrls ?? null,
           isExclusive: replyMessage.isExclusive,
           price: replyMessage.price ?? null
         });
         onMessage(reply);
         setIsReplying(false);
-        setMessageInput('');
+        handleCancel();
       } catch (error) {
         console.error(error);
         toast.error('FAILED TO REPLY!');
@@ -132,25 +147,77 @@ export default function MessageInput({
       >
         <Container maxWidth="xs" sx={{ padding: 0 }}>
           {isExclusive && (
-            <Paper>
-              <Typography sx={{ py: 2 }}>This is a paid message</Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <TextField
-                  type="text"
-                  label="Set Price ($)"
-                  variant="outlined"
-                  size="small"
-                  value={price}
-                  onChange={(e) => setPrice(+e.target.value.replace(/[^0-9]/g,''))}
-                  sx={{ flex: 1 }}
-                />
-                <Button variant="contained" color="success">
-                  Pay
-                </Button>
-              </Box>
-            </Paper>
+            <>
+              <Paper>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  flexWrap="nowrap"
+                  sx={{
+                    maxWidth: '100%',
+                    maxHeight: 150,
+                    overflowX: 'auto',
+                    overflowY: 'hidden',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {objectUrls.map((url, idx) => (
+                    <Box key={idx} sx={{ position: 'relative' }}>
+                      <Image
+                        alt={url}
+                        src={url}
+                        width={200}
+                        height={200}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          display: 'flex',
+                          justifyContent: 'space-between'
+                        }}
+                        onClick={() => {
+                          setObjectUrls(
+                            objectUrls.filter((_, id) => id !== idx)
+                          );
+                          setFiles(files.filter((_, id) => id !== idx));
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Stack>
+                <IconButton
+                  sx={{ py: 2 }}
+                  onClick={() => inputRef.current?.click()}
+                >
+                  <AddPhotoAlternateIcon />
+                  <InputElement
+                    inputRef={inputRef}
+                    setFiles={setFiles}
+                    setObjectUrls={setObjectUrls}
+                  />
+                </IconButton>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <TextField
+                    type="text"
+                    label="Set Price ($)"
+                    variant="outlined"
+                    size="small"
+                    value={price}
+                    onChange={(e) =>
+                      setPrice(+e.target.value.replace(/[^0-9]/g, ''))
+                    }
+                    sx={{ flex: 1 }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </Paper>
+            </>
           )}
-
           <Paper>
             <TextField
               fullWidth
@@ -168,7 +235,7 @@ export default function MessageInput({
               slotProps={{
                 input: {
                   startAdornment: (
-                    <IconButton onClick={() => setIsExclusive((prev) => !prev)}>
+                    <IconButton onClick={() => setIsExclusive(true)}>
                       <AttachMoneyIcon
                         color={isExclusive ? 'info' : 'action'}
                       />
@@ -181,7 +248,7 @@ export default function MessageInput({
                         loading={loading}
                         loadingPosition="start"
                         startIcon={null}
-                        disabled={!messageInput}
+                        disabled={!messageInput || (isExclusive && !price)}
                         onClick={() => {
                           (isReplying ? handleReply : handleMessage)();
                         }}
@@ -191,16 +258,10 @@ export default function MessageInput({
                       <Button onClick={() => inputRef.current?.click()}>
                         <LandscapeIcon />
                       </Button>
-                      <input
-                        type="file"
-                        ref={inputRef}
-                        accept="image/*"
-                        onChange={(e) => {
-                          const input = e.target;
-                          if (!input.files?.length) return;
-                          setFile(input.files[0]);
-                        }}
-                        hidden
+                      <InputElement
+                        inputRef={inputRef}
+                        setFiles={setFiles}
+                        setObjectUrls={() => null}
                       />
                     </>
                   )

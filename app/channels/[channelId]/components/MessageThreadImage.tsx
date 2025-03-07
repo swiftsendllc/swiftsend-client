@@ -2,7 +2,14 @@
 
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import EditIcon from '@mui/icons-material/Edit';
-import { Chip, IconButton, Stack, Typography } from '@mui/material';
+import {
+  CardContent,
+  Chip,
+  IconButton,
+  Paper,
+  Stack,
+  Typography
+} from '@mui/material';
 import moment from 'moment';
 
 import { UserContext } from '@/hooks/context/user-context';
@@ -23,37 +30,52 @@ export default function MessageThreadImage({
 
   return (
     <>
-      <Stack direction="column" justifyContent="left">
-        <ImageThumbnail message={message} />
-        <Chip
-          label={
-            <Typography variant="caption" component="span" fontSize="0.55rem">
-              {message.deleted
-                ? `${moment(message.deletedAt)
-                    .fromNow()
-                    .toLocaleUpperCase()} DELETED`
-                : message.edited
-                  ? `${moment(message.editedAt)
-                      .fromNow()
-                      .toLocaleUpperCase()} EDITED`
-                  : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
+      <Paper
+        elevation={3}
+        sx={{
+          maxWidth: 400
+        }}
+      >
+        <CardContent>
+          <Stack spacing={1} alignItems="flex-start">
+            <ImageThumbnail message={message} />
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              sx={{ wordBreak: 'break-word' }}
+            >
+              {message.message}
             </Typography>
-          }
-          icon={
-            <>
-              {isUser ? (
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Chip
+                label={
+                  <Typography
+                    variant="caption"
+                    fontSize="0.7rem"
+                    color="textSecondary"
+                  >
+                    {message.deleted
+                      ? `${moment(message.deletedAt).fromNow().toUpperCase()} DELETED`
+                      : message.edited
+                        ? `${moment(message.editedAt).fromNow().toUpperCase()} EDITED`
+                        : `${moment(message.createdAt).fromNow().toUpperCase()}`}
+                  </Typography>
+                }
+                variant="outlined"
+                size="small"
+              />
+              {isUser && (
                 <IconButton
-                  onClick={() => {
-                    setInfoMessageDrawer(true);
-                  }}
+                  size="small"
+                  onClick={() => setInfoMessageDrawer(true)}
+                  sx={{ ml: 'auto' }}
                 >
-                  <EditIcon sx={{ width: 15, height: 15 }} />
+                  <EditIcon fontSize="small" />
                 </IconButton>
-              ) : undefined}
-            </>
-          }
-          variant="outlined"
-        />
+              )}
+            </Stack>
+          </Stack>
+        </CardContent>
         <InfoMessageDrawer
           isOpen={infoMessageDrawer}
           onClose={() => setInfoMessageDrawer(false)}
@@ -82,7 +104,7 @@ export default function MessageThreadImage({
             )
           }
         />
-      </Stack>
+      </Paper>
     </>
   );
 }

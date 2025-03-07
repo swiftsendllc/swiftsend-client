@@ -5,7 +5,7 @@ export function formatDate(date: Date) {
   const targetDate = dayjs(date);
 
   if (targetDate.isSame(now, 'day')) {
-    return targetDate.format("HH:MM");
+    return targetDate.format('HH:MM');
   } else if (targetDate.isSame(now.subtract(1, 'day'), 'day')) {
     return 'Yesterday';
   } else if (targetDate.isSame(now, 'week')) {
