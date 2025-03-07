@@ -10,7 +10,7 @@ export interface ChannelsEntity {
     receiverId: string;
     channelId: string;
     message: string;
-    imageURL: string | null;
+    imageUrls: string[] | null;
     createdAt: Date;
     deletedAt: Date;
     editedAt: Date;
@@ -25,10 +25,10 @@ export interface MessagesEntity {
   receiverId: string;
   channelId: string;
   message: string;
-  imageURL: string;
-  blurredImageURL:string
-  isExclusive:boolean
-  price:number
+  imageUrls: string[];
+  blurredImageUrls: string[];
+  isExclusive: boolean;
+  price: number;
   createdAt: Date;
   deletedAt: Date;
   editedAt: Date;
@@ -37,7 +37,7 @@ export interface MessagesEntity {
   edited: boolean;
   seen: boolean;
   repliedTo: string;
-  repliedMessage:MessagesEntity
+  repliedMessage: MessagesEntity;
   replies: RepliesEntity[];
   delivered: boolean;
   reactions: MessageReactionsEntity[];
@@ -88,8 +88,8 @@ export interface GroupMessagesEntity {
   deleted: boolean;
   edited: boolean;
   sender: UserProfilesEntity;
-  repliedMessage:GroupMessagesEntity
-  repliedMessageSender:UserProfilesEntity
+  repliedMessage: GroupMessagesEntity;
+  repliedMessageSender: UserProfilesEntity;
   receivers: UserProfilesEntity[];
   reactions: GroupReactionsEntity[];
   isReacted: boolean;
@@ -122,4 +122,15 @@ export interface GroupReactionsEntity {
   messageId: string;
   senderId: string;
   createdAt: Date;
+}
+
+export interface UploadedEntity {
+  originalFile: {
+    path: string;
+    url: string;
+  };
+  blurredFile: {
+    path: string;
+    url: string;
+  };
 }

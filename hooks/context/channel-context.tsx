@@ -33,7 +33,7 @@ const emptyChannel = {
     receiverId: "",
     channelId: "",
     message: "",
-    imageURL: "",
+    imageUrls: [],
     createdAt: new Date(),
     deletedAt: new Date(),
     editedAt: new Date(),

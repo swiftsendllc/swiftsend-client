@@ -1,6 +1,7 @@
 import { authCookieKey, ENV } from '@/library/constants';
 import { getCookie } from 'cookies-next';
 import { CommentPostInput, UpdatePostInput } from '../entities/posts.entities';
+import { UploadedEntity } from '../entities/messages.entities';
 
 const usePostAPI = () => {
   const uploadFile = async (formData: FormData) => {
@@ -17,15 +18,12 @@ const usePostAPI = () => {
     if (!res.ok) {
       throw new Error(data.message);
     }
-    return {
-      blurredUrl: data.blurredUrl,
-      originalUrl: data.originalUrl
-    };
+    return data as UploadedEntity[];
   };
 
   const createPost = async (input: {
-    imageURL: string;
-    blurredImageURL: string;
+    imageUrls: string[] | null;
+    blurredImageUrls: string[] | null;
     caption: string;
     isExclusive: boolean;
     price: number | null;

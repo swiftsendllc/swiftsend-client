@@ -1,5 +1,6 @@
 'use client';
 
+import InputElement from '@/components/InputElement';
 import { previewGrid } from '@/components/SearchComponents';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { UserContext } from '@/hooks/context/user-context';
@@ -34,8 +35,8 @@ import { useContext, useRef, useState } from 'react';
 export default function PostPreview() {
   const [loading, setLoading] = useState(false);
   const [caption, setCaption] = useState<string>('');
-  const [imageURL, setImageURL] = useState<string>('');
-  const [file, setFile] = useState<File>();
+  const [objectUrls, setObjectUrls] = useState<string[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile } = usePostAPI();
   const { createPost } = usePostAPI();
@@ -45,22 +46,27 @@ export default function PostPreview() {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    if (!file) return;
+    if (!files) return;
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('file', file);
-      const { originalUrl, blurredUrl } = await uploadFile(formData);
-      console.log('blurred url:', blurredUrl);
-      console.log('image url:', originalUrl);
+      const urls = await uploadFile(formData);
+      if (urls) {
+        files.map((file) => {
+          formData.append('file', file);
+        });
+      }
+      const originalUrl = urls.map((url) => url.originalFile.url);
+      const blurredUrl = urls.map((url) => url.originalFile.url);
+
       await createPost({
         caption,
-        imageURL: originalUrl,
-        blurredImageURL: blurredUrl,
+        imageUrls: originalUrl,
+        blurredImageUrls: blurredUrl,
         isExclusive,
         price
       });
-      setImageURL(originalUrl);
+      setObjectUrls(originalUrl);
       router.push(`/${user.username}`);
     } finally {
       setLoading(false);
@@ -68,8 +74,8 @@ export default function PostPreview() {
   };
 
   const handleDeleteImage = () => {
-    setFile(undefined);
-    setImageURL('');
+    setFiles([]);
+    setObjectUrls([]);
   };
 
   return (
@@ -95,18 +101,13 @@ export default function PostPreview() {
         </Stack>
         <Stack>
           <Card sx={{ padding: 0, marginTop: 5 }}>
-            {imageURL && (
-              <Stack direction={'row'}>
-                <Image
-                  src={imageURL}
-                  width={200}
-                  height={200}
-                  alt={'original'}
-                />
+            {objectUrls.map((url, idx) => (
+              <Stack direction={'row'} key={idx}>
+                <Image src={url} width={200} height={200} alt={'original'} />
               </Stack>
-            )}
+            ))}
 
-            {imageURL ? (
+            {objectUrls ? (
               <Button
                 color="error"
                 onClick={handleDeleteImage}
@@ -123,19 +124,11 @@ export default function PostPreview() {
               </Button>
             )}
 
-            <input
-              aria-label="upload-files"
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (!e.target.files?.length) return;
-                const file = e.target.files[0];
-                setFile(file);
-                setImageURL(URL.createObjectURL(file));
-              }}
-              hidden
-            />
+     <InputElement
+     inputRef={inputRef}
+     setFiles={setFiles}
+     setObjectUrls={setObjectUrls}
+     />
             <CardContent>
               <TextField
                 fullWidth
@@ -245,7 +238,7 @@ export default function PostPreview() {
               loading={loading}
               variant="contained"
               type="submit"
-              disabled={!(caption && imageURL)}
+              disabled={!(caption && objectUrls)}
               onClick={handleSubmit}
             >
               Share

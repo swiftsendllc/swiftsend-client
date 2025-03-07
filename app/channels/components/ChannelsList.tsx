@@ -65,7 +65,7 @@ export default function ChannelsList({
             }
             title={channel.receiver.fullName}
             subheader={
-              channel.lastMessage?.imageURL
+              channel.lastMessage?.imageUrls !== null
                 ? 'Image'
                 : channel.lastMessage?.deleted
                   ? 'This message was deleted'

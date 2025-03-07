@@ -1,5 +1,8 @@
 'use client';
-import { ChannelsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
+import {
+  ChannelsEntity,
+  MessagesEntity
+} from '@/hooks/entities/messages.entities';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
 
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
@@ -61,7 +64,7 @@ export default function MessageThread({
                 />
               </ListItemAvatar>
             )}
-            {message.imageURL ? (
+            {message.isExclusive ? (
               <MessageThreadImage message={message} setMessages={setMessages} />
             ) : (
               <>

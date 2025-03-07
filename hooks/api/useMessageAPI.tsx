@@ -107,8 +107,8 @@ const useMessageAPI = () => {
 
   const sendMessage = async (input: {
     message: string | null;
-    imageURL: string | null;
-    blurredImageURL: string | null;
+    imageUrls: string[] | null;
+    blurredImageUrls: string[] | null;
     receiverId: string;
     isExclusive: boolean;
     price: number;
@@ -132,8 +132,8 @@ const useMessageAPI = () => {
   const sendMessageReply = async (input: {
     message: string | null;
     messageId: string;
-    imageURL: string | null;
-    blurredImageURL: string | null;
+    imageUrls: string[] | null;
+    blurredImageUrls: string[] | null;
     isExclusive: boolean;
     price: number;
     receiverId: string;
