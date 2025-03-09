@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Transition from "@/components/Transition";
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { PostsEntity, UpdatePostInput } from "@/hooks/entities/posts.entities";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import CloseIcon from "@mui/icons-material/Close";
-import SendIcon from "@mui/icons-material/Send";
-import { LoadingButton } from "@mui/lab";
+import Transition from '@/components/Transition';
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { PostsEntity, UpdatePostInput } from '@/hooks/entities/posts.entities';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CloseIcon from '@mui/icons-material/Close';
+import SendIcon from '@mui/icons-material/Send';
+import { LoadingButton } from '@mui/lab';
 
 import {
   Button,
@@ -18,15 +18,15 @@ import {
   IconButton,
   Stack,
   TextField,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { Fragment, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function EditPostModal({
   isOpen,
   onClose,
-  post,
+  post
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
@@ -41,7 +41,7 @@ export default function EditPostModal({
   const [caption, setCaption] = useState(post.caption);
   const { editPost } = usePostAPI();
   const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
-    caption: post.caption,
+    caption: post.caption
   });
 
   useEffect(() => {
@@ -62,10 +62,10 @@ export default function EditPostModal({
       const data = await editPost(formData, post._id);
       setCaption(data.caption);
       handleClose();
-      toast.success("Post edited");
+      toast.success('Post edited');
     } catch (error) {
       console.log(error);
-      toast.error("Failed to edit post!");
+      toast.error('Failed to edit post!');
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ export default function EditPostModal({
   const handleInputChange = (value: string) => {
     setFormData((previous) => ({
       ...previous,
-      caption: value,
+      caption: value
     }));
     setCaption(value);
     setDidChange(value.trim() !== post.caption); // enables when caption is not empty
@@ -84,9 +84,9 @@ export default function EditPostModal({
     <>
       <Dialog
         sx={{
-          alignContent: "center",
-          alignItems: "center",
-          mb: 6,
+          alignContent: 'center',
+          alignItems: 'center',
+          mb: 6
         }}
         open={open}
         TransitionComponent={Transition}
@@ -108,16 +108,18 @@ export default function EditPostModal({
         </Stack>
         <Stack>
           <Card sx={{ padding: 0 }}>
-            {post.imageURL && (
-              <CardMedia
-                sx={{
-                  objectFit: "contain",
-                }}
-                component="img"
-                image={post.imageURL}
-                title="green iguana"
-              />
-            )}
+            {post.imageUrls.map((img, idx) => (
+              <Fragment key={idx}>
+                <CardMedia
+                  sx={{
+                    objectFit: 'contain'
+                  }}
+                  component="img"
+                  image={img}
+                  title="green iguana"
+                />
+              </Fragment>
+            ))}
 
             <CardContent>
               <TextField
@@ -142,16 +144,16 @@ export default function EditPostModal({
             spacing={1}
             sx={{
               mb: 1,
-              justifyContent: "center",
-              alignContent: "center",
-              padding: 0,
+              justifyContent: 'center',
+              alignContent: 'center',
+              padding: 0
             }}
           >
             <Button
               variant="contained"
               fullWidth
-              sx={{ width: "100%" }}
-              style={{ color: "var(--warning)" }}
+              sx={{ width: '100%' }}
+              style={{ color: 'var(--warning)' }}
               onClick={handleClose}
             >
               Discard
@@ -159,11 +161,11 @@ export default function EditPostModal({
             </Button>
             <LoadingButton
               fullWidth
-              sx={{ width: "100%" }}
+              sx={{ width: '100%' }}
               loading={loading}
               variant="contained"
               type="submit"
-              disabled={!didChange || caption.trim() === ""}
+              disabled={!didChange || caption.trim() === ''}
               onClick={handleOnChange}
             >
               Post

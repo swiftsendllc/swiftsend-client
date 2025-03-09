@@ -35,9 +35,11 @@ function PaymentModal({
   metadata,
   cardData,
   onSuccess,
-  makePayment,
+  makePayment
 }: {
-  makePayment: (paymentMethodId:string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (
+    paymentMethodId: string
+  ) => Promise<{ requiresAction: boolean; clientSecret: string }>;
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
@@ -208,9 +210,7 @@ function PaymentModal({
             onClick={handlePayment}
             variant="contained"
             sx={{ width: '100%' }}
-            disabled={
-              !(stripe && elements?.getElement(CardElement) && paymentMethod)
-            }
+            disabled={!(stripe && elements && paymentMethod)}
           >
             PAY
           </LoadingButton>
@@ -226,13 +226,15 @@ const PaymentModalWrapper = ({
   onClose,
   metadata,
   onSuccess,
-  makePayment,
+  makePayment
 }: {
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
   onSuccess: () => unknown;
-  makePayment: (paymentMethodId:string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (
+    paymentMethodId: string
+  ) => Promise<{ requiresAction: boolean; clientSecret: string }>;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);

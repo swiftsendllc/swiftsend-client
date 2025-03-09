@@ -264,16 +264,13 @@ const usePostAPI = () => {
 
   const getPostsLikedByYou = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${ENV('NEXT_PUBLIC_API_URL')}/posts/user/liked`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`
-        }
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/posts/user/liked`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
       }
-    );
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -295,7 +292,7 @@ const usePostAPI = () => {
     deleteComment,
     getCommentsCreatedByYou,
     getPostsLikedByYou,
-    uploadFile
+    uploadFile,
   };
 };
 export default usePostAPI;

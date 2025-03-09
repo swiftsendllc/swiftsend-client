@@ -15,7 +15,7 @@ import { HomeHeaderPage } from './HomeHeader';
 export default function HomePage() {
   const limit = 10;
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const { getTimelinePosts } = usePostAPI();
+  const { getTimelinePosts, getPost } = usePostAPI();
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
@@ -44,7 +44,7 @@ export default function HomePage() {
     }
   };
 
-  const makePayment = async (paymentMethodId:string) => {
+  const makePayment = async (paymentMethodId: string) => {
     if (!selectedPost) {
       return {
         requiresAction: false,
@@ -64,6 +64,28 @@ export default function HomePage() {
     };
   };
 
+  const handleSuccess = async (postId: string) => {
+    try {
+      const purchasedPost =( await getPost(postId) as PostsEntity);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post._id === selectedPost?._id
+            ? { ...post, imageUrls:purchasedPost.imageUrls }
+            : post
+        )
+      );
+      setPurchased(true);
+    } catch (error) {
+      console.error(error);
+      toast.error('SOMETHING WRONG HAPPENED');
+    }
+  };
+
+  const handleClose = () => {
+    setSelectedPost(null);
+    setPaymentModal(false);
+  };
+
   const loadMorePosts = () => {
     console.log('end');
     if (hasMore && !loading) {
@@ -80,17 +102,14 @@ export default function HomePage() {
       {selectedPost && (
         <PaymentModalWrapper
           isOpen={paymentModal}
-          onClose={() => {
-            setSelectedPost(null);
-            setPaymentModal(false);
-          }}
+          onClose={handleClose}
           metadata={{
             userId: user.userId,
             creatorId: selectedPost.user.userId,
             contentId: selectedPost._id
           }}
           makePayment={makePayment}
-          onSuccess={() => setPurchased(true)}
+          onSuccess={() => handleSuccess(selectedPost._id)}
         />
       )}
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>

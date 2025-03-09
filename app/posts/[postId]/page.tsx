@@ -34,6 +34,7 @@ export default function SinglePost() {
           onMutation={() => loadPost()}
           setPaymentModal={() => false}
           setSelectedPost={() => null}
+          purchased={post.isPurchased}
         />
       )}
     </Container>
