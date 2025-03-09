@@ -29,16 +29,17 @@ import {
 import { loadStripe, MetadataParam } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import usePostAPI from '@/hooks/api/usePostAPI';
 
 function PaymentModal({
   onClose,
   metadata,
   cardData,
   onSuccess,
-  makePayment,
+  makePayment
 }: {
-  makePayment: (paymentMethodId:string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (
+    paymentMethodId: string
+  ) => Promise<{ requiresAction: boolean; clientSecret: string }>;
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
@@ -209,9 +210,7 @@ function PaymentModal({
             onClick={handlePayment}
             variant="contained"
             sx={{ width: '100%' }}
-            disabled={
-              !(stripe && elements && paymentMethod)
-            }
+            disabled={!(stripe && elements && paymentMethod)}
           >
             PAY
           </LoadingButton>
@@ -227,13 +226,15 @@ const PaymentModalWrapper = ({
   onClose,
   metadata,
   onSuccess,
-  makePayment,
+  makePayment
 }: {
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
   onSuccess: () => unknown;
-  makePayment: (paymentMethodId:string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (
+    paymentMethodId: string
+  ) => Promise<{ requiresAction: boolean; clientSecret: string }>;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);

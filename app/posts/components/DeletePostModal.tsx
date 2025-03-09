@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Transition from "@/components/Transition";
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { UserContext } from "@/hooks/context/user-context";
-import { PostsEntity } from "@/hooks/entities/posts.entities";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import DeleteIcon from "@mui/icons-material/Delete";
-import TagFacesIcon from "@mui/icons-material/TagFaces";
-import { LoadingButton } from "@mui/lab";
+import Transition from '@/components/Transition';
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { UserContext } from '@/hooks/context/user-context';
+import { PostsEntity } from '@/hooks/entities/posts.entities';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
+import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Card,
@@ -19,15 +19,15 @@ import {
   IconButton,
   Stack,
   TextField,
-  Typography,
-} from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+  Typography
+} from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { Fragment, useContext, useEffect, useState } from 'react';
 
 export default function DeletePostModal({
   isOpen,
   onClose,
-  post,
+  post
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
@@ -67,9 +67,9 @@ export default function DeletePostModal({
         fullWidth
         maxWidth="xs"
         sx={{
-          alignContent: "center",
-          alignItems: "center",
-          mb: 6,
+          alignContent: 'center',
+          alignItems: 'center',
+          mb: 6
         }}
       >
         <Stack mt={2}>
@@ -84,23 +84,25 @@ export default function DeletePostModal({
               color="var(--error)"
               fontWeight={200}
             >
-              {" "}
+              {' '}
               Are you sure you want to delete this journal?
             </Typography>
           </Stack>
         </Stack>
         <Divider />
         <Card sx={{ padding: 0, margin: 0 }}>
-          {post.imageURL && (
-            <CardMedia
-              sx={{
-                objectFit: "contain",
-              }}
-              component="img"
-              image={post.imageURL}
-              title="post title"
-            />
-          )}
+          {post.imageUrls.map((img, idx) => (
+            <Fragment key={idx}>
+              <CardMedia
+                sx={{
+                  objectFit: 'contain'
+                }}
+                component="img"
+                image={img}
+                title="post title"
+              />
+            </Fragment>
+          ))}
           <CardContent>
             <TextField
               fullWidth
@@ -114,10 +116,10 @@ export default function DeletePostModal({
         <DialogActions>
           <LoadingButton
             loading={loading}
-            sx={{ width: "100%" }}
+            sx={{ width: '100%' }}
             onClick={handleDelete}
             variant="contained"
-            style={{ color: "var(--error)" }}
+            style={{ color: 'var(--error)' }}
           >
             <DeleteIcon />
             Yes
@@ -126,7 +128,7 @@ export default function DeletePostModal({
             onClick={handleClose}
             variant="contained"
             color="primary"
-            sx={{ width: "100%" }}
+            sx={{ width: '100%' }}
           >
             <TagFacesIcon />
             No

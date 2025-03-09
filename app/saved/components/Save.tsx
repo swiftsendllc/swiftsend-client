@@ -62,7 +62,7 @@ export const SavePage = () => {
             {saved.map((saved) => (
               <ImageListItem key={saved._id}>
                 <Image
-                  src={saved.imageURL}
+                  src={"kk"}
                   style={{
                     objectFit: "cover",
                     width: "100%",
