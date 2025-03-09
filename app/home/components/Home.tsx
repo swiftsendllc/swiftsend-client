@@ -1,10 +1,12 @@
 'use client';
 
 import PaymentModalWrapper from '@/components/PaymentModal';
+import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
+import { UserContext } from '@/hooks/context/user-context';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import { Container, Divider, LinearProgress, List } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { PostCard } from '../../posts/components/Post';
@@ -18,6 +20,9 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
+  const [purchased, setPurchased] = useState<boolean>(false);
+  const [user] = useContext(UserContext);
+  const { createPayment } = usePaymentAPI();
 
   const loadPosts = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : posts.length;
@@ -37,6 +42,26 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const makePayment = async (paymentMethodId:string) => {
+    if (!selectedPost) {
+      return {
+        requiresAction: false,
+        clientSecret: ''
+      };
+    }
+
+    const paymentResponse = await createPayment(selectedPost.user.userId, {
+      amount: selectedPost.price,
+      contentId: selectedPost._id,
+      payment_method: paymentMethodId,
+      payment_method_types: ['card']
+    });
+    return {
+      requiresAction: paymentResponse.requiresAction,
+      clientSecret: paymentResponse.clientSecret
+    };
   };
 
   const loadMorePosts = () => {
@@ -59,10 +84,15 @@ export default function HomePage() {
             setSelectedPost(null);
             setPaymentModal(false);
           }}
-          selectedContent={selectedPost}
+          metadata={{
+            userId: user.userId,
+            creatorId: selectedPost.user.userId,
+            contentId: selectedPost._id
+          }}
+          makePayment={makePayment}
+          onSuccess={() => setPurchased(true)}
         />
       )}
-
       <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>
         <HomeHeaderPage />
         <Divider sx={{ mt: 1 }} />
@@ -96,6 +126,7 @@ export default function HomePage() {
                 post={post}
                 setPaymentModal={setPaymentModal}
                 setSelectedPost={setSelectedPost}
+                purchased={purchased}
               />
             ))}
           </InfiniteScroll>

@@ -34,7 +34,13 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import toast from 'react-hot-toast';
 
 interface PostProps {
@@ -43,6 +49,7 @@ interface PostProps {
   onMutation?: () => unknown;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPost: React.Dispatch<React.SetStateAction<PostsEntity | null>>;
+  purchased:boolean
 }
 
 interface LikeButtonProps {
@@ -65,7 +72,8 @@ export const PostCard = ({
   allowComments = false,
   onMutation,
   setPaymentModal,
-  setSelectedPost
+  setSelectedPost,
+  purchased,
 }: PostProps) => {
   const { followProfile } = useAPI();
   const { likePost, savePost } = usePostAPI();
@@ -94,7 +102,7 @@ export const PostCard = ({
 
   const handleLike = debounce(async (postId: string) => {
     try {
-      const post = (await likePost(postId)) as PostsEntity;
+      const post = await likePost(postId);
       setIsLiked(post.isLiked);
       setLikeCount(post.likeCount);
       toast.success('Liked');
@@ -106,7 +114,7 @@ export const PostCard = ({
 
   const handleSave = debounce(async (postId: string) => {
     try {
-      const post = (await savePost(postId)) as PostsEntity;
+      const post = await savePost(postId);
       setIsSaved(post.isSaved);
       toast.success('Saved');
     } catch (error) {
@@ -117,9 +125,9 @@ export const PostCard = ({
 
   const handleFollow = async (userId: string) => {
     try {
-      const followUser = (await followProfile(userId)) as PostsEntity;
-      setIsFollowing(followUser.isFollowing);
-      toast.success(`Connected ${followUser}`);
+      await followProfile(userId);
+      setIsFollowing(post.isFollowing);
+      toast.success('CONNECTED');
     } catch (error) {
       console.log(error);
       toast.error('Failed to connect user!');
@@ -157,7 +165,7 @@ export const PostCard = ({
             </>
           }
           action={
-            post.userId !== user.userId ? (
+            post.userId !== user.userId && !isFollowing ? (
               <FollowButton
                 isFollowing={isFollowing}
                 onClick={() => handleFollow(post.userId)}
@@ -195,19 +203,25 @@ export const PostCard = ({
           )}
         </Typography>
         <Box sx={{ position: 'relative' }}>
-          <Image
-            style={{
-              objectFit: 'contain',
-              width: '100%',
-              height: '50%'
-            }}
-            priority
-            src={post.imageURL}
-            alt={post.caption || 'Swiftsend image'}
-            width={400}
-            height={100}
-          />
-          {post.userId !== user.userId ? (
+          {post.imageUrls.map((img, idx) => (
+            <Fragment key={idx}>
+              <Image
+                style={{
+                  objectFit: 'contain',
+                  width: '100%',
+                  height: '50%'
+                }}
+                priority
+                src={img}
+                alt={post.caption || 'Swiftsend image'}
+                width={400}
+                height={100}
+              />
+            </Fragment>
+          ))}
+
+          {post.userId !== user.userId &&
+          !post.purchasedBy.includes(user.userId) && !purchased ? (
             <IconButton
               onClick={() => {
                 setSelectedPost(post);
@@ -334,7 +348,7 @@ const SaveButton = (props: SaveButtonProps) => {
 
 const FollowButton = (props: FollowButtonProps) => {
   const [isFollowing, setIsFollowing] = useState(props.isFollowing);
-  useEffect(() => setIsFollowing(isFollowing), [isFollowing]);
+  useEffect(() => setIsFollowing(props.isFollowing), [props.isFollowing]);
 
   return (
     <Button

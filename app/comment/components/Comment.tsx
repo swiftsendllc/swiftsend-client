@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { UserContext } from "@/hooks/context/user-context";
-import { CommentsEntity } from "@/hooks/entities/posts.entities";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PreviewIcon from "@mui/icons-material/Preview";
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { CommentsEntity } from '@/hooks/entities/posts.entities';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PreviewIcon from '@mui/icons-material/Preview';
 
 import {
   Avatar,
@@ -16,36 +15,35 @@ import {
   Divider,
   IconButton,
   Stack,
-  Typography,
-} from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export function CommentPage() {
   const router = useRouter();
   const [comments, setComments] = useState<CommentsEntity[]>([]);
   const [, setSelectedComment] = useState<CommentsEntity | null>(null);
-  const { getComment, deleteComment } = usePostAPI();
-  const [user] = useContext(UserContext);
+  const { getCommentsCreatedByYou, deleteComment } = usePostAPI();
 
   const loadComment = async () => {
     try {
-      const comment = await getComment(user.userId);
+      const comment = await getCommentsCreatedByYou();
       setComments(comment);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to load comments!");
+      toast.error('Failed to load comments!');
     }
   };
 
   const handleDelete = async (postId: string, commentId: string) => {
     try {
       await deleteComment(postId, commentId);
-      toast.success("This comment is deleted");
+      toast.success('This comment is deleted');
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete comment");
+      toast.error('Failed to delete comment');
     }
   };
 
@@ -71,7 +69,7 @@ export function CommentPage() {
         {comments.map((comment, idx) => (
           <Card
             key={idx}
-            sx={{ mb: 0.5, width: "100%", p: 0, m: 0, borderRadius: "15px" }}
+            sx={{ mb: 0.5, width: '100%', p: 0, m: 0, borderRadius: '15px' }}
             onClick={() => setSelectedComment(comment)}
           >
             <CardHeader

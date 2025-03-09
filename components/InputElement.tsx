@@ -17,11 +17,8 @@ export default function InputElement({
         multiple
         onChange={(e) => {
           const input = e.target;
-          console.log('......input');
           if (!input.files?.length) return;
-          console.log('......input.....');
           const multipleFiles = Array.from(input!.files);
-          console.log("multiple files", multipleFiles)
           setFiles((prev) => [...prev, ...multipleFiles]);
           setObjectUrls((prev) => [
             ...prev,

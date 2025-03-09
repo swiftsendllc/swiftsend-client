@@ -85,7 +85,7 @@ export default function MessageThreadList({
           primary={
             <Stack direction="row-reverse" justifyContent="space-between">
               <Typography variant="body2" component="span" textAlign="left">
-                {message.deleted && !message.imageUrls && !message.repliedTo
+                {message.deleted  && !message.repliedTo
                   ? 'THIS MESSAGE IS DELETED'
                   : message.message || 'UNKNOWN MESSAGE'}{' '}
               </Typography>
