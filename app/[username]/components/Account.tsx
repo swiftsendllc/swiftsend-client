@@ -1,11 +1,11 @@
-"use client";
-import DeletePostModal from "@/app/posts/components/DeletePostModal";
-import EditPostModal from "@/app/posts/components/EditPostModal";
-import usePostAPI from "@/hooks/api/usePostAPI";
-import { CreatorContext } from "@/hooks/context/creator-context";
-import { UserContext } from "@/hooks/context/user-context";
-import { PostsEntity } from "@/hooks/entities/posts.entities";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+'use client';
+import DeletePostModal from '@/app/posts/components/DeletePostModal';
+import EditPostModal from '@/app/posts/components/EditPostModal';
+import usePostAPI from '@/hooks/api/usePostAPI';
+import { CreatorContext } from '@/hooks/context/creator-context';
+import { UserContext } from '@/hooks/context/user-context';
+import { PostsEntity } from '@/hooks/entities/posts.entities';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Box,
   IconButton,
@@ -15,19 +15,19 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Typography,
-} from "@mui/material";
-import Image from "next/image";
+  Typography
+} from '@mui/material';
+import Image from 'next/image';
 
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from 'react';
 
 const options = [
   {
-    label: "Edit",
+    label: 'Edit'
   },
   {
-    label: "Delete",
-  },
+    label: 'Delete'
+  }
 ];
 
 export default function AccountPostPage() {
@@ -57,7 +57,7 @@ export default function AccountPostPage() {
 
   const handleMenuItemClick = (option: string) => {
     setAnchorEl(null);
-    if (option !== "Delete") {
+    if (option !== 'Delete') {
       setEditPostModal(true);
     } else {
       setDeletePostModal(true);
@@ -77,9 +77,9 @@ export default function AccountPostPage() {
             <Image
               src="/svg/sasuke1.svg"
               style={{
-                objectFit: "cover",
-                width: "50%",
-                height: "50%",
+                objectFit: 'cover',
+                width: '50%',
+                height: '50%'
               }}
               alt="image"
               width={300}
@@ -92,33 +92,62 @@ export default function AccountPostPage() {
           </Stack>
         ) : (
           <ImageList
-            sx={{ width: "100%", height: "auto" }}
+            sx={{ width: '100%', height: 'auto' }}
             cols={3}
             gap={4}
             rowHeight={164}
           >
             {posts.map((post) => (
-              <ImageListItem key={post._id}>
-                <Image
-                  src={post.imageURL}
-                  style={{
-                    objectFit: "cover",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  alt={post.caption || "image"}
-                  width={300}
-                  height={100}
-                  priority
-                />
+              <Stack key={post._id}>
+                {post.imageUrls.map((img, idx) => {
+                  const moreImages = post.imageUrls.length > 1;
+                  return moreImages ? (
+                    <ImageListItem
+                      style={{
+                        display: 'flex-end',
+                        maxHeight: 100,
+                        maxWidth: 100,
+                        overflowX: 'hidden',
+                        overflowY: 'auto',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Fragment key={idx}>
+                        <Image
+                          width={100}
+                          height={100}
+                          src={img}
+                          alt="IMAGE"
+                          priority
+                        />
+                      </Fragment>
+                    </ImageListItem>
+                  ) : (
+                    <Stack key={idx}>
+                      <Image
+                        src={img}
+                        style={{
+                          objectFit: 'cover',
+                          width:"100%",
+                          height:"100%"
+                        }}
+                        alt={post.caption || 'image'}
+                        width={300}
+                        height={100}
+                        priority
+                      />
+                    </Stack>
+                  );
+                })}
+
                 {user.userId !== creator.userId ? null : (
                   <ImageListItemBar
-                    sx={{ background: "transparent" }}
+                    sx={{ background: 'transparent' }}
                     position="top"
                     actionIcon={
                       <>
                         <IconButton
-                          sx={{ color: "white" }}
+                          sx={{ color: 'white' }}
                           aria-label="options"
                           id="long-button"
                           aria-haspopup="true"
@@ -152,7 +181,7 @@ export default function AccountPostPage() {
                     actionPosition="right"
                   />
                 )}
-              </ImageListItem>
+              </Stack>
             ))}
           </ImageList>
         )}

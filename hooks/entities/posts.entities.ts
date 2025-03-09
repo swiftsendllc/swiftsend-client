@@ -4,13 +4,14 @@ export interface PostsEntity {
   _id: string;
   userId: string;
   caption: string;
-  imageURL: string;
-  blurredImageURL: string;
+  imageUrls: string[];
+  blurredImageUrls: string[];
   likeCount: number;
   commentCount: number;
   isLiked: boolean;
   isSaved: boolean;
   isFollowing: boolean;
+  isPurchased: boolean;
   shareCount: number;
   saveCount: number;
   createdAt: Date;
@@ -18,6 +19,7 @@ export interface PostsEntity {
   comments?: CommentsEntity[];
   saves?: SavesEntity;
   price: number;
+  status: boolean;
   isExclusive: boolean;
   purchasedBy: string[];
 }
@@ -30,7 +32,7 @@ export interface UploadEntity {
 export interface CreatePostInput {
   caption: string;
   imageURL: string;
-  blurredImageURL:string
+  blurredImageURL: string;
   isExclusive: boolean;
   price: number;
 }

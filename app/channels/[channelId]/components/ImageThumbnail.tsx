@@ -20,23 +20,11 @@ export default function ImageThumbnail({
         justifyContent: 'space-between'
       }}
     >
-      {message.imageUrls !== null &&
-        message.imageUrls.map((image, idx) => {
-          const img = image !== null;
-          return (
-            <Fragment key={idx}>
-              {img && (
-                <Image
-                  width={100}
-                  height={100}
-                  src={image}
-                  alt="IMAGE"
-                  priority
-                />
-              )}
-            </Fragment>
-          );
-        })}
+      {message.imageUrls.map((image, idx) => (
+        <Fragment key={idx}>
+          <Image width={100} height={100} src={image} alt="IMAGE" priority />
+        </Fragment>
+      ))}
     </ImageListItem>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
-import { PostsEntity } from '@/hooks/entities/posts.entities';
 import { LoadingButton } from '@mui/lab';
 import {
   CardElement,
@@ -10,7 +9,6 @@ import {
   useStripe
 } from '@stripe/react-stripe-js';
 
-import { UserContext } from '@/hooks/context/user-context';
 import { CardsEntity } from '@/hooks/entities/payments.entity';
 import { ENV } from '@/library/constants';
 import {
@@ -28,26 +26,29 @@ import {
   RadioGroup,
   Typography
 } from '@mui/material';
-import { loadStripe } from '@stripe/stripe-js';
-import React, { useContext, useEffect, useState } from 'react';
+import { loadStripe, MetadataParam } from '@stripe/stripe-js';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 function PaymentModal({
   onClose,
-  selectedContent,
-  cardData
+  metadata,
+  cardData,
+  onSuccess,
+  makePayment,
 }: {
+  makePayment: (paymentMethodId:string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
   isOpen: boolean;
   onClose: () => unknown;
-  selectedContent: PostsEntity;
+  metadata: MetadataParam;
   cardData: CardsEntity | null;
+  onSuccess?: () => unknown;
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { createPayment, attachPaymentMethod, confirmCard } = usePaymentAPI();
+  const { attachPaymentMethod, confirmCard } = usePaymentAPI();
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>('');
-  const [user] = useContext(UserContext);
 
   const handleClose = () => {
     onClose?.();
@@ -82,11 +83,7 @@ function PaymentModal({
         const { paymentMethod } = await stripe.createPaymentMethod({
           type: 'card',
           card: newCard!,
-          metadata: {
-            userId: user.userId,
-            creatorId: selectedContent.user.userId,
-            contentId: selectedContent._id
-          },
+          metadata,
           billing_details: {
             name: 'Chris Evans'
           }
@@ -107,19 +104,14 @@ function PaymentModal({
         paymentMethodId: paymentMethodId
       });
 
-      const paymentResponse = await createPayment(selectedContent.user.userId, {
-        amount: selectedContent.price,
-        contentId: selectedContent._id,
-        payment_method: paymentMethodId,
-        payment_method_types: ['card']
-      });
+      const paymentResponse = await makePayment(paymentMethodId);
 
       if (paymentResponse.requiresAction) {
         await stripe.confirmCardPayment(paymentResponse.clientSecret, {
           payment_method: paymentMethodId
         });
       }
-
+      onSuccess?.();
       toast.success('PURCHASED');
       handleClose();
     } catch (error) {
@@ -216,7 +208,9 @@ function PaymentModal({
             onClick={handlePayment}
             variant="contained"
             sx={{ width: '100%' }}
-            disabled={!(stripe && elements)}
+            disabled={
+              !(stripe && elements?.getElement(CardElement) && paymentMethod)
+            }
           >
             PAY
           </LoadingButton>
@@ -230,11 +224,15 @@ const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
 const PaymentModalWrapper = ({
   isOpen,
   onClose,
-  selectedContent
+  metadata,
+  onSuccess,
+  makePayment,
 }: {
   isOpen: boolean;
   onClose: () => unknown;
-  selectedContent: PostsEntity | null;
+  metadata: MetadataParam;
+  onSuccess: () => unknown;
+  makePayment: (paymentMethodId:string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -256,13 +254,15 @@ const PaymentModalWrapper = ({
 
   return (
     <>
-      {open && selectedContent && (
+      {open && (
         <Elements stripe={stripePromise!}>
           <PaymentModal
             isOpen={true}
             onClose={onClose}
-            selectedContent={selectedContent}
+            metadata={metadata}
             cardData={cardData}
+            onSuccess={onSuccess}
+            makePayment={makePayment}
           />
         </Elements>
       )}

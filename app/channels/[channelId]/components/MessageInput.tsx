@@ -49,15 +49,12 @@ export default function MessageInput({
   const [objectUrls, setObjectUrls] = useState<string[]>([]);
 
   const handleUpload = async () => {
-    console.log('started..');
     if (!files) return null;
-    console.log('started..file..checked..');
     try {
       const formData = new FormData();
       files.map((file) => {
         formData.append('files', file);
       });
-      console.log('started..file..checked..appended');
       const urls = await uploadFile(formData);
       toast.success('Uploaded');
       return urls;

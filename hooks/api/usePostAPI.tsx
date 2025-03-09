@@ -1,7 +1,7 @@
 import { authCookieKey, ENV } from '@/library/constants';
 import { getCookie } from 'cookies-next';
-import { CommentPostInput, UpdatePostInput } from '../entities/posts.entities';
 import { UploadedEntity } from '../entities/messages.entities';
+import { CommentPostInput, UpdatePostInput } from '../entities/posts.entities';
 
 const usePostAPI = () => {
   const uploadFile = async (formData: FormData) => {
@@ -243,10 +243,10 @@ const usePostAPI = () => {
     return data;
   };
 
-  const getComment = async (userId: string) => {
+  const getCommentsCreatedByYou = async () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV('NEXT_PUBLIC_API_URL')}/posts/${userId}/comments`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/posts/user/commented`,
       {
         method: 'GET',
         headers: {
@@ -262,10 +262,10 @@ const usePostAPI = () => {
     return data;
   };
 
-  const getLike = async (userId: string) => {
+  const getPostsLikedByYou = async () => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV('NEXT_PUBLIC_API_URL')}/posts/user/${userId}/likes`,
+      `${ENV('NEXT_PUBLIC_API_URL')}/posts/user/liked`,
       {
         method: 'GET',
         headers: {
@@ -293,8 +293,8 @@ const usePostAPI = () => {
     getSaves,
     getCreatorPosts,
     deleteComment,
-    getComment,
-    getLike,
+    getCommentsCreatedByYou,
+    getPostsLikedByYou,
     uploadFile
   };
 };
