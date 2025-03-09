@@ -29,6 +29,7 @@ import {
 import { loadStripe, MetadataParam } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import usePostAPI from '@/hooks/api/usePostAPI';
 
 function PaymentModal({
   onClose,
@@ -209,7 +210,7 @@ function PaymentModal({
             variant="contained"
             sx={{ width: '100%' }}
             disabled={
-              !(stripe && elements?.getElement(CardElement) && paymentMethod)
+              !(stripe && elements && paymentMethod)
             }
           >
             PAY
