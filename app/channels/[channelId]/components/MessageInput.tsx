@@ -50,14 +50,20 @@ export default function MessageInput({
 
   const handleUpload = async () => {
     if (!files) return null;
+
     try {
       const formData = new FormData();
       files.map((file) => {
         formData.append('files', file);
       });
-      const urls = await uploadFile(formData);
-      toast.success('Uploaded');
-      return urls;
+
+      if (isExclusive) {
+        const urls = await uploadFile(formData);
+        const imgUrls = urls?.map((file) => file.originalFile.url);
+        const blurImageUrls = urls?.map((file) => file.blurredFile.url);
+        toast.success('Uploaded');
+        return { imgUrls, blurImageUrls };
+      }
     } catch (error) {
       toast.error('error', error);
       return null;
@@ -71,7 +77,7 @@ export default function MessageInput({
     setObjectUrls([]);
     setPrice(0);
     setFiles([]);
-    setIsExclusive((prev) => !prev);
+    setIsExclusive(false);
   };
 
   const handleMessage = async () => {
@@ -79,14 +85,11 @@ export default function MessageInput({
     try {
       const urls = await handleUpload();
 
-      const imgUrls = urls?.map((file) => file.originalFile.url);
-      const blurImageUrls = urls?.map((file) => file.blurredFile.url);
-
       const msg = await sendMessage({
         message: messageInput,
         receiverId: channel.receiver.userId,
-        imageUrls: imgUrls ?? null,
-        blurredImageUrls: blurImageUrls ?? null,
+        imageUrls: urls?.imgUrls ?? null,
+        blurredImageUrls: urls?.blurImageUrls ?? null,
         isExclusive: isExclusive,
         price: price
       });
@@ -104,15 +107,12 @@ export default function MessageInput({
       try {
         const urls = await handleUpload();
 
-        const imgUrls = urls?.map((file) => file.originalFile.url);
-        const blurImageUrls = urls?.map((file) => file.blurredFile.url);
-
         const reply = await sendMessageReply({
           message: messageInput,
           messageId: replyMessage._id,
           receiverId: replyMessage.senderId,
-          imageUrls: imgUrls ?? null,
-          blurredImageUrls: blurImageUrls ?? null,
+          imageUrls: urls?.imgUrls ?? null,
+          blurredImageUrls: urls?.blurImageUrls ?? null,
           isExclusive: replyMessage.isExclusive,
           price: replyMessage.price ?? null
         });

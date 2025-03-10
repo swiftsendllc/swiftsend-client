@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Transition from "@/components/Transition";
-import useAPI from "@/hooks/api/useAPI";
-import { UserContext } from "@/hooks/context/user-context";
-import { UpdateUserInput } from "@/hooks/entities/users.entities";
-import { LoadingButton } from "@mui/lab";
+import Transition from '@/components/Transition';
+import useAPI from '@/hooks/api/useAPI';
+import { UserContext } from '@/hooks/context/user-context';
+import { UpdateUserInput } from '@/hooks/entities/users.entities';
+import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Dialog,
@@ -13,15 +13,15 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
-  TextField,
-} from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  TextField
+} from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function EditProfileModal({
   isOpen,
   onClose,
-  currentField,
+  currentField
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
@@ -36,39 +36,39 @@ export default function EditProfileModal({
 
   // Initialize formData with user data and ensure values are not undefined
   const [formData, setFormData] = useState<Partial<UpdateUserInput>>({
-    username: user?.username || "",
-    pronouns: user?.pronouns || "",
-    bio: user?.bio || "",
-    websiteURL: user?.websiteURL || "",
-    bannerURL: user?.bannerURL || "",
+    username: user?.username || '',
+    pronouns: user?.pronouns || '',
+    bio: user?.bio || '',
+    websiteURL: user?.websiteURL || '',
+    bannerURL: user?.bannerURL || ''
   });
 
   const profiles = [
     {
-      label: "Username",
+      label: 'Username',
       value: formData.username,
-      key: "username",
+      key: 'username'
     },
     {
-      label: "Pronouns",
+      label: 'Pronouns',
       value: formData.pronouns,
-      key: "pronouns",
+      key: 'pronouns'
     },
     {
-      label: "Bio",
+      label: 'Bio',
       value: formData.bio,
-      key: "bio",
+      key: 'bio'
     },
     {
-      label: "Links",
+      label: 'Links',
       value: formData.websiteURL,
-      key: "websiteURL",
+      key: 'websiteURL'
     },
     {
-      label: "Banners",
+      label: 'Banners',
       value: formData.bannerURL,
-      key: "bannerURL",
-    },
+      key: 'bannerURL'
+    }
   ];
 
   const { updateUser } = useAPI();
@@ -81,7 +81,7 @@ export default function EditProfileModal({
   const handleInputChange = (key: string, value: string) => {
     setFormData((previous) => ({
       ...previous,
-      [key]: value,
+      [key]: value
     }));
     setDidChange(true);
   };
@@ -92,10 +92,10 @@ export default function EditProfileModal({
       const data = await updateUser(formData);
       setUserInfo(data);
       handleClose();
-      toast.success(` The ${data} is updated `);
+      toast.success('UPDATED');
     } catch (error) {
       console.log(error);
-      toast.error(`Failed to update!`);
+      toast.error("FAILED TO UPDATE!");
     } finally {
       setLoading(false);
     }
@@ -116,8 +116,8 @@ export default function EditProfileModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         onClose={handleClose}
       >
@@ -136,7 +136,7 @@ export default function EditProfileModal({
               <TextField
                 key={currentProfile.key}
                 label={currentProfile.label}
-                value={currentProfile.value || ""}
+                value={currentProfile.value || ''}
                 fullWidth
                 onChange={(event) =>
                   handleInputChange(currentProfile.key, event.target.value)

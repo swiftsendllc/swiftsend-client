@@ -22,6 +22,7 @@ export interface PostsEntity {
   status: boolean;
   isExclusive: boolean;
   purchasedBy: string[];
+  isMyPost:boolean
 }
 
 export interface UploadEntity {
