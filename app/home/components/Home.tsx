@@ -20,6 +20,7 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [purchased, setPurchased] = useState<boolean>(false);
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
@@ -146,6 +147,8 @@ export default function HomePage() {
                 setPaymentModal={setPaymentModal}
                 setSelectedPost={setSelectedPost}
                 purchased={purchased}
+                isFollowing={isFollowing}
+                setIsFollowing={setIsFollowing}
               />
             ))}
           </InfiniteScroll>

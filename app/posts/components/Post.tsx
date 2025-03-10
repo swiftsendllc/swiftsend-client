@@ -49,7 +49,9 @@ interface PostProps {
   onMutation?: () => unknown;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPost: React.Dispatch<React.SetStateAction<PostsEntity | null>>;
-  purchased:boolean
+  purchased: boolean;
+  setIsFollowing: React.Dispatch<React.SetStateAction<boolean>>;
+  isFollowing: boolean;
 }
 
 interface LikeButtonProps {
@@ -74,13 +76,14 @@ export const PostCard = ({
   setPaymentModal,
   setSelectedPost,
   purchased,
+  isFollowing,
+  setIsFollowing
 }: PostProps) => {
   const { followProfile } = useAPI();
   const { likePost, savePost } = usePostAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
-  const [isFollowing, setIsFollowing] = useState(post.isFollowing);
   const [commentCount, setCommentCount] = useState(post.commentCount);
   const [user] = useContext(UserContext);
   const router = useRouter();
@@ -105,10 +108,10 @@ export const PostCard = ({
       const post = await likePost(postId);
       setIsLiked(post.isLiked);
       setLikeCount(post.likeCount);
-      toast.success('Liked');
+      toast.success('LIKED');
     } catch (error) {
       console.log(error);
-      toast.error('Failed to like post!');
+      toast.error('FAILED TO LIKE!');
     }
   }, 250);
 
@@ -116,21 +119,21 @@ export const PostCard = ({
     try {
       const post = await savePost(postId);
       setIsSaved(post.isSaved);
-      toast.success('Saved');
+      toast.success('SAVED');
     } catch (error) {
       console.log(error);
-      toast.error('Failed to save post!');
+      toast.error('FAILED TO SAVE POST!');
     }
   }, 250);
 
   const handleFollow = async (userId: string) => {
     try {
-      await followProfile(userId);
-      setIsFollowing(post.isFollowing);
+      const followedUser = await followProfile(userId);
+      setIsFollowing(followedUser.isFollowing);
       toast.success('CONNECTED');
     } catch (error) {
       console.log(error);
-      toast.error('Failed to connect user!');
+      toast.error('FAILED TO FOLLOW!');
     }
   };
 
@@ -165,12 +168,12 @@ export const PostCard = ({
             </>
           }
           action={
-            post.userId !== user.userId && !isFollowing ? (
+            !post.isMyPost && (
               <FollowButton
                 isFollowing={isFollowing}
                 onClick={() => handleFollow(post.userId)}
               />
-            ) : null
+            )
           }
           title={
             <>
@@ -221,7 +224,8 @@ export const PostCard = ({
           ))}
 
           {post.userId !== user.userId &&
-          !post.purchasedBy.includes(user.userId) && !purchased ? (
+          !post.purchasedBy.includes(user.userId) &&
+          !purchased ? (
             <IconButton
               onClick={() => {
                 setSelectedPost(post);
