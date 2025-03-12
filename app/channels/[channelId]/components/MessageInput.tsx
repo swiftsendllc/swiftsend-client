@@ -10,15 +10,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 import SendIcon from '@mui/icons-material/Send';
 import { LoadingButton } from '@mui/lab';
-import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Paper,
-  Stack,
-  TextField
-} from '@mui/material';
+import { Box, Button, Container, IconButton, Paper, Stack, TextField } from '@mui/material';
 import Image from 'next/image';
 import React, { useContext, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -31,12 +23,7 @@ interface UserMessageInputProps {
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function MessageInput({
-  onMessage,
-  replyMessage,
-  isReplying,
-  setIsReplying
-}: UserMessageInputProps) {
+export default function MessageInput({ onMessage, replyMessage, isReplying, setIsReplying }: UserMessageInputProps) {
   const { sendMessage, sendMessageReply } = useMessageAPI();
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState<string>('');
@@ -127,11 +114,7 @@ export default function MessageInput({
 
   return (
     <>
-      <ReplyThread
-        replyMessage={replyMessage}
-        isReplying={isReplying}
-        onClose={() => setIsReplying(false)}
-      />
+      <ReplyThread replyMessage={replyMessage} isReplying={isReplying} onClose={() => setIsReplying(false)} />
       <Box
         width="100%"
         sx={{
@@ -172,25 +155,16 @@ export default function MessageInput({
                           justifyContent: 'space-between'
                         }}
                         onClick={() => {
-                          setObjectUrls(
-                            objectUrls.filter((_, id) => id !== idx)
-                          );
+                          setObjectUrls(objectUrls.filter((_, id) => id !== idx));
                           setFiles(files.filter((_, id) => id !== idx));
                         }}
                       />
                     </Box>
                   ))}
                 </Stack>
-                <IconButton
-                  sx={{ py: 2 }}
-                  onClick={() => inputRef.current?.click()}
-                >
+                <IconButton sx={{ py: 2 }} onClick={() => inputRef.current?.click()}>
                   <AddPhotoAlternateIcon />
-                  <InputElement
-                    inputRef={inputRef}
-                    setFiles={setFiles}
-                    setObjectUrls={setObjectUrls}
-                  />
+                  <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={setObjectUrls} />
                 </IconButton>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <TextField
@@ -199,16 +173,10 @@ export default function MessageInput({
                     variant="outlined"
                     size="small"
                     value={price}
-                    onChange={(e) =>
-                      setPrice(+e.target.value.replace(/[^0-9]/g, ''))
-                    }
+                    onChange={(e) => setPrice(+e.target.value.replace(/[^0-9]/g, ''))}
                     sx={{ flex: 1 }}
                   />
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={handleCancel}
-                  >
+                  <Button variant="contained" color="warning" onClick={handleCancel}>
                     Cancel
                   </Button>
                 </Box>
@@ -225,17 +193,14 @@ export default function MessageInput({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
-                  if (messageInput.trim() !== '')
-                    (isReplying ? handleReply : handleMessage)();
+                  if (messageInput.trim() !== '') (isReplying ? handleReply : handleMessage)();
                 }
               }}
               slotProps={{
                 input: {
                   startAdornment: (
                     <IconButton onClick={() => setIsExclusive(true)}>
-                      <AttachMoneyIcon
-                        color={isExclusive ? 'info' : 'action'}
-                      />
+                      <AttachMoneyIcon color={isExclusive ? 'info' : 'action'} />
                     </IconButton>
                   ),
                   endAdornment: (
@@ -255,11 +220,7 @@ export default function MessageInput({
                       <Button onClick={() => inputRef.current?.click()}>
                         <LandscapeIcon />
                       </Button>
-                      <InputElement
-                        inputRef={inputRef}
-                        setFiles={setFiles}
-                        setObjectUrls={() => null}
-                      />
+                      <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={() => null} />
                     </>
                   )
                 }

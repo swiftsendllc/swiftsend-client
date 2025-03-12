@@ -19,12 +19,12 @@ import toast from 'react-hot-toast';
 
 export function LikePage() {
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const { getPostsLikedByYou } = usePostAPI();
+  const { getLikedPosts } = usePostAPI();
   const router = useRouter();
 
   const loadLike = async () => {
     try {
-      const post = await getPostsLikedByYou();
+      const post = await getLikedPosts();
       setPosts(post);
     } catch (error) {
       console.log(error);
@@ -72,6 +72,7 @@ export function LikePage() {
                     width={400}
                     height={400}
                     priority
+                    onClick={() => router.push(`/posts/${post._id}`)}
                   />
                 </ImageListItem>
               ))

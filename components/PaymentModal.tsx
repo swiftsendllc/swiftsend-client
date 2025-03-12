@@ -2,12 +2,7 @@
 
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { LoadingButton } from '@mui/lab';
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe
-} from '@stripe/react-stripe-js';
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import { CardsEntity } from '@/hooks/entities/payments.entity';
 import { ENV } from '@/library/constants';
@@ -37,9 +32,7 @@ function PaymentModal({
   onSuccess,
   makePayment
 }: {
-  makePayment: (
-    paymentMethodId: string
-  ) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
@@ -108,12 +101,11 @@ function PaymentModal({
 
       const paymentResponse = await makePayment(paymentMethodId);
 
-      if (paymentResponse.requiresAction) {
-        await stripe.confirmCardPayment(paymentResponse.clientSecret, {
-          payment_method: paymentMethodId
-        });
-      }
-      onSuccess?.();
+      const d = await stripe.confirmCardPayment(paymentResponse.clientSecret, {
+        payment_method: paymentMethodId
+      });
+      
+      if (d.paymentIntent?.status === 'succeeded') onSuccess?.();
       toast.success('PURCHASED');
       handleClose();
     } catch (error) {
@@ -160,26 +152,10 @@ function PaymentModal({
             <Typography variant="subtitle1" gutterBottom>
               Payment Method
             </Typography>
-            <RadioGroup
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              row
-            >
-              <FormControlLabel
-                value="card"
-                control={<Radio />}
-                label="💳 Credit Card"
-              />
-              <FormControlLabel
-                value="link"
-                control={<Radio />}
-                label="🏦 Debit card"
-              />
-              <FormControlLabel
-                value="apple_pay"
-                control={<Radio />}
-                label="💻 Apple Pay"
-              />
+            <RadioGroup value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} row>
+              <FormControlLabel value="card" control={<Radio />} label="💳 Credit Card" />
+              <FormControlLabel value="link" control={<Radio />} label="🏦 Debit card" />
+              <FormControlLabel value="apple_pay" control={<Radio />} label="💻 Apple Pay" />
             </RadioGroup>
             {paymentMethod === 'card' && (
               <Box
@@ -232,9 +208,7 @@ const PaymentModalWrapper = ({
   onClose: () => unknown;
   metadata: MetadataParam;
   onSuccess: () => unknown;
-  makePayment: (
-    paymentMethodId: string
-  ) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
