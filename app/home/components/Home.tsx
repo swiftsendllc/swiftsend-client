@@ -20,8 +20,7 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
-  const [isFollowing, setIsFollowing] = useState<boolean>(false)
-  const [purchased, setPurchased] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
 
@@ -67,15 +66,24 @@ export default function HomePage() {
 
   const handleSuccess = async (postId: string) => {
     try {
-      const purchasedPost =( await getPost(postId) as PostsEntity);
+      await new Promise((res) => setTimeout(res, 1500));
+      const purchasedPost = (await getPost(postId)) as PostsEntity;
       setPosts((prev) =>
-        prev.map((post) =>
-          post._id === selectedPost?._id
-            ? { ...post, imageUrls:purchasedPost.imageUrls }
-            : post
-        )
+        prev.map((post) => {
+          const updated =
+            post._id === selectedPost?._id
+              ? {
+                  ...post,
+                  imageUrls: purchasedPost.imageUrls,
+                  isPurchased: purchasedPost.isPurchased,
+                  purchasedBy: [...post.purchasedBy, user.userId]
+                }
+              : post;
+
+          if (post._id === selectedPost?._id) console.log(updated);
+          return updated;
+        })
       );
-      setPurchased(true);
     } catch (error) {
       console.error(error);
       toast.error('SOMETHING WRONG HAPPENED');
@@ -88,7 +96,6 @@ export default function HomePage() {
   };
 
   const loadMorePosts = () => {
-    console.log('end');
     if (hasMore && !loading) {
       loadPosts();
     }
@@ -146,7 +153,6 @@ export default function HomePage() {
                 post={post}
                 setPaymentModal={setPaymentModal}
                 setSelectedPost={setSelectedPost}
-                purchased={purchased}
                 isFollowing={isFollowing}
                 setIsFollowing={setIsFollowing}
               />
