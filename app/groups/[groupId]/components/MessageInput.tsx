@@ -97,11 +97,7 @@ export default function MessageInputPage({
 
   return (
     <>
-      <ReplyThread
-        isReplying={isReplying}
-        replyMessage={replyMessage}
-        onClose={() => setIsReplying(false)}
-      />
+      <ReplyThread isReplying={isReplying} replyMessage={replyMessage} onClose={() => setIsReplying(false)} />
       <Box
         width="100%"
         sx={{
@@ -123,8 +119,7 @@ export default function MessageInputPage({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
-                  if (messageInput.trim() !== '')
-                    (isReplying ? handleReply : handleMessage)();
+                  if (messageInput.trim() !== '') (isReplying ? handleReply : handleMessage)();
                 }
               }}
               slotProps={{

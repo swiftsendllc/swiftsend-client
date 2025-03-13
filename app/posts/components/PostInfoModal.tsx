@@ -2,28 +2,32 @@
 
 import Transition from '@/components/Transition';
 import usePostAPI from '@/hooks/api/usePostAPI';
-import { PostsEntity, UpdatePostInput } from '@/hooks/entities/posts.entities';
+import { UserContext } from '@/hooks/context/user-context';
+import { PostsEntity } from '@/hooks/entities/posts.entities';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
 import { LoadingButton } from '@mui/lab';
-
 import {
   Button,
   Card,
   CardContent,
   CardMedia,
   Dialog,
+  DialogActions,
   Divider,
   IconButton,
   Stack,
   TextField,
   Typography
 } from '@mui/material';
-import { Fragment, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function EditPostModal({
+export default function PostInfoModal({
   isOpen,
   onClose,
   post
@@ -32,52 +36,48 @@ export default function EditPostModal({
   onClose?: () => unknown;
   post: PostsEntity;
 }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-
+  const [user] = useContext(UserContext);
   const [didChange, setDidChange] = useState(false);
-
+  const { editPost, deletePost } = usePostAPI();
   const [caption, setCaption] = useState(post.caption);
-  const { editPost } = usePostAPI();
-  const [formData, setFormData] = useState<Partial<UpdatePostInput>>({
-    caption: post.caption
-  });
 
   useEffect(() => {
-    setOpen(isOpen);
-    setCaption(post.caption);
-    setFormData({ caption: post.caption });
-  }, [isOpen, post]);
+    setDidChange(caption !== post.caption);
+  }, [caption]); //eslint-disable-line
 
   const handleClose = () => {
     setOpen(false);
-    setDidChange(false);
     onClose?.();
   };
 
-  const handleOnChange = async () => {
+  const handleOnChange = async (postId: string) => {
     setLoading(true);
     try {
-      const data = await editPost(formData, post._id);
+      const data = await editPost({ caption }, { postId });
       setCaption(data.caption);
       handleClose();
-      toast.success('Post edited');
+      toast.success('EDITED');
     } catch (error) {
       console.log(error);
-      toast.error('Failed to edit post!');
+      toast.error('FAILED TO EDIT POST!');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (value: string) => {
-    setFormData((previous) => ({
-      ...previous,
-      caption: value
-    }));
-    setCaption(value);
-    setDidChange(value.trim() !== post.caption); // enables when caption is not empty
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      await deletePost(post._id);
+      handleClose();
+      router.push(`/${user.username}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -130,7 +130,7 @@ export default function EditPostModal({
                 maxRows={4}
                 label="Edit your caption"
                 value={caption}
-                onChange={(e) => handleInputChange(e.target.value.trim())}
+                onChange={(e) => setCaption(e.target.value)}
                 focused
                 autoFocus
               />
@@ -166,13 +166,78 @@ export default function EditPostModal({
               variant="contained"
               type="submit"
               disabled={!didChange || caption.trim() === ''}
-              onClick={handleOnChange}
+              onClick={() => handleOnChange(post._id)}
             >
               Post
               <SendIcon />
             </LoadingButton>
           </Stack>
         </Stack>
+      </Dialog>
+
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        fullWidth
+        maxWidth="xs"
+        sx={{
+          alignContent: 'center',
+          alignItems: 'center',
+          mb: 6
+        }}
+      >
+        <Stack mt={2}>
+          <Stack direction="row" alignContent="center" alignItems="center">
+            <IconButton onClick={handleClose}>
+              <ArrowBackIosNewIcon />
+            </IconButton>
+            <Typography
+              alignContent="center"
+              alignItems="center"
+              variant="subtitle2"
+              color="var(--error)"
+              fontWeight={200}
+            >
+              {' '}
+              Are you sure you want to delete this journal?
+            </Typography>
+          </Stack>
+        </Stack>
+        <Divider />
+        <Card sx={{ padding: 0, margin: 0 }}>
+          {post.imageUrls.map((img, idx) => (
+            <Fragment key={idx}>
+              <CardMedia
+                sx={{
+                  objectFit: 'contain'
+                }}
+                component="img"
+                image={img}
+                title="post title"
+              />
+            </Fragment>
+          ))}
+          <CardContent>
+            <TextField fullWidth value={caption} variant="standard" label="Caption" disabled />
+          </CardContent>
+        </Card>
+        <DialogActions>
+          <LoadingButton
+            loading={loading}
+            sx={{ width: '100%' }}
+            onClick={handleDelete}
+            variant="contained"
+            style={{ color: 'var(--error)' }}
+          >
+            <DeleteIcon />
+            Yes
+          </LoadingButton>
+          <Button onClick={handleClose} variant="contained" color="primary" sx={{ width: '100%' }}>
+            <TagFacesIcon />
+            No
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

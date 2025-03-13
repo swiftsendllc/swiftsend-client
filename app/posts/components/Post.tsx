@@ -17,7 +17,20 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Chip, debounce, Divider, IconButton, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  debounce,
+  Divider,
+  IconButton,
+  Stack,
+  Typography
+} from '@mui/material';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -143,7 +156,9 @@ export const PostCard = ({
               </StyledBadge>
             </>
           }
-          action={!post.isMyPost && <FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />}
+          action={
+            !post.isMyPost && <FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />
+          }
           title={
             <>
               <IconButton onClick={() => router.push(`/${post.user.username}`)}>
@@ -154,7 +169,9 @@ export const PostCard = ({
           subheader={moment(post.createdAt).format('LLL')}
         />
         <Typography variant="body2">
-          {isExpanded && post.caption.length > 50 ? post.caption : `${post.caption.slice(0, 50)}${post.caption.length > 0 ? '...' : ''}`}
+          {isExpanded && post.caption.length > 50
+            ? post.caption
+            : `${post.caption.slice(0, 50)}${post.caption.length > 0 ? '...' : ''}`}
           {post.caption.length > 50 && (
             <Button
               onClick={handleSee}
@@ -239,13 +256,18 @@ export const PostCard = ({
                 }}
                 sx={{ p: 0, m: 0 }}
               >
-                <Chip color="primary" label="PURCHASE EXCLUSIVE POST" variant="filled" icon={<MonetizationOnRoundedIcon />} />
+                <Chip
+                  color="primary"
+                  label="PURCHASE EXCLUSIVE POST"
+                  variant="filled"
+                  icon={<MonetizationOnRoundedIcon />}
+                />
               </IconButton>
             </Box>
           )}
 
           <Box sx={{ color: 'white', position: 'absolute', bottom: 8, right: 8 }} aria-label="save">
-            <SaveButton isSaved={isSaved} onClick={() => handleSave(post._id)} />
+            {!post.isMyPost && <SaveButton isSaved={isSaved} onClick={() => handleSave(post._id)} />}
           </Box>
         </Box>
 

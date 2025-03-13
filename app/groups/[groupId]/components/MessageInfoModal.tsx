@@ -2,15 +2,11 @@
 
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
-import {
-  DeleteForeverOutlined,
-  EditLocationAlt,
-  Forward10Outlined,
-  ReportOffRounded
-} from '@mui/icons-material';
+import { DeleteForeverOutlined, EditLocationAlt, Forward10Outlined, ReportOffRounded } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -129,28 +125,19 @@ export default function MessageInfoModal({
       >
         <List sx={{ width: '100%', padding: 0 }}>
           {options.map((option, idx) => (
-            <>
+            <Box key={idx}>
               <Paper elevation={3}>
-                <ListItemButton
-                  key={idx}
-                  sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }}
-                  onClick={option.action}
-                >
+                <ListItemButton sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }} onClick={option.action}>
                   <ListItemIcon sx={{ pr: 1 }}>{option.leftIcon}</ListItemIcon>
                   <ListItemText disableTypography>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignContent="center"
-                      alignItems="center"
-                    >
+                    <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
                       <Typography variant="body1">{option.label}</Typography>
                       <Icon>{option.rightIcon}</Icon>
                     </Stack>
                   </ListItemText>
                 </ListItemButton>
               </Paper>
-            </>
+            </Box>
           ))}
         </List>
       </Dialog>
@@ -168,17 +155,10 @@ export default function MessageInfoModal({
         }}
         aria-describedby="edit-dialog-open"
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }}>Edit your message</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Don&apos;t worry, edit your message, if anything is wrong
-            </DialogContentText>
+            <DialogContentText>Don&apos;t worry, edit your message, if anything is wrong</DialogContentText>
             <Stack>
               <TextField
                 id="edit-message-field"

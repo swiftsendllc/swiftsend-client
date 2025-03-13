@@ -2,13 +2,7 @@
 
 import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  Chip,
-  IconButton,
-  ImageListItem,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Chip, IconButton, ImageListItem, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 
 import { UserContext } from '@/hooks/context/user-context';
@@ -30,25 +24,15 @@ export default function MessageThreadImage({
     <>
       <Stack direction="column" justifyContent="left">
         <ImageListItem>
-          <Image
-            width={100}
-            height={100}
-            src={message.imageURL}
-            alt="IMAGE"
-            priority
-          />
+          <Image width={100} height={100} src={message.imageURL} alt="IMAGE" priority />
         </ImageListItem>
         <Chip
           label={
             <Typography variant="caption" component="span" fontSize="0.55rem">
               {message.deleted
-                ? `${moment(message.deletedAt)
-                    .fromNow()
-                    .toLocaleUpperCase()} DELETED`
+                ? `${moment(message.deletedAt).fromNow().toLocaleUpperCase()} DELETED`
                 : message.edited
-                  ? `${moment(message.editedAt)
-                      .fromNow()
-                      .toLocaleUpperCase()} EDITED`
+                  ? `${moment(message.editedAt).fromNow().toLocaleUpperCase()} EDITED`
                   : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
             </Typography>
           }
@@ -70,11 +54,7 @@ export default function MessageThreadImage({
         message={message}
         onDelete={() =>
           setMessages((prev) =>
-            prev.map((msg) =>
-              msg._id === message._id
-                ? { ...msg, deleted: true, deletedAt: new Date() }
-                : msg
-            )
+            prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
           )
         }
         onEdit={(edited_message) =>

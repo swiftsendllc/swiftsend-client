@@ -17,9 +17,7 @@ export default function MessageThread({
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
   messages: GroupMessagesEntity[];
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-  setReplyMessage: React.Dispatch<
-    React.SetStateAction<GroupMessagesEntity | null>
-  >;
+  setReplyMessage: React.Dispatch<React.SetStateAction<GroupMessagesEntity | null>>;
 }) {
   const [user] = useContext(UserContext);
   return (
@@ -51,10 +49,7 @@ export default function MessageThread({
                     }}
                     overlap="circular"
                   >
-                    <Avatar
-                      alt={sender.avatarURL}
-                      src={sender.avatarURL || '/svg/app_icon.svg'}
-                    />
+                    <Avatar alt={sender.avatarURL} src={sender.avatarURL || '/svg/app_icon.svg'} />
                   </StyledBadge>
                 </ListItemAvatar>
               </>

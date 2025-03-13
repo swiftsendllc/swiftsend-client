@@ -1,14 +1,9 @@
 'use client';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
-import { ImageListItem } from '@mui/material';
+import { Box, ImageListItem } from '@mui/material';
 import Image from 'next/image';
-import { Fragment } from 'react';
 
-export default function ImageThumbnail({
-  message
-}: {
-  message: MessagesEntity;
-}) {
+export default function ImageThumbnail({ message }: { message: MessagesEntity }) {
   return (
     <ImageListItem
       style={{
@@ -21,9 +16,9 @@ export default function ImageThumbnail({
       }}
     >
       {message.imageUrls.map((image, idx) => (
-        <Fragment key={idx}>
+        <Box key={idx}>
           <Image width={100} height={100} src={image} alt="IMAGE" priority />
-        </Fragment>
+        </Box>
       ))}
     </ImageListItem>
   );

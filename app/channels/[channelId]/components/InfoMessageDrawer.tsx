@@ -6,6 +6,7 @@ import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -112,8 +113,8 @@ export default function InfoMessageDrawer({
       >
         <List sx={{ width: '100%', padding: 0 }}>
           {options.map((option, idx) => (
-            <>
-              <Paper elevation={3}>
+            <Box key={idx}>
+              <Paper elevation={3} >
                 <ListItemButton
                   key={idx}
                   sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }}
@@ -131,7 +132,7 @@ export default function InfoMessageDrawer({
                   </ListItemText>
                 </ListItemButton>
               </Paper>
-            </>
+            </Box>
           ))}
         </List>
       </Dialog>

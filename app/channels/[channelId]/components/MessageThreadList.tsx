@@ -7,17 +7,8 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import ReplyIcon from '@mui/icons-material/Reply';
-
 import useMessageAPI from '@/hooks/api/useMessageAPI';
-import {
-  Box,
-  Checkbox,
-  IconButton,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Box, Checkbox, IconButton, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -49,6 +40,7 @@ export default function MessageThreadList({
   const { deleteMessageReactions } = useMessageAPI();
 
   const handleDeleteMessageReactions = async (reactionId: string) => {
+    if (isUser) return null;
     try {
       await deleteMessageReactions(reactionId);
       setMessages((prev) =>
@@ -56,9 +48,7 @@ export default function MessageThreadList({
           msg.reactions.map((reaction) => reaction._id === reactionId)
             ? {
                 ...msg,
-                reactions: msg.reactions.filter(
-                  (reaction) => reaction._id !== reactionId
-                )
+                reactions: msg.reactions.filter((reaction) => reaction._id !== reactionId)
               }
             : msg
         )
@@ -85,7 +75,7 @@ export default function MessageThreadList({
           primary={
             <Stack direction="row-reverse" justifyContent="space-between">
               <Typography variant="body2" component="span" textAlign="left">
-                {message.deleted  && !message.repliedTo
+                {message.deleted && !message.repliedTo
                   ? 'THIS MESSAGE IS DELETED'
                   : message.message || 'UNKNOWN MESSAGE'}{' '}
               </Typography>
@@ -100,27 +90,13 @@ export default function MessageThreadList({
           }
           secondary={
             <>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                paddingBottom="0"
-              >
-                <Typography
-                  variant="caption"
-                  component="span"
-                  fontSize="0.55rem"
-                >
+              <Stack direction="row" justifyContent="space-between" paddingBottom="0">
+                <Typography variant="caption" component="span" fontSize="0.55rem">
                   {message.deleted
-                    ? `${moment(message.deletedAt)
-                        .fromNow()
-                        .toLocaleUpperCase()} DELETED`
+                    ? `${moment(message.deletedAt).fromNow().toLocaleUpperCase()} DELETED`
                     : message.edited
-                      ? `${moment(message.editedAt)
-                          .fromNow()
-                          .toLocaleUpperCase()} EDITED`
-                      : `${moment(message.createdAt)
-                          .fromNow()
-                          .toLocaleUpperCase()}`}
+                      ? `${moment(message.editedAt).fromNow().toLocaleUpperCase()} EDITED`
+                      : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
                 </Typography>
 
                 <Stack direction="row" justifyContent="right">
@@ -130,23 +106,14 @@ export default function MessageThreadList({
                         key={idx}
                         sx={{ p: 0 }}
                         marginRight={1}
-                        onClick={() => {
-                          if (isUser) {
-                            return null;
-                          } else {
-                            return handleDeleteMessageReactions(emoji._id);
-                          }
-                        }}
+                        onClick={() => handleDeleteMessageReactions(emoji._id)}
                       >
                         {emoji.reaction}
                       </Box>
                     ))}
                   {!isUser && !message.deleted && (
                     <>
-                      <IconButton
-                        sx={{ mt: 0 }}
-                        onClick={() => setEmojiDrawer(true)}
-                      >
+                      <IconButton sx={{ mt: 0 }} onClick={() => setEmojiDrawer(true)}>
                         <AddReactionIcon sx={{ width: 13, height: 13 }} />
                       </IconButton>
                       <IconButton
@@ -188,11 +155,7 @@ export default function MessageThreadList({
                 </Stack>
               </Stack>
               {message.repliedMessage && (
-                <Typography
-                  textAlign="left"
-                  fontSize={'0.65rem'}
-                  fontStyle={'italic'}
-                >
+                <Typography textAlign="left" fontSize={'0.65rem'} fontStyle={'italic'}>
                   Replied on: {message.repliedMessage.message}
                 </Typography>
               )}
@@ -206,11 +169,7 @@ export default function MessageThreadList({
           message={message}
           onDelete={() =>
             setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === message._id
-                  ? { ...msg, deleted: true, deletedAt: new Date() }
-                  : msg
-              )
+              prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
             )
           }
           onEdit={(edited_message) =>
@@ -234,11 +193,7 @@ export default function MessageThreadList({
           message={message}
           onReaction={(reaction) =>
             setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === message._id
-                  ? { ...msg, reactions: [...msg.reactions, reaction] }
-                  : msg
-              )
+              prev.map((msg) => (msg._id === message._id ? { ...msg, reactions: [...msg.reactions, reaction] } : msg))
             )
           }
         />

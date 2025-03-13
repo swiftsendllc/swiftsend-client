@@ -7,15 +7,7 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import EditIcon from '@mui/icons-material/Edit';
 import ReplyIcon from '@mui/icons-material/Reply';
 
-import {
-  Avatar,
-  Box,
-  IconButton,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Avatar, Box, IconButton, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -31,9 +23,7 @@ export default function MessageThreadList({
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
   message: GroupMessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-  setReplyMessage: React.Dispatch<
-    React.SetStateAction<GroupMessagesEntity | null>
-  >;
+  setReplyMessage: React.Dispatch<React.SetStateAction<GroupMessagesEntity | null>>;
 }) {
   const [user] = useContext(UserContext);
   const isUser = message.senderId === user.userId;
@@ -42,6 +32,7 @@ export default function MessageThreadList({
   const { deleteGroupReaction } = useMessageAPI();
 
   const handleDeleteReaction = async (reactionId: string) => {
+    if (isUser) return null;
     try {
       await deleteGroupReaction(reactionId);
       setMessages((prev) =>
@@ -49,9 +40,7 @@ export default function MessageThreadList({
           msg.reactions.map((reaction) => reaction._id === reactionId)
             ? {
                 ...msg,
-                reactions: msg.reactions.filter(
-                  (reaction) => reaction._id !== reactionId
-                )
+                reactions: msg.reactions.filter((reaction) => reaction._id !== reactionId)
               }
             : msg
         )
@@ -90,44 +79,19 @@ export default function MessageThreadList({
           }
           secondary={
             <>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                paddingBottom="0"
-              >
-                <Typography
-                  variant="caption"
-                  component="span"
-                  fontSize="0.55rem"
-                >
+              <Stack direction="row" justifyContent="space-between" paddingBottom="0">
+                <Typography variant="caption" component="span" fontSize="0.55rem">
                   {message.deleted
-                    ? `${moment(message.deletedAt)
-                        .fromNow()
-                        .toLocaleUpperCase()} DELETED`
+                    ? `${moment(message.deletedAt).fromNow().toLocaleUpperCase()} DELETED`
                     : message.edited
-                      ? `${moment(message.editedAt)
-                          .fromNow()
-                          .toLocaleUpperCase()} EDITED`
-                      : `${moment(message.createdAt)
-                          .fromNow()
-                          .toLocaleUpperCase()}`}
+                      ? `${moment(message.editedAt).fromNow().toLocaleUpperCase()} EDITED`
+                      : `${moment(message.createdAt).fromNow().toLocaleUpperCase()}`}
                 </Typography>
 
                 <Stack direction="row" justifyContent="right" padding={0}>
                   {message.reactions !== undefined &&
                     message.reactions.map((emoji, idx) => (
-                      <Box
-                        key={idx}
-                        sx={{ p: 0 }}
-                        marginRight={1}
-                        onClick={() => {
-                          if (isUser) {
-                            return null;
-                          } else {
-                            return handleDeleteReaction(emoji._id);
-                          }
-                        }}
-                      >
+                      <Box key={idx} sx={{ p: 0 }} marginRight={1} onClick={() => handleDeleteReaction(emoji._id)}>
                         {emoji.reaction}
                       </Box>
                     ))}
@@ -156,10 +120,7 @@ export default function MessageThreadList({
                   )}
 
                   {isUser && !message.deleted && (
-                    <IconButton
-                      sx={{ mt: 0, p: 0 }}
-                      onClick={() => setMessageInfoModal(true)}
-                    >
+                    <IconButton sx={{ mt: 0, p: 0 }} onClick={() => setMessageInfoModal(true)}>
                       <EditIcon sx={{ width: 13, height: 13 }} />
                     </IconButton>
                   )}
@@ -167,25 +128,15 @@ export default function MessageThreadList({
               </Stack>
               {message.repliedMessage && (
                 <>
-                  <Stack
-                    direction={'row'}
-                    alignContent={'center'}
-                    alignItems={'center'}
-                    spacing={1}
-                  >
-                     <Avatar
+                  <Stack direction={'row'} alignContent={'center'} alignItems={'center'} spacing={1}>
+                    <Avatar
                       src={message.repliedMessageSender.avatarURL}
                       alt={message.repliedMessageSender.avatarURL}
                       sx={{ width: 10, height: 10 }}
                     />
-                    <Typography
-                      textAlign="left"
-                      fontSize={'0.65rem'}
-                      fontStyle={'italic'}
-                    >
+                    <Typography textAlign="left" fontSize={'0.65rem'} fontStyle={'italic'}>
                       Replied on: {message.repliedMessage.message}
                     </Typography>
-
                   </Stack>
                 </>
               )}
@@ -198,11 +149,7 @@ export default function MessageThreadList({
           onClose={() => setMessageInfoModal(false)}
           onDelete={() =>
             setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === message._id
-                  ? { ...msg, deleted: true, deletedAt: new Date() }
-                  : msg
-              )
+              prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
             )
           }
           onEdit={(edited_message) =>
@@ -227,9 +174,7 @@ export default function MessageThreadList({
           onReaction={(newReaction) =>
             setMessages((prev) =>
               prev.map((msg) =>
-                msg._id === message._id
-                  ? { ...msg, reactions: [...msg.reactions, newReaction] }
-                  : msg
+                msg._id === message._id ? { ...msg, reactions: [...msg.reactions, newReaction] } : msg
               )
             )
           }
