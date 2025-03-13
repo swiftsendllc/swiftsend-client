@@ -111,6 +111,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             error={!!passwordError}
             helperText={passwordError}
+            autoComplete="current-password"
             slotProps={{
               input: {
                 endAdornment: (

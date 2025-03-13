@@ -4,10 +4,10 @@ import usePostAPI from '@/hooks/api/usePostAPI';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import { Divider, IconButton, ImageList, ImageListItem, Stack, Typography } from '@mui/material';
+import { Box, Chip, Divider, IconButton, ImageList, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SavePage() {
   const [posts, setPosts] = useState<PostsEntity[]>([]);
@@ -43,36 +43,70 @@ export default function SavePage() {
       </Stack>
       <Divider />
       <Stack>
-        {posts.length > 0 ? (
-          <ImageList sx={{ width: '100%', height: 'auto', margin: '0' }} cols={3} gap={4} rowHeight={125}>
-            {posts.map((post) => (
-              <ImageListItem key={post._id}>
-                {post.imageUrls.map((img, idx) => {
-                  return (
-                    <Fragment key={idx}>
-                      <Image
-                        src={img}
-                        style={{
-                          objectFit: 'cover',
-                          width: '100%',
-                          height: '100%'
-                        }}
-                        alt={'img'}
-                        width={400}
-                        height={400}
-                        priority
-                        onClick={() => router.push(`/posts/${post._id}`)}
-                      />
-                    </Fragment>
-                  );
-                })}
-              </ImageListItem>
-            ))}{' '}
-          </ImageList>
-        ) : (
+        {posts.map((post, idx) => (
+          <Box sx={{ position: 'relative' }} key={idx}>
+            {post.imageUrls.length === 1 ? (
+              post.imageUrls.map((img, igx) => (
+                <Stack key={igx} mb={1}>
+                  <ImageList component="div" cols={3} rowHeight={164}>
+                    <Image
+                      style={{
+                        minWidth: 122,
+                        minHeight: 122,
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                      priority
+                      src={img}
+                      alt={'image'}
+                      width={122}
+                      height={122}
+                    />
+                  </ImageList>
+                </Stack>
+              ))
+            ) : (
+              <Stack
+                direction={'row'}
+                spacing={1}
+                flexWrap={'nowrap'}
+                sx={{
+                  whiteSpace: 'nowrap',
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  minHeight: 122,
+                  minWidth: 122
+                }}
+              >
+                {post.imageUrls.map((img, idx) => (
+                  <Box key={idx} position={'relative'}>
+                    <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+                      <Chip color="primary" label={post.imageUrls.length} variant="filled" />
+                    </Box>
+                    <Image
+                      style={{
+                        minWidth: 122,
+                        minHeight: 122,
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                      priority
+                      src={img}
+                      alt={'image'}
+                      width={122}
+                      height={122}
+                    />
+                  </Box>
+                ))}
+              </Stack>
+            )}
+          </Box>
+        ))}
+
+        {posts.length === 0 && (
           <Stack my="10" alignContent="center" alignItems="center" justifyContent="center">
             <Image
-              src="/svg-icons/sasuke1.svg"
+              src="/svg/sasuke1.svg"
               style={{
                 objectFit: 'cover',
                 width: '50%',

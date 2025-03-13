@@ -1,46 +1,21 @@
 'use client';
-import DeletePostModal from '@/app/posts/components/DeletePostModal';
-import EditPostModal from '@/app/posts/components/EditPostModal';
+
+import PostInfoModal from '@/app/posts/components/PostInfoModal';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { CreatorContext } from '@/hooks/context/creator-context';
-import { UserContext } from '@/hooks/context/user-context';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {
-  Box,
-  IconButton,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Box, Chip, ImageList, ImageListItem, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 
-import { Fragment, useContext, useEffect, useState } from 'react';
-
-const options = [
-  {
-    label: 'Edit'
-  },
-  {
-    label: 'Delete'
-  }
-];
+import { useContext, useEffect, useState } from 'react';
 
 export default function AccountPostPage() {
   const { getCreatorPosts } = usePostAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const [editPostModal, setEditPostModal] = useState(false);
-  const [deletePostModal, setDeletePostModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
-
   const [creator] = useContext(CreatorContext);
-  const [user] = useContext(UserContext);
 
   const loadPosts = async (userId: string) => {
     try {
@@ -55,25 +30,11 @@ export default function AccountPostPage() {
     loadPosts(creator.userId);
   }, [creator.userId]); //eslint-disable-line
 
-  const handleMenuItemClick = (option: string) => {
-    setAnchorEl(null);
-    if (option !== 'Delete') {
-      setEditPostModal(true);
-    } else {
-      setDeletePostModal(true);
-    }
-  };
-
   return (
     <>
       <Box mb={6}>
         {posts.length === 0 ? (
-          <Stack
-            my="10"
-            alignContent="center"
-            alignItems="center"
-            justifyContent="center"
-          >
+          <Stack my="10" alignContent="center" alignItems="center" justifyContent="center">
             <Image
               src="/svg/sasuke1.svg"
               style={{
@@ -87,118 +48,87 @@ export default function AccountPostPage() {
               priority
             />
             <Typography variant="h6" fontWeight="50">
-              𝕿𝖍𝖎𝖘 𝖚𝖘𝖊𝖗 𝖍𝖆𝖘 𝖓𝖔 𝖎𝖒𝖆𝖌𝖊!!!!
+              This user has no image
             </Typography>
           </Stack>
         ) : (
           <ImageList
-            sx={{ width: '100%', height: 'auto' }}
+            sx={{
+              width: '100%',
+              height: 'auto',
+              margin: '0'
+            }}
             cols={3}
             gap={4}
-            rowHeight={164}
+            rowHeight={125}
           >
-            {posts.map((post) => (
-              <Stack key={post._id}>
-                {post.imageUrls.map((img, idx) => {
-                  const moreImages = post.imageUrls.length > 1;
-                  return moreImages ? (
-                    <ImageListItem
+            {posts.map((post, idx) => (
+              <ImageListItem key={idx}>
+                <Box onClick={() => setSelectedPost(post)} position={'absolute'} top={2} right={2}>
+                  <MoreVertIcon />
+                </Box>
+                {post.imageUrls.length < 2 ? (
+                  post.imageUrls.map((img, imgIdx) => (
+                    <Image
+                      key={imgIdx}
+                      src={img}
+                      onClick={() => setSelectedPost(post)}
                       style={{
-                        display: 'flex-end',
-                        maxHeight: 100,
-                        maxWidth: 100,
-                        overflowX: 'hidden',
-                        overflowY: 'auto',
-                        justifyContent: 'space-between'
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: '100%'
                       }}
-                    >
-                      <Fragment key={idx}>
-                        <Image
-                          width={100}
-                          height={100}
-                          src={img}
-                          alt="IMAGE"
-                          priority
-                        />
-                      </Fragment>
-                    </ImageListItem>
-                  ) : (
-                    <Stack key={idx}>
-                      <Image
-                        src={img}
-                        style={{
-                          objectFit: 'cover',
-                          width:"100%",
-                          height:"100%"
-                        }}
-                        alt={post.caption || 'image'}
-                        width={300}
-                        height={100}
-                        priority
-                      />
-                    </Stack>
-                  );
-                })}
-
-                {user.userId !== creator.userId ? null : (
-                  <ImageListItemBar
-                    sx={{ background: 'transparent' }}
-                    position="top"
-                    actionIcon={
-                      <>
-                        <IconButton
-                          sx={{ color: 'white' }}
-                          aria-label="options"
-                          id="long-button"
-                          aria-haspopup="true"
-                          onClick={(e) => {
-                            setAnchorEl(e.currentTarget);
-                            setSelectedPost(post);
-                          }}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                          id="long-menu"
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={() => {
-                            setAnchorEl(null);
-                            setSelectedPost(null);
-                          }}
-                        >
-                          {options.map((option, idx) => (
-                            <MenuItem
-                              key={idx}
-                              onClick={() => handleMenuItemClick(option.label)}
-                            >
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </Menu>
-                      </>
-                    }
-                    actionPosition="right"
-                  />
+                      alt={'image'}
+                      width={400}
+                      height={400}
+                      priority
+                    />
+                  ))
+                ) : (
+                  <Stack
+                    direction={'row'}
+                    spacing={0}
+                    flexWrap={'nowrap'}
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      overflowX: 'auto',
+                      overflowY: 'hidden',
+                      minHeight: 254,
+                      minWidth: 248
+                    }}
+                  >
+                    {post.imageUrls.map((img, imgIdx) => (
+                      <Box key={imgIdx}>
+                        <Box position={'absolute'} sx={{ top: 8, right: 8 }} p={0} m={0} zIndex={100}>
+                          <Chip label={post.imageUrls.length} color="info" variant="outlined" />
+                        </Box>
+                        <Box position={'relative'}>
+                          <Image
+                            src={img}
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              minHeight: 254,
+                              minWidth: 248,
+                              marginRight: 2
+                            }}
+                            alt={'image'}
+                            width={400}
+                            height={400}
+                            priority
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </Stack>
                 )}
-              </Stack>
+              </ImageListItem>
             ))}
           </ImageList>
         )}
       </Box>
       {selectedPost && (
-        <EditPostModal
-          post={selectedPost}
-          isOpen={editPostModal}
-          onClose={() => setEditPostModal(false)}
-        />
-      )}
-      {selectedPost && (
-        <DeletePostModal
-          post={selectedPost}
-          isOpen={deletePostModal}
-          onClose={() => setDeletePostModal(false)}
-        />
+        <PostInfoModal post={selectedPost} isOpen={editPostModal} onClose={() => setEditPostModal(false)} />
       )}
     </>
   );

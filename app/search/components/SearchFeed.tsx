@@ -76,11 +76,11 @@ export const SearchFeed = ({ post }: SearchFeedProps) => {
                     }}
                   >
                     {post.imageUrls.map((img, imgIdx) => (
-                      <>
+                      <Box key={imgIdx}>
                         <Box position={'absolute'} sx={{ top: 8, right: 8 }} p={0} m={0} zIndex={100}>
                           <Chip label={post.imageUrls.length} color="info" variant="outlined" />
                         </Box>
-                        <Box key={imgIdx} position={'relative'}>
+                        <Box position={'relative'}>
                           <Image
                             onClick={() => handleSelect(img)}
                             src={img}
@@ -97,7 +97,7 @@ export const SearchFeed = ({ post }: SearchFeedProps) => {
                             priority
                           />
                         </Box>
-                      </>
+                      </Box>
                     ))}
                   </Stack>
                 )}

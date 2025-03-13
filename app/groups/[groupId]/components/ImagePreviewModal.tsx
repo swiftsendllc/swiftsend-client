@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button, Container, Modal, Stack } from "@mui/material";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Button, Container, Modal, Stack } from '@mui/material';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ImagePreviewModalPage({
   isOpen,
@@ -12,7 +12,7 @@ export default function ImagePreviewModalPage({
   onUpload,
   imageURL,
   setImageURLInput,
-  setFile,
+  setFile
 }: {
   isOpen: boolean;
   onClose?: () => unknown;
@@ -32,7 +32,7 @@ export default function ImagePreviewModalPage({
 
   const handleDelete = () => {
     setFile(undefined);
-    setImageURLInput("");
+    setImageURLInput('');
   };
 
   return (
@@ -41,29 +41,24 @@ export default function ImagePreviewModalPage({
         <Modal open={open} onClose={handleClose} sx={{ margin: 5 }}>
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
               width: 300,
-              bgcolor: "background.paper",
+              bgcolor: 'background.paper',
               boxShadow: 24,
               p: 4,
-              border: "2px solid #000",
+              border: '2px solid #000'
             }}
           >
             <Stack direction="row" spacing={1}>
-              {imageURL && (
-                <Image width="75" height="75" src={imageURL} alt="$" />
-              )}
+              {imageURL && <Image width="75" height="75" src={imageURL} alt="$" />}
             </Stack>
             <Stack direction="column" alignContent="left">
               {!imageURL ? (
                 <>
-                  <Button
-                    startIcon={<CloudUploadIcon />}
-                    onClick={() => inputRef.current?.click()}
-                  >
+                  <Button startIcon={<CloudUploadIcon />} onClick={() => inputRef.current?.click()}>
                     UPLOAD
                   </Button>
                   <input
