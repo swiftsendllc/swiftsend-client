@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function InputElement({
+export const InputElement = ({
   inputRef,
   setFiles,
   setObjectUrls
@@ -8,7 +8,7 @@ export default function InputElement({
   inputRef: React.RefObject<HTMLInputElement>;
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   setObjectUrls: React.Dispatch<React.SetStateAction<string[]>>;
-}) {
+}) => {
   return (
     <>
       <input
@@ -20,14 +20,11 @@ export default function InputElement({
           if (!input.files?.length) return;
           const multipleFiles = Array.from(input!.files);
           setFiles((prev) => [...prev, ...multipleFiles]);
-          setObjectUrls((prev) => [
-            ...prev,
-            ...multipleFiles.map((file) => URL.createObjectURL(file))
-          ]);
+          setObjectUrls((prev) => [...prev, ...multipleFiles.map((file) => URL.createObjectURL(file))]);
         }}
         ref={inputRef}
         hidden
       />
     </>
   );
-}
+};

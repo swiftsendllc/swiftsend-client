@@ -101,7 +101,7 @@ export interface GroupsEntity {
   groupName: string;
   description: string;
   createdAt: Date;
-  admin: string;
+  adminId: string;
   moderators: string[];
   participants: string[];
   members: UserProfilesEntity[];

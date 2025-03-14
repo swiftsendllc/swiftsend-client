@@ -22,16 +22,18 @@ export const GetSocketMessagesForGroup = ({
       'group_message_edited',
       (editedMessage: { message: string; edited: boolean; editedAt: Date; _id: string }) => {
         setMessages((prev) =>
-          prev.map((msg) =>
-            msg._id === editedMessage._id
-              ? {
-                  ...msg,
-                  message: editedMessage.message,
-                  editedAt: editedMessage.editedAt,
-                  edited: true
-                }
-              : msg
-          )
+          prev.map((msg) => {
+            const edited_message =
+              msg._id === editedMessage._id
+                ? {
+                    ...msg,
+                    message: editedMessage.message,
+                    editedAt: editedMessage.editedAt,
+                    edited: true
+                  }
+                : msg;
+            return edited_message;
+          })
         );
       }
     );
@@ -40,38 +42,43 @@ export const GetSocketMessagesForGroup = ({
       'group_message_deleted',
       (deletedMessage: { _id: string; message: string; deleted: boolean; deletedAt: Date }) => {
         setMessages((prev) =>
-          prev.map((msg) =>
-            msg._id === deletedMessage._id
-              ? {
-                  ...msg,
-                  message: '',
-                  deleted: true,
-                  deletedAt: deletedMessage.deletedAt
-                }
-              : msg
-          )
+          prev.map((msg) => {
+            const deleted_message =
+              msg._id === deletedMessage._id
+                ? {
+                    ...msg,
+                    message: '',
+                    deleted: true,
+                    deletedAt: deletedMessage.deletedAt
+                  }
+                : msg;
+            return deleted_message;
+          })
         );
       }
     );
 
     socket.on('group_message_reacted', (reaction: GroupReactionsEntity) => {
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === reaction.messageId ? { ...msg, reactions: [...(msg.reactions || []), reaction] } : msg
-        )
+        prev.map((msg) => {
+          const reacted_message =
+            msg._id === reaction.messageId ? { ...msg, reactions: [...(msg.reactions || []), reaction] } : msg;
+          return reacted_message;
+        })
       );
     });
 
     socket.on('group_reaction_deleted', (deleteGroupReaction: { userId: string; reactionId: string }) => {
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg.reactions?.map((reaction) => reaction?._id === deleteGroupReaction?.reactionId)
+        prev.map((msg) => {
+          const deleted_reaction = msg.reactions?.map((reaction) => reaction?._id === deleteGroupReaction?.reactionId)
             ? {
                 ...msg,
                 reactions: msg.reactions.filter((reaction) => reaction._id !== deleteGroupReaction.reactionId)
               }
-            : msg
-        )
+            : msg;
+          return deleted_reaction;
+        })
       );
     });
 

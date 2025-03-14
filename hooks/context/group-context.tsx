@@ -9,7 +9,7 @@ const emptyGroup = {
   groupAvatar: "",
   description: "",
   createdAt: new Date(),
-  admin: "",
+  adminId: "",
   participants: [],
   members:[],
   moderators:[]
