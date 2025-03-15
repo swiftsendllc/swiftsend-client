@@ -105,6 +105,10 @@ export interface GroupsEntity {
   moderators: string[];
   participants: string[];
   members: UserProfilesEntity[];
+  _admin: UserProfilesEntity;
+  isAdmin:boolean;
+  isModerator:boolean
+
 }
 export interface SendGroupMessageInput {
   message: string | null;

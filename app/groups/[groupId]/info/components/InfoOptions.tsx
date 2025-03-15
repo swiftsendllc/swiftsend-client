@@ -1,4 +1,4 @@
-import { CreatorContext } from '@/hooks/context/creator-context';
+import { UserContext } from '@/hooks/context/user-context';
 import { GroupsEntity } from '@/hooks/entities/messages.entities';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
@@ -6,7 +6,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {
   Avatar,
   Box,
-  Chip,
   Divider,
   List,
   ListItemButton,
@@ -17,6 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { useContext } from 'react';
+import { CustomChip } from '../../components/Customchip';
 
 export function InfoOptions({
   group,
@@ -27,59 +27,55 @@ export function InfoOptions({
   group: GroupsEntity;
   onUpdate: () => unknown;
   onSelectedMember: (user: UserProfilesEntity) => unknown;
-  onMemberInfoOpen: (open:boolean) => unknown
+  onMemberInfoOpen: (open: boolean) => unknown;
 }) {
-  const [creator] = useContext(CreatorContext);
+  const [user] = useContext(UserContext);
   const infoOptions = [
     {
       label: 'Change group info',
       leftIcon: <DriveFileRenameOutlineIcon />,
       rightIcon: <KeyboardArrowRightIcon />,
       action: () => onUpdate(),
-      disabled: () => undefined
+      disabled: !(group.isAdmin || group.isModerator)
     },
     {
       label: 'Media, Images',
       leftIcon: <DriveFileRenameOutlineIcon />,
       rightIcon: <KeyboardArrowRightIcon />,
       action: () => undefined,
-      disabled: () => undefined
+      disabled: false
     },
     {
       label: 'Transfer leadership',
       leftIcon: <DriveFileRenameOutlineIcon />,
       rightIcon: <KeyboardArrowRightIcon />,
       action: () => undefined,
-      disabled: () => undefined
-    },
-    {
-      label: 'Change group info',
-      leftIcon: <DriveFileRenameOutlineIcon />,
-      rightIcon: <KeyboardArrowRightIcon />,
-      action: () => undefined,
-      disabled: () => undefined
+      disabled: !group.isAdmin
     }
   ];
   return (
     <>
-      {(group.adminId === creator.userId || group.moderators.includes(creator.userId)) && (
-        <>
-          <List sx={{ padding: 0 }}>
-            {infoOptions.map((option, idx) => (
-              <ListItemButton key={idx} sx={{ padding: 0, py: 1, borderRadius: 2 }} onClick={option.action}>
-                <ListItemIcon sx={{ pr: 1 }}>{option.leftIcon}</ListItemIcon>
-                <ListItemText disableTypography>
-                  <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
-                    <Typography color="text.secondary">{option.label}</Typography>
-                    <Typography>{option.rightIcon}</Typography>
-                  </Stack>
-                </ListItemText>
-              </ListItemButton>
-            ))}
-          </List>
-          <Divider />
-        </>
-      )}
+      <>
+        <List sx={{ padding: 0 }}>
+          {infoOptions.map((option, idx) => (
+            <ListItemButton
+              key={idx}
+              sx={{ padding: 0, py: 1, borderRadius: 2 }}
+              disabled={option.disabled}
+              onClick={option.action}
+            >
+              <ListItemIcon sx={{ pr: 1 }}>{option.leftIcon}</ListItemIcon>
+              <ListItemText disableTypography>
+                <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
+                  <Typography color="text.secondary">{option.label}</Typography>
+                  <Typography>{option.rightIcon}</Typography>
+                </Stack>
+              </ListItemText>
+            </ListItemButton>
+          ))}
+        </List>
+        <Divider />
+      </>
       <Typography sx={{ mt: 1 }}>GROUP MEMBERS </Typography>
 
       <Box>
@@ -88,7 +84,7 @@ export function InfoOptions({
             <Paper elevation={3} sx={{ backgroundColor: 'InfoText' }}>
               <ListItemButton
                 onClick={() => {
-                  if (group.adminId === creator.userId) {
+                  if (group.isAdmin) {
                     onMemberInfoOpen(true);
                     onSelectedMember(member);
                   }
@@ -99,15 +95,9 @@ export function InfoOptions({
                 </ListItemIcon>
                 <ListItemText>
                   <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
-                    <Typography>{member.fullName}</Typography>
+                    <Typography>{member.userId === user.userId ? 'You' : member.fullName}</Typography>
                     <Box display="flex">
-                      {group.adminId === member.userId ? (
-                        <Chip label="Admin" color="info" />
-                      ) : group.moderators.includes(member.userId) ? (
-                        <Chip label="Moderator" color="warning" />
-                      ) : (
-                        <Chip label="Member" color="primary" />
-                      )}
+                      <CustomChip group={group} member={member} />
                       <Typography>
                         <KeyboardArrowRightIcon />
                       </Typography>

@@ -22,7 +22,7 @@ export default function MessagePage() {
   const [messages, setMessages] = useState<GroupMessagesEntity[]>([]);
   GetSocketMessagesForGroup({ setMessages });
   const [replyMessage, setReplyMessage] = useState<GroupMessagesEntity | null>(null);
-  const [isReplying, setIsReplying] = useState<boolean>(false)
+  const [isReplying, setIsReplying] = useState<boolean>(false);
 
   const loadGroupMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
@@ -104,7 +104,6 @@ export default function MessagePage() {
             isReplying={isReplying}
             replyMessage={replyMessage}
             setIsReplying={setIsReplying}
-
           />
         )}
       </Container>

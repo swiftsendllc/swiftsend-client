@@ -1,6 +1,5 @@
 'use client';
 
-import InputElement from '@/components/InputElement';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
@@ -15,6 +14,7 @@ import Image from 'next/image';
 import React, { useContext, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReplyThread from './ReplyThread';
+import { InputElement } from '@/components/InputElement';
 
 interface UserMessageInputProps {
   onMessage: (msg: MessagesEntity) => unknown;

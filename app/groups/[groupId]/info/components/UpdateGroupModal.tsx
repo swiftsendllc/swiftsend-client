@@ -22,7 +22,7 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function UpdateGroupModal({
+export  function UpdateGroupModal({
   isOpen,
   onClose,
   onUpdate
@@ -47,9 +47,7 @@ export default function UpdateGroupModal({
   };
 
   useEffect(() => {
-    setDidChange(
-      description !== group.description || groupName !== group.groupName
-    );
+    setDidChange(description !== group.description || groupName !== group.groupName);
   }, [groupName, description, group]);
 
   const handleChange = async () => {
@@ -60,6 +58,7 @@ export default function UpdateGroupModal({
         description,
         groupAvatar
       });
+      console.log(updateGroup)
       onUpdate(updatedGroup);
       handleClose();
     } catch (error) {
@@ -86,17 +85,10 @@ export default function UpdateGroupModal({
         }}
         aria-describedby="dialog-open-modal"
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }}>Edit your group</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Update your group with infinite aura
-            </DialogContentText>
+            <DialogContentText>Update your group with infinite aura</DialogContentText>
             <Stack direction="row">
               <TextField
                 id="channel-name"
@@ -110,19 +102,12 @@ export default function UpdateGroupModal({
                 }}
                 slotProps={{
                   input: {
-                    startAdornment: (
-                      <DriveFileRenameOutlineIcon sx={{ padding: 1 }} />
-                    )
+                    startAdornment: <DriveFileRenameOutlineIcon sx={{ padding: 1 }} />
                   }
                 }}
                 sx={{ mb: 1.5 }}
               />
-              <Divider
-                orientation="vertical"
-                variant="middle"
-                flexItem
-                sx={{ margin: 2 }}
-              />
+              <Divider orientation="vertical" variant="middle" flexItem sx={{ margin: 2 }} />
               <Avatar src={group.groupAvatar} alt="C">
                 <CameraAltIcon />
               </Avatar>
@@ -149,11 +134,7 @@ export default function UpdateGroupModal({
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <LoadingButton
-              loading={loading}
-              onClick={handleChange}
-              disabled={!didChange}
-            >
+            <LoadingButton loading={loading} onClick={handleChange} disabled={!didChange}>
               CONFIRM
             </LoadingButton>
           </DialogActions>
