@@ -1,11 +1,9 @@
+import { GroupsEntity } from '@/hooks/entities/messages.entities';
 import { ArrowBackOutlined, CameraAlt } from '@mui/icons-material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { Avatar, Badge, Box, Divider, IconButton, Stack, Typography } from '@mui/material';
-
-import { CreatorContext } from '@/hooks/context/creator-context';
-import { GroupsEntity } from '@/hooks/entities/messages.entities';
-import router from 'next/router';
-import { RefObject, useContext } from 'react';
+import { useRouter } from 'next/navigation';
+import { RefObject } from 'react';
 
 export function InfoHeader({
   group,
@@ -16,7 +14,7 @@ export function InfoHeader({
   inputRef: RefObject<HTMLInputElement>;
   onUpload: (file: File) => unknown;
 }) {
-  const [creator] = useContext(CreatorContext);
+  const router = useRouter();
   return (
     <>
       <Stack direction="row" mt={1} mb={2} justifyContent="space-between" alignContent="center" textAlign="center">
@@ -25,15 +23,7 @@ export function InfoHeader({
         </IconButton>
         <Typography variant="body1">GROUP INFO</Typography>
         <IconButton>
-          <AdminPanelSettingsIcon
-            color={
-              group.adminId === creator.userId
-                ? 'info'
-                : group.moderators.includes(creator.userId)
-                  ? 'warning'
-                  : 'primary'
-            }
-          />
+          <AdminPanelSettingsIcon color={group.isAdmin ? 'info' : group.isModerator ? 'warning' : 'primary'} />
         </IconButton>
       </Stack>
       <Divider />
@@ -45,11 +35,8 @@ export function InfoHeader({
             <>
               <IconButton
                 sx={{ padding: 0 }}
-                onClick={() => {
-                  if (group.adminId === creator.userId || group.moderators.includes(creator.userId)) {
-                    inputRef.current?.click();
-                  }
-                }}
+                disabled={!(group.isAdmin || !group.isModerator)}
+                onClick={() => inputRef.current?.click()}
               >
                 <CameraAlt color="info" />
               </IconButton>
@@ -60,7 +47,7 @@ export function InfoHeader({
                 onChange={(e) => {
                   if (!e.target.files?.length) return;
                   const file = e.target.files[0];
-                  onUpload(file)
+                  onUpload(file);
                 }}
                 hidden
               />

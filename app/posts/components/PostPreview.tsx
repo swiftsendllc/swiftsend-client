@@ -1,6 +1,6 @@
 'use client';
 
-import InputElement from '@/components/InputElement';
+import { InputElement } from '@/components/InputElement';
 import { previewGrid } from '@/components/SearchComponents';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';

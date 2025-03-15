@@ -21,7 +21,7 @@ import {
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function DeleteGroupModal({
+export function GroupDeleteModal({
   group,
   isOpen,
   onClose,
