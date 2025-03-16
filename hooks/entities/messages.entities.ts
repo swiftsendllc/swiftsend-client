@@ -36,6 +36,7 @@ export interface MessagesEntity {
   deleted: boolean;
   edited: boolean;
   seen: boolean;
+  isUser:boolean;
   repliedTo: string;
   repliedMessage: MessagesEntity;
   replies: RepliesEntity[];

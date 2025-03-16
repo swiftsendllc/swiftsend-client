@@ -1,9 +1,6 @@
 'use client';
 import { useSocket } from '@/hooks/context/socket-context';
-import {
-  MessageReactionsEntity,
-  MessagesEntity
-} from '@/hooks/entities/messages.entities';
+import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import { useEffect } from 'react';
 
 export const GetSocketMessages = ({
@@ -24,12 +21,7 @@ export const GetSocketMessages = ({
 
     socket.on(
       'messageEdited',
-      (editedMessage: {
-        messageId: string;
-        message: string;
-        editedAt: Date;
-        edited: boolean;
-      }) => {
+      (editedMessage: { messageId: string; message: string; editedAt: Date; edited: boolean }) => {
         setMessages((prev) =>
           prev.map((msg) =>
             msg._id === editedMessage.messageId
@@ -47,13 +39,7 @@ export const GetSocketMessages = ({
 
     socket.on(
       'messageDeleted',
-      (message: {
-        messageId: string;
-        deleted: boolean;
-        deletedAt: Date;
-        message: string;
-        imageURL: string;
-      }) => {
+      (message: { messageId: string; deleted: boolean; deletedAt: Date; message: string; imageURL: string }) => {
         setMessages((prev) =>
           prev.map((msg) =>
             msg._id === message.messageId
@@ -71,27 +57,20 @@ export const GetSocketMessages = ({
       }
     );
 
-    socket.on(
-      'bulkDelete',
-      (bulkDelete: {
-        messageIds: string[];
-        deletedAt: Date;
-        deleted: true;
-      }) => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            bulkDelete.messageIds.includes(msg._id)
-              ? {
-                  ...msg,
-                  messageIds: bulkDelete.messageIds,
-                  deleted: true,
-                  deletedAt: bulkDelete.deletedAt
-                }
-              : msg
-          )
-        );
-      }
-    );
+    socket.on('bulkDelete', (bulkDelete: { messageIds: string[]; deletedAt: Date; deleted: true }) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          bulkDelete.messageIds.includes(msg._id)
+            ? {
+                ...msg,
+                messageIds: bulkDelete.messageIds,
+                deleted: true,
+                deletedAt: bulkDelete.deletedAt
+              }
+            : msg
+        )
+      );
+    });
 
     socket.on('messageReactions', (messageReaction: MessageReactionsEntity) => {
       setMessages((prev) =>
@@ -106,25 +85,18 @@ export const GetSocketMessages = ({
       );
     });
 
-    socket.on(
-      'deletedReactions',
-      (deletedReaction: { userId: string; reactionId: string }) => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.reactions.map(
-              (reaction) => reaction._id === deletedReaction.reactionId
-            )
-              ? {
-                  ...msg,
-                  reactions: msg.reactions.filter(
-                    (reaction) => reaction._id !== deletedReaction.reactionId
-                  )
-                }
-              : msg
-          )
-        );
-      }
-    );
+    socket.on('deletedReactions', (deletedReaction: { userId: string; reactionId: string }) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.reactions.map((reaction) => reaction._id === deletedReaction.reactionId)
+            ? {
+                ...msg,
+                reactions: msg.reactions.filter((reaction) => reaction._id !== deletedReaction.reactionId)
+              }
+            : msg
+        )
+      );
+    });
 
     socket.on('connect_err', (error) => {
       console.error('Socket connection error:', error);

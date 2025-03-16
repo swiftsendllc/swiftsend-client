@@ -1,5 +1,3 @@
-'use client';
-
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
@@ -25,7 +23,7 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function InfoMessageDrawer({
+export  function InfoMessageDrawer({
   isOpen,
   onClose,
   message,

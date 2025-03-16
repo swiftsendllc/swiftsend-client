@@ -6,8 +6,8 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Container, Divider, Stack, Tab, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
-import ChannelHeader from './ChannelHeader';
-import ChannelsList from './ChannelsList';
+import { ChannelHeader } from './ChannelHeader';
+import { ChannelsList } from './ChannelsList';
 import { GetSocketChannels } from './GetSocketChannels';
 
 export default function ChannelsPage() {
@@ -30,11 +30,7 @@ export default function ChannelsPage() {
           <Stack direction="row" spacing={1}>
             <TabList onChange={handleTabChange}>
               <Tab label="Chats " value="2" />
-              <Tab
-                label="Groups "
-                value="3"
-                onClick={() => router.push('/groups')}
-              />
+              <Tab label="Groups " value="3" onClick={() => router.push('/groups')} />
             </TabList>
           </Stack>
           <TabPanel value="2" sx={{ padding: 0 }}>

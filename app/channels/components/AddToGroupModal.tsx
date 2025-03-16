@@ -20,7 +20,7 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function AddToGroupModal({
+export function AddToGroupModal({
   isOpen,
   onClose,
   memberId
@@ -46,7 +46,19 @@ export default function AddToGroupModal({
 
   const handleAddMemberToGroup = async (groupId: string, memberId: string) => {
     try {
-      await addMemberToGroup(groupId, memberId);
+      const updatedGroup = (await addMemberToGroup(groupId, memberId)) as GroupsEntity;
+      setGroups((prev) =>
+        prev.map((grp) => {
+          const updated =
+            grp._id === groupId
+              ? {
+                  ...grp,
+                  participants: updatedGroup.participants
+                }
+              : grp;
+          return updated;
+        })
+      );
       handleClose();
       toast.success('ADDED TO GROUP');
     } catch (error) {
@@ -98,24 +110,16 @@ export default function AddToGroupModal({
                       alignItems={'center'}
                     >
                       <Stack direction={'column'}>
-                        <Typography variant="body2">
-                          {group.groupName}
-                        </Typography>
+                        <Typography variant="body2">{group.groupName}</Typography>
 
-                        <Typography variant="caption">
-                          {group.description}
-                        </Typography>
+                        <Typography variant="caption">{group.description}</Typography>
                       </Stack>
 
                       <Button
-                        onClick={() =>
-                          handleAddMemberToGroup(group._id, memberId)
-                        }
+                        onClick={() => handleAddMemberToGroup(group._id, memberId)}
                         disabled={group.participants.includes(memberId)}
                       >
-                        {group.participants.includes(memberId)
-                          ? 'ADDED'
-                          : 'ADD'}
+                        {group.participants.includes(memberId) ? 'ADDED' : 'ADD'}
                       </Button>
                     </Stack>
                   </ListItemText>

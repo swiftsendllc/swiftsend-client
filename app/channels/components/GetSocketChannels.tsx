@@ -1,35 +1,25 @@
-import { useSocket } from "@/hooks/context/socket-context";
-import {
-  ChannelsEntity,
-  MessagesEntity,
-} from "@/hooks/entities/messages.entities";
-import React, { useEffect } from "react";
+import { useSocket } from '@/hooks/context/socket-context';
+import { ChannelsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
+import React, { useEffect } from 'react';
 
 export const GetSocketChannels = ({
-  setChannels,
+  setChannels
 }: {
   setChannels: React.Dispatch<React.SetStateAction<ChannelsEntity[]>>;
 }) => {
   const { socket } = useSocket();
   useEffect(() => {
-    socket.on("newMessage", (message: MessagesEntity) => {
+    socket.on('newMessage', (message: MessagesEntity) => {
       setChannels((channels) => {
         return channels.map((channel) =>
-          channel._id === message.channelId
-            ? { ...channel, lastMessage: message }
-            : channel
+          channel._id === message.channelId ? { ...channel, lastMessage: message } : channel
         );
       });
     });
 
     socket.on(
-      "messageDeleted",
-      (message: {
-        messageId: string;
-        deleted: boolean;
-        deletedAt: Date;
-        message: string;
-      }) => {
+      'messageDeleted',
+      (message: { messageId: string; deleted: boolean; deletedAt: Date; message: string }) => {
         setChannels((channels) => {
           return channels.map((channel) =>
             channel.lastMessage?._id === message.messageId
@@ -39,8 +29,8 @@ export const GetSocketChannels = ({
                     ...channel.lastMessage,
                     deleted: message.deleted,
                     deletedAt: message.deletedAt,
-                    message: "",
-                  },
+                    message: ''
+                  }
                 }
               : channel
           );
@@ -48,13 +38,8 @@ export const GetSocketChannels = ({
       }
     );
     socket.on(
-      "messageEdited",
-      (editedMessage: {
-        messageId: string;
-        message: string;
-        editedAt: Date;
-        edited: true;
-      }) => {
+      'messageEdited',
+      (editedMessage: { messageId: string; message: string; editedAt: Date; edited: true }) => {
         setChannels((channels) => {
           return channels.map((channel) =>
             channel.lastMessage?._id === editedMessage.messageId
@@ -64,8 +49,8 @@ export const GetSocketChannels = ({
                     ...channel.lastMessage,
                     edited: editedMessage.edited,
                     editedAt: editedMessage.editedAt,
-                    message: editedMessage.message,
-                  },
+                    message: editedMessage.message
+                  }
                 }
               : channel
           );
@@ -74,10 +59,10 @@ export const GetSocketChannels = ({
     );
 
     return () => {
-      socket.off("newMessage");
-      socket.off("onlineUsers");
-      socket.off("messageDeleted");
-      socket.off("messageEdited");
+      socket.off('newMessage');
+      socket.off('onlineUsers');
+      socket.off('messageDeleted');
+      socket.off('messageEdited');
     };
   }, [setChannels]); //eslint-disable-line
 };
