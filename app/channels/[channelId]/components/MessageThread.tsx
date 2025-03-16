@@ -1,16 +1,11 @@
-'use client';
-import {
-  ChannelsEntity,
-  MessagesEntity
-} from '@/hooks/entities/messages.entities';
+import { ChannelsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
-
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import React, { SetStateAction } from 'react';
-import MessageThreadImage from './MessageThreadImage';
-import MessageThreadList from './MessageThreadList';
+import { MessageThreadImage } from './MessageThreadImage';
+import { MessageThreadList } from './MessageThreadList';
 
-export default function MessageThread({
+export function MessageThread({
   user,
   messages,
   checkBox,
@@ -58,10 +53,7 @@ export default function MessageThread({
           >
             {!isUser && (
               <ListItemAvatar>
-                <Avatar
-                  alt={channel.receiver.fullName}
-                  src={channel.receiver.avatarURL}
-                />
+                <Avatar alt={channel.receiver.fullName} src={channel.receiver.avatarURL} />
               </ListItemAvatar>
             )}
             {message.isExclusive ? (

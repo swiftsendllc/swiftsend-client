@@ -1,11 +1,6 @@
-'use  client';
-
 import { StyledBadge } from '@/components/SearchComponents';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
-import {
-  ChannelsEntity,
-  MessagesEntity
-} from '@/hooks/entities/messages.entities';
+import { ChannelsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import { formatDate } from '@/library/helper';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -13,21 +8,12 @@ import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardHeader,
-  Container,
-  IconButton,
-  LinearProgress,
-  Typography
-} from '@mui/material';
+import { Avatar, Box, Card, CardHeader, Container, IconButton, LinearProgress, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { InfoChannelDrawer } from './InfoChannelDrawer';
-export default function ChatHeader({
+export function ChatHeader({
   channel,
   loading,
   messages,
@@ -93,19 +79,12 @@ export default function ChatHeader({
                   badgeContent
                   variant="dot"
                 >
-                  <Avatar
-                    aria-label="recipe"
-                    src={channel.receiver.avatarURL}
-                    alt={channel.receiver.fullName}
-                  />
+                  <Avatar aria-label="recipe" src={channel.receiver.avatarURL} alt={channel.receiver.fullName} />
                 </StyledBadge>
               </>
             }
             title={
-              <IconButton
-                sx={{ p: 0, m: 0 }}
-                onClick={() => router.push(`/${channel.receiver.username}`)}
-              >
+              <IconButton sx={{ p: 0, m: 0 }} onClick={() => router.push(`/${channel.receiver.username}`)}>
                 <Typography>{channel.receiver.fullName}</Typography>
               </IconButton>
             }

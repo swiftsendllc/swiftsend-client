@@ -1,6 +1,6 @@
 'use client';
 
-import MessageInput from '@/app/channels/[channelId]/components/MessageInput';
+import { MessageInput } from '@/app/channels/[channelId]/components/MessageInput';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
 import { UserContext } from '@/hooks/context/user-context';
@@ -11,10 +11,10 @@ import { useParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ChatHeader from './components/ChatHeader';
-import EncryptionNotice from './components/EncryptionNotice';
+import { ChatHeader } from './components/ChatHeader';
+import { EncryptionNotice } from './components/EncryptionNotice';
 import { GetSocketMessages } from './components/GetSocketMessages';
-import MessageThread from './components/MessageThread';
+import { MessageThread } from './components/MessageThread';
 
 export default function MessagePage() {
   const limit = 20;
@@ -34,8 +34,7 @@ export default function MessagePage() {
 
   useEffect(() => {
     const backgroundImageCookie = getCookie('imageURL');
-    if (backgroundImageCookie && messages.length !== 0)
-      setBackgroundImage(backgroundImageCookie);
+    if (backgroundImageCookie && messages.length !== 0) setBackgroundImage(backgroundImageCookie);
   }, [backgroundImage, messages.length]);
 
   const loadChannelMessages = async (initialLoad = false) => {

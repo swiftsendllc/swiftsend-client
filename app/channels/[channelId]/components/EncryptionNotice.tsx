@@ -1,8 +1,6 @@
-"use client";
-
 import { Box, Button, Stack, Typography } from "@mui/material";
 
-export default function EncryptionNotice() {
+export  function EncryptionNotice() {
   return (
     <>
       <Stack

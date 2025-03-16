@@ -23,7 +23,7 @@ interface UserMessageInputProps {
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function MessageInput({ onMessage, replyMessage, isReplying, setIsReplying }: UserMessageInputProps) {
+export  function MessageInput({ onMessage, replyMessage, isReplying, setIsReplying }: UserMessageInputProps) {
   const { sendMessage, sendMessageReply } = useMessageAPI();
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState<string>('');

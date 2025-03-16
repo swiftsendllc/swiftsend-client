@@ -1,11 +1,9 @@
-"use client";
-
 import { UserProfilesEntity } from "@/hooks/entities/users.entities";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Avatar, Fab, Stack, TextField } from "@mui/material";
 
-export default function ChannelHeader({
+export  function ChannelHeader({
   user,
 }: {
   user: UserProfilesEntity;

@@ -1,20 +1,11 @@
-'use client';
-
 import { reactions } from '@/components/SearchComponents';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
-import {
-  Dialog,
-  DialogContent,
-  List,
-  ListItemButton,
-  ListItemText,
-  Paper
-} from '@mui/material';
+import { Dialog, DialogContent, List, ListItemButton, ListItemText, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function MessageReaction({
+export function MessageReaction({
   isOpen,
   onClose,
   message,
@@ -69,10 +60,7 @@ export default function MessageReaction({
           <DialogContent sx={{ padding: 0 }}>
             <List sx={{ display: 'flex', padding: 0, margin: 0 }}>
               {reactions.map((option, idx) => (
-                <ListItemButton
-                  key={idx}
-                  onClick={() => handleEmojiReaction(option.label)}
-                >
+                <ListItemButton key={idx} onClick={() => handleEmojiReaction(option.label)}>
                   <ListItemText primary={option.icon} />
                 </ListItemButton>
               ))}

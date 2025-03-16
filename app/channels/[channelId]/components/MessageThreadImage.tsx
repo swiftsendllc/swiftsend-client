@@ -1,23 +1,13 @@
-'use client';
-
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  CardContent,
-  Chip,
-  IconButton,
-  Paper,
-  Stack,
-  Typography
-} from '@mui/material';
+import { CardContent, Chip, IconButton, Paper, Stack, Typography } from '@mui/material';
 import moment from 'moment';
-
 import { UserContext } from '@/hooks/context/user-context';
 import { useContext, useState } from 'react';
-import ImageThumbnail from './ImageThumbnail';
-import InfoMessageDrawer from './InfoMessageDrawer';
+import {ImageThumbnail} from './ImageThumbnail';
+import {InfoMessageDrawer} from './InfoMessageDrawer';
 
-export default function MessageThreadImage({
+export function MessageThreadImage({
   message,
   setMessages
 }: {
@@ -39,21 +29,13 @@ export default function MessageThreadImage({
         <CardContent>
           <Stack spacing={1} alignItems="flex-start">
             <ImageThumbnail message={message} />
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              sx={{ wordBreak: 'break-word' }}
-            >
+            <Typography variant="body1" color="textPrimary" sx={{ wordBreak: 'break-word' }}>
               {message.message}
             </Typography>
             <Stack direction="row" spacing={1} alignItems="center">
               <Chip
                 label={
-                  <Typography
-                    variant="caption"
-                    fontSize="0.7rem"
-                    color="textSecondary"
-                  >
+                  <Typography variant="caption" fontSize="0.7rem" color="textSecondary">
                     {message.deleted
                       ? `${moment(message.deletedAt).fromNow().toUpperCase()} DELETED`
                       : message.edited
@@ -65,11 +47,7 @@ export default function MessageThreadImage({
                 size="small"
               />
               {isUser && (
-                <IconButton
-                  size="small"
-                  onClick={() => setInfoMessageDrawer(true)}
-                  sx={{ ml: 'auto' }}
-                >
+                <IconButton size="small" onClick={() => setInfoMessageDrawer(true)} sx={{ ml: 'auto' }}>
                   <EditIcon fontSize="small" />
                 </IconButton>
               )}
@@ -82,11 +60,7 @@ export default function MessageThreadImage({
           message={message}
           onDelete={() => {
             setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === message._id
-                  ? { ...msg, deleted: true, deletedAt: new Date() }
-                  : msg
-              )
+              prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
             );
           }}
           onEdit={(edit_msg) =>

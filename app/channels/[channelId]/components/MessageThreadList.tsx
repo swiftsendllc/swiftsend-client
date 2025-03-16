@@ -1,21 +1,18 @@
-'use client';
-
-import { UserContext } from '@/hooks/context/user-context';
-import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import { DoneAll } from '@mui/icons-material';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import ReplyIcon from '@mui/icons-material/Reply';
-import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { Box, Checkbox, IconButton, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import InfoMessageDrawer from './InfoMessageDrawer';
-import MessageReaction from './MessageReaction';
+import { InfoMessageDrawer } from './InfoMessageDrawer';
+import { MessageReaction } from './MessageReaction';
 
-export default function MessageThreadList({
+export function MessageThreadList({
   message,
   checkBox,
   selectedMessageIds,
@@ -33,8 +30,7 @@ export default function MessageThreadList({
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
-  const [user] = useContext(UserContext);
-  const isUser = user.userId === message.senderId;
+  const isUser = message.isUser;
   const [infoMessageDrawer, setInfoMessageDrawer] = useState<boolean>(false);
   const [emojiDrawer, setEmojiDrawer] = useState(false);
   const { deleteMessageReactions } = useMessageAPI();
@@ -60,6 +56,36 @@ export default function MessageThreadList({
       toast.error('FAILED TO DELETE REACTIONS!');
     }
   };
+
+  const handleDeleteMessage = () => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
+    );
+  };
+
+  const handleEditMessage = (edited_message: string) => {
+    setMessages((prev) =>
+      prev.map((msg) => {
+        const edited =
+          msg._id === message._id
+            ? {
+                ...msg,
+                message: edited_message,
+                edited: true,
+                editedAt: new Date()
+              }
+            : msg;
+        return edited;
+      })
+    );
+  };
+
+  const handleReaction = (reaction: MessageReactionsEntity) => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg._id === message._id ? { ...msg, reactions: [...msg.reactions, reaction] } : msg))
+    );
+  };
+
   return (
     <>
       <ListItemButton
@@ -167,35 +193,14 @@ export default function MessageThreadList({
           isOpen={infoMessageDrawer}
           onClose={() => setInfoMessageDrawer(false)}
           message={message}
-          onDelete={() =>
-            setMessages((prev) =>
-              prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
-            )
-          }
-          onEdit={(edited_message) =>
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === message._id
-                  ? {
-                      ...msg,
-                      message: edited_message,
-                      edited: true,
-                      editedAt: new Date()
-                    }
-                  : msg
-              )
-            )
-          }
+          onDelete={handleDeleteMessage}
+          onEdit={(edited_message) => handleEditMessage(edited_message)}
         />
         <MessageReaction
           isOpen={emojiDrawer}
           onClose={() => setEmojiDrawer(false)}
           message={message}
-          onReaction={(reaction) =>
-            setMessages((prev) =>
-              prev.map((msg) => (msg._id === message._id ? { ...msg, reactions: [...msg.reactions, reaction] } : msg))
-            )
-          }
+          onReaction={(reaction) => handleReaction(reaction)}
         />
       </ListItemButton>
     </>

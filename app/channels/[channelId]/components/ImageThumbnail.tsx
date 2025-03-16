@@ -1,9 +1,8 @@
-'use client';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import { Box, ImageListItem } from '@mui/material';
 import Image from 'next/image';
 
-export default function ImageThumbnail({ message }: { message: MessagesEntity }) {
+export function ImageThumbnail({ message }: { message: MessagesEntity }) {
   return (
     <ImageListItem
       style={{
