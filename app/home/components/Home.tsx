@@ -79,8 +79,6 @@ export default function HomePage() {
                   purchasedBy: [...post.purchasedBy, user.userId]
                 }
               : post;
-
-          if (post._id === selectedPost?._id) console.log(updated);
           return updated;
         })
       );
