@@ -1,8 +1,10 @@
 'use client';
+
 import UnFollowModal from '@/app/[username]/components/UnFollowModal';
 import UploadModal from '@/app/[username]/components/UploadModal';
 import useAPI from '@/hooks/api/useAPI';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
+import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { CreatorContext } from '@/hooks/context/creator-context';
 import { UserContext } from '@/hooks/context/user-context';
 import AddIcon from '@mui/icons-material/Add';
@@ -22,10 +24,13 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import {
   Avatar,
   Box,
+  Button,
   Card,
+  CardActions,
   CardContent,
   Divider,
   Fab,
+  FormControl,
   IconButton,
   Stack,
   Typography
@@ -33,22 +38,24 @@ import {
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 import { MusicModal } from './MusicModal';
 import { StyledBadge } from './SearchComponents';
+import SubscriptionModalWrapper from './SubscriptionModal';
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
   const [creator, setCreator] = useContext(CreatorContext);
   const { followProfile } = useAPI();
   const { createChannel } = useMessageAPI();
-
+  const { createSubscription, customerPortal } = usePaymentAPI();
   const router = useRouter();
-
   const pathname = usePathname();
   const { id } = useParams();
   const [createModal, setCreateModal] = useState(false);
   const [unFollowModal, setUnFollowModal] = useState(false);
   const [musicModal, setMusicModal] = useState(false);
+  const [subscriptionModal, setSubscriptionModal] = useState<boolean>(false);
 
   const stats = [
     {
@@ -86,10 +93,7 @@ export default function AccountPage() {
     }
   ];
 
-  const pathName =
-    pathname === `/${creator.username}/${id}`
-      ? `${creator.username}`
-      : pathname;
+  const pathName = pathname === `/${creator.username}/${id}` ? `${creator.username}` : pathname;
 
   const handleFollow = async (userId: string) => {
     try {
@@ -109,15 +113,56 @@ export default function AccountPage() {
     }
   };
 
+  const makePayment = async (paymentMethodId: string) => {
+    if (!paymentMethodId) {
+      return {
+        sessionUrl: '',
+        portalSessionUrl: '',
+        clientSecret: ''
+      };
+    }
+    const sessionData = await createSubscription({ creatorId: creator.userId});
+    const portalData = await customerPortal();
+    return {
+      sessionUrl: sessionData.sessionUrl,
+      portalSessionUrl: portalData.portalSessionUrl,
+      clientSecret: sessionData.clientSecret
+    };
+  };
+
   return (
     <>
-      {/* Profile Header */}
-      <Stack
-        mb={1}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <SubscriptionModalWrapper
+        isOpen={subscriptionModal}
+        metadata={{ userId: user.userId, creatorId: creator.userId }}
+        onClose={() => setSubscriptionModal(false)}
+        makePayment={makePayment}
+        onSuccess={() => toast.success('SUBSCRIBED')}
+      />
+
+      <FormControl>
+        <Box textAlign="center" mt={4}>
+          <Typography variant="h4" gutterBottom>
+            Choose a Collaboration Plan
+          </Typography>
+          <Card sx={{ maxWidth: 300, mx: 'auto', p: 2, borderRadius: 2, boxShadow: 3 }}>
+            <CardContent>
+              <Typography variant="h6">Starter</Typography>
+              <Typography variant="h4" color="primary">
+                $12
+              </Typography>
+              <Typography variant="body2">per month</Typography>
+            </CardContent>
+            <CardActions>
+              <Button variant="contained" color="primary" fullWidth onClick={() => setSubscriptionModal(true)}>
+                SUBSCRIBE
+              </Button>
+            </CardActions>
+          </Card>
+        </Box>
+      </FormControl>
+
+      <Stack mb={1} direction="row" justifyContent="space-between" alignItems="center">
         <Box display="flex" gap={0} width="50%" marginRight={0}>
           {user.userId !== creator.userId ? (
             <>
@@ -173,18 +218,10 @@ export default function AccountPage() {
             <Fab color="primary" href="/" aria-label="share">
               <NavigationIcon sx={{ width: 30, height: 30 }} />
             </Fab>
-            <Fab
-              color="secondary"
-              aria-label="add"
-              onClick={() => setCreateModal(true)}
-            >
+            <Fab color="secondary" aria-label="add" onClick={() => setCreateModal(true)}>
               <AddIcon sx={{ width: 30, height: 30 }} />
             </Fab>
-            <Fab
-              color="inherit"
-              href={`/${user.username}/settings`}
-              LinkComponent={Link}
-            >
+            <Fab color="inherit" onClick={() => router.push(`/${user.username}/settings`)}>
               <ViewListIcon sx={{ width: 30, height: 30 }} />
             </Fab>
           </Stack>
@@ -192,13 +229,7 @@ export default function AccountPage() {
       </Stack>
       <Box display="flex" alignItems="center">
         <Stack direction="column" spacing={2} width="100%">
-          <Stack
-            direction="row"
-            spacing={1}
-            justifyContent="space-between"
-            alignContent="center"
-            alignItems="center"
-          >
+          <Stack direction="row" spacing={1} justifyContent="space-between" alignContent="center" alignItems="center">
             <>
               <StyledBadge
                 isOnline={creator.isOnline}
@@ -220,19 +251,9 @@ export default function AccountPage() {
             </>
 
             <Stack direction="column" spacing={1}>
-              <Stack
-                direction="row"
-                spacing={4}
-                justifyContent="flex-end"
-                flexGrow={1}
-              >
+              <Stack direction="row" spacing={4} justifyContent="flex-end" flexGrow={1}>
                 {stats.map((item, idx) => (
-                  <Stack
-                    key={idx}
-                    direction="column"
-                    alignContent="center"
-                    alignItems="center"
-                  >
+                  <Stack key={idx} direction="column" alignContent="center" alignItems="center">
                     {item.value ? (
                       <Link href={item.value}>
                         <Typography variant="h6" fontWeight={100}>
@@ -263,12 +284,7 @@ export default function AccountPage() {
               >
                 <CardContent sx={{ p: 0, width: '100%' }}>
                   <IconButton onClick={() => setMusicModal(true)}>
-                    <Typography
-                      variant="subtitle2"
-                      fontWeight={100}
-                      color="text.secondary"
-                      textAlign="center"
-                    >
+                    <Typography variant="subtitle2" fontWeight={100} color="text.secondary" textAlign="center">
                       Live From Space
                     </Typography>
                   </IconButton>
@@ -323,16 +339,28 @@ export default function AccountPage() {
                   <Typography color="primary">Connected </Typography>
                 </Fab>
               ) : (
-                <Fab
-                  aria-label="add"
-                  variant="extended"
-                  sx={{ width: '100%', borderRadius: '30px' }}
-                  color="primary"
-                  onClick={() => handleFollow(creator.userId)}
-                >
-                  <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
-                  Connect{' '}
-                </Fab>
+                <>
+                  <Fab
+                    aria-label="add"
+                    variant="extended"
+                    sx={{ width: '100%', borderRadius: '30px' }}
+                    color="primary"
+                    onClick={() => handleFollow(creator.userId)}
+                  >
+                    <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
+                    Connect{' '}
+                  </Fab>
+                  {/* <Fab
+                    aria-label="add"
+                    variant="extended"
+                    sx={{ width: '100%', borderRadius: '30px' }}
+                    color="primary"
+                    onClick={() => setSubscriptionModal(true)}
+                  >
+                    <PaymentOutlined sx={{ width: 30, height: 30 }} />
+                    Subscribe{' '}
+                  </Fab> */}
+                </>
               )}
 
               <Fab
@@ -364,10 +392,7 @@ export default function AccountPage() {
                 <EditIcon sx={{ width: 30, height: 30 }} />
                 Profile{' '}
               </Fab>
-              <Fab
-                variant="extended"
-                sx={{ width: '100%', borderRadius: '30px' }}
-              >
+              <Fab variant="extended" sx={{ width: '100%', borderRadius: '30px' }}>
                 <DashboardIcon sx={{ width: 20, height: 30 }} />
                 Dashboard
               </Fab>
@@ -376,20 +401,11 @@ export default function AccountPage() {
 
           <Divider />
 
-          <Stack
-            direction="row"
-            spacing={1}
-            justifyContent="space-between"
-            alignContent="center"
-            alignItems="center"
-          >
+          <Stack direction="row" spacing={1} justifyContent="space-between" alignContent="center" alignItems="center">
             {grid.map((item, idx) => (
               <Stack key={idx}>
                 <IconButton href={item.value} LinkComponent={Link}>
-                  <Fab
-                    variant="extended"
-                    color={pathName === item.value ? 'primary' : 'inherit'}
-                  >
+                  <Fab variant="extended" color={pathName === item.value ? 'primary' : 'inherit'}>
                     {item.icon}
                   </Fab>
                 </IconButton>
@@ -400,10 +416,7 @@ export default function AccountPage() {
         </Stack>
       </Box>
       <MusicModal isOpen={musicModal} onClose={() => setMusicModal(false)} />
-      <UnFollowModal
-        isOpen={unFollowModal}
-        onClose={() => setUnFollowModal(false)}
-      />
+      <UnFollowModal isOpen={unFollowModal} onClose={() => setUnFollowModal(false)} />
       <UploadModal isOpen={createModal} onClose={() => setCreateModal(false)} />
     </>
   );

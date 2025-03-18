@@ -1,10 +1,9 @@
 'use client';
 
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
-import { LoadingButton } from '@mui/lab';
-import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { CardsEntity } from '@/hooks/entities/payments.entity';
 import { ENV } from '@/library/constants';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -20,18 +19,19 @@ import {
   RadioGroup,
   Typography
 } from '@mui/material';
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { loadStripe, MetadataParam } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-function PaymentModal({
+function SubscriptionModal({
   onClose,
   metadata,
   cardData,
   onSuccess,
   makePayment
 }: {
-  makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (paymentMethodId: string) => Promise<{ clientSecret: string }>;
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
@@ -71,6 +71,7 @@ function PaymentModal({
       if (!stripe || !elements) {
         throw new Error('Payment is still loading.Try again');
       }
+      console.log('.....started')
       let paymentMethodId = cardData?.id;
       if (!paymentMethodId) {
         const newCard = elements.getElement(CardElement);
@@ -84,25 +85,33 @@ function PaymentModal({
         });
         paymentMethodId = paymentMethod!.id;
       }
+      console.log('.....started....payment_method')
 
       const attachPayment = await attachPaymentMethod({
         paymentMethodId: paymentMethodId
       });
+      console.log('.....started....payment_method....attached.....')
 
       if (attachPayment.nextActionUrl) {
         await stripe.confirmCardSetup(attachPayment.clientSecret, {
           payment_method: paymentMethodId
         });
+        console.log('.....started....payment_method....attached.....confirmed...')
       }
+
       await confirmCard({
         paymentMethodId: paymentMethodId
       });
+      console.log('.....started....payment_method....attached.....confirmed...card...')
 
       const paymentResponse = await makePayment(paymentMethodId);
+      console.log('.....started....payment_method....attached.....confirmed...card...make...payment')
 
       const d = await stripe.confirmCardPayment(paymentResponse.clientSecret, {
         payment_method: paymentMethodId
       });
+      console.log('.....started....payment_method....attached.....confirmed...card...make...payment...confirmed...card...payment')
+
 
       if (d.paymentIntent?.status === 'succeeded') onSuccess?.();
       toast.success('PURCHASED');
@@ -196,7 +205,7 @@ function PaymentModal({
 }
 const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
 
-const PaymentModalWrapper = ({
+const SubscriptionModalWrapper = ({
   isOpen,
   onClose,
   metadata,
@@ -207,7 +216,7 @@ const PaymentModalWrapper = ({
   onClose: () => unknown;
   metadata: MetadataParam;
   onSuccess: () => unknown;
-  makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+  makePayment: (paymentMethodId: string) => Promise<{ clientSecret: string }>;
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -231,7 +240,7 @@ const PaymentModalWrapper = ({
     <>
       {open && (
         <Elements stripe={stripePromise!}>
-          <PaymentModal
+          <SubscriptionModal
             isOpen={true}
             onClose={onClose}
             metadata={metadata}
@@ -245,4 +254,4 @@ const PaymentModalWrapper = ({
   );
 };
 
-export default PaymentModalWrapper;
+export default SubscriptionModalWrapper;
