@@ -1,10 +1,10 @@
 'use client';
 
+import { AccountPostPage } from '@/app/[username]/components/Account';
 import UnFollowModal from '@/app/[username]/components/UnFollowModal';
 import UploadModal from '@/app/[username]/components/UploadModal';
 import useAPI from '@/hooks/api/useAPI';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
-import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { CreatorContext } from '@/hooks/context/creator-context';
 import { UserContext } from '@/hooks/context/user-context';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,46 +17,61 @@ import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import MovieSharpIcon from '@mui/icons-material/MovieSharp';
 import NavigationIcon from '@mui/icons-material/Navigation';
-import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import PersonPinRoundedIcon from '@mui/icons-material/PersonPinRounded';
 import ShoppingBasketSharpIcon from '@mui/icons-material/ShoppingBasketSharp';
 import ViewListIcon from '@mui/icons-material/ViewList';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Fab,
-  FormControl,
-  IconButton,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Avatar, Box, Card, CardContent, Divider, Fab, IconButton, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
-import toast from 'react-hot-toast';
+import { useContext, useEffect, useState } from 'react';
 import { MusicModal } from './MusicModal';
 import { StyledBadge } from './SearchComponents';
-import SubscriptionModalWrapper from './SubscriptionModal';
+import { Subscriptions } from './Subscriptions';
+
+interface FollowButtonProps {
+  isFollowing: boolean;
+  setUnFollowModal: (following: boolean) => unknown;
+  handleFollow: () => unknown;
+}
+
+const FollowButton = (props: FollowButtonProps) => {
+  const [isFollowing, setIsFollowing] = useState<boolean>(props.isFollowing);
+  useEffect(() => setIsFollowing(props.isFollowing), [props.isFollowing]);
+
+  return (
+    <Fab
+      aria-label="add"
+      variant="extended"
+      sx={{
+        width: '100%',
+        borderRadius: '30px'
+      }}
+      color="inherit"
+      onClick={() => {
+        if (isFollowing) {
+          props.setUnFollowModal(true);
+        } else {
+          props.handleFollow();
+        }
+      }}
+    >
+      <Typography color="primary">{isFollowing ? 'Connected' : 'Connect'}</Typography>
+    </Fab>
+  );
+};
 
 export default function AccountPage() {
   const [user] = useContext(UserContext);
   const [creator, setCreator] = useContext(CreatorContext);
   const { followProfile } = useAPI();
   const { createChannel } = useMessageAPI();
-  const { createSubscription, customerPortal } = usePaymentAPI();
   const router = useRouter();
   const pathname = usePathname();
   const { id } = useParams();
   const [createModal, setCreateModal] = useState(false);
   const [unFollowModal, setUnFollowModal] = useState(false);
   const [musicModal, setMusicModal] = useState(false);
-  const [subscriptionModal, setSubscriptionModal] = useState<boolean>(false);
-
+  const isViewer = user.userId !== creator.userId;
   const stats = [
     {
       title: 'entries',
@@ -65,30 +80,30 @@ export default function AccountPage() {
     {
       title: 'connections',
       count: creator.followerCount,
-      value: `/${creator.username}/connections`
+      path: `/${creator.username}/connections`
     },
     {
       title: 'connected',
       count: creator.followingCount,
-      value: `/${creator.username}/connected`
+      path: `/${creator.username}/connected`
     }
   ];
 
   const grid = [
     {
-      value: `/${creator.username}`,
+      path: `/${creator.username}`,
       icon: <GridOnSharpIcon color="inherit" />
     },
     {
-      value: `/${creator.username}/subscribers`,
+      path: `/${creator.username}/subscribers`,
       icon: <ShoppingBasketSharpIcon />
     },
     {
-      value: `/${creator.username}/reels`,
+      path: `/${creator.username}/reels`,
       icon: <MovieSharpIcon />
     },
     {
-      value: `/${creator.username}/tags`,
+      path: `/${creator.username}/tags`,
       icon: <PersonPinRoundedIcon />
     }
   ];
@@ -113,119 +128,50 @@ export default function AccountPage() {
     }
   };
 
-  const makePayment = async (paymentMethodId: string) => {
-    if (!paymentMethodId) {
-      return {
-        sessionUrl: '',
-        portalSessionUrl: '',
-        clientSecret: ''
-      };
-    }
-    const sessionData = await createSubscription({ creatorId: creator.userId});
-    const portalData = await customerPortal();
-    return {
-      sessionUrl: sessionData.sessionUrl,
-      portalSessionUrl: portalData.portalSessionUrl,
-      clientSecret: sessionData.clientSecret
-    };
-  };
-
   return (
     <>
-      <SubscriptionModalWrapper
-        isOpen={subscriptionModal}
-        metadata={{ userId: user.userId, creatorId: creator.userId }}
-        onClose={() => setSubscriptionModal(false)}
-        makePayment={makePayment}
-        onSuccess={() => toast.success('SUBSCRIBED')}
-      />
-
-      <FormControl>
-        <Box textAlign="center" mt={4}>
-          <Typography variant="h4" gutterBottom>
-            Choose a Collaboration Plan
-          </Typography>
-          <Card sx={{ maxWidth: 300, mx: 'auto', p: 2, borderRadius: 2, boxShadow: 3 }}>
-            <CardContent>
-              <Typography variant="h6">Starter</Typography>
-              <Typography variant="h4" color="primary">
-                $12
-              </Typography>
-              <Typography variant="body2">per month</Typography>
-            </CardContent>
-            <CardActions>
-              <Button variant="contained" color="primary" fullWidth onClick={() => setSubscriptionModal(true)}>
-                SUBSCRIBE
-              </Button>
-            </CardActions>
-          </Card>
-        </Box>
-      </FormControl>
-
       <Stack mb={1} direction="row" justifyContent="space-between" alignItems="center">
         <Box display="flex" gap={0} width="50%" marginRight={0}>
-          {user.userId !== creator.userId ? (
-            <>
-              <IconButton onClick={() => router.back()}>
-                <ArrowBackIcon />
-              </IconButton>
-              <Typography
-                variant="h5"
-                fontWeight={50}
-                textAlign="left"
-                sx={{
-                  display: 'inline-block',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {creator.username}
-              </Typography>
-            </>
-          ) : (
-            <Typography
-              variant="h5"
-              fontWeight={50}
-              color="inherit"
-              textAlign="left"
-              sx={{
-                display: 'inline-block',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {creator.username}
+          {isViewer && (
+            <IconButton onClick={() => router.back()}>
+              <ArrowBackIcon />
+            </IconButton>
+          )}
+          <Typography
+            variant="h5"
+            fontWeight={50}
+            color="inherit"
+            textAlign="left"
+            sx={{
+              display: 'inline-block',
+              overflow: 'hidden'
+            }}
+          >
+            {creator.username}
+            {!isViewer && (
               <IconButton edge="end">
                 <ExpandMoreOutlinedIcon />
               </IconButton>
-            </Typography>
-          )}
+            )}
+          </Typography>
         </Box>
-        {user.userId !== creator.userId ? (
-          <Stack direction="row" spacing={1}>
-            <Fab color="primary" href="/" aria-label="share">
-              <NavigationIcon sx={{ width: 30, height: 30 }} />
-            </Fab>
+        <Stack direction="row" spacing={2}>
+          <Fab color="primary" href="/" aria-label="share">
+            <NavigationIcon sx={{ width: 30, height: 30 }} />
+          </Fab>
+          <Fab color="secondary" aria-label="add" onClick={() => setCreateModal(true)}>
+            <AddIcon sx={{ width: 30, height: 30 }} />
+          </Fab>
+          {isViewer ? (
             <Fab>
               <MoreVertOutlinedIcon />
             </Fab>
-          </Stack>
-        ) : (
-          <Stack direction="row" spacing={2}>
-            {/* add link LinkComponent */}
-            <Fab color="primary" href="/" aria-label="share">
-              <NavigationIcon sx={{ width: 30, height: 30 }} />
-            </Fab>
-            <Fab color="secondary" aria-label="add" onClick={() => setCreateModal(true)}>
-              <AddIcon sx={{ width: 30, height: 30 }} />
-            </Fab>
+          ) : (
             <Fab color="inherit" onClick={() => router.push(`/${user.username}/settings`)}>
               <ViewListIcon sx={{ width: 30, height: 30 }} />
             </Fab>
-          </Stack>
-        )}
+          )}
+        </Stack>
       </Stack>
       <Box display="flex" alignItems="center">
         <Stack direction="column" spacing={2} width="100%">
@@ -254,8 +200,8 @@ export default function AccountPage() {
               <Stack direction="row" spacing={4} justifyContent="flex-end" flexGrow={1}>
                 {stats.map((item, idx) => (
                   <Stack key={idx} direction="column" alignContent="center" alignItems="center">
-                    {item.value ? (
-                      <Link href={item.value}>
+                    {item.path ? (
+                      <Link href={item.path}>
                         <Typography variant="h6" fontWeight={100}>
                           {item.count}
                         </Typography>
@@ -292,12 +238,10 @@ export default function AccountPage() {
               </Card>
             </Stack>
           </Stack>
-
           <Stack direction="column">
             <Typography variant="h6" fontWeight={200}>
               {creator.fullName}
             </Typography>
-
             <Link
               href={creator.websiteURL ?? '/'}
               target="_blank"
@@ -315,8 +259,7 @@ export default function AccountPage() {
               {creator.bio}
             </Typography>
           </Stack>
-
-          {user.userId !== creator.userId ? (
+          {isViewer ? (
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -325,44 +268,13 @@ export default function AccountPage() {
               width="100%"
               spacing={2}
             >
-              {creator.isFollowedByMe ? (
-                <Fab
-                  aria-label="add"
-                  variant="extended"
-                  sx={{
-                    width: '100%',
-                    borderRadius: '30px'
-                  }}
-                  color="inherit"
-                  onClick={() => setUnFollowModal(true)}
-                >
-                  <Typography color="primary">Connected </Typography>
-                </Fab>
-              ) : (
-                <>
-                  <Fab
-                    aria-label="add"
-                    variant="extended"
-                    sx={{ width: '100%', borderRadius: '30px' }}
-                    color="primary"
-                    onClick={() => handleFollow(creator.userId)}
-                  >
-                    <PersonAddAlt1OutlinedIcon sx={{ width: 30, height: 30 }} />
-                    Connect{' '}
-                  </Fab>
-                  {/* <Fab
-                    aria-label="add"
-                    variant="extended"
-                    sx={{ width: '100%', borderRadius: '30px' }}
-                    color="primary"
-                    onClick={() => setSubscriptionModal(true)}
-                  >
-                    <PaymentOutlined sx={{ width: 30, height: 30 }} />
-                    Subscribe{' '}
-                  </Fab> */}
-                </>
+              {creator.isFollowedByMe && (
+                <FollowButton
+                  handleFollow={() =>handleFollow(creator.userId)}
+                  isFollowing={creator.isFollowing}
+                  setUnFollowModal={setUnFollowModal}
+                />
               )}
-
               <Fab
                 variant="extended"
                 sx={{ width: '100%', borderRadius: '30px' }}
@@ -398,21 +310,32 @@ export default function AccountPage() {
               </Fab>
             </Stack>
           )}
-
           <Divider />
-
-          <Stack direction="row" spacing={1} justifyContent="space-between" alignContent="center" alignItems="center">
-            {grid.map((item, idx) => (
-              <Stack key={idx}>
-                <IconButton href={item.value} LinkComponent={Link}>
-                  <Fab variant="extended" color={pathName === item.value ? 'primary' : 'inherit'}>
-                    {item.icon}
-                  </Fab>
-                </IconButton>
+          {creator.hasSubscribed ? (
+            <>
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent="space-between"
+                alignContent="center"
+                alignItems="center"
+              >
+                {grid.map((item, idx) => (
+                  <Stack key={idx}>
+                    <IconButton href={item.path} LinkComponent={Link}>
+                      <Fab variant="extended" color={pathName === item.path ? 'primary' : 'inherit'}>
+                        {item.icon}
+                      </Fab>
+                    </IconButton>
+                  </Stack>
+                ))}
               </Stack>
-            ))}
-          </Stack>
-          <Divider />
+              <Divider />
+              <AccountPostPage />
+            </>
+          ) : (
+            <Subscriptions />
+          )}
         </Stack>
       </Box>
       <MusicModal isOpen={musicModal} onClose={() => setMusicModal(false)} />

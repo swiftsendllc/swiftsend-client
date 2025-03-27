@@ -10,7 +10,8 @@ import Image from 'next/image';
 
 import { useContext, useEffect, useState } from 'react';
 
-export default function AccountPostPage() {
+
+export  function AccountPostPage() {
   const { getCreatorPosts } = usePostAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [editPostModal, setEditPostModal] = useState(false);
