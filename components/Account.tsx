@@ -5,8 +5,10 @@ import UnFollowModal from '@/app/[username]/components/UnFollowModal';
 import UploadModal from '@/app/[username]/components/UploadModal';
 import useAPI from '@/hooks/api/useAPI';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
+import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { CreatorContext } from '@/hooks/context/creator-context';
 import { UserContext } from '@/hooks/context/user-context';
+import { SubscriptionPlansEntity } from '@/hooks/entities/payments.entity';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -25,18 +27,19 @@ import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { MusicModal } from './MusicModal';
+import PaymentModalWrapper from './PaymentModal';
 import { StyledBadge } from './SearchComponents';
-import { Subscriptions } from './Subscriptions';
+import { SubscriptionPlans } from './SubscriptionPlans';
 
 interface FollowButtonProps {
-  isFollowing: boolean;
+  isFollowedByMe: boolean;
   setUnFollowModal: (following: boolean) => unknown;
   handleFollow: () => unknown;
 }
 
 const FollowButton = (props: FollowButtonProps) => {
-  const [isFollowing, setIsFollowing] = useState<boolean>(props.isFollowing);
-  useEffect(() => setIsFollowing(props.isFollowing), [props.isFollowing]);
+  const [isFollowedByMe, setIsFollowedByMe] = useState<boolean>(props.isFollowedByMe);
+  useEffect(() => setIsFollowedByMe(props.isFollowedByMe), [props.isFollowedByMe]);
 
   return (
     <Fab
@@ -48,14 +51,14 @@ const FollowButton = (props: FollowButtonProps) => {
       }}
       color="inherit"
       onClick={() => {
-        if (isFollowing) {
+        if (isFollowedByMe) {
           props.setUnFollowModal(true);
         } else {
           props.handleFollow();
         }
       }}
     >
-      <Typography color="primary">{isFollowing ? 'Connected' : 'Connect'}</Typography>
+      <Typography color="primary">{isFollowedByMe ? 'Connected' : 'Connect'}</Typography>
     </Fab>
   );
 };
@@ -72,6 +75,11 @@ export default function AccountPage() {
   const [unFollowModal, setUnFollowModal] = useState(false);
   const [musicModal, setMusicModal] = useState(false);
   const isViewer = user.userId !== creator.userId;
+  const { createPayment } = usePaymentAPI();
+  const [subscribeModal, setSubscribeModal] = useState<boolean>(false);
+  const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlansEntity | null>(null);
+  console.log('subscription plan id:', subscriptionPlan);
+
   const stats = [
     {
       title: 'entries',
@@ -113,7 +121,8 @@ export default function AccountPage() {
   const handleFollow = async (userId: string) => {
     try {
       await followProfile(userId);
-      setCreator((previous) => ({ ...previous, following: true }));
+      setCreator((previous) => ({ ...previous, isFollowedByMe: true, followerCount:previous.followerCount + 1}));
+
     } catch (error) {
       console.log(error);
     }
@@ -128,8 +137,31 @@ export default function AccountPage() {
     }
   };
 
+  const makePayment = async (paymentMethodId: string) => {
+    console.log("payment method id:", paymentMethodId)
+    const paymentResponse = await createPayment(creator.userId, 'subscription', {
+      amount: subscriptionPlan!.price,
+      payment_method: paymentMethodId,
+      payment_method_types: ['card'],
+      contentId: subscriptionPlan!._id
+    });
+    return {
+      requiresAction: paymentResponse.requiresAction,
+      clientSecret: paymentResponse.clientSecret
+    };
+  };
+
   return (
     <>
+      {subscriptionPlan && (
+        <PaymentModalWrapper
+          isOpen={subscribeModal}
+          metadata={{ userId: user.userId, creatorId: creator.userId, contentId: subscriptionPlan._id }}
+          onClose={() => setSubscribeModal(false)}
+          makePayment={makePayment}
+          onSuccess={() => router.refresh()}
+        />
+      )}
       <Stack mb={1} direction="row" justifyContent="space-between" alignItems="center">
         <Box display="flex" gap={0} width="50%" marginRight={0}>
           {isViewer && (
@@ -260,31 +292,31 @@ export default function AccountPage() {
             </Typography>
           </Stack>
           {isViewer ? (
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              alignContent="center"
-              width="100%"
-              spacing={2}
-            >
-              {creator.isFollowedByMe && (
-                <FollowButton
-                  handleFollow={() =>handleFollow(creator.userId)}
-                  isFollowing={creator.isFollowing}
-                  setUnFollowModal={setUnFollowModal}
-                />
-              )}
-              <Fab
-                variant="extended"
-                sx={{ width: '100%', borderRadius: '30px' }}
-                color="secondary"
-                onClick={() => loadChannel(creator.userId)}
+            creator.hasSubscribed && (
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                alignContent="center"
+                width="100%"
+                spacing={2}
               >
-                <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
-                Message
-              </Fab>
-            </Stack>
+                  <FollowButton
+                    handleFollow={() => handleFollow(creator.userId)}
+                    isFollowedByMe={creator.isFollowedByMe}
+                    setUnFollowModal={setUnFollowModal}
+                  />
+                <Fab
+                  variant="extended"
+                  sx={{ width: '100%', borderRadius: '30px' }}
+                  color="secondary"
+                  onClick={() => loadChannel(creator.userId)}
+                >
+                  <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
+                  Message
+                </Fab>
+              </Stack>
+            )
           ) : (
             <Stack
               direction="row"
@@ -334,7 +366,11 @@ export default function AccountPage() {
               <AccountPostPage />
             </>
           ) : (
-            <Subscriptions />
+            <SubscriptionPlans
+              creator={creator}
+              onSubscribe={() => setSubscribeModal(true)}
+              setSubscriptionPlan={setSubscriptionPlan}
+            />
           )}
         </Stack>
       </Box>

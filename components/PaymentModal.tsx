@@ -1,10 +1,9 @@
 'use client';
 
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
-import { LoadingButton } from '@mui/lab';
-import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { CardsEntity } from '@/hooks/entities/payments.entity';
 import { ENV } from '@/library/constants';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -20,6 +19,7 @@ import {
   RadioGroup,
   Typography
 } from '@mui/material';
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { loadStripe, MetadataParam } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -72,6 +72,7 @@ function PaymentModal({
         throw new Error('Payment is still loading.Try again');
       }
       let paymentMethodId = cardData?.id;
+      console.log('.....');
       if (!paymentMethodId) {
         const newCard = elements.getElement(CardElement);
         const { paymentMethod } = await stripe.createPaymentMethod({
@@ -84,27 +85,38 @@ function PaymentModal({
         });
         paymentMethodId = paymentMethod!.id;
       }
+      console.log('.....card...');
 
       const attachPayment = await attachPaymentMethod({
         paymentMethodId: paymentMethodId
       });
+      console.log('.....card...attached...');
 
       if (attachPayment.nextActionUrl) {
         await stripe.confirmCardSetup(attachPayment.clientSecret, {
           payment_method: paymentMethodId
         });
       }
+      console.log('.....card...attached...confirming');
+console.log(paymentMethodId)
       await confirmCard({
         paymentMethodId: paymentMethodId
       });
+      console.log('.....card...attached...confirming....confirm');
+      console.log(paymentMethodId)
 
       const paymentResponse = await makePayment(paymentMethodId);
+      console.log('.....card...attached...confirming....confirmed...paymentResponse');
+      console.log(paymentMethodId)
 
       const d = await stripe.confirmCardPayment(paymentResponse.clientSecret, {
         payment_method: paymentMethodId
       });
+      console.log('.....card...attached...confirming....confirmed....confirmed...');
 
       if (d.paymentIntent?.status === 'succeeded') onSuccess?.();
+      console.log('.....card...attached...confirming....confirmed....confirmed......status');
+
       toast.success('PURCHASED');
       handleClose();
     } catch (error) {

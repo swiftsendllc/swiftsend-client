@@ -11,7 +11,6 @@ export default function SinglePost() {
   const { getPost } = usePostAPI();
   const { postId } = useParams();
   const [post, setPost] = useState<PostsEntity>();
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   const loadPost = async () => {
     try {
@@ -35,8 +34,6 @@ export default function SinglePost() {
           onMutation={() => loadPost()}
           setPaymentModal={() => false}
           setSelectedPost={() => null}
-          isFollowing={isFollowing}
-          setIsFollowing={setIsFollowing}
         />
       )}
     </Container>

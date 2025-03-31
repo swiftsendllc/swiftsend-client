@@ -15,6 +15,18 @@ export interface PurchasesEntity {
   purchasedAt: Date;
 }
 
+export interface SubscriptionPlansEntity {
+  _id: string;
+  price: number;
+  description: string;
+  bannerURL: string | null;
+  createdAt: Date;
+  deletedAt: Date | null;
+  syncedAt: Date;
+  tier: string;
+  creatorId: string;
+}
+
 export interface SubscriptionsEntity {
   userId: string;
   creatorId: string;
@@ -22,10 +34,12 @@ export interface SubscriptionsEntity {
   status: string;
   startedAt: Date;
   expiresAt: Date;
+  price: number;
+  subscription_plans_id: string;
 }
 
 export interface CardsEntity {
-  id:string
+  id: string;
   card: {
     brand: string;
     checks: {
