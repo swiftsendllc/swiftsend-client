@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Transition from "@/components/Transition";
-import useAPI from "@/hooks/api/useAPI";
-import { CreatorContext } from "@/hooks/context/creator-context";
-import { LoadingButton } from "@mui/lab";
+import Transition from '@/components/Transition';
+import useAPI from '@/hooks/api/useAPI';
+import { CreatorContext } from '@/hooks/context/creator-context';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Button,
@@ -13,18 +13,12 @@ import {
   DialogActions,
   DialogTitle,
   FormControl,
-  Typography,
-} from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-export default function UnFollowModal({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose?: () => unknown;
-}) {
+export default function UnFollowModal({ isOpen, onClose }: { isOpen: boolean; onClose?: () => unknown }) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
@@ -41,7 +35,7 @@ export default function UnFollowModal({
     setLoading(true);
     try {
       await unFollowProfile(userId);
-      setCreator((previous) => ({ ...previous, following: false }));
+      setCreator((previous) => ({ ...previous, isFollowedByMe: false, followerCount: previous.followerCount - 1 }));
       handleClose();
       toast.success(`Disconnected ${creator.fullName}`);
     } catch (error) {
@@ -63,48 +57,28 @@ export default function UnFollowModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         onClose={handleClose}
       >
-        <FormControl
-          fullWidth
-          component="form"
-          variant="standard"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl fullWidth component="form" variant="standard" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }} variant="subtitle1" fontWeight={200}>
             We are sad to see you go!
           </DialogTitle>
-          <Card sx={{ my: 1, width: "100%", p: 0 }}>
+          <Card sx={{ my: 1, width: '100%', p: 0 }}>
             <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={creator.avatarURL}
-                  alt={creator.fullName}
-                />
-              }
+              avatar={<Avatar aria-label="recipe" src={creator.avatarURL} alt={creator.fullName} />}
               title={creator.fullName}
               subheader={
-                <Typography
-                  fontWeight={200}
-                  fontSize=".75rem"
-                  variant="subtitle2"
-                >
+                <Typography fontWeight={200} fontSize=".75rem" variant="subtitle2">
                   {creator.username}
                 </Typography>
               }
             />
           </Card>
-          <DialogActions sx={{ justifyContent: "space-between" }}>
-            <Button
-              onClick={handleClose}
-              color="primary"
-              variant="contained"
-              sx={{ width: "100%" }}
-            >
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button onClick={handleClose} color="primary" variant="contained" sx={{ width: '100%' }}>
               No
             </Button>
             <LoadingButton
@@ -112,7 +86,7 @@ export default function UnFollowModal({
               onClick={() => handleUnFollow(creator.userId)}
               variant="contained"
               color="error"
-              sx={{ width: "100%" }}
+              sx={{ width: '100%' }}
             >
               Yes
             </LoadingButton>

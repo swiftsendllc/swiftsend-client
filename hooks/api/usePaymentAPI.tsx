@@ -4,6 +4,7 @@ import { getCookie } from 'cookies-next';
 const usePaymentAPI = () => {
   const createPayment = async (
     creatorId: string,
+    purchaseType: string,
     input: {
       contentId: string;
       amount: number;
@@ -12,14 +13,17 @@ const usePaymentAPI = () => {
     }
   ) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/create/payment?creatorId=${creatorId}`, {
-      method: 'POST',
-      body: JSON.stringify(input),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
+    const res = await fetch(
+      `${ENV('NEXT_PUBLIC_API_URL')}/create/payment?creatorId=${creatorId}&purchaseType=${purchaseType}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
-    });
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -77,12 +81,29 @@ const usePaymentAPI = () => {
     return data;
   };
 
-  const createSubscription = async (input: { creatorId: string }) => {
+  const createSubscriptionPlan = async (input: { creatorId: string }) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/payments/subscriptions/create`, {
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/subscriptions/plans/create`, {
       method: 'POST',
       body: JSON.stringify(input),
       headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error);
+    }
+    return data;
+  };
+
+  const getSubscriptionPlans = async (creatorId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/subscription/plans/${creatorId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
       }
     });
@@ -93,17 +114,37 @@ const usePaymentAPI = () => {
     return data;
   };
 
-  const customerPortal = async () => {
+  const editSubscriptionPlan = async (
+    subscription_plan_id: string,
+    input: Partial<{ price: number; description: string; tier: string; bannerURL: string }>
+  ) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}//payments/subscriptions/customer/portal`, {
-      method: 'POST',
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/subscription/plan/edit/${subscription_plan_id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(input),
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
       }
     });
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error);
+      throw new Error(data.message);
+    }
+  };
+
+  const deleteSubscriptionPlan = async (subscription_plan_id: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/subscription/plan/delete/${subscription_plan_id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
     }
     return data;
   };
@@ -113,8 +154,10 @@ const usePaymentAPI = () => {
     getCard,
     attachPaymentMethod,
     confirmCard,
-    createSubscription,
-    customerPortal
+    createSubscriptionPlan,
+    getSubscriptionPlans,
+    editSubscriptionPlan,
+    deleteSubscriptionPlan
   };
 };
 export default usePaymentAPI;

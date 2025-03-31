@@ -26,6 +26,7 @@ export interface UserProfilesEntity {
   isFollowing: boolean;
   isFollowedByMe: boolean;
   hasSubscribed: boolean;
+  
 }
 
 export interface UpdateUserInput {

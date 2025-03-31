@@ -25,7 +25,8 @@ const emptyChannel = {
     isOnline: false,
     lastSeen: new Date(),
     isFollowing:false,
-    isFollowedByMe:false
+    isFollowedByMe:false,
+    hasSubscribed:false
   },
   lastMessage: {
     _id: "",

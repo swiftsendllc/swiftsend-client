@@ -3,6 +3,7 @@
 import { InputElement } from '@/components/InputElement';
 import { previewGrid } from '@/components/SearchComponents';
 import usePostAPI from '@/hooks/api/usePostAPI';
+import { UserContext } from '@/hooks/context/user-context';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
@@ -28,7 +29,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 export default function PostPreview() {
   const [loading, setLoading] = useState(false);
@@ -38,6 +39,7 @@ export default function PostPreview() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadFile } = usePostAPI();
   const { createPost } = usePostAPI();
+  const [, setUser] = useContext(UserContext);
   const [isExclusive, setIsExclusive] = useState<boolean>(true);
   const [priceError, setPriceError] = useState<string>('');
   const [price, setPrice] = useState<number>(200);
@@ -64,6 +66,7 @@ export default function PostPreview() {
         price
       });
       setObjectUrls(originalUrl);
+      setUser((prev) => ({ ...prev, postCount: prev.postCount + 1 }));
       router.back();
     } catch (error) {
       console.error(error);
@@ -124,17 +127,10 @@ export default function PostPreview() {
               </Box>
             ))}
           </Stack>
-          <Button
-            startIcon={<CloudUploadIcon />}
-            onClick={() => inputRef.current?.click()}
-          >
+          <Button startIcon={<CloudUploadIcon />} onClick={() => inputRef.current?.click()}>
             Upload
           </Button>
-          <InputElement
-            inputRef={inputRef}
-            setFiles={setFiles}
-            setObjectUrls={setObjectUrls}
-          />
+          <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={setObjectUrls} />
           <CardContent>
             <TextField
               fullWidth
@@ -179,9 +175,7 @@ export default function PostPreview() {
                 helperText={priceError}
                 error={!!priceError}
                 value={price}
-                onChange={(e) =>
-                  setPrice(Number(e.target.value.replace(/[^0-9]/g, '')))
-                }
+                onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
             )}
           </Box>
@@ -195,23 +189,14 @@ export default function PostPreview() {
                   borderRadius: 2
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 35, pr: 1 }}>
-                  {option.leftIcon}
-                </ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 35, pr: 1 }}>{option.leftIcon}</ListItemIcon>
                 {option.leftIcon ? (
                   <ListItemText disableTypography>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignContent="center"
-                      alignItems="center"
-                    >
+                    <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
                       <Typography variant="h6" fontWeight={100}>
                         {option.label}
                       </Typography>
-                      <Typography variant="body2">
-                        {option.rightIcon}
-                      </Typography>
+                      <Typography variant="body2">{option.rightIcon}</Typography>
                     </Stack>
                   </ListItemText>
                 ) : (
@@ -234,11 +219,7 @@ export default function PostPreview() {
             padding: 0
           }}
         >
-          <Button
-            variant="contained"
-            fullWidth
-            style={{ color: 'var(--warning)' }}
-          >
+          <Button variant="contained" fullWidth style={{ color: 'var(--warning)' }}>
             Discard
           </Button>
           <LoadingButton

@@ -20,7 +20,6 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
 
@@ -52,7 +51,7 @@ export default function HomePage() {
       };
     }
 
-    const paymentResponse = await createPayment(selectedPost.user.userId, {
+    const paymentResponse = await createPayment(selectedPost.user.userId, 'post', {
       amount: selectedPost.price,
       contentId: selectedPost._id,
       payment_method: paymentMethodId,
@@ -151,8 +150,6 @@ export default function HomePage() {
                 post={post}
                 setPaymentModal={setPaymentModal}
                 setSelectedPost={setSelectedPost}
-                isFollowing={isFollowing}
-                setIsFollowing={setIsFollowing}
               />
             ))}
           </InfiniteScroll>

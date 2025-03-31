@@ -35,7 +35,7 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface PostProps {
@@ -44,8 +44,6 @@ interface PostProps {
   onMutation?: () => unknown;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPost: React.Dispatch<React.SetStateAction<PostsEntity | null>>;
-  setIsFollowing: React.Dispatch<React.SetStateAction<boolean>>;
-  isFollowing: boolean;
 }
 
 interface LikeButtonProps {
@@ -63,20 +61,13 @@ interface FollowButtonProps {
   isFollowing: boolean;
 }
 
-export const PostCard = ({
-  post,
-  allowComments = false,
-  onMutation,
-  setPaymentModal,
-  setSelectedPost,
-  isFollowing,
-  setIsFollowing
-}: PostProps) => {
+export const PostCard = ({ post, allowComments = false, onMutation, setPaymentModal, setSelectedPost }: PostProps) => {
   const { followProfile } = useAPI();
   const { likePost, savePost } = usePostAPI();
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
+  const [isFollowing, setIsFollowing] = useState(post.isFollowing);
   const [commentCount, setCommentCount] = useState(post.commentCount);
   const [user] = useContext(UserContext);
   const router = useRouter();
@@ -156,9 +147,7 @@ export const PostCard = ({
               </StyledBadge>
             </>
           }
-          action={
-            !post.isMyPost && <FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />
-          }
+          action={<FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />}
           title={
             <>
               <IconButton onClick={() => router.push(`/${post.user.username}`)}>
@@ -188,37 +177,20 @@ export const PostCard = ({
           )}
         </Typography>
         <Box sx={{ position: 'relative' }}>
-          {post.imageUrls.length < 2 ? (
-            post.imageUrls.map((img, idx) => (
-              <Fragment key={idx}>
-                <Image
-                  style={{
-                    objectFit: 'cover',
-                    width: '100%',
-                    minHeight: 300
-                  }}
-                  priority
-                  src={img}
-                  alt={'image'}
-                  width={400}
-                  height={100}
-                />
-              </Fragment>
-            ))
-          ) : (
-            <Stack
-              direction={'row'}
-              spacing={1}
-              flexWrap={'nowrap'}
-              sx={{
-                whiteSpace: 'nowrap',
-                overflowX: 'auto',
-                overflowY: 'hidden',
-                minHeight: 300,
-                minWidth: 375
-              }}
-            >
-              {post.imageUrls.map((img, idx) => (
+          <Stack
+            direction={'row'}
+            spacing={1}
+            flexWrap={'nowrap'}
+            sx={{
+              whiteSpace: 'nowrap',
+              overflowX: 'auto',
+              overflowY: 'hidden',
+              minHeight: 300,
+              minWidth: 375
+            }}
+          >
+            {post.imageUrls &&
+              post.imageUrls.map((img, idx) => (
                 <Box key={idx} position={'relative'}>
                   <Image
                     style={{
@@ -235,13 +207,12 @@ export const PostCard = ({
                   />
                 </Box>
               ))}
-            </Stack>
-          )}
+          </Stack>
           <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
             <Chip color="primary" label={post.imageUrls.length} variant="filled" />
           </Box>
 
-          {post.purchasedBy.includes(user.userId) ? null : (
+          {post.isExclusive === false || post.purchasedBy.includes(user.userId) ? null : (
             <Box
               sx={{
                 position: 'absolute',
