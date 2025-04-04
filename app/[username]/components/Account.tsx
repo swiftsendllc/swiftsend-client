@@ -33,7 +33,7 @@ export  function AccountPostPage() {
 
   return (
     <>
-      <Box mb={6}>
+      <Box mb={6} >
         {posts.length === 0 ? (
           <Stack my="10" alignContent="center" alignItems="center" justifyContent="center">
             <Image

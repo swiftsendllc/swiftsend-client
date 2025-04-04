@@ -81,6 +81,7 @@ export default function HomePage() {
           return updated;
         })
       );
+      toast.success("Purchased")
     } catch (error) {
       console.error(error);
       toast.error('SOMETHING WRONG HAPPENED');

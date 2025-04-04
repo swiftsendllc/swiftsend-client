@@ -59,7 +59,6 @@ export function MessageThread({
             {message.isExclusive ? (
               <MessageThreadImage message={message} setMessages={setMessages} />
             ) : (
-              <>
                 <MessageThreadList
                   setSelectedMessageIds={setSelectedMessageIds}
                   message={message}
@@ -70,7 +69,6 @@ export function MessageThread({
                   setIsReplying={setIsReplying}
                   setReplyMessage={setReplyMessage}
                 />
-              </>
             )}
             {isUser && (
               <ListItemAvatar>

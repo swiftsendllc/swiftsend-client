@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ["assets.arijit.xyz", "images.unsplash.com"], // Add your image domain here
-  },
+    domains: ['assets.arijit.xyz', 'images.unsplash.com'] // Add your image domain here
+  }
 };
 
 export default nextConfig;

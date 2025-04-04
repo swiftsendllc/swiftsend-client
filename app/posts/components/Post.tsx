@@ -6,7 +6,6 @@ import { StyledBadge } from '@/components/SearchComponents';
 import TopBackNav from '@/components/TopBackNav';
 import useAPI from '@/hooks/api/useAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
-import { UserContext } from '@/hooks/context/user-context';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -35,7 +34,7 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface PostProps {
@@ -69,7 +68,6 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [isFollowing, setIsFollowing] = useState(post.isFollowing);
   const [commentCount, setCommentCount] = useState(post.commentCount);
-  const [user] = useContext(UserContext);
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
@@ -130,6 +128,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
   return (
     <>
       {allowComments && <TopBackNav />}
+      {/* card header */}
       <Card key={post._id} sx={{ mb: 0.5, width: '100%', padding: 0, m: 0 }}>
         <CardHeader
           avatar={
@@ -157,6 +156,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
           }
           subheader={moment(post.createdAt).format('LLL')}
         />
+        {/* post caption expands */}
         <Typography variant="body2">
           {isExpanded && post.caption.length > 50
             ? post.caption
@@ -176,6 +176,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
             </Button>
           )}
         </Typography>
+        {/* timeline posts */}
         <Box sx={{ position: 'relative' }}>
           <Stack
             direction={'row'}
@@ -211,8 +212,8 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
           <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
             <Chip color="primary" label={post.imageUrls.length} variant="filled" />
           </Box>
-
-          {post.isExclusive === false || post.purchasedBy.includes(user.userId) ? null : (
+          {/* purchase button */}
+          {post.isPurchased ? null : (
             <Box
               sx={{
                 position: 'absolute',
@@ -229,19 +230,18 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
               >
                 <Chip
                   color="primary"
-                  label="PURCHASE EXCLUSIVE POST"
+                  label={`Purchase exclusive post at $${post.price}`}
                   variant="filled"
                   icon={<MonetizationOnRoundedIcon />}
                 />
               </IconButton>
             </Box>
           )}
-
           <Box sx={{ color: 'white', position: 'absolute', bottom: 8, right: 8 }} aria-label="save">
             {!post.isMyPost && <SaveButton isSaved={isSaved} onClick={() => handleSave(post._id)} />}
           </Box>
         </Box>
-
+        {/* like, comment, share... options */}
         <CardContent sx={{ fontWeight: '200' }}>
           <Stack direction="row" justifyContent="space-between">
             <Box alignItems="left">{`${likeCount} ❤`}</Box>
@@ -252,7 +252,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
           </Stack>
         </CardContent>
         <Divider sx={{ mb: 1 }} />
-        {post.purchasedBy.includes(user.userId) && post.isPurchased ? (
+        {post.isPurchased ? (
           <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
             <LikeButton isLiked={isLiked} onClick={() => handleLike(post._id)} />
             <IconButton href={`/posts/${post._id}`} aria-label="show more" LinkComponent={Link}>
@@ -266,7 +266,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
             </IconButton>
           </Stack>
         ) : null}
-
+        {/* comment stack */}
         {post.comments && post.comments.length > 0 && (
           <>
             <Divider sx={{ mt: 1 }} />
