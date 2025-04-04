@@ -138,7 +138,6 @@ export default function AccountPage() {
   };
 
   const makePayment = async (paymentMethodId: string) => {
-    console.log("payment method id:", paymentMethodId)
     const paymentResponse = await createPayment(creator.userId, 'subscription', {
       amount: subscriptionPlan!.price,
       payment_method: paymentMethodId,
@@ -206,7 +205,7 @@ export default function AccountPage() {
         </Stack>
       </Stack>
       <Box display="flex" alignItems="center">
-        <Stack direction="column" spacing={2} width="100%">
+        <Stack direction="column" spacing={2} width="100%" mb={10}>
           <Stack direction="row" spacing={1} justifyContent="space-between" alignContent="center" alignItems="center">
             <>
               <StyledBadge

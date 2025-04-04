@@ -134,7 +134,7 @@ export function MessageThreadList({
                         marginRight={1}
                         onClick={() => handleDeleteMessageReactions(emoji._id)}
                       >
-                        {emoji.reaction}
+                        <Typography component="span">{emoji.reaction}</Typography>
                       </Box>
                     ))}
                   {!isUser && !message.deleted && (
@@ -181,9 +181,9 @@ export function MessageThreadList({
                 </Stack>
               </Stack>
               {message.repliedMessage && (
-                <Typography textAlign="left" fontSize={'0.65rem'} fontStyle={'italic'}>
+                <Box textAlign="left" fontSize={'0.65rem'} fontStyle={'italic'} component="div">
                   Replied on: {message.repliedMessage.message}
-                </Typography>
+                </Box>
               )}
             </>
           }

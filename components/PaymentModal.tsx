@@ -85,39 +85,51 @@ function PaymentModal({
         });
         paymentMethodId = paymentMethod!.id;
       }
-      console.log('.....card...');
 
       const attachPayment = await attachPaymentMethod({
         paymentMethodId: paymentMethodId
       });
-      console.log('.....card...attached...');
 
       if (attachPayment.nextActionUrl) {
         await stripe.confirmCardSetup(attachPayment.clientSecret, {
           payment_method: paymentMethodId
         });
       }
-      console.log('.....card...attached...confirming');
-console.log(paymentMethodId)
+
       await confirmCard({
         paymentMethodId: paymentMethodId
       });
-      console.log('.....card...attached...confirming....confirm');
-      console.log(paymentMethodId)
 
       const paymentResponse = await makePayment(paymentMethodId);
-      console.log('.....card...attached...confirming....confirmed...paymentResponse');
-      console.log(paymentMethodId)
 
       const d = await stripe.confirmCardPayment(paymentResponse.clientSecret, {
         payment_method: paymentMethodId
       });
-      console.log('.....card...attached...confirming....confirmed....confirmed...');
 
-      if (d.paymentIntent?.status === 'succeeded') onSuccess?.();
-      console.log('.....card...attached...confirming....confirmed....confirmed......status');
+      const paymentStatus = d.paymentIntent?.status;
+      switch (paymentStatus) {
+        case 'succeeded':
+          onSuccess?.();
+          break;
+        case 'requires_payment_method':
+          toast.error('Payment method required');
+          break;
+        case 'requires_action':
+          toast.error('action required');
+          break;
+        case 'canceled':
+          toast.error('Payment is canceled');
+          break;
+        case 'requires_confirmation':
+          toast.error('Requires confirmation');
+          break;
+        case 'requires_capture':
+          toast.error('Requires capture');
+          break;
+        default:
+          toast.error('Unable to purchase!');
+      }
 
-      toast.success('PURCHASED');
       handleClose();
     } catch (error) {
       console.error(error);

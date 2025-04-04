@@ -26,13 +26,13 @@ export function SubscriptionPlans({
     }
   };
   useEffect(() => {
-    if (plans) loadSubscriptionPlans();
+    if (plans.length !== 0) loadSubscriptionPlans();
   }, []); //eslint-disable-line
   return (
     <>
       <Container maxWidth="xs" disableGutters>
         <Typography variant="h4" textAlign={'center'} alignContent={'center'}>
-          Choose a subscription Plan
+          {plans.length === 0 ? 'Coming soon' : 'Choose a subscription Plan'}
         </Typography>
         <Box marginBottom={10}>
           {plans.map((plan) => (

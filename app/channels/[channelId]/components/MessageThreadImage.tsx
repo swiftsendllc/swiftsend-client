@@ -1,11 +1,11 @@
+import { UserContext } from '@/hooks/context/user-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import EditIcon from '@mui/icons-material/Edit';
 import { CardContent, Chip, IconButton, Paper, Stack, Typography } from '@mui/material';
 import moment from 'moment';
-import { UserContext } from '@/hooks/context/user-context';
 import { useContext, useState } from 'react';
-import {ImageThumbnail} from './ImageThumbnail';
-import {InfoMessageDrawer} from './InfoMessageDrawer';
+import { ImageThumbnail } from './ImageThumbnail';
+import { InfoMessageDrawer } from './InfoMessageDrawer';
 
 export function MessageThreadImage({
   message,
@@ -60,21 +60,27 @@ export function MessageThreadImage({
           message={message}
           onDelete={() => {
             setMessages((prev) =>
-              prev.map((msg) => (msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg))
+              prev.map((msg) => {
+                const messages = msg._id === message._id ? { ...msg, deleted: true, deletedAt: new Date() } : msg;
+                return messages;
+              })
             );
           }}
           onEdit={(edit_msg) =>
             setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === message._id
-                  ? {
-                      ...msg,
-                      message: edit_msg,
-                      edited: true,
-                      editedAt: new Date()
-                    }
-                  : msg
-              )
+              prev.map((msg) => {
+                const messages =
+                  msg._id === message._id
+                    ? {
+                        ...msg,
+                        message: edit_msg,
+                        edited: true,
+                        editedAt: new Date()
+                      }
+                    : msg;
+
+                return messages;
+              })
             )
           }
         />
