@@ -14,7 +14,7 @@ export default function RootTemplate({ children }: { children: React.ReactNode }
   }
 
   return (
-    <Container style={{ padding: 0 }}>
+    <Container style={{ padding: 5 }}>
       {children}
       <SideBar />
       <BottomNav />

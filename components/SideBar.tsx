@@ -18,10 +18,12 @@ export function SideBar() {
         left={1}
         zIndex={8}
         sx={{
-          position: 'absolute',
-          maxWidth: '100%',
+          position:"absolute",
+          paddingRight:375,
+          pr:375,
           display: { xs: 'none', md: 'block' },
         }}
+        width={375}
       >
         <Paper elevation={3}>
           <Chip

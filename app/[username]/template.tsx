@@ -10,7 +10,7 @@ export default function PageTemplate({
   children: React.ReactNode;
 }) {
   return (
-    <Container style={{ padding: 5 }}>
+    <Container style={{ padding:5 }}>
       {children}
       <SideBar />
       <BottomNav/>
