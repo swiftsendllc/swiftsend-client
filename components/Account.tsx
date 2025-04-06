@@ -22,7 +22,7 @@ import NavigationIcon from '@mui/icons-material/Navigation';
 import PersonPinRoundedIcon from '@mui/icons-material/PersonPinRounded';
 import ShoppingBasketSharpIcon from '@mui/icons-material/ShoppingBasketSharp';
 import ViewListIcon from '@mui/icons-material/ViewList';
-import { Avatar, Box, Card, CardContent, Divider, Fab, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
@@ -42,7 +42,8 @@ const FollowButton = (props: FollowButtonProps) => {
   useEffect(() => setIsFollowedByMe(props.isFollowedByMe), [props.isFollowedByMe]);
 
   return (
-    <IconButton
+    <Button
+      variant="contained"
       aria-label="add"
       sx={{
         width: '100%',
@@ -58,7 +59,7 @@ const FollowButton = (props: FollowButtonProps) => {
       }}
     >
       <Typography color="primary">{isFollowedByMe ? 'Connected' : 'Connect'}</Typography>
-    </IconButton>
+    </Button>
   );
 };
 
@@ -98,7 +99,7 @@ export default function AccountPage() {
   const grid = [
     {
       path: `/${creator.username}`,
-      icon: <GridOnSharpIcon color="inherit" />
+      icon: <GridOnSharpIcon />
     },
     {
       path: `/${creator.username}/subscribers`,
@@ -158,137 +159,163 @@ export default function AccountPage() {
           onSuccess={() => router.refresh()}
         />
       )}
-      <Stack mb={1} direction="row" justifyContent="space-between" alignItems="center">
-        <Box display="flex" gap={0} width="50%" marginRight={0}>
-          {isViewer && (
-            <IconButton onClick={() => router.back()}>
-              <ArrowBackIcon />
-            </IconButton>
-          )}
-          <Typography
-            variant="h5"
-            fontWeight={50}
-            color="inherit"
-            textAlign="left"
-            sx={{
-              display: 'inline-block',
-              overflow: 'hidden'
-            }}
-          >
-            {creator.username}
-            {!isViewer && (
-              <IconButton edge="end">
-                <ExpandMoreOutlinedIcon />
-              </IconButton>
+      <Box sx={{ pl: { xs: 0, md: 32 } }}>
+        <Stack mb={1} direction="row" justifyContent="space-between" alignItems="center">
+          <Box display="flex" gap={0} width="50%" marginRight={0}>
+            {isViewer && (
+              <Button onClick={() => router.back()}>
+                <ArrowBackIcon />
+              </Button>
             )}
-          </Typography>
-        </Box>
-        <Stack direction="row" spacing={2}>
-          <IconButton color="primary" href="/" aria-label="share">
-            <NavigationIcon sx={{ width: 30, height: 30 }} />
-          </IconButton>
-          <IconButton color="secondary" aria-label="add" onClick={() => setCreateModal(true)}>
-            <AddIcon sx={{ width: 30, height: 30 }} />
-          </IconButton>
-          {isViewer ? (
-            <IconButton>
-              <MoreVertOutlinedIcon />
-            </IconButton>
-          ) : (
-            <IconButton color="inherit" onClick={() => router.push(`/${user.username}/settings`)}>
-              <ViewListIcon sx={{ width: 30, height: 30 }} />
-            </IconButton>
-          )}
+            <Typography
+              variant="h5"
+              fontWeight={50}
+              color="inherit"
+              textAlign="left"
+              sx={{
+                display: 'inline-block',
+                overflow: 'hidden'
+              }}
+            >
+              {creator.username}
+              {!isViewer && (
+                <Button>
+                  <ExpandMoreOutlinedIcon />
+                </Button>
+              )}
+            </Typography>
+          </Box>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" color="primary" href="/" aria-label="share">
+              <NavigationIcon sx={{ width: 30, height: 30 }} />
+            </Button>
+            <Button color="secondary" aria-label="add" onClick={() => setCreateModal(true)} variant="contained">
+              <AddIcon sx={{ width: 30, height: 30 }} />
+            </Button>
+            {isViewer ? (
+              <Button variant="contained">
+                <MoreVertOutlinedIcon />
+              </Button>
+            ) : (
+              <Button variant="contained" color="inherit" onClick={() => router.push(`/${user.username}/settings`)}>
+                <ViewListIcon sx={{ width: 30, height: 30 }} />
+              </Button>
+            )}
+          </Stack>
         </Stack>
-      </Stack>
-      <Box display="flex" alignItems="center">
-        <Stack direction="column" spacing={2} width="100%" mb={10}>
-          <Stack direction="row" spacing={1} justifyContent="space-between" alignContent="center" alignItems="center">
-            <>
-              <StyledBadge
-                isOnline={creator.isOnline}
-                overlap="circular"
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right'
-                }}
-                badgeContent
-                variant="dot"
-              >
-                <Avatar
-                  aria-label="recipe"
-                  src={creator.avatarURL}
-                  alt={creator.fullName}
-                  sx={{ width: 80, height: 80 }}
-                />
-              </StyledBadge>
-            </>
+        <Box display="flex" alignItems="center">
+          <Stack direction="column" spacing={2} width="100%" mb={10}>
+            <Stack direction="row" spacing={1} justifyContent="space-between" alignContent="center" alignItems="center">
+              <>
+                <StyledBadge
+                  isOnline={creator.isOnline}
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                  }}
+                  badgeContent
+                  variant="dot"
+                >
+                  <Avatar
+                    aria-label="recipe"
+                    src={creator.avatarURL}
+                    alt={creator.fullName}
+                    sx={{ width: 80, height: 80 }}
+                  />
+                </StyledBadge>
+              </>
 
-            <Stack direction="column" spacing={1}>
-              <Stack direction="row" spacing={4} justifyContent="flex-end" flexGrow={1}>
-                {stats.map((item, idx) => (
-                  <Stack key={idx} direction="column" alignContent="center" alignItems="center">
-                    {item.path ? (
-                      <Link href={item.path}>
+              <Stack direction="column" spacing={1}>
+                <Stack direction="row" spacing={4} justifyContent="flex-end" flexGrow={1}>
+                  {stats.map((item, idx) => (
+                    <Stack key={idx} direction="column" alignContent="center" alignItems="center">
+                      {item.path ? (
+                        <Link href={item.path}>
+                          <Typography variant="h6" fontWeight={100}>
+                            {item.count}
+                          </Typography>
+                        </Link>
+                      ) : (
                         <Typography variant="h6" fontWeight={100}>
                           {item.count}
                         </Typography>
-                      </Link>
-                    ) : (
-                      <Typography variant="h6" fontWeight={100}>
-                        {item.count}
-                      </Typography>
-                    )}
+                      )}
 
-                    <Typography variant="body2" fontWeight={100}>
-                      {item.title}
-                    </Typography>
-                  </Stack>
-                ))}
+                      <Typography variant="body2" fontWeight={100}>
+                        {item.title}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+                <Card
+                  sx={{
+                    backgroundImage: "url('/photos/f49y3HRM_400x400.png')",
+                    backgroundSize: 'contain',
+                    backgroundPosition: 'right',
+                    backgroundRepeat: 'no-repeat',
+                    height: 50,
+                    width: '100%'
+                  }}
+                >
+                  <CardContent sx={{ p: 0, width: '100%' }}>
+                    <Button onClick={() => setMusicModal(true)} variant="contained">
+                      <Typography variant="subtitle2" fontWeight={100} color="text.secondary" textAlign="center">
+                        Live From Space
+                      </Typography>
+                    </Button>
+                  </CardContent>
+                </Card>
               </Stack>
-              <Card
-                sx={{
-                  backgroundImage: "url('/photos/f49y3HRM_400x400.png')",
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'right',
-                  backgroundRepeat: 'no-repeat',
-                  height: 50,
-                  width: '100%'
+            </Stack>
+            <Stack direction="column">
+              <Typography variant="h6" fontWeight={200}>
+                {creator.fullName}
+              </Typography>
+              <Link
+                href={creator.websiteURL ?? '/'}
+                target="_blank"
+                style={{
+                  color: 'var(--success)',
+                  display: 'inline-block',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                <CardContent sx={{ p: 0, width: '100%' }}>
-                  <IconButton onClick={() => setMusicModal(true)}>
-                    <Typography variant="subtitle2" fontWeight={100} color="text.secondary" textAlign="center">
-                      Live From Space
-                    </Typography>
-                  </IconButton>
-                </CardContent>
-              </Card>
-            </Stack>
-          </Stack>
-          <Stack direction="column">
-            <Typography variant="h6" fontWeight={200}>
-              {creator.fullName}
-            </Typography>
-            <Link
-              href={creator.websiteURL ?? '/'}
-              target="_blank"
-              style={{
-                color: 'var(--success)',
-                display: 'inline-block',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {creator.websiteURL}
-            </Link>
+                {creator.websiteURL}
+              </Link>
 
-            <Typography variant="body2" fontWeight={300}>
-              {creator.bio}
-            </Typography>
-          </Stack>
-          {isViewer ? (
-            creator.hasSubscribed && (
+              <Typography variant="body2" fontWeight={300}>
+                {creator.bio}
+              </Typography>
+            </Stack>
+            {isViewer ? (
+              creator.hasSubscribed && (
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  alignContent="center"
+                  width="100%"
+                  spacing={2}
+                >
+                  <FollowButton
+                    handleFollow={() => handleFollow(creator.userId)}
+                    isFollowedByMe={creator.isFollowedByMe}
+                    setUnFollowModal={setUnFollowModal}
+                  />
+                  <Button
+                    variant="contained"
+                    sx={{ width: '100%', borderRadius: '30px' }}
+                    color="secondary"
+                    onClick={() => loadChannel(creator.userId)}
+                  >
+                    <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
+                    Message
+                  </Button>
+                </Stack>
+              )
+            ) : (
               <Stack
                 direction="row"
                 justifyContent="space-between"
@@ -297,76 +324,53 @@ export default function AccountPage() {
                 width="100%"
                 spacing={2}
               >
-                <FollowButton
-                  handleFollow={() => handleFollow(creator.userId)}
-                  isFollowedByMe={creator.isFollowedByMe}
-                  setUnFollowModal={setUnFollowModal}
-                />
-                <IconButton
+                <Button
+                  variant="contained"
+                  aria-label="edit"
+                  href={`/${user.username}/profile`}
+                  LinkComponent={Link}
                   sx={{ width: '100%', borderRadius: '30px' }}
-                  color="secondary"
-                  onClick={() => loadChannel(creator.userId)}
                 >
-                  <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
-                  Message
-                </IconButton>
+                  <EditIcon sx={{ width: 30, height: 30 }} />
+                  Profile{' '}
+                </Button>
+                <Button sx={{ width: '100%', borderRadius: '30px' }} variant="contained">
+                  <DashboardIcon sx={{ width: 20, height: 30 }} />
+                  Dashboard
+                </Button>
               </Stack>
-            )
-          ) : (
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              alignContent="center"
-              width="100%"
-              spacing={2}
-            >
-              <IconButton
-                aria-label="edit"
-                href={`/${user.username}/profile`}
-                LinkComponent={Link}
-                sx={{ width: '100%', borderRadius: '30px' }}
-              >
-                <EditIcon sx={{ width: 30, height: 30 }} />
-                Profile{' '}
-              </IconButton>
-              <IconButton sx={{ width: '100%', borderRadius: '30px' }}>
-                <DashboardIcon sx={{ width: 20, height: 30 }} />
-                Dashboard
-              </IconButton>
-            </Stack>
-          )}
-          <Divider />
-          {creator.hasSubscribed ? (
-            <>
-              <Stack
-                direction="row"
-                spacing={1}
-                justifyContent="space-between"
-                alignContent="center"
-                alignItems="center"
-              >
-                {grid.map((item, idx) => (
-                  <Stack key={idx}>
-                    <IconButton href={item.path} LinkComponent={Link}>
-                      <Fab variant="extended" color={pathName === item.path ? 'primary' : 'inherit'}>
-                        {item.icon}
-                      </Fab>
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
-              <Divider />
-              <AccountPostPage />
-            </>
-          ) : (
-            <SubscriptionPlans
-              creator={creator}
-              onSubscribe={() => setSubscribeModal(true)}
-              setSubscriptionPlan={setSubscriptionPlan}
-            />
-          )}
-        </Stack>
+            )}
+            <Divider />
+            {creator.hasSubscribed ? (
+              <>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  justifyContent="space-between"
+                  alignContent="center"
+                  alignItems="center"
+                  sx={{ display: { xs: 'block', md: 'none' } }}
+                >
+                  {grid.map((item, idx) => (
+                    <Stack key={idx}>
+                      <Button href={item.path} LinkComponent={Link} variant="contained">
+                        <Button color={pathName === item.path ? 'inherit' : 'info'}>{item.icon}</Button>
+                      </Button>
+                    </Stack>
+                  ))}
+                </Stack>
+                <Divider sx={{ display: { xs: 'block', md: 'none' } }} />
+                <AccountPostPage />
+              </>
+            ) : (
+              <SubscriptionPlans
+                creator={creator}
+                onSubscribe={() => setSubscribeModal(true)}
+                setSubscriptionPlan={setSubscriptionPlan}
+              />
+            )}
+          </Stack>
+        </Box>
       </Box>
 
       <MusicModal isOpen={musicModal} onClose={() => setMusicModal(false)} />
