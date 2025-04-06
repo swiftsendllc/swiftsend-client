@@ -42,9 +42,8 @@ const FollowButton = (props: FollowButtonProps) => {
   useEffect(() => setIsFollowedByMe(props.isFollowedByMe), [props.isFollowedByMe]);
 
   return (
-    <Fab
+    <IconButton
       aria-label="add"
-      variant="extended"
       sx={{
         width: '100%',
         borderRadius: '30px'
@@ -59,7 +58,7 @@ const FollowButton = (props: FollowButtonProps) => {
       }}
     >
       <Typography color="primary">{isFollowedByMe ? 'Connected' : 'Connect'}</Typography>
-    </Fab>
+    </IconButton>
   );
 };
 
@@ -78,7 +77,6 @@ export default function AccountPage() {
   const { createPayment } = usePaymentAPI();
   const [subscribeModal, setSubscribeModal] = useState<boolean>(false);
   const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlansEntity | null>(null);
-  console.log('subscription plan id:', subscriptionPlan);
 
   const stats = [
     {
@@ -121,8 +119,7 @@ export default function AccountPage() {
   const handleFollow = async (userId: string) => {
     try {
       await followProfile(userId);
-      setCreator((previous) => ({ ...previous, isFollowedByMe: true, followerCount:previous.followerCount + 1}));
-
+      setCreator((previous) => ({ ...previous, isFollowedByMe: true, followerCount: previous.followerCount + 1 }));
     } catch (error) {
       console.log(error);
     }
@@ -187,20 +184,20 @@ export default function AccountPage() {
           </Typography>
         </Box>
         <Stack direction="row" spacing={2}>
-          <Fab color="primary" href="/" aria-label="share">
+          <IconButton color="primary" href="/" aria-label="share">
             <NavigationIcon sx={{ width: 30, height: 30 }} />
-          </Fab>
-          <Fab color="secondary" aria-label="add" onClick={() => setCreateModal(true)}>
+          </IconButton>
+          <IconButton color="secondary" aria-label="add" onClick={() => setCreateModal(true)}>
             <AddIcon sx={{ width: 30, height: 30 }} />
-          </Fab>
+          </IconButton>
           {isViewer ? (
-            <Fab>
+            <IconButton>
               <MoreVertOutlinedIcon />
-            </Fab>
+            </IconButton>
           ) : (
-            <Fab color="inherit" onClick={() => router.push(`/${user.username}/settings`)}>
+            <IconButton color="inherit" onClick={() => router.push(`/${user.username}/settings`)}>
               <ViewListIcon sx={{ width: 30, height: 30 }} />
-            </Fab>
+            </IconButton>
           )}
         </Stack>
       </Stack>
@@ -300,20 +297,19 @@ export default function AccountPage() {
                 width="100%"
                 spacing={2}
               >
-                  <FollowButton
-                    handleFollow={() => handleFollow(creator.userId)}
-                    isFollowedByMe={creator.isFollowedByMe}
-                    setUnFollowModal={setUnFollowModal}
-                  />
-                <Fab
-                  variant="extended"
+                <FollowButton
+                  handleFollow={() => handleFollow(creator.userId)}
+                  isFollowedByMe={creator.isFollowedByMe}
+                  setUnFollowModal={setUnFollowModal}
+                />
+                <IconButton
                   sx={{ width: '100%', borderRadius: '30px' }}
                   color="secondary"
                   onClick={() => loadChannel(creator.userId)}
                 >
                   <MessageOutlinedIcon sx={{ width: 20, height: 30 }} />
                   Message
-                </Fab>
+                </IconButton>
               </Stack>
             )
           ) : (
@@ -325,20 +321,19 @@ export default function AccountPage() {
               width="100%"
               spacing={2}
             >
-              <Fab
+              <IconButton
                 aria-label="edit"
-                variant="extended"
                 href={`/${user.username}/profile`}
                 LinkComponent={Link}
                 sx={{ width: '100%', borderRadius: '30px' }}
               >
                 <EditIcon sx={{ width: 30, height: 30 }} />
                 Profile{' '}
-              </Fab>
-              <Fab variant="extended" sx={{ width: '100%', borderRadius: '30px' }}>
+              </IconButton>
+              <IconButton sx={{ width: '100%', borderRadius: '30px' }}>
                 <DashboardIcon sx={{ width: 20, height: 30 }} />
                 Dashboard
-              </Fab>
+              </IconButton>
             </Stack>
           )}
           <Divider />
@@ -373,6 +368,7 @@ export default function AccountPage() {
           )}
         </Stack>
       </Box>
+
       <MusicModal isOpen={musicModal} onClose={() => setMusicModal(false)} />
       <UnFollowModal isOpen={unFollowModal} onClose={() => setUnFollowModal(false)} />
       <UploadModal isOpen={createModal} onClose={() => setCreateModal(false)} />

@@ -76,6 +76,7 @@ export default function BottomNav() {
         left: 0,
         right: 0,
         height: { sm: 65, md: 65 },
+        display:{xs:"block", md:"none"}
       }}
     >
       <Container maxWidth="xs" style={{ padding: 0 }}>
