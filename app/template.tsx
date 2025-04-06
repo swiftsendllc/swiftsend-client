@@ -1,15 +1,12 @@
-"use client";
+'use client';
 
-import BottomNav from "@/components/BottomNav";
-import { authenticatedPaths } from "@/library/constants";
-import { Container } from "@mui/material";
-import { usePathname } from "next/navigation";
+import BottomNav from '@/components/BottomNav';
+import { SideBar } from '@/components/SideBar';
+import { authenticatedPaths } from '@/library/constants';
+import { Container } from '@mui/material';
+import { usePathname } from 'next/navigation';
 
-export default function RootTemplate({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootTemplate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   if (![...authenticatedPaths].includes(pathname)) {
@@ -17,8 +14,9 @@ export default function RootTemplate({
   }
 
   return (
-    <Container maxWidth="xs" style={{ padding: 0 }}>
+    <Container style={{ padding: 0 }}>
       {children}
+      <SideBar />
       <BottomNav />
     </Container>
   );

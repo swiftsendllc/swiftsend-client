@@ -1,6 +1,7 @@
 "use client";
 
 import BottomNav from "@/components/BottomNav";
+import { SideBar } from "@/components/SideBar";
 import { Container } from "@mui/material";
 
 export default function PageTemplate({
@@ -9,9 +10,10 @@ export default function PageTemplate({
   children: React.ReactNode;
 }) {
   return (
-    <Container maxWidth="xs" style={{ padding: 5 }}>
+    <Container style={{ padding: 5 }}>
       {children}
-      <BottomNav />
+      <SideBar />
+      <BottomNav/>
     </Container>
   );
 }

@@ -1,5 +1,12 @@
 "use client";
-
+import FilterVintageIcon from '@mui/icons-material/FilterVintage';
+import HomeMaxIcon from '@mui/icons-material/HomeMax';
+import LogoutIcon from '@mui/icons-material/Logout';
+import StoreIcon from '@mui/icons-material/Store';
+import TagIcon from '@mui/icons-material/Tag';
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
+import UpcomingIcon from '@mui/icons-material/Upcoming';
+import WebAssetIcon from '@mui/icons-material/WebAsset';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
@@ -407,4 +414,47 @@ export const reactions = [
     icon: "😡",
     label: "😡",
   },
+];
+
+export const sideBarOptions = [
+  {
+    label: 'Home',
+    leftIcon: <HomeMaxIcon />,
+    path:"/home"
+  },
+  {
+    label: 'Search',
+    leftIcon: <TroubleshootIcon />,
+    path:"/search"
+  },
+  {
+    label: 'Message',
+    leftIcon: <UpcomingIcon />,
+    path:"/message"
+  },
+  {
+    label: 'Intro',
+    leftIcon: <FilterVintageIcon />,
+    path:"/intro"
+  },
+  {
+    label: 'Purchased',
+    leftIcon: <StoreIcon />,
+    path:"/subscribers"
+  },
+  {
+    label: 'Video',
+    leftIcon: <WebAssetIcon />,
+    path:"/reels"
+  },
+  {
+    label: 'Tagged',
+    leftIcon: <TagIcon />,
+    path:"/tags"
+  },
+  {
+    label: 'Logout',
+    leftIcon: <LogoutIcon />,
+    path:"/logout"
+  }
 ];
