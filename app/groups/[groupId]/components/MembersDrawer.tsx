@@ -51,7 +51,7 @@ export default function MembersDrawerPage({
             }}
           >
             <Typography variant="h6" fontWeight="bold">
-              Swifters
+            🆂🆆🅸🅵🆃🅴🆁🆂
             </Typography>
             <Stack direction="column-reverse">
               <Typography variant="body2" fontWeight="bold" display="flex">
