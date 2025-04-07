@@ -159,7 +159,7 @@ export default function AccountPage() {
           onSuccess={() => router.refresh()}
         />
       )}
-      <Box sx={{ pl: { xs: 0, md: 32 } }}>
+      <Box sx={{ pl: { xs: 0, md: 32 } }} paddingRight={0}>
         <Stack mb={1} direction="row" justifyContent="space-between" alignItems="center">
           <Box display="flex" gap={0} width="50%" marginRight={0}>
             {isViewer && (
@@ -349,14 +349,19 @@ export default function AccountPage() {
                   justifyContent="space-between"
                   alignContent="center"
                   alignItems="center"
-                  sx={{ display: { xs: 'block', md: 'none' } }}
                 >
                   {grid.map((item, idx) => (
-                    <Stack key={idx}>
-                      <Button href={item.path} LinkComponent={Link} variant="contained">
-                        <Button color={pathName === item.path ? 'inherit' : 'info'}>{item.icon}</Button>
+                    <Box key={idx}>
+                      <Button
+                        href={item.path}
+                        LinkComponent={Link}
+                        variant="outlined"
+                        sx={{ width: 25 }}
+                        color={pathName === item.path ? 'inherit' : 'info'}
+                      >
+                        {item.icon}
                       </Button>
-                    </Stack>
+                    </Box>
                   ))}
                 </Stack>
                 <Divider sx={{ display: { xs: 'block', md: 'none' } }} />

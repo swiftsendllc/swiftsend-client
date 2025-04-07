@@ -13,7 +13,7 @@ export const HomeHeaderPage = () => {
         alignContent="center"
         alignItems="center"
       >
-        <Typography variant="h5">swiftsend</Typography>
+        <Typography variant="h5">🆂🆆🅸🅵🆃🆂🅴🅽🅳</Typography>
         <Stack direction="row" justifyContent="space-between" gap={4}>
           <Fab
             sx={{ width: 40, height: 40 }}

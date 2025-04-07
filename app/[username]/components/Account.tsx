@@ -10,8 +10,7 @@ import Image from 'next/image';
 
 import { useContext, useEffect, useState } from 'react';
 
-
-export  function AccountPostPage() {
+export function AccountPostPage() {
   const { getCreatorPosts } = usePostAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const [editPostModal, setEditPostModal] = useState(false);
@@ -33,7 +32,7 @@ export  function AccountPostPage() {
 
   return (
     <>
-      <Box mb={6} >
+      <Box mb={6} padding={0}>
         {posts.length === 0 ? (
           <Stack my="10" alignContent="center" alignItems="center" justifyContent="center">
             <Image

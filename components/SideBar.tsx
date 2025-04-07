@@ -2,7 +2,7 @@
 
 import { UserContext } from '@/hooks/context/user-context';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { Box, Chip, Divider, List, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from '@mui/material';
+import { Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { sideBarOptions } from './SearchComponents';
@@ -18,33 +18,25 @@ export function SideBar() {
         left={1}
         zIndex={8}
         sx={{
-          position:"absolute",
-          paddingRight:375,
-          pr:375,
+          position: 'fixed',
           display: { xs: 'none', md: 'block' },
+          pr: 0
         }}
-        width={375}
       >
         <Paper elevation={3}>
-          <Chip
-            sx={{
-              my: 2
-            }}
-            label="swiftsend"
-            color="primary"
-            variant="filled"
-          />
+          <Typography sx={{ mb: 4 }} variant="h5" color="primary">
+            🆂🆆🅸🅵🆃🆂🅴🅽🅳
+          </Typography>
           <Divider />
-          <List sx={{ width: '100%' }}>
+          <List sx={{ pb: 5 }}>
             {sideBarOptions.map((option, idx) => (
-              <Box key={idx} my={1}>
-                <ListItemButton sx={{ minWidth: 300 }} onClick={() => router.push(option.path)}>
+              <Box key={idx}>
+                <ListItemButton onClick={() => router.push(option.path)} sx={{ mb: 1 }}>
                   <ListItemIcon>{option.leftIcon}</ListItemIcon>
                   <ListItemText disableTypography>
                     <Typography variant="body1">{option.label}</Typography>
                   </ListItemText>
                 </ListItemButton>
-                <Divider />
               </Box>
             ))}
             <ListItemButton sx={{ minWidth: 300 }} onClick={() => router.push(`/${user.username}`)}>
@@ -55,7 +47,6 @@ export function SideBar() {
                 <Typography variant="body1">Account</Typography>
               </ListItemText>
             </ListItemButton>
-            <Divider />
           </List>
         </Paper>
       </Box>
