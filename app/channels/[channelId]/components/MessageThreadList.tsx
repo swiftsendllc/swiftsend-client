@@ -1,8 +1,6 @@
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
-import { DoneAll } from '@mui/icons-material';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
-import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { Box, Checkbox, IconButton, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
@@ -19,14 +17,14 @@ export function MessageThreadList({
   onToggleCheckBox,
   setMessages,
   setIsReplying,
-  setReplyMessage
+  setRepliedToMessage
 }: {
   checkBox: boolean;
   message: MessagesEntity;
   selectedMessageIds: string[];
   onToggleCheckBox: (message: string) => unknown;
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
-  setReplyMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  setRepliedToMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
@@ -137,7 +135,7 @@ export function MessageThreadList({
                         <Typography component="span">{emoji.reaction}</Typography>
                       </Box>
                     ))}
-                  {!isUser && !message.deleted && (
+                  {!message.deleted && (
                     <>
                       <IconButton sx={{ mt: 0 }} onClick={() => setEmojiDrawer(true)}>
                         <AddReactionIcon sx={{ width: 13, height: 13 }} />
@@ -145,7 +143,7 @@ export function MessageThreadList({
                       <IconButton
                         sx={{ mt: 0 }}
                         onClick={() => {
-                          setReplyMessage(message);
+                          setRepliedToMessage(message);
                           setIsReplying(true);
                         }}
                       >
@@ -164,25 +162,11 @@ export function MessageThreadList({
                       <EditIcon sx={{ width: 13, height: 13 }} />
                     </IconButton>
                   )}
-
-                  {isUser && (
-                    <Typography component="span" fontSize="0.85rem">
-                      {message.seen ? (
-                        <IconButton sx={{ mt: 0 }}>
-                          <DoneAll sx={{ width: 13, height: 13 }} />
-                        </IconButton>
-                      ) : (
-                        <IconButton sx={{ mt: 0 }}>
-                          <DoneIcon sx={{ width: 13, height: 13 }} />
-                        </IconButton>
-                      )}
-                    </Typography>
-                  )}
                 </Stack>
               </Stack>
-              {message.repliedMessage && (
+              {message.repliedToMessage && (
                 <Box textAlign="left" fontSize={'0.65rem'} fontStyle={'italic'} component="div">
-                  Replied on: {message.repliedMessage.message}
+                  Replied on: {message.repliedToMessage.message}
                 </Box>
               )}
             </>

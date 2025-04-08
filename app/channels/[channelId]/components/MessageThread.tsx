@@ -14,9 +14,9 @@ export function MessageThread({
   selectedMessageIds,
   setSelectedMessageIds,
   setIsReplying,
-  setReplyMessage
+  setRepliedToMessage
 }: {
-  setReplyMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  setRepliedToMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   checkBox: boolean;
   channel: ChannelsEntity;
   user: UserProfilesEntity;
@@ -67,7 +67,7 @@ export function MessageThread({
                   selectedMessageIds={selectedMessageIds}
                   onToggleCheckBox={() => handleToggleCheckBox(message._id)}
                   setIsReplying={setIsReplying}
-                  setReplyMessage={setReplyMessage}
+                  setRepliedToMessage={setRepliedToMessage}
                 />
             )}
             {isUser && (

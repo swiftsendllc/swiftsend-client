@@ -30,7 +30,7 @@ export default function MessagePage() {
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
   GetSocketMessages({ setMessages });
   const [isReplying, setIsReplying] = useState<boolean>(false);
-  const [replyMessage, setReplyMessage] = useState<MessagesEntity | null>(null);
+  const [repliedToMessage, setRepliedToMessage] = useState<MessagesEntity | null>(null);
 
   useEffect(() => {
     const backgroundImageCookie = getCookie('imageURL');
@@ -143,7 +143,7 @@ export default function MessagePage() {
                   selectedMessageIds={selectedMessageIds}
                   setSelectedMessageIds={setSelectedMessageIds}
                   setIsReplying={setIsReplying}
-                  setReplyMessage={setReplyMessage}
+                  setRepliedToMessage={setRepliedToMessage}
                 />
               </InfiniteScroll>
             </List>
@@ -152,7 +152,7 @@ export default function MessagePage() {
         {messages && (
           <MessageInput
             onMessage={(msg) => setMessages((prev) => [msg, ...prev])}
-            replyMessage={replyMessage}
+            repliedToMessage={repliedToMessage}
             isReplying={isReplying}
             setIsReplying={setIsReplying}
           />
