@@ -1,5 +1,6 @@
 'use client';
 
+import { InputElement } from '@/components/InputElement';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
@@ -13,17 +14,16 @@ import { Box, Button, Container, IconButton, Paper, Stack, TextField } from '@mu
 import Image from 'next/image';
 import React, { useContext, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import ReplyThread from './ReplyThread';
-import { InputElement } from '@/components/InputElement';
+import { ReplyThread } from './ReplyThread';
 
 interface UserMessageInputProps {
   onMessage: (msg: MessagesEntity) => unknown;
-  replyMessage: MessagesEntity | null;
+  repliedToMessage: MessagesEntity | null;
   isReplying: boolean;
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export  function MessageInput({ onMessage, replyMessage, isReplying, setIsReplying }: UserMessageInputProps) {
+export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsReplying }: UserMessageInputProps) {
   const { sendMessage, sendMessageReply } = useMessageAPI();
   const [loading, setLoading] = useState(false);
   const [messageInput, setMessageInput] = useState<string>('');
@@ -90,18 +90,18 @@ export  function MessageInput({ onMessage, replyMessage, isReplying, setIsReplyi
   };
 
   const handleReply = async () => {
-    if (replyMessage)
+    if (repliedToMessage)
       try {
         const urls = await handleUpload();
 
         const reply = await sendMessageReply({
           message: messageInput,
-          messageId: replyMessage._id,
-          receiverId: replyMessage.senderId,
+          messageId: repliedToMessage._id,
+          receiverId: channel.receiver.userId,
           imageUrls: urls?.imgUrls ?? null,
           blurredImageUrls: urls?.blurImageUrls ?? null,
-          isExclusive: replyMessage.isExclusive,
-          price: replyMessage.price ?? null
+          isExclusive: repliedToMessage.isExclusive,
+          price: repliedToMessage.price ?? null
         });
         onMessage(reply);
         setIsReplying(false);
@@ -114,7 +114,7 @@ export  function MessageInput({ onMessage, replyMessage, isReplying, setIsReplyi
 
   return (
     <>
-      <ReplyThread replyMessage={replyMessage} isReplying={isReplying} onClose={() => setIsReplying(false)} />
+      <ReplyThread repliedToMessage={repliedToMessage} isReplying={isReplying} onClose={() => setIsReplying(false)} />
       <Box
         width="100%"
         sx={{

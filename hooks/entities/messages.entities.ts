@@ -32,13 +32,13 @@ export interface MessagesEntity {
   createdAt: Date;
   deletedAt: Date;
   editedAt: Date;
-  receiver: UserProfilesEntity;
+  sender: UserProfilesEntity;
   deleted: boolean;
   edited: boolean;
   seen: boolean;
   isUser:boolean;
   repliedTo: string;
-  repliedMessage: MessagesEntity;
+  repliedToMessage: MessagesEntity;
   replies: RepliesEntity[];
   delivered: boolean;
   reactions: MessageReactionsEntity[];
