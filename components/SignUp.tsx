@@ -1,50 +1,41 @@
-"use client";
+'use client';
 
-import useAPI from "@/hooks/api/useAPI";
-import { useTranslation } from "@/locales/dictionary";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import { LoadingButton } from "@mui/lab";
-import {
-  Autocomplete,
-  Box,
-  Container,
-  FormControl,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import Link from "next/link";
-import { useState } from "react";
-import { countries } from "./SearchComponents";
+import useAPI from '@/hooks/api/useAPI';
+import { useTranslation } from '@/locales/dictionary';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { LoadingButton } from '@mui/lab';
+import { Autocomplete, Box, Container, FormControl, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import { countries } from './SearchComponents';
 
 const genderOption = [
   {
-    label: "Male",
+    label: 'Male'
   },
   {
-    label: "Female",
-  },
+    label: 'Female'
+  }
 ];
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { signup } = useAPI();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState('');
   const [isFullNameValid, setIsFullNameValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [continued, setContinued] = useState(false);
   const { t } = useTranslation();
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState("");
-  const [region, setRegion] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [gender, setGender] = useState('');
+  const [region, setRegion] = useState('');
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -64,12 +55,12 @@ export default function SignUpPage() {
         password,
         gender: gender,
         region: region,
-        dateOfBirth: dob,
+        dateOfBirth: dob
       });
 
-      window.location.href = "/channels";
+      window.location.href = '/channels';
     } catch (error) {
-      console.error("SigUp failed", error);
+      console.error('SigUp failed', error);
     } finally {
       setLoading(false);
     }
@@ -81,8 +72,8 @@ export default function SignUpPage() {
         <Container
           maxWidth="xs"
           sx={{
-            minHeight: "100vh",
-            alignItems: "center",
+            minHeight: '100vh',
+            alignItems: 'center'
           }}
         >
           <Box mt={{ md: 2, sm: 2 }} mb={2}>
@@ -97,16 +88,16 @@ export default function SignUpPage() {
             </IconButton>
           </Box>
           <Box width="100%" textAlign="right" alignContent="center" mb={10}>
-            <InstagramIcon sx={{ width: 100, height: 100 }} />
+            <Image src={'/icons/app_icon.png'} alt={'/icons/app_icon.png'} width={100} height={100} priority />
             <Typography variant="h5" fontWeight={300}>
-              Swiftsend
+              {t('appName')}
             </Typography>
           </Box>
           <Box width="100%" alignContent="center" textAlign="center" mt={10}>
             <AccountCircleIcon sx={{ width: 25, height: 25 }} />
           </Box>
           <Box mt={{ md: 2, sm: 2 }} mb={2}>
-            <Typography variant="h5">{t("signUpHeader")}</Typography>
+            <Typography variant="h5">{t('signUpHeader')}</Typography>
           </Box>
           <FormControl
             variant="standard"
@@ -131,25 +122,17 @@ export default function SignUpPage() {
                 disablePortal
                 options={genderOption}
                 value={{ label: gender }}
-                onChange={(e, newGender) => setGender(newGender?.label || "")}
-                isOptionEqualToValue={(option, value) =>
-                  option.label === value?.label
-                }
-                renderInput={(params) => (
-                  <TextField required label="Gender" {...params} />
-                )}
+                onChange={(e, newGender) => setGender(newGender?.label || '')}
+                isOptionEqualToValue={(option, value) => option.label === value?.label}
+                renderInput={(params) => <TextField required label="Gender" {...params} />}
               />
               <Autocomplete
                 disablePortal
                 options={countries}
                 value={{ label: region }}
-                onChange={(e, newRegion) => setRegion(newRegion?.label || "")}
-                isOptionEqualToValue={(option, value) =>
-                  option.label === value?.label
-                }
-                renderInput={(params) => (
-                  <TextField required label="Region" {...params} />
-                )}
+                onChange={(e, newRegion) => setRegion(newRegion?.label || '')}
+                isOptionEqualToValue={(option, value) => option.label === value?.label}
+                renderInput={(params) => <TextField required label="Region" {...params} />}
               />
               <LoadingButton
                 loading={loading}
@@ -167,8 +150,8 @@ export default function SignUpPage() {
         <Container
           maxWidth="xs"
           sx={{
-            minHeight: "100vh",
-            alignItems: "center",
+            minHeight: '100vh',
+            alignItems: 'center'
           }}
         >
           <Box mt={{ md: 2, sm: 2 }} mb={2}>
@@ -183,16 +166,16 @@ export default function SignUpPage() {
             </IconButton>
           </Box>
           <Box width="100%" textAlign="right" alignContent="center" mb={10}>
-            <InstagramIcon sx={{ height: 100, width: 100 }} />
+            <Image src={'/icons/app_icon.png'} alt={'/icons/app_icon.png'} width={100} height={100} priority />
             <Typography variant="h5" fontWeight={300}>
-              Swiftsend
+              swiftsend
             </Typography>
           </Box>
           <Box width="100%" alignContent="center" textAlign="center" mt={10}>
             <AccountCircleIcon sx={{ width: 25, height: 25 }} />
           </Box>
           <Box mt={{ md: 2, sm: 2 }} mb={2}>
-            <Typography variant="h5">{t("signUpHeader")}</Typography>
+            <Typography variant="h5">{t('signUpHeader')}</Typography>
           </Box>
           <FormControl
             variant="standard"
@@ -214,11 +197,7 @@ export default function SignUpPage() {
                 autoFocus
                 onChange={(e) => {
                   setFullName(e.target.value);
-                  setIsFullNameValid(
-                    /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/.test(
-                      e.target.value
-                    )
-                  );
+                  setIsFullNameValid(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/.test(e.target.value));
                 }}
               />
               <TextField
@@ -232,18 +211,12 @@ export default function SignUpPage() {
                   setEmail(e.target.value);
                 }}
                 onBlur={(e) => {
-                  setIsEmailValid(
-                    /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(
-                      e.target.value
-                    )
-                  );
+                  setIsEmailValid(/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(e.target.value));
                 }}
                 error={!!email && !isEmailValid}
                 helperText={
                   email && !isEmailValid ? (
-                    <Typography sx={{ color: "var(--error)" }}>
-                      {t("validEmail")}
-                    </Typography>
+                    <Typography sx={{ color: 'var(--error)' }}>{t('validEmail')}</Typography>
                   ) : null
                 }
               />
@@ -253,7 +226,7 @@ export default function SignUpPage() {
                 label="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 slotProps={{
                   input: {
                     endAdornment: (
@@ -266,44 +239,32 @@ export default function SignUpPage() {
                           {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>
-                    ),
-                  },
+                    )
+                  }
                 }}
               />
 
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                textAlign="left"
-              >
+              <Typography variant="body2" color="text.secondary" textAlign="left">
                 <Link
                   href="/login"
                   style={{
-                    textDecoration: "none",
-                    color: "currentcolor",
+                    textDecoration: 'none',
+                    color: 'currentcolor'
                   }}
                 >
-                  {t("existingAccount")}
+                  {t('existingAccount')}
                 </Link>
               </Typography>
               <LoadingButton
                 loading={loading}
                 loadingPosition="start"
                 startIcon={null}
-                disabled={
-                  !(
-                    password &&
-                    fullName &&
-                    email &&
-                    isEmailValid &&
-                    isFullNameValid
-                  )
-                }
+                disabled={!(password && fullName && email && isEmailValid && isFullNameValid)}
                 variant="contained"
                 type="submit"
                 onClick={handleContinue}
               >
-                {t("continue")}
+                {t('continue')}
               </LoadingButton>
             </Stack>
           </FormControl>

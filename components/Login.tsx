@@ -12,6 +12,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import Animation from './Animation';
 
 export default function LoginPage() {
   const { login } = useAPI();
@@ -52,15 +53,15 @@ export default function LoginPage() {
         </IconButton>
       </Box>
       <Box width="100%" textAlign="right" alignContent="center" mb={10}>
-        {/* <Animation> */}
+        <Animation>
         <Image
-          src="/svg/swift_send.svg"
+          src="/icons/app_icon.png"
           width={100}
           height={100}
-          alt="/svg/swift_send.svg"
+          alt="/icons/app_icon.png"
           style={{ objectFit: 'contain' }}
         />
-        {/* </Animation> */}
+        </Animation>
         <Typography variant="h5" fontWeight={300}>
           {t('appName')}
         </Typography>

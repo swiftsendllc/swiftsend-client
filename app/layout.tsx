@@ -24,8 +24,8 @@ export const metadata = {
   manifest: '/manifest.json',
   keywords: ['nextjs', 'nextjs14', 'next14', 'pwa', 'next-pwa'],
   icons: [
-    { rel: 'apple-touch-icon', url: '/svg/swift_send.svg' },
-    { rel: 'icon', url: '/svg/swift_send.svg' }
+    { rel: 'apple-touch-icon', url: '/svg/app.svg' },
+    { rel: 'icon', url: '/svg/app.svg' }
   ]
 } satisfies Metadata;
 
@@ -46,10 +46,7 @@ const validateAuth = async () => {
     }
   });
 
-  if (
-    (res.status === 401 || res.status === 403) &&
-    !['/', '/login', '/signup'].includes(pathname)
-  ) {
+  if ((res.status === 401 || res.status === 403) && !['/', '/login', '/signup'].includes(pathname)) {
     return redirect('/');
   }
 
@@ -100,9 +97,7 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <UserContextWrapper user={user}>
-              <SocketContextWrapper serverURL={ENV('NEXT_PUBLIC_API_URL')!}>
-                {children}
-              </SocketContextWrapper>
+              <SocketContextWrapper serverURL={ENV('NEXT_PUBLIC_API_URL')!}>{children}</SocketContextWrapper>
             </UserContextWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>

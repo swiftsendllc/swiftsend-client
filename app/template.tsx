@@ -2,6 +2,7 @@
 
 import BottomNav from '@/components/BottomNav';
 import { LeftSideBar } from '@/components/LeftSideBar';
+import { RightSideBar } from '@/components/RightSideBar';
 import { authenticatedPaths } from '@/library/constants';
 import { Container } from '@mui/material';
 import { usePathname } from 'next/navigation';
@@ -17,6 +18,7 @@ export default function RootTemplate({ children }: { children: React.ReactNode }
     <Container style={{ padding: 5 }}>
       {children}
       <LeftSideBar />
+      <RightSideBar />
       <BottomNav />
     </Container>
   );

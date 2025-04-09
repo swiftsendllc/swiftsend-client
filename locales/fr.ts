@@ -1,22 +1,19 @@
 export const fr = {
-  appName: "Swiftsend",
-  email: "E-mail",
-  password: "Mot de passe",
+  appName: 'SwiftSend',
+  email: 'E-mail',
+  password: 'Mot de passe',
   signUp: "S'inscrire",
-  login: "Connexion",
-  googleSign: "Continuer avec Google",
-  privacyPolicy:
-    "En vous inscrivant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité",
-  loginHeader: "Se connecter avec Swiftsend",
-  forgotPassword: "Mot de passe oublié ?",
-  createAccount: "Créer un nouveau compte",
-  signUpHeader: "S'inscrire avec Swiftsend",
-  validEmail: "Veuillez entrer une adresse e-mail valide",
-  existingAccount: "Vous avez déjà un compte ? Connectez-vous",
-  continue: "Continuer",
-  verifyEmailHeader: "Vérifiez votre e-mail",
-  verifyEmail:
-    "Cette étape supplémentaire montre que c'est vraiment vous qui essayez de vous connecter",
-  emailCheck:
-    "Veuillez vérifier votre e-mail et confirmer votre compte en cliquant sur le lien",
+  login: 'Connexion',
+  googleSign: 'Continuer avec Google',
+  privacyPolicy: "En vous inscrivant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité",
+  loginHeader: 'Se connecter avec SwiftSend',
+  forgotPassword: 'Mot de passe oublié ?',
+  createAccount: 'Créer un nouveau compte',
+  signUpHeader: "S'inscrire avec SwiftSend",
+  validEmail: 'Veuillez entrer une adresse e-mail valide',
+  existingAccount: 'Vous avez déjà un compte ? Connectez-vous',
+  continue: 'Continuer',
+  verifyEmailHeader: 'Vérifiez votre e-mail',
+  verifyEmail: "Cette étape supplémentaire montre que c'est vraiment vous qui essayez de vous connecter",
+  emailCheck: 'Veuillez vérifier votre e-mail et confirmer votre compte en cliquant sur le lien'
 } as const;

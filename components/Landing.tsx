@@ -1,7 +1,6 @@
-"use client";
-import { LangCode, useTranslation,  } from "@/locales/dictionary";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+'use client';
+import { LangCode, useTranslation } from '@/locales/dictionary';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   Box,
   Button,
@@ -13,10 +12,11 @@ import {
   ListItemButton,
   ListItemText,
   Stack,
-  Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { GoogleIconCustom } from "./CustomIcons";
+  Typography
+} from '@mui/material';
+import Image from 'next/image';
+import { useState } from 'react';
+import { GoogleIconCustom } from './CustomIcons';
 
 export default function LandingPage() {
   const [open, setOpen] = useState(false);
@@ -27,17 +27,17 @@ export default function LandingPage() {
 
   const languageOptions = [
     {
-      language: "English",
-      languageCode: "en",
+      language: 'English',
+      languageCode: 'en'
     },
     {
-      language: "French",
-      languageCode: "fr",
+      language: 'French',
+      languageCode: 'fr'
     },
     {
-      language: "German",
-      languageCode: "de",
-    },
+      language: 'German',
+      languageCode: 'de'
+    }
   ] as { language: string; languageCode: LangCode }[];
 
   const changeLanguage = (lang: LangCode) => {
@@ -48,21 +48,21 @@ export default function LandingPage() {
     <Container
       maxWidth="xs"
       sx={{
-        minHeight: "100vh",
-        alignContent: "center",
-        alignItems: "center",
+        minHeight: '100vh',
+        alignContent: 'center',
+        alignItems: 'center'
       }}
     >
       <Box
         sx={{
-          display: { xs: "flex", md: "none" },
-          justifyContent: "flex-end",
-          width: "auto",
+          display: { xs: 'flex', md: 'none' },
+          justifyContent: 'flex-end',
+          width: 'auto'
         }}
         role="presentation"
       >
         <IconButton
-          sx={{ borderRadius: "30px", fontSize: ".85rem" }}
+          sx={{ borderRadius: '30px', fontSize: '.85rem' }}
           onClick={toggleDrawer(true)}
           aria-label="Select-Language"
         >
@@ -74,10 +74,7 @@ export default function LandingPage() {
             {languageOptions.map((option, idx) => (
               <ListItem key={idx} disablePadding>
                 <ListItemButton onClick={() => changeLanguage(option.languageCode)}>
-                  <ListItemText
-                    primary={option.language}
-                    sx={{ textAlign: "center" }}
-                  />
+                  <ListItemText primary={option.language} sx={{ textAlign: 'center' }} />
                 </ListItemButton>
               </ListItem>
             ))}
@@ -85,31 +82,26 @@ export default function LandingPage() {
         </Drawer>
       </Box>
       <Box width="100%" textAlign="center" alignContent="center" mb={20}>
-        <InstagramIcon sx={{ height: 140, width: 140 }} />
+        <Image src={'/icons/app_icon.png'} alt="/icons/app_icon.png" width={150} height={150} style={{padding:0, margin:0}} priority />
         <Typography variant="h3" fontWeight={300}>
-          {t("appName")}
+          {t('appName')}
         </Typography>
       </Box>
 
       <Stack spacing={3} mb={2}>
         <Button fullWidth variant="contained" color="success" href="/signup">
-          {t("signUp")}
+          {t('signUp')}
         </Button>
 
         <Button fullWidth variant="outlined" href="/login">
-          {t("login")}
+          {t('login')}
         </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          startIcon={<GoogleIconCustom />}
-          href="/account"
-        >
-          {t("googleSign")}
+        <Button fullWidth variant="contained" startIcon={<GoogleIconCustom />} href="/account">
+          {t('googleSign')}
         </Button>
       </Stack>
       <Typography variant="body2" align="center" color="text.secondary">
-        {t("privacyPolicy")}
+        {t('privacyPolicy')}
       </Typography>
     </Container>
   );

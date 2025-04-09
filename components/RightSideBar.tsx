@@ -8,18 +8,23 @@ export function RightSideBar() {
   const router = useRouter();
   return (
     <>
-      <Box>
+      <Box top={1} right={1} zIndex={8} sx={{ position: 'fixed', display: { xs: 'none', md: 'block' }, pl: 0 }}>
         <Paper elevation={3}>
-          <Typography variant="h5" color="primary">
+          <Typography variant="h5" color="primary" sx={{ mb: 4 }}>
             🆂🆆🅸🅵🆃🆂🅴🅽🅳
           </Typography>
           <Divider />
-          <List>
+          <List sx={{ pb: 5, minWidth: 300 }}>
             {sideBarOptions.map((option, idx) => (
               <Box key={idx}>
-                <ListItemButton onClick={() => router.push(option.path)}>
+                <ListItemButton
+                  onClick={() => router.push(option.path)}
+                  sx={{
+                    mb: 1
+                  }}
+                >
                   <ListItemIcon>{option.leftIcon}</ListItemIcon>
-                  <ListItemText>
+                  <ListItemText disableTypography>
                     <Typography variant="body1">{option.label}</Typography>
                   </ListItemText>
                 </ListItemButton>

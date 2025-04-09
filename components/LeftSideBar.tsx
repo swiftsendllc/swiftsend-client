@@ -28,7 +28,7 @@ export function LeftSideBar() {
             🆂🆆🅸🅵🆃🆂🅴🅽🅳
           </Typography>
           <Divider />
-          <List sx={{ pb: 5 }}>
+          <List sx={{ pb: 5, minWidth:300 }}>
             {sideBarOptions.map((option, idx) => (
               <Box key={idx}>
                 <ListItemButton onClick={() => router.push(option.path)} sx={{ mb: 1 }}>
@@ -39,7 +39,7 @@ export function LeftSideBar() {
                 </ListItemButton>
               </Box>
             ))}
-            <ListItemButton sx={{ minWidth: 300 }} onClick={() => router.push(`/${user.username}`)}>
+            <ListItemButton onClick={() => router.push(`/${user.username}`)}>
               <ListItemIcon>
                 <AdminPanelSettingsIcon />
               </ListItemIcon>
