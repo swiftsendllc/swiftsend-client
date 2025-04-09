@@ -24,8 +24,8 @@ export const metadata = {
   manifest: '/manifest.json',
   keywords: ['nextjs', 'nextjs14', 'next14', 'pwa', 'next-pwa'],
   icons: [
-    { rel: 'apple-touch-icon', url: '/svg/app_icon.svg' },
-    { rel: 'icon', url: '/svg/app_icon.svg' }
+    { rel: 'apple-touch-icon', url: '/svg/swift_send.svg' },
+    { rel: 'icon', url: '/svg/swift_send.svg' }
   ]
 } satisfies Metadata;
 

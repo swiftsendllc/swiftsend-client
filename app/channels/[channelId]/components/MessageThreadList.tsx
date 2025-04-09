@@ -1,11 +1,12 @@
 import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { UserContext } from '@/hooks/context/user-context';
 import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import EditIcon from '@mui/icons-material/Edit';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { Box, Checkbox, IconButton, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import { InfoMessageDrawer } from './InfoMessageDrawer';
 import { MessageReaction } from './MessageReaction';
@@ -28,7 +29,8 @@ export function MessageThreadList({
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
-  const isUser = message.isUser;
+  const [user] = useContext(UserContext);
+  const isUser = message.senderId === user.userId;
   const [infoMessageDrawer, setInfoMessageDrawer] = useState<boolean>(false);
   const [emojiDrawer, setEmojiDrawer] = useState(false);
   const { deleteMessageReactions } = useMessageAPI();

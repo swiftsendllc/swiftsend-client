@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { sideBarOptions } from './SearchComponents';
 
-export function SideBar() {
+export function LeftSideBar() {
   const router = useRouter();
   const [user] = useContext(UserContext);
 
