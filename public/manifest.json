@@ -8,7 +8,7 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/svg/app_icon.svg",
+      "src": "/svg/swift_send.svg",
       "sizes": "192x192",
       "type": "svg/png"
     },

@@ -1,7 +1,7 @@
 'use client';
 
 import BottomNav from '@/components/BottomNav';
-import { SideBar } from '@/components/SideBar';
+import { LeftSideBar } from '@/components/LeftSideBar';
 import { authenticatedPaths } from '@/library/constants';
 import { Container } from '@mui/material';
 import { usePathname } from 'next/navigation';
@@ -16,7 +16,7 @@ export default function RootTemplate({ children }: { children: React.ReactNode }
   return (
     <Container style={{ padding: 5 }}>
       {children}
-      <SideBar />
+      <LeftSideBar />
       <BottomNav />
     </Container>
   );
