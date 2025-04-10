@@ -8,8 +8,8 @@ import { Container, List } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import HeaderPage from './components/Header';
-import MessageInputPage from './components/MessageInput';
+import Header from './components/Header';
+import MessageInput from './components/MessageInput';
 import MessageThread from './components/MessageThread';
 
 export default function MessagePage() {
@@ -56,14 +56,8 @@ export default function MessagePage() {
   }, [groupId]); //eslint-disable-line
   return (
     <>
-      <Container
-        maxWidth="xs"
-        style={{
-          padding: 0,
-          marginBottom: 60
-        }}
-      >
-        <HeaderPage group={group} />
+      <Container sx={{ p: 0, mb: 6 }}>
+        <Header group={group} />
         <List
           sx={{
             marginTop: 10,
@@ -99,7 +93,7 @@ export default function MessagePage() {
           </InfiniteScroll>
         </List>
         {messages && (
-          <MessageInputPage
+          <MessageInput
             onSend={(msg) => setMessages((prev) => [msg, ...prev])}
             isReplying={isReplying}
             replyMessage={replyMessage}

@@ -1,34 +1,46 @@
 'use client';
 
-import { Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from '@mui/material';
+import { Box, List, ListItemButton, ListItemIcon, ListItemText, Paper, Typography, useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { sideBarOptions } from './SearchComponents';
-
+interface SideBarProps {
+  list: [] | null;
+}
 export function RightSideBar() {
   const router = useRouter();
+  const theme = useTheme();
+
   return (
     <>
-      <Box top={1} right={1} zIndex={8} sx={{ position: 'fixed', display: { xs: 'none', md: 'block' }, pl: 0 }}>
-        <Paper elevation={3}>
-          <Typography variant="h5" color="primary" sx={{ mb: 4 }}>
-            🆂🆆🅸🅵🆃🆂🅴🅽🅳
-          </Typography>
-          <Divider />
-          <List sx={{ pb: 5, minWidth: 300 }}>
+      <Box
+        sx={{
+          position: 'fixed',
+          top: theme.spacing(8),
+          right: theme.spacing(2),
+          width: 280,
+          zIndex: 8,
+          display: { xs: 'none', sm: '48%', md: 'block' }
+        }}
+      >
+        <Paper elevation={0} sx={{ borderRadius: 2 }}>
+          <List sx={{ p: 2 }}>
             {sideBarOptions.map((option, idx) => (
-              <Box key={idx}>
-                <ListItemButton
-                  onClick={() => router.push(option.path)}
-                  sx={{
-                    mb: 1
-                  }}
-                >
-                  <ListItemIcon>{option.leftIcon}</ListItemIcon>
-                  <ListItemText disableTypography>
-                    <Typography variant="body1">{option.label}</Typography>
-                  </ListItemText>
-                </ListItemButton>
-              </Box>
+              <ListItemButton
+                key={idx}
+                onClick={() => router.push(option.path)}
+                sx={{
+                  mb: 1,
+                  borderRadius: 1,
+                  '&:hover': {
+                    backgroundColor: theme.palette.action.hover,
+                    boxShadow: 4,
+                    transform: 'scale(1.01)'
+                  }
+                }}
+              >
+                <ListItemIcon>{option.leftIcon}</ListItemIcon>
+                <ListItemText disableTypography primary={<Typography variant="body1">{option.label}</Typography>} />
+              </ListItemButton>
             ))}
           </List>
         </Paper>

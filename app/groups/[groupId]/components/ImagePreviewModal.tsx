@@ -6,7 +6,7 @@ import { Box, Button, Container, Modal, Stack } from '@mui/material';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
-export default function ImagePreviewModalPage({
+export function ImagePreviewModal({
   isOpen,
   onClose,
   onUpload,

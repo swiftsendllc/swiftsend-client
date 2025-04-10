@@ -11,10 +11,10 @@ import { Box, Button, Container, Paper, TextField } from '@mui/material';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import ImagePreviewModalPage from './ImagePreviewModal';
+import { ImagePreviewModal } from './ImagePreviewModal';
 import ReplyThread from './ReplyThread';
 
-export default function MessageInputPage({
+export default function MessageInput({
   onSend,
   isReplying,
   replyMessage,
@@ -99,16 +99,16 @@ export default function MessageInputPage({
     <>
       <ReplyThread isReplying={isReplying} replyMessage={replyMessage} onClose={() => setIsReplying(false)} />
       <Box
-        width="100%"
         sx={{
           position: 'fixed',
           left: 0,
           bottom: 0,
           right: 0,
-          zIndex: 8
+          zIndex: 8,
+          px: { md: 40, xs: 'none' }
         }}
       >
-        <Container maxWidth="xs" sx={{ padding: 0 }}>
+        <Container sx={{ padding: 0 }}>
           <Paper>
             <TextField
               fullWidth
@@ -150,7 +150,7 @@ export default function MessageInputPage({
             />
           </Paper>
         </Container>
-        <ImagePreviewModalPage
+        <ImagePreviewModal
           isOpen={imagePreviewModal}
           onClose={() => setImagePreviewModal(false)}
           onUpload={handleUpload}

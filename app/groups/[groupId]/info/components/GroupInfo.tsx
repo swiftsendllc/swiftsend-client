@@ -71,7 +71,7 @@ export default function GroupInfoPage() {
 
   return (
     <>
-      <Container maxWidth="xs">
+      <Container>
         <InfoHeader group={group} inputRef={inputRef} onUpload={(file) => handleUpload(file)} />
         <Divider />
         <InfoOptions

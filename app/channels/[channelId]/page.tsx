@@ -74,7 +74,6 @@ export default function MessagePage() {
   return (
     <>
       <Container
-        maxWidth="xs"
         style={{
           padding: 0,
           marginBottom: 60

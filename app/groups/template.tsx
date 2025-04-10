@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
+import { RightSideBar } from '@/components/RightSideBar';
+import React from 'react';
 
-export default function PageTemplate({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <>{children}</>;
+export default function PageTemplate({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {children}
+    </>
+  );
 }

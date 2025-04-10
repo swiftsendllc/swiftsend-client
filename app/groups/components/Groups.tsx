@@ -21,7 +21,7 @@ export default function GroupsPage() {
 
   return (
     <>
-      <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mb: 5, mt: 2 }}>
+      <Container sx={{ mb: 5, mt: 2, pl:{md:26, xs:"none"} }}>
         <GroupHeader user={user} setGroups={setGroups} />
         <Divider sx={{ mt: 1 }} />
         <TabContext value={value}>

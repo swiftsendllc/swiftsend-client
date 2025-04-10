@@ -17,7 +17,18 @@ export function ChannelsList({ channels }: { channels: ChannelsEntity[] }) {
       {channels.map((channel, idx) => (
         <Card
           key={idx}
-          sx={{ mb: 0.3, width: '100%', p: 0 }}
+          sx={{
+            mb: 0.3,
+            width: '100%',
+            p: 0,
+            transform: 'all 0.3s ease',
+            cursor: 'pointer',
+            boxShadow: 1,
+            '&:hover': {
+              boxShadow: 4,
+              transform: 'scale(1.01)'
+            }
+          }}
           onClick={() => {
             router.push(`/channels/${channel._id}`);
           }}
