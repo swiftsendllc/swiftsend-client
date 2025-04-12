@@ -2,6 +2,7 @@
 
 import { LeftSideBar } from '@/components/LeftSideBar';
 import { Stack } from '@mui/material';
+import { SideChannelsList } from './components/SideChannelsList';
 
 export default function PageTemplate({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export default function PageTemplate({ children }: { children: React.ReactNode }
       >
         {children}
         <LeftSideBar />
+        <SideChannelsList />
       </Stack>
     </>
   );

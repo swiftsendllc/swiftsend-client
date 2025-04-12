@@ -114,7 +114,8 @@ export default function MessagePage() {
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 background: `url('${backgroundImage}')`,
-                objectFit: 'cover'
+                objectFit: 'cover',
+                marginTop: 8
               }}
               id="scroll-id"
             >
@@ -148,6 +149,7 @@ export default function MessagePage() {
             </List>
           </>
         )}
+
         {messages && (
           <MessageInput
             onMessage={(msg) => setMessages((prev) => [msg, ...prev])}

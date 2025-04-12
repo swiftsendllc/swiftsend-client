@@ -116,16 +116,16 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
     <>
       <ReplyThread repliedToMessage={repliedToMessage} isReplying={isReplying} onClose={() => setIsReplying(false)} />
       <Box
-        width="100%"
         sx={{
           position: 'fixed',
           left: 0,
           bottom: 0,
           right: 0,
-          zIndex: 8
+          zIndex: 8,
+          px: { xs: 'none', md: 40 }
         }}
       >
-        <Container maxWidth="xs" sx={{ padding: 0 }}>
+        <Container sx={{ padding: 0 }}>
           {isExclusive && (
             <>
               <Paper>

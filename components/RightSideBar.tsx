@@ -3,9 +3,7 @@
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Paper, Typography, useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { sideBarOptions } from './SearchComponents';
-interface SideBarProps {
-  list: [] | null;
-}
+
 export function RightSideBar() {
   const router = useRouter();
   const theme = useTheme();

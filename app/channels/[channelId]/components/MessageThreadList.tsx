@@ -93,7 +93,7 @@ export function MessageThreadList({
           backgroundColor: isUser ? '#4dabf5' : '#4caf50',
           borderColor: isUser ? '#4dabf5' : '#4caf50',
           borderRadius: '10px',
-          maxWidth: '60%',
+          maxWidth: { xs: '60%', md: '40%', sm: '40%' },
           padding: '8px'
         }}
       >
