@@ -21,17 +21,13 @@ export default function GroupsPage() {
 
   return (
     <>
-      <Container sx={{ mb: 5, mt: 2, pl:{md:26, xs:"none"} }}>
+      <Container sx={{ mb: 5, mt: 2, pl: { md: 26, xs: 'none' } }}>
         <GroupHeader user={user} setGroups={setGroups} />
         <Divider sx={{ mt: 1 }} />
         <TabContext value={value}>
           <Stack direction="row" spacing={1}>
             <TabList onChange={handleTabChange}>
-              <Tab
-                label="Chats "
-                value="2"
-                onClick={() => router.push('/channels')}
-              />
+              <Tab label="Chats " value="2" onClick={() => router.push('/channels')} />
               <Tab label="Groups " value="3" />
             </TabList>
           </Stack>
