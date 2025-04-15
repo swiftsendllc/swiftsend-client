@@ -1,5 +1,4 @@
-'use client';
-import { PostsEntity } from '@/hooks/entities/posts.entities';
+import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -7,25 +6,21 @@ import Image from 'next/image';
 import { cluster } from 'radash';
 import { useState } from 'react';
 
-interface SearchFeedProps {
-  posts: PostsEntity[];
-}
-
-export const SearchFeed = ({ posts }: SearchFeedProps) => {
-  const imageGroups = cluster(posts, 3);
-  const [imageDialogOpen, setImageDialogOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+export function AssetFeed({ assets }: { assets: CreatorAssetsEntity[] }) {
   const theme = useTheme();
+  const assetGroups = cluster(assets, 3);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [assetDialogOpen, setAssetDialogOpen] = useState<boolean>(false);
+  const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
 
-  const handleSelect = (imageURL: string) => {
-    setSelectedImage(imageURL);
-    setImageDialogOpen(true);
+  const handleSelectAsset = (assetUrl: string) => {
+    setSelectedAsset(assetUrl);
+    setAssetDialogOpen(true);
   };
 
   const handleClose = () => {
-    setImageDialogOpen(false);
-    setSelectedImage(null);
+    setAssetDialogOpen(false);
+    setSelectedAsset(null);
   };
 
   return (
@@ -38,16 +33,16 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
         padding={2}
         marginBottom={isSmallScreen ? 40 : 15}
       >
-        {imageGroups.map((group, groupIdx) =>
-          group.map((posts, idx) =>
-            posts.imageUrls.map((img, imgIdx) => (
+        {assetGroups.map((groups, groupIdx) =>
+          groups.map((asset, astIdx) =>
+            asset._assets.map((asst, idx) => (
               <Box
-                key={`${groupIdx}-${idx}-${imgIdx}`}
-                onClick={() => handleSelect(img)}
+                key={`${groupIdx}-${idx}-${astIdx}`}
+                onClick={() => handleSelectAsset(asst.originalURL)}
                 sx={{
                   position: 'relative',
                   width: {
-                    xs: '100%',
+                    xs: '40%',
                     sm: '48%',
                     md: '30%'
                   },
@@ -64,8 +59,8 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
                 }}
               >
                 <Image
-                  src={img}
-                  alt="posts image"
+                  src={asst.originalURL}
+                  alt="assets"
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
@@ -77,7 +72,7 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
         )}
       </Stack>
 
-      <Dialog open={imageDialogOpen} onClose={handleClose} maxWidth="md" fullWidth>
+      <Dialog open={assetDialogOpen} onClose={handleClose} maxWidth="md" fullWidth>
         <Box
           component={motion.div}
           initial={{ opacity: 0, scale: 0.95 }}
@@ -97,29 +92,22 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
           <IconButton
             onClick={handleClose}
             sx={{
-              position: 'absolute',
               top: 8,
               right: 8,
               zIndex: 10,
+              position: 'absolute',
               bgcolor: 'whitesmoke'
             }}
           >
             <CloseIcon />
           </IconButton>
-          {selectedImage && (
+          {selectedAsset && (
             <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
-              <Image
-                src={selectedImage}
-                alt="selected image"
-                fill
-                style={{ objectFit: 'contain' }}
-                sizes="100vw"
-                priority
-              />
+              <Image src={selectedAsset} alt="assets" fill style={{ objectFit: 'contain' }} sizes="100vw" priority />
             </Box>
           )}
         </Box>
       </Dialog>
     </>
   );
-};
+}
