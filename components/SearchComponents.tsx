@@ -443,7 +443,7 @@ export const sideBarOptions = [
   {
     label: 'Add asset',
     leftIcon: <PostAddIcon />,
-    path: '/logout'
+    path: '/assets'
   },
   {
     label: 'Notifications',

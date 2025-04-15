@@ -198,7 +198,7 @@ export default function SearchPage() {
             initialScrollY={500}
             loader={loading && <LinearProgress />}
           >
-            <SearchFeed post={posts} />
+            <SearchFeed posts={posts} />
           </InfiniteScroll>
         </List>
       )}

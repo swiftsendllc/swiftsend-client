@@ -1,12 +1,6 @@
 export const authCookieKey = '_accessToken';
 
-export const authenticatedPaths = [
-  '/home',
-  '/search',
-  '/channels',
-  '/reels',
-  '/groups'
-];
+export const authenticatedPaths = ['/home', '/search', '/channels', '/reels', '/groups', '/assets'];
 
 export const env = {
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',
@@ -15,13 +9,5 @@ export const env = {
 type EnvKeys = keyof typeof env;
 export const ENV = (key: EnvKeys) => env[key];
 
-export const authenticatedPathsRegex = [
-  /^\/home/,
-  /^\/search/,
-  /^\/posts/,
-  /^\/reels/,
-  /^\/account/
-];
-export const authenticatedPathRegex = new RegExp(
-  authenticatedPathsRegex.map((r) => r.source).join('|')
-);
+export const authenticatedPathsRegex = [/^\/home/, /^\/search/, /^\/posts/, /^\/reels/, /^\/account/];
+export const authenticatedPathRegex = new RegExp(authenticatedPathsRegex.map((r) => r.source).join('|'));
