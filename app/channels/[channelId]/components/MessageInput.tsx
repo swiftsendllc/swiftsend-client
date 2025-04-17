@@ -30,34 +30,11 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
   const [channel] = useContext(ChannelContext);
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile } = usePostAPI();
   const [isExclusive, setIsExclusive] = useState<boolean>(false);
   const [price, setPrice] = useState<number>(0);
   const [objectUrls, setObjectUrls] = useState<string[]>([]);
 
-  const handleUpload = async () => {
-    if (!files) return null;
 
-    try {
-      const formData = new FormData();
-      files.map((file) => {
-        formData.append('files', file);
-      });
-
-      if (isExclusive) {
-        const urls = await uploadFile(formData);
-        const imgUrls = urls?.map((file) => file.originalFile.url);
-        const blurImageUrls = urls?.map((file) => file.blurredFile.url);
-        toast.success('Uploaded');
-        return { imgUrls, blurImageUrls };
-      }
-    } catch (error) {
-      toast.error('error', error);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCancel = () => {
     setMessageInput('');

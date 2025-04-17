@@ -4,7 +4,7 @@ import { UploadedEntity } from '../entities/messages.entities';
 import { CommentPostInput } from '../entities/posts.entities';
 
 const usePostAPI = () => {
-  const uploadFile = async (formData: FormData) => {
+  const uploadAndCreateAsset = async (formData: FormData) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/posts/upload`, {
       method: 'POST',
@@ -18,7 +18,7 @@ const usePostAPI = () => {
     if (!res.ok) {
       throw new Error(data.message);
     }
-    return data as UploadedEntity[];
+    return data as UploadedEntity;
   };
 
   const createPost = async (input: {
@@ -270,7 +270,7 @@ const usePostAPI = () => {
     deleteComment,
     getCommentsCreatedByYou,
     getLikedPosts,
-    uploadFile
+    uploadAndCreateAsset
   };
 };
 export default usePostAPI;

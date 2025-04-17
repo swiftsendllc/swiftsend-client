@@ -2,7 +2,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import FilterBAndWIcon from '@mui/icons-material/FilterBAndW';
 import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
+import { UploadModal } from './UploadModal';
 export function Header() {
+  const [uploadModal, setUploadModal] = useState<boolean>(false);
+
   return (
     <>
       <Box sx={{ width: { xs: 'auto', md: '100%' } }}>
@@ -18,9 +22,10 @@ export function Header() {
               <IconButton edge="end" color="inherit" aria-label="upload">
                 <FilterBAndWIcon />
               </IconButton>
-              <IconButton edge="end" color="inherit" aria-label="upload">
+              <IconButton edge="end" color="inherit" aria-label="upload" onClick={() => setUploadModal(true)}>
                 <CloudUploadIcon />
               </IconButton>
+              <UploadModal isOpen={uploadModal} onClose={() => setUploadModal(false)} />
             </Stack>
           </Stack>
         </Paper>
