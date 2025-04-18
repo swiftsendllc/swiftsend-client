@@ -2,16 +2,16 @@ import { authCookieKey, ENV } from '@/library/constants';
 import { getCookie } from 'cookies-next';
 
 const useAssetAPI = () => {
-  const createAsset = async (input: { originalURL: string; blurredURL: string; type: string }) => {
+  const uploadAndCreateAsset = async (formData: FormData) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/create`, {
-      method: 'GET',
-      body: JSON.stringify(input),
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/upload`, {
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
-      }
+      },
+      body: formData
     });
+
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
@@ -51,9 +51,9 @@ const useAssetAPI = () => {
     return data;
   };
   return {
-    createAsset,
     getCreatorAssets,
-    getFanAssets
+    getFanAssets,
+    uploadAndCreateAsset
   };
 };
 export default useAssetAPI;

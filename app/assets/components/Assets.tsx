@@ -11,6 +11,7 @@ import { Header } from './Header';
 export default function AssetsPage() {
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const { getCreatorAssets } = useAssetAPI();
+  const [checkbox, setCheckBox] = useState<boolean>(false);
 
   const loadAssets = async () => {
     try {
@@ -28,7 +29,7 @@ export default function AssetsPage() {
   return (
     <>
       <Container sx={{ p: 0, mt: 2, pl: { xs: 0, md: 24 }, position: 'fixed' }}>
-        <Header />
+        <Header setAssets={setAssets} setCheckBox={setCheckBox} checkBox={checkbox} />
         {!assets.length ? (
           <Typography variant="h5" textAlign={'center'} justifyContent={'center'}>
             You assets will appear here
@@ -44,7 +45,7 @@ export default function AssetsPage() {
             }}
             id="scroll-d"
           >
-            <AssetFeed assets={assets} />
+            <AssetFeed assets={assets} checkbox={checkbox} setCheckBox={setCheckBox} />
           </List>
         )}
       </Container>

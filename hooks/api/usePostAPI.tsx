@@ -1,26 +1,8 @@
 import { authCookieKey, ENV } from '@/library/constants';
 import { getCookie } from 'cookies-next';
-import { UploadedEntity } from '../entities/messages.entities';
 import { CommentPostInput } from '../entities/posts.entities';
 
 const usePostAPI = () => {
-  const uploadAndCreateAsset = async (formData: FormData) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/posts/upload`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: formData
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-    return data as UploadedEntity;
-  };
-
   const createPost = async (input: {
     imageUrls: string[] | null;
     blurredImageUrls: string[] | null;
@@ -269,8 +251,7 @@ const usePostAPI = () => {
     getCreatorPosts,
     deleteComment,
     getCommentsCreatedByYou,
-    getLikedPosts,
-    uploadAndCreateAsset
+    getLikedPosts
   };
 };
 export default usePostAPI;

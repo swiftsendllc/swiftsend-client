@@ -3,8 +3,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import WallpaperIcon from '@mui/icons-material/Wallpaper';
-import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import Drawer from '@mui/material/Drawer';
+import { Dialog, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { setCookie } from 'cookies-next';
 import { useParams, useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -32,7 +31,7 @@ export function InfoChannelDrawer({
     onClose?.();
   };
 
-  const drawer = [
+  const drawerOptions = [
     {
       label: 'Select',
       icon: <ChecklistIcon />,
@@ -63,73 +62,70 @@ export function InfoChannelDrawer({
 
   return (
     <>
-      <Container maxWidth="xs">
-        <Drawer
-          open={open}
-          keepMounted
-          anchor="bottom"
-          sx={{
+      <Dialog
+        open={open}
+        keepMounted
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          style: {
             width: '100%',
-            maxWidth: 444,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            position: 'absolute'
-          }}
-          onClose={handleClose}
-        >
-          <List
-            sx={{
-              borderRadius: '14px',
-              width: '100%',
-              maxWidth: 444,
-              margin: '0 auto'
-            }}
-          >
-            {drawer.map((option, idx) => (
-              <Fragment key={idx}>
-                <ListItem disablePadding>
-                  <ListItemButton onClick={option.action}>
-                    <ListItemIcon>{option.icon}</ListItemIcon>
-                    <ListItemText primary={option.label} />
-                  </ListItemButton>
-                </ListItem>
-              </Fragment>
-            ))}
-          </List>
-        </Drawer>
-      </Container>
-      <Container maxWidth="xs">
-        <Drawer
-          open={imageDrawer}
-          keepMounted
-          anchor="bottom"
+            margin: 0
+          }
+        }}
+        onClose={handleClose}
+        aria-labelledby="info-channel-drawer"
+      >
+        <List
           sx={{
-            maxWidth: 444,
-            width: '100%',
-            left: '50%',
-            transform: 'translateX(-50%)'
+            borderRadius: '14px',
+            width: '100%'
           }}
-          onClose={handleClose}
         >
-          <List sx={{ border: '2px solid #80EF80', borderRadius: '15px' }}>
-            {backgroundImages.map((option, idx) => (
-              <Fragment key={idx}>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    onClick={() => {
-                      setBackgroundImage(option.imageURL);
-                      setCookie('imageURL', option.imageURL);
-                      handleClose();
-                    }}
-                  >
-                    <ListItemText primary={option.title} />
-                  </ListItemButton>
-                </ListItem>
-              </Fragment>
-            ))}
-          </List>
-        </Drawer>
-      </Container>
+          {drawerOptions.map((option, idx) => (
+            <Fragment key={idx}>
+              <ListItem disablePadding>
+                <ListItemButton onClick={option.action}>
+                  <ListItemIcon>{option.icon}</ListItemIcon>
+                  <ListItemText primary={option.label} />
+                </ListItemButton>
+              </ListItem>
+            </Fragment>
+          ))}
+        </List>
+      </Dialog>
+      <Dialog
+        open={imageDrawer}
+        keepMounted
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{
+          style: {
+            width: '100%',
+            margin: 0
+          }
+        }}
+        aria-labelledby="wallpaper-drawer"
+        onClose={handleClose}
+      >
+        <List sx={{ border: '2px solid #80EF80', borderRadius: '15px' }}>
+          {backgroundImages.map((option, idx) => (
+            <Fragment key={idx}>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => {
+                    setBackgroundImage(option.imageURL);
+                    setCookie('imageURL', option.imageURL);
+                    handleClose();
+                  }}
+                >
+                  <ListItemText primary={option.title} />
+                </ListItemButton>
+              </ListItem>
+            </Fragment>
+          ))}
+        </List>
+      </Dialog>
     </>
   );
 }
