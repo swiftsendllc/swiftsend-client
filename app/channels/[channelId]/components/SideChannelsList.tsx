@@ -1,9 +1,7 @@
-import { StyledBadge } from '@/components/SearchComponents';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { ChannelsEntity } from '@/hooks/entities/messages.entities';
-import AddIcon from '@mui/icons-material/Add';
-import { Avatar, Box, Button, Card, CardHeader, Paper, useTheme } from '@mui/material';
-import moment from 'moment';
+import Groups3Icon from '@mui/icons-material/Groups3';
+import { Avatar, Box, Button, Card, CardHeader, Stack, Typography, useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -12,6 +10,7 @@ export function SideChannelsList() {
   const [channels, setChannels] = useState<ChannelsEntity[]>([]);
   const { getChannels } = useMessageAPI();
   const theme = useTheme();
+  const router = useRouter();
   const loadChannels = async () => {
     try {
       const channels = await getChannels();
@@ -26,8 +25,6 @@ export function SideChannelsList() {
     if (channels) loadChannels();
   }, []); //eslint-disable-line
 
-  const router = useRouter();
-
   return (
     <>
       <Box
@@ -36,64 +33,58 @@ export function SideChannelsList() {
           top: theme.spacing(1),
           right: theme.spacing(2),
           width: 280,
-          height:"100%",
           zIndex: 8,
-          display: { xs: 'none', sm: '48%', md: 'block' }
+          display: { xs: 'none', md: 'block' }
         }}
       >
-        <Paper>
-
-        {channels.map((channel, idx) => (
-          <Card
-            key={idx}
-            sx={{
-              minWidth:300,
-              transform: 'all 0.3s ease',
-              cursor: 'pointer',
-              boxShadow: 1,
-              '&:hover': {
-                boxShadow: 4,
-                transform: 'scale(1.01)'
-              }
-            }}
-            onClick={() => {
-              router.push(`/channels/${channel._id}`);
-            }}
-          >
-            <CardHeader
-              avatar={
-                <>
-                  <StyledBadge
-                    isOnline={channel.receiver.isOnline}
-                    overlap="circular"
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right'
-                    }}
-                    badgeContent
-                    variant="dot"
-                  >
-                    <Avatar aria-label="recipe" src={channel.receiver.avatarURL} alt={channel.receiver.fullName} />
-                  </StyledBadge>
-                </>
-              }
-              action={
-                <Button sx={{ height: 20, fontWeight: 200 }} aria-label="settings" variant="text">
-                  <AddIcon />
-                </Button>
-              }
-              title={channel.receiver.fullName}
-              subheader={
-                channel.lastMessage?.deleted
-                  ? 'This message was deleted'
-                  : channel.lastMessage?.edited
-                    ? 'This message was edited'
-                    : `${channel.lastMessage?.message.slice(0, 10) || ''}... • ${moment(channel.lastMessage?.createdAt).format('hh:mm A')}`
-              }
-            />
-          </Card>
-        ))}
-        </Paper>
+        <Box
+          sx={{
+            pb: 2,
+            borderBottom: '1px solid #ddd',
+            textAlign: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            ml: 2
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold">
+            🆂🆆🅸🅵🆃🅴🆁🆂
+          </Typography>
+          <Stack direction="column-reverse">
+            <Typography variant="body2" fontWeight="bold" display="flex">
+              {channels.length}
+            </Typography>
+            <Groups3Icon />
+          </Stack>
+        </Box>
+        <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 60px)', mt: 2 }}>
+          {channels.map((member, idx) => (
+            <Card
+              key={idx}
+              sx={{
+                mb: 1,
+                p: 1,
+                boxShadow: 2,
+                borderRadius: 2,
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <CardHeader
+                onClick={() => router.push(`/channels/${member._id}`)}
+                avatar={<Avatar src={member.receiver.avatarURL} alt={member.receiver.fullName} />}
+                title={member.receiver.fullName}
+                subheader={member.receiver.username}
+                action={
+                  <Button variant="contained" size="small">
+                    A
+                  </Button>
+                }
+                sx={{ flex: 1 }}
+              />
+            </Card>
+          ))}
+        </Box>
       </Box>
     </>
   );

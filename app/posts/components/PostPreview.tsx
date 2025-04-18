@@ -37,7 +37,6 @@ export default function PostPreview() {
   const [objectUrls, setObjectUrls] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile } = usePostAPI();
   const { createPost } = usePostAPI();
   const [, setUser] = useContext(UserContext);
   const [isExclusive, setIsExclusive] = useState<boolean>(true);
@@ -53,11 +52,6 @@ export default function PostPreview() {
       files.map((file) => {
         formData.append('files', file);
       });
-      const urls = await uploadFile(formData);
-
-      const originalUrl = urls.map((url) => url.originalFile.url);
-      const blurredUrl = urls.map((url) => url.blurredFile.url);
-
       await createPost({
         caption,
         imageUrls: originalUrl,
@@ -74,11 +68,6 @@ export default function PostPreview() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDeleteImage = (objectUrls: string[], idx: number) => {
-    setFiles(files.filter((_, id) => id !== idx));
-    setObjectUrls(objectUrls.filter((_, id) => id !== idx));
   };
 
   return (
@@ -122,7 +111,6 @@ export default function PostPreview() {
                   width={100}
                   height={100}
                   alt={'original'}
-                  onClick={() => handleDeleteImage(objectUrls, idx)}
                 />
               </Box>
             ))}

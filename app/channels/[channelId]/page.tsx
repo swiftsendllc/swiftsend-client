@@ -67,6 +67,21 @@ export default function MessagePage() {
     }
   };
 
+  const handleDeleteMessages = () => {
+    setMessages((prev) =>
+      prev.map((msg) =>
+        selectedMessageIds.includes(msg._id)
+          ? {
+              ...msg,
+              messageIds: selectedMessageIds,
+              deleted: true,
+              deletedAt: new Date()
+            }
+          : msg
+      )
+    );
+  };
+
   useEffect(() => {
     if (channelId) loadChannelMessages();
   }, [channelId]); // eslint-disable-line
@@ -88,20 +103,7 @@ export default function MessagePage() {
           selectedMessageIds={selectedMessageIds}
           setSelectedMessageIds={setSelectedMessageIds}
           setBackgroundImage={setBackgroundImage}
-          onDelete={() =>
-            setMessages((prev) =>
-              prev.map((msg) =>
-                selectedMessageIds.includes(msg._id)
-                  ? {
-                      ...msg,
-                      messageIds: selectedMessageIds,
-                      deleted: true,
-                      deletedAt: new Date()
-                    }
-                  : msg
-              )
-            )
-          }
+          onDelete={handleDeleteMessages}
         />
         {messages.length === 0 ? (
           <EncryptionNotice />

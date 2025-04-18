@@ -441,19 +441,19 @@ export const sideBarOptions = [
     path: '/reels'
   },
   {
-    label: 'Add asset',
+    label: 'Assets',
     leftIcon: <PostAddIcon />,
     path: '/assets'
   },
   {
     label: 'Notifications',
     leftIcon: <CircleNotificationsIcon />,
-    path: '/logout'
+    path: '/notifications'
   },
   {
     label: 'More',
     leftIcon: <ViewWeekIcon />,
-    path: '/logout'
+    path: '/more'
   },
   {
     label: 'Dashboard',

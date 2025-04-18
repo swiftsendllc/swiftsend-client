@@ -1,12 +1,22 @@
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cluster } from 'radash';
 import { useState } from 'react';
+import { ForwardDrawer } from './ForwardDrawer';
 
-export function AssetFeed({ assets }: { assets: CreatorAssetsEntity[] }) {
+export function AssetFeed({
+  assets,
+  checkbox,
+  setCheckBox
+}: {
+  assets: CreatorAssetsEntity[];
+  checkbox: boolean;
+  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const theme = useTheme();
   const assetGroups = cluster(assets, 3);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -42,7 +52,7 @@ export function AssetFeed({ assets }: { assets: CreatorAssetsEntity[] }) {
                 sx={{
                   position: 'relative',
                   width: {
-                    xs: '40%',
+                    xs: '30%',
                     sm: '48%',
                     md: '30%'
                   },
@@ -66,6 +76,15 @@ export function AssetFeed({ assets }: { assets: CreatorAssetsEntity[] }) {
                   sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                   priority
                 />
+                {checkbox && (
+                  <IconButton
+                    onClick={(event) => {
+                      event.stopPropagation();
+                    }}
+                  >
+                    <CheckBoxOutlineBlankOutlinedIcon />
+                  </IconButton>
+                )}
               </Box>
             ))
           )
@@ -108,6 +127,7 @@ export function AssetFeed({ assets }: { assets: CreatorAssetsEntity[] }) {
           )}
         </Box>
       </Dialog>
+      <ForwardDrawer isOpen={checkbox} onClose={() => setCheckBox(false)} />
     </>
   );
 }

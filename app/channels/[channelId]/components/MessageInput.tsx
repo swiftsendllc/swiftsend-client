@@ -1,8 +1,6 @@
 'use client';
 
-import { InputElement } from '@/components/InputElement';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
-import usePostAPI from '@/hooks/api/usePostAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -12,7 +10,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Container, IconButton, Paper, Stack, TextField } from '@mui/material';
 import Image from 'next/image';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ReplyThread } from './ReplyThread';
 
@@ -29,12 +27,9 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
   const [messageInput, setMessageInput] = useState<string>('');
   const [channel] = useContext(ChannelContext);
   const [files, setFiles] = useState<File[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [isExclusive, setIsExclusive] = useState<boolean>(false);
   const [price, setPrice] = useState<number>(0);
   const [objectUrls, setObjectUrls] = useState<string[]>([]);
-
-
 
   const handleCancel = () => {
     setMessageInput('');
@@ -47,8 +42,6 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
   const handleMessage = async () => {
     setLoading(true);
     try {
-      const urls = await handleUpload();
-
       const msg = await sendMessage({
         message: messageInput,
         receiverId: channel.receiver.userId,
@@ -69,8 +62,6 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
   const handleReply = async () => {
     if (repliedToMessage)
       try {
-        const urls = await handleUpload();
-
         const reply = await sendMessageReply({
           message: messageInput,
           messageId: repliedToMessage._id,
@@ -139,9 +130,8 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
                     </Box>
                   ))}
                 </Stack>
-                <IconButton sx={{ py: 2 }} onClick={() => inputRef.current?.click()}>
+                <IconButton sx={{ py: 2 }}>
                   <AddPhotoAlternateIcon />
-                  <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={setObjectUrls} />
                 </IconButton>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <TextField
@@ -194,10 +184,9 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
                       >
                         <SendIcon />
                       </LoadingButton>
-                      <Button onClick={() => inputRef.current?.click()}>
+                      <Button>
                         <LandscapeIcon />
                       </Button>
-                      <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={() => null} />
                     </>
                   )
                 }
