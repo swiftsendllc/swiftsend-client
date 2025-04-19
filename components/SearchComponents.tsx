@@ -1,10 +1,10 @@
 'use client';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import CloudQueueSharpIcon from '@mui/icons-material/CloudQueueSharp';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
@@ -464,5 +464,20 @@ export const sideBarOptions = [
     label: 'Logout',
     leftIcon: <LogoutIcon />,
     path: '/logout'
+  }
+];
+
+export const widths = [
+  {
+    value: 10
+  },
+  {
+    value: 30
+  },
+  {
+    value: 50
+  },
+  {
+    value: 100
   }
 ];

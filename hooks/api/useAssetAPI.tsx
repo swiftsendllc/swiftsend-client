@@ -36,9 +36,26 @@ const useAssetAPI = () => {
   };
 
   const getFanAssets = async () => {
-    const accessToken = await getCookie(authCookieKey);
+    const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/fan`, {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    return data;
+  };
+
+  const deleteCreatorAssets = async (input: { assetIds: string[] }) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/delete`, {
+      body: JSON.stringify(input),
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
@@ -53,7 +70,8 @@ const useAssetAPI = () => {
   return {
     getCreatorAssets,
     getFanAssets,
-    uploadAndCreateAsset
+    uploadAndCreateAsset,
+    deleteCreatorAssets
   };
 };
 export default useAssetAPI;

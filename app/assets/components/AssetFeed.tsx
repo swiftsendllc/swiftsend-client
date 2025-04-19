@@ -1,31 +1,42 @@
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
-import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Checkbox, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cluster } from 'radash';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ForwardDrawer } from './ForwardDrawer';
 
 export function AssetFeed({
   assets,
   checkbox,
-  setCheckBox
+  selectedAssetIds,
+  setSelectedAssetIds,
+  width
 }: {
   assets: CreatorAssetsEntity[];
   checkbox: boolean;
-  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
+  width: number;
+  selectedAssetIds: string[];
+  setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const theme = useTheme();
   const assetGroups = cluster(assets, 3);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [assetDialogOpen, setAssetDialogOpen] = useState<boolean>(false);
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
+  const [forwardDrawer, setForwardDrawer] = useState<boolean>(false);
 
   const handleSelectAsset = (assetUrl: string) => {
     setSelectedAsset(assetUrl);
     setAssetDialogOpen(true);
+  };
+
+  const handleToggleCheckBox = async (assetId: string) => {
+    setSelectedAssetIds((prev) => {
+      const newAssetIds = prev.includes(assetId) ? prev.filter((id) => id !== assetId) : [...prev, assetId];
+      return newAssetIds;
+    });
   };
 
   const handleClose = () => {
@@ -40,8 +51,8 @@ export function AssetFeed({
         flexWrap="wrap"
         justifyContent="center"
         gap={2}
-        padding={2}
-        marginBottom={isSmallScreen ? 40 : 15}
+        paddingTop={2}
+        marginBottom={isSmallScreen ? 5 : 15}
       >
         {assetGroups.map((groups, groupIdx) =>
           groups.map((asset, astIdx) =>
@@ -52,9 +63,9 @@ export function AssetFeed({
                 sx={{
                   position: 'relative',
                   width: {
-                    xs: '30%',
+                    xs: `${width}%`,
                     sm: '48%',
-                    md: '30%'
+                    md: `${width}%`
                   },
                   aspectRatio: '4 / 3',
                   borderRadius: 2,
@@ -77,13 +88,13 @@ export function AssetFeed({
                   priority
                 />
                 {checkbox && (
-                  <IconButton
+                  <Checkbox
                     onClick={(event) => {
                       event.stopPropagation();
                     }}
-                  >
-                    <CheckBoxOutlineBlankOutlinedIcon />
-                  </IconButton>
+                    checked={selectedAssetIds.includes(asset.assetId)}
+                    onChange={() => handleToggleCheckBox(asset.assetId)}
+                  />
                 )}
               </Box>
             ))
@@ -127,7 +138,7 @@ export function AssetFeed({
           )}
         </Box>
       </Dialog>
-      <ForwardDrawer isOpen={checkbox} onClose={() => setCheckBox(false)} />
+      <ForwardDrawer isOpen={forwardDrawer} onClose={() => setForwardDrawer(false)} />
     </>
   );
 }

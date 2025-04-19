@@ -47,7 +47,7 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
                 sx={{
                   position: 'relative',
                   width: {
-                    xs: '100%',
+                    xs: '30%',
                     sm: '48%',
                     md: '30%'
                   },
