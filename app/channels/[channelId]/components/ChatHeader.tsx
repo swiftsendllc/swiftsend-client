@@ -6,6 +6,7 @@ import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import RedeemIcon from '@mui/icons-material/Redeem';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import { Avatar, Box, Card, CardHeader, Container, IconButton, LinearProgress, Typography } from '@mui/material';
@@ -13,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { InfoChannelDrawer } from './InfoChannelDrawer';
+import { SendAssetsDrawer } from './SendAssetsDrawer';
 export function ChatHeader({
   channel,
   loading,
@@ -37,6 +39,7 @@ export function ChatHeader({
   const [infoChannelDrawer, setInfoChannelDrawer] = useState(false);
   const router = useRouter();
   const { deleteMessages } = useMessageAPI();
+  const [assetDrawer, setAssetDrawer] = useState<boolean>(false);
   const l = selectedMessageIds.length === 0;
 
   const handleDeleteMessages = async () => {
@@ -100,6 +103,9 @@ export function ChatHeader({
                 <>
                   {!checkBox ? (
                     <>
+                      <IconButton onClick={() => setAssetDrawer((prev) => !prev)}>
+                        <RedeemIcon />
+                      </IconButton>
                       <IconButton>
                         <ContactPhoneIcon />
                       </IconButton>
@@ -144,6 +150,7 @@ export function ChatHeader({
         setCheckBox={setCheckBox}
         setBackgroundImage={setBackgroundImage}
       />
+      <SendAssetsDrawer isOpen={assetDrawer} onClose={() => setAssetDrawer(false)} />
     </Box>
   );
 }

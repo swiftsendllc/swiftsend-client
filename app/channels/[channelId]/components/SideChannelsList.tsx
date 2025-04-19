@@ -22,7 +22,7 @@ export function SideChannelsList() {
   };
 
   useEffect(() => {
-    if (channels) loadChannels();
+    loadChannels();
   }, []); //eslint-disable-line
 
   return (
