@@ -28,6 +28,16 @@ export default function AssetsPage() {
     loadAssets();
   }, []); // eslint-disable-line
 
+  const handleSelectTenAssets = (hasSelected: boolean) => {
+    const selectedAssets = assets.slice(0, 10);
+    if (hasSelected) {
+      setSelectedAssetIds(selectedAssets.map((asst) => asst.assetId));
+    } else {
+      setSelectedAssetIds([]);
+    }
+    return selectedAssets;
+  };
+
   return (
     <>
       <Container sx={{ p: 0, mt: 2, pl: { xs: 0, md: 24 }, position: 'fixed' }}>
@@ -38,6 +48,7 @@ export default function AssetsPage() {
           selectedAssetIds={selectedAssetIds}
           setSelectedAssetIds={setSelectedAssetIds}
           setWidth={setWidth}
+          onSelectTenAssets={handleSelectTenAssets}
         />
         {!assets.length ? (
           <Typography variant="h5" textAlign={'center'} justifyContent={'center'}>

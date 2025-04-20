@@ -18,7 +18,7 @@ export const InputElement = ({
         onChange={(e) => {
           const input = e.target;
           if (!input.files?.length) return;
-          const multipleFiles = Array.from(input!.files);
+          const multipleFiles = Array.from(input!.files).slice(0, 10);
           setFiles((prev) => [...prev, ...multipleFiles]);
           setObjectUrls((prev) => [...prev, ...multipleFiles.map((file) => URL.createObjectURL(file))]);
         }}
