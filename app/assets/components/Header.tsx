@@ -1,12 +1,12 @@
 import { widths } from '@/components/SearchComponents';
 import useAssetAPI from '@/hooks/api/useAssetAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 import GradingOutlinedIcon from '@mui/icons-material/GradingOutlined';
 import LayersClearIcon from '@mui/icons-material/LayersClear';
-import { Box, IconButton, Paper, Slider, Stack, TextField, Typography } from '@mui/material';
+import { Box, Fab, Paper, Slider, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { UploadModal } from './UploadModal';
@@ -17,8 +17,10 @@ export function Header({
   setCheckBox,
   selectedAssetIds,
   setSelectedAssetIds,
-  setWidth
+  setWidth,
+  onSelectTenAssets
 }: {
+  onSelectTenAssets: (selected: boolean) => unknown;
   checkBox: boolean;
   setAssets: React.Dispatch<React.SetStateAction<CreatorAssetsEntity[]>>;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,83 +30,87 @@ export function Header({
 }) {
   const [uploadModal, setUploadModal] = useState<boolean>(false);
   const { deleteCreatorAssets } = useAssetAPI();
-
   const handleDeleteCreatorAssets = async () => {
     try {
       await deleteCreatorAssets({ assetIds: selectedAssetIds });
       setAssets((prev) => prev.filter((asset) => !selectedAssetIds.includes(asset.assetId)));
       toast.success(`DELETED ${selectedAssetIds.length} ASSETS`);
-      setCheckBox(false)
+      setCheckBox(false);
     } catch (error) {
       console.error(error);
       toast.error('FAILED TO DELETE ASSETS!');
     }
   };
 
+  const handleToggleSelect = () => {
+    setSelectedAssetIds([]);
+    setCheckBox((prev) => !prev);
+  };
+
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Paper elevation={0} sx={{ padding: { xs: '8px 16px', sm: '8px 32px' } }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ flexWrap: 'wrap' }}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="back"
-              sx={{ mx: 1, display: { xs: 'none', sm: 'block' } }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
+          <Stack direction={'row'} justifyContent={'space-between'}>
             <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 }}>
-              Assets
+              🄰🅂🅂🄴🅃🅂
             </Typography>
-
-            <Box sx={{ display: { xs: 'none', sm: 'block' }, maxWidth: 200, pr: 1 }}>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="Search Assets..."
-                sx={{ backgroundColor: 'background.paper', pr: 5 }}
-              />
-            </Box>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Box width={150}>
               <Slider
                 defaultValue={30}
                 min={10}
                 marks={widths}
                 step={10}
-                sx={{ width: 150 }}
                 onChange={(_, value) => {
                   if (typeof value === 'number') {
                     setWidth(value);
                   }
                 }}
               />
+            </Box>
+          </Stack>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ flexWrap: 'wrap' }}>
+            <Stack direction="row" spacing={1} alignItems="center">
               {checkBox && (
-                <IconButton edge="end" color="error" aria-label="filter" onClick={handleDeleteCreatorAssets}>
-                  <LayersClearIcon />
-                </IconButton>
+                <>
+                  <Fab
+                    variant="extended"
+                    color="error"
+                    aria-label="filter"
+                    onClick={handleDeleteCreatorAssets}
+                    disabled={!selectedAssetIds.length}
+                  >
+                    <LayersClearIcon />
+                    Delete
+                  </Fab>
+                  <Fab
+                    variant="extended"
+                    color={!selectedAssetIds.length ? 'default' : 'primary'}
+                    aria-label="filter-select"
+                    onClick={() => onSelectTenAssets(!selectedAssetIds.length)}
+                  >
+                    <DoneAllIcon />
+                    Select 10
+                  </Fab>
+                </>
               )}
-              <IconButton edge="end" color="inherit" aria-label="upload" onClick={() => setUploadModal(true)}>
-                <CloudUploadIcon />
-              </IconButton>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="checkbox"
-                onClick={() => {
-                  setSelectedAssetIds([]);
-                  setCheckBox((prev) => !prev);
-                }}
-              >
+              <Fab variant="extended" aria-label="checkbox" onClick={handleToggleSelect}>
                 {checkBox ? <CancelPresentationOutlinedIcon /> : <GradingOutlinedIcon />}
-              </IconButton>
+                {checkBox ? 'Cancel' : 'Select'}
+              </Fab>
+            </Stack>
+            <Stack direction={'row'}>
+              <Fab variant="extended" aria-label="upload" onClick={() => setUploadModal(true)}>
+                <CloudUploadIcon />
+                Upload
+              </Fab>
             </Stack>
           </Stack>
         </Paper>
         <UploadModal
           isOpen={uploadModal}
           onClose={() => setUploadModal(false)}
-          onUpload={(asset) => setAssets((prev) => [...prev, asset])}
+          onUpload={(asset) => setAssets((prev) => [asset, ...prev])}
         />
       </Box>
     </>

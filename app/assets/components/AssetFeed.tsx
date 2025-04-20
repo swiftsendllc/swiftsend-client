@@ -1,5 +1,6 @@
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import CloseIcon from '@mui/icons-material/Close';
+import MemoryIcon from '@mui/icons-material/Memory';
 import { Box, Checkbox, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -52,7 +53,7 @@ export function AssetFeed({
         justifyContent="center"
         gap={2}
         paddingTop={2}
-        marginBottom={isSmallScreen ? 5 : 15}
+        marginBottom={isSmallScreen ? 45 : 25}
       >
         {assetGroups.map((groups, groupIdx) =>
           groups.map((asset, astIdx) =>
@@ -64,13 +65,15 @@ export function AssetFeed({
                   position: 'relative',
                   width: {
                     xs: `${width}%`,
-                    sm: '48%',
+                    sm: `${width}%`,
                     md: `${width}%`
                   },
                   aspectRatio: '4 / 3',
                   borderRadius: 2,
                   overflow: 'hidden',
                   cursor: 'pointer',
+                  display:"flex",
+                  flexDirection:"column-reverse",
                   boxShadow: 1,
                   transition: 'all 0.3s ease',
                   '&:hover': {
@@ -93,15 +96,25 @@ export function AssetFeed({
                       event.stopPropagation();
                     }}
                     checked={selectedAssetIds.includes(asset.assetId)}
-                    onChange={() => handleToggleCheckBox(asset.assetId)}
+                    onChange={() => {
+                      handleToggleCheckBox(asset.assetId);
+                    }}
                   />
                 )}
+                <IconButton
+                  sx={{ top: 1, right: 1, position: 'absolute', color: 'inherit' }}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                >
+                  <MemoryIcon />
+                </IconButton>
               </Box>
             ))
           )
         )}
       </Stack>
-
+      {/* big screen */}
       <Dialog open={assetDialogOpen} onClose={handleClose} maxWidth="md" fullWidth>
         <Box
           component={motion.div}

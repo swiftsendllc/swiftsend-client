@@ -43,7 +43,6 @@ export function UploadModal({
   const [uploadStatus, setUploadStatus] = useState<boolean[]>([]);
 
   const handleUpload = async (file: File) => {
-    console.log(file);
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -66,17 +65,21 @@ export function UploadModal({
         await handleUpload(file);
         setUploadStatus((prev) => prev.map((status, idx) => (idx === index ? true : status)));
       } catch {
-        toast.error(`Upload failed, try again or close: ${file.name}`);
+        toast.error(`FAILED TO UPLOAD: ${file.name}`);
       }
     });
 
     await Promise.all(uploadPromises);
     setLoading(false);
+    toast.success('ASSETS UPLOADED');
+    handleClose();
   };
 
   const handleClose = () => {
     setOpen(false);
     onClose?.();
+    setFiles([]);
+    setObjectUrls([]);
   };
 
   return (
@@ -94,7 +97,7 @@ export function UploadModal({
         fullWidth
         aria-describedby="asset-upload-modal"
       >
-        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }} id="form-upload">
           <DialogTitle sx={{ pb: 0 }}>Insert asset</DialogTitle>
           <DialogContent>
             <DialogContentText sx={{ mb: 2 }}>
