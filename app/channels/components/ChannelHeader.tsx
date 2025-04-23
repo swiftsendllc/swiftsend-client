@@ -3,7 +3,10 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Avatar, Fab, Stack, TextField } from '@mui/material';
 
-export function ChannelHeader({ user }: { user: UserProfilesEntity }) {
+interface ChannelHeaderProps {
+  user: UserProfilesEntity;
+}
+export function ChannelHeader({ user }: ChannelHeaderProps) {
   return (
     <>
       <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">

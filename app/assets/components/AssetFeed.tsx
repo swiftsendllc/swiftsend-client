@@ -8,19 +8,15 @@ import { cluster } from 'radash';
 import React, { useState } from 'react';
 import { ForwardDrawer } from './ForwardDrawer';
 
-export function AssetFeed({
-  assets,
-  checkbox,
-  selectedAssetIds,
-  setSelectedAssetIds,
-  width
-}: {
+interface AssetFeedProps {
   assets: CreatorAssetsEntity[];
   checkbox: boolean;
   width: number;
   selectedAssetIds: string[];
   setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
-}) {
+}
+
+export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAssetIds, width }: AssetFeedProps) {
   const theme = useTheme();
   const assetGroups = cluster(assets, 3);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -72,8 +68,8 @@ export function AssetFeed({
                   borderRadius: 2,
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  display:"flex",
-                  flexDirection:"column-reverse",
+                  display: 'flex',
+                  flexDirection: 'column-reverse',
                   boxShadow: 1,
                   transition: 'all 0.3s ease',
                   '&:hover': {

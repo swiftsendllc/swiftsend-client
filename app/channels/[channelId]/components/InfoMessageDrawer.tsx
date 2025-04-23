@@ -23,19 +23,15 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export  function InfoMessageDrawer({
-  isOpen,
-  onClose,
-  message,
-  onEdit,
-  onDelete
-}: {
+interface InfoMessageDrawerProps {
   onDelete: () => unknown;
   onEdit: (edited_message: string) => unknown;
   isOpen: boolean;
   onClose?: () => unknown;
   message: MessagesEntity;
-}) {
+}
+
+export function InfoMessageDrawer({ isOpen, onClose, message, onEdit, onDelete }: InfoMessageDrawerProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [didChange, setDidChange] = useState<boolean>(false);
@@ -112,19 +108,10 @@ export  function InfoMessageDrawer({
         <List sx={{ width: '100%', padding: 0 }}>
           {options.map((option, idx) => (
             <Box key={idx}>
-              <Paper elevation={3} >
-                <ListItemButton
-                  key={idx}
-                  sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }}
-                  onClick={option.action}
-                >
+              <Paper elevation={3}>
+                <ListItemButton key={idx} sx={{ p: 0, py: 1, borderRadius: 2, mb: 0.5 }} onClick={option.action}>
                   <ListItemText disableTypography>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignContent="center"
-                      alignItems="center"
-                    >
+                    <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
                       <Typography variant="body1">{option.label}</Typography>
                     </Stack>
                   </ListItemText>
@@ -148,17 +135,10 @@ export  function InfoMessageDrawer({
         }}
         aria-describedby="edit-dialog-open"
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }}>Edit your message</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Don&apos;t worry, edit your message, if anything is wrong
-            </DialogContentText>
+            <DialogContentText>Don&apos;t worry, edit your message, if anything is wrong</DialogContentText>
             <Stack>
               <TextField
                 id="edit-message-field"

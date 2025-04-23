@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function LikePage() {
+export default function LikePage() {
   const [posts, setPosts] = useState<PostsEntity[]>([]);
   const { getLikedPosts } = usePostAPI();
   const router = useRouter();

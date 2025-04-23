@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Transition from "@/components/Transition";
-import useAPI from "@/hooks/api/useAPI";
-import { FollowersEntity } from "@/hooks/entities/users.entities";
-import { LoadingButton } from "@mui/lab";
+import Transition from '@/components/Transition';
+import useAPI from '@/hooks/api/useAPI';
+import { FollowersEntity } from '@/hooks/entities/users.entities';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Button,
@@ -13,22 +13,19 @@ import {
   DialogActions,
   DialogTitle,
   FormControl,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-export default function ConnectedModal({
-  isOpen,
-  onClose,
-  user,
-  onUnFollow
-}: {
+interface ConnectionProps {
   isOpen: boolean;
   onClose?: () => unknown;
   user: FollowersEntity;
-  onUnFollow: (useFollowedUserId: string) =>void
-}) {
+  onUnFollow: (useFollowedUserId: string) => void;
+}
+
+export default function ConnectedModal({ isOpen, onClose, user, onUnFollow }: ConnectionProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { unFollowProfile } = useAPI();
@@ -44,7 +41,7 @@ export default function ConnectedModal({
     try {
       await unFollowProfile(user.followedUserId);
       handleClose();
-      onUnFollow(user.user.userId)
+      onUnFollow(user.user.userId);
       toast.success(`Disconnected`);
     } catch (error) {
       console.log(error);
@@ -65,48 +62,28 @@ export default function ConnectedModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         onClose={handleClose}
       >
-        <FormControl
-          fullWidth
-          component="form"
-          variant="standard"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl fullWidth component="form" variant="standard" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }} variant="subtitle1" fontWeight={200}>
             We are sad to see you go!
           </DialogTitle>
-          <Card sx={{ my: 1, width: "100%", p: 0 }}>
+          <Card sx={{ my: 1, width: '100%', p: 0 }}>
             <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={user.user.avatarURL}
-                  alt={user.user.fullName}
-                />
-              }
+              avatar={<Avatar aria-label="recipe" src={user.user.avatarURL} alt={user.user.fullName} />}
               title={user.user.fullName}
               subheader={
-                <Typography
-                  fontWeight={200}
-                  fontSize=".75rem"
-                  variant="subtitle2"
-                >
+                <Typography fontWeight={200} fontSize=".75rem" variant="subtitle2">
                   {user.user.username}
                 </Typography>
               }
             />
           </Card>
-          <DialogActions sx={{ justifyContent: "space-between" }}>
-            <Button
-              onClick={handleClose}
-              color="primary"
-              variant="contained"
-              sx={{ width: "100%" }}
-            >
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button onClick={handleClose} color="primary" variant="contained" sx={{ width: '100%' }}>
               No
             </Button>
             <LoadingButton
@@ -114,7 +91,7 @@ export default function ConnectedModal({
               onClick={handleUnFollow}
               variant="contained"
               color="error"
-              sx={{ width: "100%" }}
+              sx={{ width: '100%' }}
             >
               Yes
             </LoadingButton>

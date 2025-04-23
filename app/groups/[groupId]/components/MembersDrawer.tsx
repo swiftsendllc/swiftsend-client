@@ -5,15 +5,13 @@ import Groups3Icon from '@mui/icons-material/Groups3';
 import { Avatar, Box, Button, Card, CardHeader, Container, Drawer, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-export default function MembersDrawerPage({
-  isOpen,
-  onClose,
-  group
-}: {
+interface MembersDrawerProps {
   isOpen: boolean;
   onClose?: () => unknown;
   group: GroupsEntity;
-}) {
+}
+
+export default function MembersDrawerPage({ isOpen, onClose, group }: MembersDrawerProps) {
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
@@ -51,7 +49,7 @@ export default function MembersDrawerPage({
             }}
           >
             <Typography variant="h6" fontWeight="bold">
-            🆂🆆🅸🅵🆃🅴🆁🆂
+              🆂🆆🅸🅵🆃🅴🆁🆂
             </Typography>
             <Stack direction="column-reverse">
               <Typography variant="body2" fontWeight="bold" display="flex">

@@ -4,7 +4,12 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Box, Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 
-export function InfoFooter({ group, onDelete }: { group: GroupsEntity; onDelete?: () => unknown }) {
+interface InfoFooterProps {
+  group: GroupsEntity;
+  onDelete?: () => unknown;
+}
+
+export function InfoFooter({ group, onDelete }: InfoFooterProps) {
   return (
     <>
       <Box display="flex" justifyContent="space-between" padding={1}>

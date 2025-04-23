@@ -2,7 +2,12 @@ import { GroupsEntity } from '@/hooks/entities/messages.entities';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
 import { Chip } from '@mui/material';
 
-export const CustomChip = ({ group, member }: { group: GroupsEntity; member: UserProfilesEntity }) => {
+interface CustomChipProps {
+  group: GroupsEntity;
+  member: UserProfilesEntity;
+}
+
+export const CustomChip = ({ group, member }: CustomChipProps) => {
   return (
     <>
       {group.adminId === member.userId ? (

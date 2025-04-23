@@ -4,11 +4,10 @@ import { CommentPostInput } from '../entities/posts.entities';
 
 const usePostAPI = () => {
   const createPost = async (input: {
-    imageUrls: string[] | null;
-    blurredImageUrls: string[] | null;
     caption: string;
     isExclusive: boolean;
     price: number | null;
+    assetIds: string[];
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/posts/create`, {

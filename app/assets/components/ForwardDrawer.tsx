@@ -3,7 +3,12 @@ import Groups3Icon from '@mui/icons-material/Groups3';
 import { Box, Button, Card, Container, Drawer, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-export function ForwardDrawer({ isOpen, onClose }: { isOpen: boolean; onClose?: () => unknown }) {
+interface ForwardDrawerProps {
+  isOpen: boolean;
+  onClose?: () => unknown;
+}
+
+export function ForwardDrawer({ isOpen, onClose }: ForwardDrawerProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
@@ -59,8 +64,7 @@ export function ForwardDrawer({ isOpen, onClose }: { isOpen: boolean; onClose?: 
                 display: 'flex',
                 alignItems: 'center'
               }}
-            >
-            </Card>
+            ></Card>
           </Box>
         </Drawer>
       </Container>

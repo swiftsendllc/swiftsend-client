@@ -10,7 +10,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import MembersDrawerPage from './MembersDrawer';
 
-export default function Header({ group }: { group: GroupsEntity }) {
+interface HeaderProps {
+  group: GroupsEntity;
+}
+
+export default function Header({ group }: HeaderProps) {
   const router = useRouter();
   const [memberDrawer, setMemberDrawer] = useState<boolean>(false);
   return (

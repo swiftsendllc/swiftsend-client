@@ -8,13 +8,12 @@ import { Avatar, Fab, Stack, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import GroupCreateModal from './GroupCreateModal';
 
-export default function GroupHeader({
-  user,
-  setGroups
-}: {
+interface GroupHeaderProps {
   user: UserProfilesEntity;
   setGroups: React.Dispatch<React.SetStateAction<GroupsEntity[]>>;
-}) {
+}
+
+export default function GroupHeader({ user, setGroups }: GroupHeaderProps) {
   const [groupCreateModal, setGroupCreateModal] = useState<boolean>(false);
 
   return (

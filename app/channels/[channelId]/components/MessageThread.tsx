@@ -5,6 +5,18 @@ import React, { SetStateAction } from 'react';
 import { MessageThreadImage } from './MessageThreadImage';
 import { MessageThreadList } from './MessageThreadList';
 
+interface MessageThreadProps {
+  checkBox: boolean;
+  channel: ChannelsEntity;
+  user: UserProfilesEntity;
+  messages: MessagesEntity[];
+  selectedMessageIds: string[];
+  setMessages: React.Dispatch<SetStateAction<MessagesEntity[]>>;
+  setSelectedMessageIds: React.Dispatch<SetStateAction<string[]>>;
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
+  setRepliedToMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+}
+
 export function MessageThread({
   user,
   messages,
@@ -15,17 +27,7 @@ export function MessageThread({
   setSelectedMessageIds,
   setIsReplying,
   setRepliedToMessage
-}: {
-  setRepliedToMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
-  checkBox: boolean;
-  channel: ChannelsEntity;
-  user: UserProfilesEntity;
-  messages: MessagesEntity[];
-  selectedMessageIds: string[];
-  setMessages: React.Dispatch<SetStateAction<MessagesEntity[]>>;
-  setSelectedMessageIds: React.Dispatch<SetStateAction<string[]>>;
-  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}: MessageThreadProps) {
   const handleToggleCheckBox = (messageId: string) => {
     setSelectedMessageIds((prev) => {
       const newSelectedMessageIds = prev.includes(messageId)
@@ -59,16 +61,16 @@ export function MessageThread({
             {message.isExclusive ? (
               <MessageThreadImage message={message} setMessages={setMessages} />
             ) : (
-                <MessageThreadList
-                  setSelectedMessageIds={setSelectedMessageIds}
-                  message={message}
-                  setMessages={setMessages}
-                  checkBox={checkBox}
-                  selectedMessageIds={selectedMessageIds}
-                  onToggleCheckBox={() => handleToggleCheckBox(message._id)}
-                  setIsReplying={setIsReplying}
-                  setRepliedToMessage={setRepliedToMessage}
-                />
+              <MessageThreadList
+                setSelectedMessageIds={setSelectedMessageIds}
+                message={message}
+                setMessages={setMessages}
+                checkBox={checkBox}
+                selectedMessageIds={selectedMessageIds}
+                onToggleCheckBox={() => handleToggleCheckBox(message._id)}
+                setIsReplying={setIsReplying}
+                setRepliedToMessage={setRepliedToMessage}
+              />
             )}
             {isUser && (
               <ListItemAvatar>

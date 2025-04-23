@@ -5,17 +5,14 @@ import { Dialog, DialogContent, List, ListItemButton, ListItemText, Paper } from
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function MessageReaction({
-  isOpen,
-  onClose,
-  message,
-  onReaction
-}: {
+interface MessageReactionProps {
   onReaction: (reaction: MessageReactionsEntity) => unknown;
   isOpen: boolean;
   onClose?: () => unknown;
   message: MessagesEntity;
-}) {
+}
+
+export function MessageReaction({ isOpen, onClose, message, onReaction }: MessageReactionProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { sendMessageReactions } = useMessageAPI();

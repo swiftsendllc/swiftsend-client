@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import useMessageAPI from "@/hooks/api/useMessageAPI";
-import { GroupsEntity } from "@/hooks/entities/messages.entities";
-import { LoadingButton } from "@mui/lab";
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { GroupsEntity } from '@/hooks/entities/messages.entities';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Button,
@@ -16,20 +16,18 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+  Typography
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-export function GroupDeleteModal({
-  group,
-  isOpen,
-  onClose,
-}: {
+interface DeleteGroupModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   group: GroupsEntity;
-}) {
+}
+
+export function GroupDeleteModal({ group, isOpen, onClose }: DeleteGroupModalProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,10 +43,10 @@ export function GroupDeleteModal({
     try {
       await deleteGroup(group._id);
       handleClose();
-      window.location.href = "/groups";
+      window.location.href = '/groups';
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO DELETE GROUP!");
+      toast.error('FAILED TO DELETE GROUP!');
     } finally {
       setLoading(false);
     }
@@ -64,17 +62,12 @@ export function GroupDeleteModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         aria-describedby="dialog-open-modal"
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }}>DELETE GROUP</DialogTitle>
           <DialogContent sx={{ padding: 0 }} color="error">
             Delete your group permanently

@@ -18,15 +18,12 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function EditProfileModal({
-  isOpen,
-  onClose,
-  currentField
-}: {
+interface ModalOptionProps {
   isOpen: boolean;
   onClose?: () => unknown;
   currentField: string;
-}) {
+}
+export default function EditProfileModal({ isOpen, onClose, currentField }: ModalOptionProps) {
   const [user, setUserInfo] = useContext(UserContext);
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -95,15 +92,13 @@ export default function EditProfileModal({
       toast.success('UPDATED');
     } catch (error) {
       console.log(error);
-      toast.error("FAILED TO UPDATE!");
+      toast.error('FAILED TO UPDATE!');
     } finally {
       setLoading(false);
     }
   };
 
-  const currentProfile = profiles.find(
-    (profile) => profile.label === currentField
-  );
+  const currentProfile = profiles.find((profile) => profile.label === currentField);
 
   return (
     <>
@@ -121,26 +116,17 @@ export default function EditProfileModal({
         }}
         onClose={handleClose}
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }}>Edit {currentField}</DialogTitle>
           <DialogContent>
-            <DialogContentText sx={{ pb: 0 }}>
-              Update your {currentField.toLowerCase()}
-            </DialogContentText>
+            <DialogContentText sx={{ pb: 0 }}>Update your {currentField.toLowerCase()}</DialogContentText>
             {currentProfile && (
               <TextField
                 key={currentProfile.key}
                 label={currentProfile.label}
                 value={currentProfile.value || ''}
                 fullWidth
-                onChange={(event) =>
-                  handleInputChange(currentProfile.key, event.target.value)
-                }
+                onChange={(event) => handleInputChange(currentProfile.key, event.target.value)}
                 focused
                 autoFocus
                 variant="standard"
@@ -151,11 +137,7 @@ export default function EditProfileModal({
               <Button onClick={handleClose} color="error">
                 Discard
               </Button>
-              <LoadingButton
-                loading={loading}
-                onClick={handleOnChange}
-                disabled={!didChange}
-              >
+              <LoadingButton loading={loading} onClick={handleOnChange} disabled={!didChange}>
                 Confirm
               </LoadingButton>
             </DialogActions>

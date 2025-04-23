@@ -6,6 +6,15 @@ import { Box, Button, Container, Modal, Stack } from '@mui/material';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
+interface ImagePreviewModalProps {
+  isOpen: boolean;
+  onClose?: () => unknown;
+  onUpload: () => unknown;
+  imageURL: string;
+  setFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  setImageURLInput: React.Dispatch<React.SetStateAction<string>>;
+}
+
 export function ImagePreviewModal({
   isOpen,
   onClose,
@@ -13,14 +22,7 @@ export function ImagePreviewModal({
   imageURL,
   setImageURLInput,
   setFile
-}: {
-  isOpen: boolean;
-  onClose?: () => unknown;
-  onUpload: () => unknown;
-  imageURL: string;
-  setFile: React.Dispatch<React.SetStateAction<File | undefined>>;
-  setImageURLInput: React.Dispatch<React.SetStateAction<string>>;
-}) {
+}: ImagePreviewModalProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const inputRef = useRef<HTMLInputElement | null>(null);

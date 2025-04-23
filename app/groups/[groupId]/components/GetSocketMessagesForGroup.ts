@@ -2,11 +2,11 @@ import { useSocket } from '@/hooks/context/socket-context';
 import { GroupMessagesEntity, GroupReactionsEntity } from '@/hooks/entities/messages.entities';
 import React, { useEffect } from 'react';
 
-export const GetSocketMessagesForGroup = ({
-  setMessages
-}: {
+interface SocketMessagesProps {
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-}) => {
+}
+
+export const GetSocketMessagesForGroup = ({ setMessages }: SocketMessagesProps) => {
   const { socket } = useSocket();
   useEffect(() => {
     socket.on('groupMessage', (groupMessage: GroupMessagesEntity) => {

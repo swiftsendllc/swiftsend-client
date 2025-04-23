@@ -5,7 +5,10 @@ import { InfoOutlined } from '@mui/icons-material';
 import { Avatar, Button, Card, CardHeader, useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
-export default function GroupsList({ groups }: { groups: GroupsEntity[] }) {
+interface GroupListProps {
+  groups: GroupsEntity[];
+}
+export default function GroupsList({ groups }: GroupListProps) {
   const router = useRouter();
   const theme = useTheme();
 

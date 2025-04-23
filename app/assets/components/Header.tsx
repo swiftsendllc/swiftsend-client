@@ -11,6 +11,16 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { UploadModal } from './UploadModal';
 
+interface HeaderProps {
+  onSelectTenAssets: (selected: boolean) => unknown;
+  checkBox: boolean;
+  setAssets: React.Dispatch<React.SetStateAction<CreatorAssetsEntity[]>>;
+  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedAssetIds: string[];
+  setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
+  setWidth: React.Dispatch<React.SetStateAction<number>>;
+}
+
 export function Header({
   checkBox,
   setAssets,
@@ -19,15 +29,7 @@ export function Header({
   setSelectedAssetIds,
   setWidth,
   onSelectTenAssets
-}: {
-  onSelectTenAssets: (selected: boolean) => unknown;
-  checkBox: boolean;
-  setAssets: React.Dispatch<React.SetStateAction<CreatorAssetsEntity[]>>;
-  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedAssetIds: string[];
-  setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
-  setWidth: React.Dispatch<React.SetStateAction<number>>;
-}) {
+}: HeaderProps) {
   const [uploadModal, setUploadModal] = useState<boolean>(false);
   const { deleteCreatorAssets } = useAssetAPI();
   const handleDeleteCreatorAssets = async () => {

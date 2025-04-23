@@ -41,6 +41,7 @@ export function AccountPostPage() {
   const handleClose = () => {
     setImageDialogOpen(false);
     setSelectedImage(null);
+    setSelectedPost(null);
   };
 
   useEffect(() => {

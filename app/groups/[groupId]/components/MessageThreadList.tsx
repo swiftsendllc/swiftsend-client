@@ -14,17 +14,19 @@ import toast from 'react-hot-toast';
 import EmojiModal from './EmojiModal';
 import MessageInfoModal from './MessageInfoModal';
 
+interface MessageThreadProps {
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
+  message: GroupMessagesEntity;
+  setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
+  setReplyMessage: React.Dispatch<React.SetStateAction<GroupMessagesEntity | null>>;
+}
+
 export default function MessageThreadList({
   message,
   setMessages,
   setIsReplying,
   setReplyMessage
-}: {
-  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
-  message: GroupMessagesEntity;
-  setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
-  setReplyMessage: React.Dispatch<React.SetStateAction<GroupMessagesEntity | null>>;
-}) {
+}: MessageThreadProps) {
   const [user] = useContext(UserContext);
   const isUser = message.senderId === user.userId;
   const [messageInfoModal, setMessageInfoModal] = useState<boolean>(false);

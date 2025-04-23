@@ -2,11 +2,11 @@ import { useSocket } from '@/hooks/context/socket-context';
 import { ChannelsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import React, { useEffect } from 'react';
 
-export const GetSocketChannels = ({
-  setChannels
-}: {
+interface ChannelProps {
   setChannels: React.Dispatch<React.SetStateAction<ChannelsEntity[]>>;
-}) => {
+}
+
+export const GetSocketChannels = ({ setChannels }: ChannelProps) => {
   const { socket } = useSocket();
   useEffect(() => {
     socket.on('newMessage', (message: MessagesEntity) => {
