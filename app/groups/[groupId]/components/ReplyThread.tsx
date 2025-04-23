@@ -1,26 +1,17 @@
 'use client';
 
-import { GroupMessagesEntity, } from '@/hooks/entities/messages.entities';
+import { GroupMessagesEntity } from '@/hooks/entities/messages.entities';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardHeader,
-  Container,
-  IconButton
-} from '@mui/material';
+import { Avatar, Box, Card, CardHeader, Container, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-export default function ReplyThread({
-  isReplying,
-  onClose,
-  replyMessage
-}: {
+interface ReplyThreadProps {
   replyMessage: GroupMessagesEntity | null;
   isReplying: boolean;
   onClose?: () => unknown;
-}) {
+}
+
+export default function ReplyThread({ isReplying, onClose, replyMessage }: ReplyThreadProps) {
   const [open, setOpen] = useState<boolean>(isReplying);
   useEffect(() => setOpen(isReplying), [isReplying]);
 
@@ -46,19 +37,12 @@ export default function ReplyThread({
             <Card>
               <CardHeader
                 avatar={
-                  <Avatar
-                    aria-label="recipe"
-                    src={replyMessage.sender.avatarURL}
-                    alt={replyMessage.sender.fullName}
-                  />
+                  <Avatar aria-label="recipe" src={replyMessage.sender.avatarURL} alt={replyMessage.sender.fullName} />
                 }
                 title={replyMessage.sender.fullName}
                 subheader={replyMessage.message}
                 action={
-                  <IconButton
-                    aria-labelledby="cancel-replying"
-                    onClick={handleClose}
-                  >
+                  <IconButton aria-labelledby="cancel-replying" onClick={handleClose}>
                     <CloseIcon />
                   </IconButton>
                 }

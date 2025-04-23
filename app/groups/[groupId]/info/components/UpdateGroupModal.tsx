@@ -22,15 +22,13 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export  function UpdateGroupModal({
-  isOpen,
-  onClose,
-  onUpdate
-}: {
+interface UpdateGroupModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   onUpdate: (grp: GroupsEntity) => unknown;
-}) {
+}
+
+export function UpdateGroupModal({ isOpen, onClose, onUpdate }: UpdateGroupModalProps) {
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,7 +56,7 @@ export  function UpdateGroupModal({
         description,
         groupAvatar
       });
-      console.log(updateGroup)
+      console.log(updateGroup);
       onUpdate(updatedGroup);
       handleClose();
     } catch (error) {

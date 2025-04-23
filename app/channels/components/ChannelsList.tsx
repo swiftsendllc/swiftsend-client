@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AddToGroupModal } from './AddToGroupModal';
 
-export function ChannelsList({ channels }: { channels: ChannelsEntity[] }) {
+interface ChannelListProps {
+  channels: ChannelsEntity[];
+}
+
+export function ChannelsList({ channels }: ChannelListProps) {
   const router = useRouter();
   const [addToGroupModal, setAddToGroupModal] = useState<boolean>(false);
   const [memberId, setMemberId] = useState<string>('');

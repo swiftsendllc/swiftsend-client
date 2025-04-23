@@ -23,15 +23,13 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function GroupCreateModal({
-  isOpen,
-  onClose,
-  onCreate
-}: {
+interface GroupCreateModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   onCreate: (grp: GroupsEntity) => unknown;
-}) {
+}
+
+export default function GroupCreateModal({ isOpen, onClose, onCreate }: GroupCreateModalProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -103,17 +101,10 @@ export default function GroupCreateModal({
         }}
         aria-describedby="dialog-open-modal"
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }}>
           <DialogTitle sx={{ pb: 0 }}>Create new group</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Add friends 👬 and start connecting with them
-            </DialogContentText>
+            <DialogContentText>Add friends 👬 and start connecting with them</DialogContentText>
             <Stack direction="row">
               <TextField
                 id="channel-name"
@@ -127,19 +118,12 @@ export default function GroupCreateModal({
                 }}
                 slotProps={{
                   input: {
-                    startAdornment: (
-                      <DriveFileRenameOutlineIcon sx={{ padding: 1 }} />
-                    )
+                    startAdornment: <DriveFileRenameOutlineIcon sx={{ padding: 1 }} />
                   }
                 }}
                 sx={{ mb: 1.5 }}
               />
-              <Divider
-                orientation="vertical"
-                variant="middle"
-                flexItem
-                sx={{ margin: 2 }}
-              />
+              <Divider orientation="vertical" variant="middle" flexItem sx={{ margin: 2 }} />
               <Button onClick={() => inputRef.current?.click()}>
                 <Avatar src={groupAvatar} alt="C">
                   <CameraAltIcon />
@@ -181,11 +165,7 @@ export default function GroupCreateModal({
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <LoadingButton
-              loading={loading}
-              onClick={handleCreateGroup}
-              disabled={!(groupName && description)}
-            >
+            <LoadingButton loading={loading} onClick={handleCreateGroup} disabled={!(groupName && description)}>
               CONFIRM
             </LoadingButton>
           </DialogActions>

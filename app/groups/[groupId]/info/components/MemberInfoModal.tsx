@@ -8,15 +8,7 @@ import toast from 'react-hot-toast';
 import { DemoteMemberModal } from './DemoteMemberModal';
 import { PromoteMemberModal } from './PromoteMemberModal';
 
-export  function MemberInfoModal({
-  group,
-  isOpen,
-  onClose,
-  selectedMember,
-  onKick,
-  onDemote,
-  onPromote
-}: {
+interface MemberModalInfoProps {
   group: GroupsEntity;
   isOpen: boolean;
   onClose?: () => unknown;
@@ -24,7 +16,17 @@ export  function MemberInfoModal({
   onKick: () => unknown;
   onDemote: () => unknown;
   onPromote: () => unknown;
-}) {
+}
+
+export function MemberInfoModal({
+  group,
+  isOpen,
+  onClose,
+  selectedMember,
+  onKick,
+  onDemote,
+  onPromote
+}: MemberModalInfoProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);

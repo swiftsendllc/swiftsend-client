@@ -1,30 +1,19 @@
-"use client";
+'use client';
 
-import usePostAPI from "@/hooks/api/usePostAPI";
-import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
-import {
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import usePostAPI from '@/hooks/api/usePostAPI';
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Fragment, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-export default function CommentInfoDrawer({
-  isOpen,
-  onClose,
-  postId,
-  commentId,
-}: {
+interface CommentInfoDrawerProps {
   isOpen: boolean;
   onClose: () => unknown;
   postId: string;
   commentId: string;
-}) {
+}
+
+export default function CommentInfoDrawer({ isOpen, onClose, postId, commentId }: CommentInfoDrawerProps) {
   const { deleteComment } = usePostAPI();
   const [, setOpen] = useState(isOpen);
   useEffect(() => setDrawerOpen(isOpen), [isOpen]);
@@ -33,10 +22,10 @@ export default function CommentInfoDrawer({
   const handleDelete = async (postId: string, commentId: string) => {
     try {
       await deleteComment(postId, commentId);
-      toast.success("Deleted");
+      toast.success('Deleted');
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete comment!");
+      toast.error('Failed to delete comment!');
     } finally {
       onClose();
       setOpen(false);
@@ -50,21 +39,21 @@ export default function CommentInfoDrawer({
 
   const commentInfo = [
     {
-      label: "Delete",
-      icon: <DeleteSweepOutlinedIcon sx={{ color: "var(--error)" }} />,
-      action: () => handleDelete(postId, commentId),
-    },
+      label: 'Delete',
+      icon: <DeleteSweepOutlinedIcon sx={{ color: 'var(--error)' }} />,
+      action: () => handleDelete(postId, commentId)
+    }
   ];
 
   return (
     <>
-      <Box role="presentation" sx={{ width: "auto" }}>
+      <Box role="presentation" sx={{ width: 'auto' }}>
         <Drawer
           open={drawerOpen}
           keepMounted
           anchor="bottom"
           sx={{
-            maxWidth: "xs",
+            maxWidth: 'xs'
           }}
           onClose={handleClose}
         >

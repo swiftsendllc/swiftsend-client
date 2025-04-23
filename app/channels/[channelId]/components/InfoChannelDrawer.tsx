@@ -8,17 +8,14 @@ import { setCookie } from 'cookies-next';
 import { useParams, useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 
-export function InfoChannelDrawer({
-  isOpen,
-  onClose,
-  setCheckBox,
-  setBackgroundImage
-}: {
+interface InfoChannelDrawerProps {
   isOpen: boolean;
   onClose?: () => unknown;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
-}) {
+}
+
+export function InfoChannelDrawer({ isOpen, onClose, setCheckBox, setBackgroundImage }: InfoChannelDrawerProps) {
   const { channelId } = useParams();
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);

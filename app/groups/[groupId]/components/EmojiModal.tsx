@@ -2,32 +2,19 @@
 
 import { reactions } from '@/components/SearchComponents';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
-import {
-  GroupMessagesEntity,
-  GroupReactionsEntity
-} from '@/hooks/entities/messages.entities';
-import {
-  Dialog,
-  DialogContent,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  Paper
-} from '@mui/material';
+import { GroupMessagesEntity, GroupReactionsEntity } from '@/hooks/entities/messages.entities';
+import { Dialog, DialogContent, List, ListItemButton, ListItemIcon, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function EmojiModal({
-  isOpen,
-  onClose,
-  message,
-  onReaction
-}: {
+interface EmojiModalProps {
   onReaction: (newReaction: GroupReactionsEntity) => unknown;
   isOpen: boolean;
   onClose?: () => unknown;
   message: GroupMessagesEntity;
-}) {
+}
+
+export default function EmojiModal({ isOpen, onClose, message, onReaction }: EmojiModalProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { sendGroupReaction } = useMessageAPI();
@@ -71,10 +58,7 @@ export default function EmojiModal({
           <DialogContent sx={{ padding: 0 }}>
             <List sx={{ display: 'flex', padding: 0, margin: 0 }}>
               {reactions.map((emoji, idx) => (
-                <ListItemButton
-                  key={idx}
-                  onClick={() => handleEmojiReaction(emoji.icon)}
-                >
+                <ListItemButton key={idx} onClick={() => handleEmojiReaction(emoji.icon)}>
                   <ListItemIcon>{emoji.icon}</ListItemIcon>
                 </ListItemButton>
               ))}

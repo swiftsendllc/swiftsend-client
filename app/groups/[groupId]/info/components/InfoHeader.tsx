@@ -5,15 +5,13 @@ import { Avatar, Badge, Box, Divider, IconButton, Stack, Typography } from '@mui
 import { useRouter } from 'next/navigation';
 import { RefObject } from 'react';
 
-export function InfoHeader({
-  group,
-  inputRef,
-  onUpload
-}: {
+interface InfoHeaderProps {
   group: GroupsEntity;
   inputRef: RefObject<HTMLInputElement>;
   onUpload: (file: File) => unknown;
-}) {
+}
+
+export function InfoHeader({ group, inputRef, onUpload }: InfoHeaderProps) {
   const router = useRouter();
   return (
     <>

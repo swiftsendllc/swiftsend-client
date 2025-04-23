@@ -7,13 +7,12 @@ import { useContext, useState } from 'react';
 import { ImageThumbnail } from './ImageThumbnail';
 import { InfoMessageDrawer } from './InfoMessageDrawer';
 
-export function MessageThreadImage({
-  message,
-  setMessages
-}: {
+interface MessageThreadImageProps {
   message: MessagesEntity;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
-}) {
+}
+
+export function MessageThreadImage({ message, setMessages }: MessageThreadImageProps) {
   const [user] = useContext(UserContext);
   const isUser = user.userId === message.senderId;
   const [infoMessageDrawer, setInfoMessageDrawer] = useState<boolean>(false);

@@ -1,13 +1,10 @@
 'use client';
 
-import { InputElement } from '@/components/InputElement';
 import { previewGrid } from '@/components/SearchComponents';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { UserContext } from '@/hooks/context/user-context';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
-
 import {
   Box,
   Button,
@@ -26,45 +23,34 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function PostPreview() {
   const [loading, setLoading] = useState(false);
   const [caption, setCaption] = useState<string>('');
-  const [objectUrls, setObjectUrls] = useState<string[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
   const { createPost } = usePostAPI();
   const [, setUser] = useContext(UserContext);
   const [isExclusive, setIsExclusive] = useState<boolean>(true);
-  const [priceError, setPriceError] = useState<string>('');
   const [price, setPrice] = useState<number>(200);
   const router = useRouter();
 
   const handleSubmit = async () => {
-    if (!files) return;
     setLoading(true);
     try {
-      const formData = new FormData();
-      files.map((file) => {
-        formData.append('files', file);
-      });
       await createPost({
-        caption,
-        imageUrls: originalUrl,
-        blurredImageUrls: blurredUrl,
-        isExclusive,
-        price
+        caption: caption,
+        isExclusive: isExclusive,
+        price: price,
+        assetIds: []
       });
-      setObjectUrls(originalUrl);
       setUser((prev) => ({ ...prev, postCount: prev.postCount + 1 }));
       router.back();
     } catch (error) {
       console.error(error);
-      setPriceError('Minimum price is 200 INR');
+      toast.error('FAILED TO CREATE POST!');
     } finally {
       setLoading(false);
     }
@@ -103,22 +89,7 @@ export default function PostPreview() {
               overflowY: 'hidden',
               whiteSpace: 'nowrap'
             }}
-          >
-            {objectUrls.map((url, idx) => (
-              <Box key={idx} position={'relative'}>
-                <Image
-                  src={url}
-                  width={100}
-                  height={100}
-                  alt={'original'}
-                />
-              </Box>
-            ))}
-          </Stack>
-          <Button startIcon={<CloudUploadIcon />} onClick={() => inputRef.current?.click()}>
-            Upload
-          </Button>
-          <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={setObjectUrls} />
+          ></Stack>
           <CardContent>
             <TextField
               fullWidth
@@ -160,8 +131,6 @@ export default function PostPreview() {
                 type="text"
                 placeholder="Enter your price"
                 sx={{ mt: 1.5 }}
-                helperText={priceError}
-                error={!!priceError}
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
@@ -215,7 +184,7 @@ export default function PostPreview() {
             loading={loading}
             variant="contained"
             type="submit"
-            disabled={!(caption && objectUrls)}
+            disabled={!caption}
             onClick={handleSubmit}
           >
             Share

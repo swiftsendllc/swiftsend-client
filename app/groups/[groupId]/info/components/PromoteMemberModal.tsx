@@ -20,6 +20,15 @@ import {
   Typography
 } from '@mui/material';
 
+interface PromoteMemberModalProps {
+  open: boolean;
+  loading: boolean;
+  onClose?: () => unknown;
+  onKickMember: (memberId: string) => unknown;
+  onUpdateToModerator: (memberId: string) => unknown;
+  selectedMember: UserProfilesEntity;
+}
+
 export function PromoteMemberModal({
   open,
   onClose,
@@ -27,14 +36,7 @@ export function PromoteMemberModal({
   loading,
   onUpdateToModerator,
   selectedMember
-}: {
-  open: boolean;
-  loading: boolean;
-  onClose?: () => unknown;
-  onKickMember: (memberId: string) => unknown;
-  onUpdateToModerator: (memberId: string) => unknown;
-  selectedMember: UserProfilesEntity;
-}) {
+}: PromoteMemberModalProps) {
   return (
     <>
       <Dialog

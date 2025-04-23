@@ -5,15 +5,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Avatar, Box, Card, CardHeader, Container, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-export function ReplyThread({
-  isReplying,
-  onClose,
-  repliedToMessage
-}: {
+interface ReplyThreadProps {
   repliedToMessage: MessagesEntity | null;
   isReplying: boolean;
   onClose?: () => unknown;
-}) {
+}
+
+export function ReplyThread({ isReplying, onClose, repliedToMessage }: ReplyThreadProps) {
   const [open, setOpen] = useState<boolean>(isReplying);
   useEffect(() => setOpen(isReplying), [isReplying]);
 

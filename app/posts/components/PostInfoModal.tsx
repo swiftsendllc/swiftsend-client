@@ -27,15 +27,13 @@ import { useRouter } from 'next/navigation';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function PostInfoModal({
-  isOpen,
-  onClose,
-  post
-}: {
+interface PostInfoModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   post: PostsEntity;
-}) {
+}
+
+export default function PostInfoModal({ isOpen, onClose, post }: PostInfoModalProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);

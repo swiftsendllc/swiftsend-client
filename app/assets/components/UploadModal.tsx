@@ -21,15 +21,13 @@ import { cluster } from 'radash';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function UploadModal({
-  isOpen,
-  onClose,
-  onUpload
-}: {
+interface UploadModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   onUpload: (assets: CreatorAssetsEntity) => unknown;
-}) {
+}
+
+export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const theme = useTheme();

@@ -18,7 +18,12 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function UnFollowModal({ isOpen, onClose }: { isOpen: boolean; onClose?: () => unknown }) {
+interface ModalOptionProps {
+  isOpen: boolean;
+  onClose?: () => unknown;
+}
+
+export default function UnFollowModal({ isOpen, onClose }: ModalOptionProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 

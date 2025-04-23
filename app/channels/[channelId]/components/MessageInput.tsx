@@ -45,8 +45,6 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
       const msg = await sendMessage({
         message: messageInput,
         receiverId: channel.receiver.userId,
-        imageUrls: urls?.imgUrls ?? null,
-        blurredImageUrls: urls?.blurImageUrls ?? null,
         isExclusive: isExclusive,
         price: price
       });
@@ -66,8 +64,6 @@ export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsRep
           message: messageInput,
           messageId: repliedToMessage._id,
           receiverId: channel.receiver.userId,
-          imageUrls: urls?.imgUrls ?? null,
-          blurredImageUrls: urls?.blurImageUrls ?? null,
           isExclusive: repliedToMessage.isExclusive,
           price: repliedToMessage.price ?? null
         });

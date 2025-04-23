@@ -15,6 +15,18 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { InfoChannelDrawer } from './InfoChannelDrawer';
 import { SendAssetsDrawer } from './SendAssetsDrawer';
+
+interface ChatHeaderProps {
+  onDelete: () => unknown;
+  loading: boolean;
+  checkBox: boolean;
+  channel: ChannelsEntity;
+  messages: MessagesEntity[];
+  selectedMessageIds: string[];
+  setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
+  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
+}
 export function ChatHeader({
   channel,
   loading,
@@ -25,17 +37,7 @@ export function ChatHeader({
   selectedMessageIds,
   setSelectedMessageIds,
   onDelete
-}: {
-  onDelete: () => unknown;
-  loading: boolean;
-  checkBox: boolean;
-  channel: ChannelsEntity;
-  messages: MessagesEntity[];
-  selectedMessageIds: string[];
-  setBackgroundImage: React.Dispatch<React.SetStateAction<string | null>>;
-  setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
-}) {
+}: ChatHeaderProps) {
   const [infoChannelDrawer, setInfoChannelDrawer] = useState(false);
   const router = useRouter();
   const { deleteMessages } = useMessageAPI();

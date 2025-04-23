@@ -1,14 +1,12 @@
 import React from 'react';
 
-export const InputElement = ({
-  inputRef,
-  setFiles,
-  setObjectUrls
-}: {
+interface InputElementProps {
   inputRef: React.RefObject<HTMLInputElement>;
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   setObjectUrls: React.Dispatch<React.SetStateAction<string[]>>;
-}) => {
+}
+
+export const InputElement = ({ inputRef, setFiles, setObjectUrls }: InputElementProps) => {
   return (
     <>
       <input

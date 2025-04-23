@@ -14,17 +14,14 @@ import toast from 'react-hot-toast';
 import { ImagePreviewModal } from './ImagePreviewModal';
 import ReplyThread from './ReplyThread';
 
-export default function MessageInput({
-  onSend,
-  isReplying,
-  replyMessage,
-  setIsReplying
-}: {
+interface MessageInputProps {
   onSend: (msg: GroupMessagesEntity) => unknown;
   isReplying: boolean;
   replyMessage: GroupMessagesEntity | null;
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}
+
+export default function MessageInput({ onSend, isReplying, replyMessage, setIsReplying }: MessageInputProps) {
   const { groupId } = useParams();
   const [, setLoading] = useState<boolean>(false);
   const { sendGroupMessage, groupMessageReply } = useMessageAPI();

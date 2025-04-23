@@ -20,6 +20,15 @@ import {
   Typography
 } from '@mui/material';
 
+interface DemoteMemberModalProps {
+  open: boolean;
+  loading: boolean;
+  onClose?: () => unknown;
+  selectedMember: UserProfilesEntity;
+  onKickMember: (memberId: string) => unknown;
+  onDemoteMember: (memberId: string) => unknown;
+}
+
 export function DemoteMemberModal({
   open,
   onClose,
@@ -27,14 +36,7 @@ export function DemoteMemberModal({
   onKickMember,
   loading,
   onDemoteMember
-}: {
-  open: boolean;
-  loading: boolean;
-  onClose?: () => unknown;
-  selectedMember: UserProfilesEntity;
-  onKickMember: (memberId: string) => unknown;
-  onDemoteMember: (memberId: string) => unknown;
-}) {
+}: DemoteMemberModalProps) {
   return (
     <>
       <Dialog

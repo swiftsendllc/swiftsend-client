@@ -5,15 +5,13 @@ import { Box, Button, Card, CardActions, CardContent, Container, FormControl, St
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function SubscriptionPlans({
-  onSubscribe,
-  creator,
-  setSubscriptionPlan
-}: {
+interface SubscriptionPlansProps {
   onSubscribe: () => unknown;
   creator: UserProfilesEntity;
   setSubscriptionPlan: React.Dispatch<React.SetStateAction<SubscriptionPlansEntity | null>>;
-}) {
+}
+
+export function SubscriptionPlans({ onSubscribe, creator, setSubscriptionPlan }: SubscriptionPlansProps) {
   const { getSubscriptionPlans } = usePaymentAPI();
   const [plans, setPlans] = useState<SubscriptionPlansEntity[]>([]);
   const loadSubscriptionPlans = async () => {

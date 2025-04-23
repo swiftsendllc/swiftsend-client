@@ -18,17 +18,14 @@ import {
 import { useContext } from 'react';
 import { CustomChip } from '../../components/Customchip';
 
-export function InfoOptions({
-  group,
-  onUpdate,
-  onSelectedMember,
-  onMemberInfoOpen
-}: {
+interface InfoOptionsProps {
   group: GroupsEntity;
   onUpdate: () => unknown;
   onSelectedMember: (user: UserProfilesEntity) => unknown;
   onMemberInfoOpen: (open: boolean) => unknown;
-}) {
+}
+
+export function InfoOptions({ group, onUpdate, onSelectedMember, onMemberInfoOpen }: InfoOptionsProps) {
   const [user] = useContext(UserContext);
   const infoOptions = [
     {

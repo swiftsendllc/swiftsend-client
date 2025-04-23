@@ -20,15 +20,13 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function AddToGroupModal({
-  isOpen,
-  onClose,
-  memberId
-}: {
+interface AddToGroupModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   memberId: string;
-}) {
+}
+
+export function AddToGroupModal({ isOpen, onClose, memberId }: AddToGroupModalProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const [groups, setGroups] = useState<GroupsEntity[]>([]);

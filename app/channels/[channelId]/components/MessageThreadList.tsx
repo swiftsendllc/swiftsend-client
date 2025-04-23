@@ -11,15 +11,7 @@ import toast from 'react-hot-toast';
 import { InfoMessageDrawer } from './InfoMessageDrawer';
 import { MessageReaction } from './MessageReaction';
 
-export function MessageThreadList({
-  message,
-  checkBox,
-  selectedMessageIds,
-  onToggleCheckBox,
-  setMessages,
-  setIsReplying,
-  setRepliedToMessage
-}: {
+interface MessageThreadListProps {
   checkBox: boolean;
   message: MessagesEntity;
   selectedMessageIds: string[];
@@ -28,7 +20,17 @@ export function MessageThreadList({
   setRepliedToMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
   setSelectedMessageIds: React.Dispatch<React.SetStateAction<string[]>>;
-}) {
+}
+
+export function MessageThreadList({
+  message,
+  checkBox,
+  selectedMessageIds,
+  onToggleCheckBox,
+  setMessages,
+  setIsReplying,
+  setRepliedToMessage
+}: MessageThreadListProps) {
   const [user] = useContext(UserContext);
   const isUser = message.senderId === user.userId;
   const [infoMessageDrawer, setInfoMessageDrawer] = useState<boolean>(false);

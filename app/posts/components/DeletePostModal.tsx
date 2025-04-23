@@ -24,22 +24,19 @@ import {
 import { useRouter } from 'next/navigation';
 import { Fragment, useContext, useEffect, useState } from 'react';
 
-export default function DeletePostModal({
-  isOpen,
-  onClose,
-  post
-}: {
+interface DeletePostModalProps {
   isOpen: boolean;
   onClose?: () => unknown;
   post: PostsEntity;
-}) {
+}
+
+export default function DeletePostModal({ isOpen, onClose, post }: DeletePostModalProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { deletePost } = usePostAPI();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [caption] = useState(post.caption);
-
   const [user] = useContext(UserContext);
 
   const handleClose = () => {
@@ -104,13 +101,7 @@ export default function DeletePostModal({
             </Fragment>
           ))}
           <CardContent>
-            <TextField
-              fullWidth
-              value={caption}
-              variant="standard"
-              label="Caption"
-              disabled
-            />
+            <TextField fullWidth value={caption} variant="standard" label="Caption" disabled />
           </CardContent>
         </Card>
         <DialogActions>
@@ -124,12 +115,7 @@ export default function DeletePostModal({
             <DeleteIcon />
             Yes
           </LoadingButton>
-          <Button
-            onClick={handleClose}
-            variant="contained"
-            color="primary"
-            sx={{ width: '100%' }}
-          >
+          <Button onClick={handleClose} variant="contained" color="primary" sx={{ width: '100%' }}>
             <TagFacesIcon />
             No
           </Button>

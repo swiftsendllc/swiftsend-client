@@ -3,11 +3,11 @@ import { useSocket } from '@/hooks/context/socket-context';
 import { MessageReactionsEntity, MessagesEntity } from '@/hooks/entities/messages.entities';
 import { useEffect } from 'react';
 
-export const GetSocketMessages = ({
-  setMessages
-}: {
+interface ChannelProps {
   setMessages: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
-}) => {
+}
+
+export const GetSocketMessages = ({ setMessages }: ChannelProps) => {
   const { socket } = useSocket();
 
   useEffect(() => {

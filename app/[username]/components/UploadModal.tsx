@@ -1,8 +1,8 @@
-import Transition from "@/components/Transition";
-import AcUnitIcon from "@mui/icons-material/AcUnit";
-import React, { useEffect, useState } from "react";
+import Transition from '@/components/Transition';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import React, { useEffect, useState } from 'react';
 
-import { uploadingOptions } from "@/components/SearchComponents";
+import { uploadingOptions } from '@/components/SearchComponents';
 import {
   Dialog,
   DialogTitle,
@@ -14,17 +14,16 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
-  Typography,
-} from "@mui/material";
-import Link from "next/link";
+  Typography
+} from '@mui/material';
+import Link from 'next/link';
 
-export default function UploadModal({
-  isOpen,
-  onClose,
-}: {
+interface ModalOptionProps {
   isOpen: boolean;
   onClose?: () => unknown;
-}) {
+}
+
+export default function UploadModal({ isOpen, onClose }: ModalOptionProps) {
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
@@ -44,20 +43,15 @@ export default function UploadModal({
         PaperProps={{
           style: {
             margin: 0,
-            width: "100%",
-          },
+            width: '100%'
+          }
         }}
         onClose={handleClose}
       >
-        <FormControl
-          variant="standard"
-          fullWidth
-          component="form"
-          sx={{ margin: 0, padding: 0, mb: 0 }}
-        >
+        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0, mb: 0 }}>
           <DialogTitle textAlign="center">Create</DialogTitle>
           <Divider />
-          <List sx={{ width: "100%", padding: 0, mb: 0 }}>
+          <List sx={{ width: '100%', padding: 0, mb: 0 }}>
             {uploadingOptions.map((option, idx) => (
               <React.Fragment key={idx}>
                 <ListItemButton
@@ -66,16 +60,10 @@ export default function UploadModal({
                   href={option.value}
                   LinkComponent={Link}
                 >
-                  <ListItemIcon sx={{ pr: 1, minWidth: 35 }}>
-                    {option.icon}
-                  </ListItemIcon>
+                  <ListItemIcon sx={{ pr: 1, minWidth: 35 }}>{option.icon}</ListItemIcon>
                   {option.icon ? (
                     <ListItemText disableTypography>
-                      <Stack
-                        direction="column"
-                        alignContent=""
-                        alignItems="left"
-                      >
+                      <Stack direction="column" alignContent="" alignItems="left">
                         <Typography variant="h6" fontWeight={200}>
                           {option.label}
                         </Typography>
@@ -91,9 +79,9 @@ export default function UploadModal({
           </List>
           <IconButton
             sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              alignContent: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignContent: 'center'
             }}
           >
             <AcUnitIcon sx={{ width: 30, height: 30 }} />

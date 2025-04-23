@@ -8,17 +8,14 @@ import React, { useContext } from 'react';
 import MessageThreadImage from './MessageThreadImage';
 import MessageThreadList from './MessageThreadList';
 
-export default function MessageThread({
-  messages,
-  setMessages,
-  setIsReplying,
-  setReplyMessage
-}: {
+interface MessageThreadProps {
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
   messages: GroupMessagesEntity[];
   setMessages: React.Dispatch<React.SetStateAction<GroupMessagesEntity[]>>;
   setReplyMessage: React.Dispatch<React.SetStateAction<GroupMessagesEntity | null>>;
-}) {
+}
+
+export default function MessageThread({ messages, setMessages, setIsReplying, setReplyMessage }: MessageThreadProps) {
   const [user] = useContext(UserContext);
   return (
     <>

@@ -24,20 +24,24 @@ import { loadStripe, MetadataParam } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-function PaymentModal({
-  onClose,
-  metadata,
-  cardData,
-  onSuccess,
-  makePayment
-}: {
+interface PaymentModalProps {
   makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
   isOpen: boolean;
   onClose: () => unknown;
   metadata: MetadataParam;
   cardData: CardsEntity | null;
   onSuccess?: () => unknown;
-}) {
+}
+
+interface PaymentModalWrapperProps {
+  isOpen: boolean;
+  onClose: () => unknown;
+  metadata: MetadataParam;
+  onSuccess: () => unknown;
+  makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
+}
+
+function PaymentModal({ onClose, metadata, cardData, onSuccess, makePayment }: PaymentModalProps) {
   const stripe = useStripe();
   const elements = useElements();
   const { attachPaymentMethod, confirmCard } = usePaymentAPI();
@@ -220,19 +224,7 @@ function PaymentModal({
 }
 const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
 
-const PaymentModalWrapper = ({
-  isOpen,
-  onClose,
-  metadata,
-  onSuccess,
-  makePayment
-}: {
-  isOpen: boolean;
-  onClose: () => unknown;
-  metadata: MetadataParam;
-  onSuccess: () => unknown;
-  makePayment: (paymentMethodId: string) => Promise<{ requiresAction: boolean; clientSecret: string }>;
-}) => {
+const PaymentModalWrapper = ({ isOpen, onClose, metadata, onSuccess, makePayment }: PaymentModalWrapperProps) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { getCard } = usePaymentAPI();

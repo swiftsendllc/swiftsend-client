@@ -27,19 +27,15 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function MessageInfoModal({
-  isOpen,
-  onClose,
-  message,
-  onDelete,
-  onEdit
-}: {
+interface MessageInfoModalProps {
   onEdit: (edited_message: string) => unknown;
   onDelete: () => unknown;
   message: GroupMessagesEntity;
   isOpen: boolean;
   onClose?: () => unknown;
-}) {
+}
+
+export default function MessageInfoModal({ isOpen, onClose, message, onDelete, onEdit }: MessageInfoModalProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
   const { deleteGroupMessage, editGroupMessage } = useMessageAPI();
