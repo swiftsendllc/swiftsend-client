@@ -190,8 +190,8 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
               minWidth: 375
             }}
           >
-            {post.imageUrls &&
-              post.imageUrls.map((img, idx) => (
+            {post._assets &&
+              post._assets.map((url, idx) => (
                 <Box key={idx} position={'relative'}>
                   <Image
                     style={{
@@ -201,7 +201,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
                       justifyContent: 'space-between'
                     }}
                     priority
-                    src={img}
+                    src={url.originalURL}
                     alt={'image'}
                     width={375}
                     height={300}
@@ -210,7 +210,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
               ))}
           </Stack>
           <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
-            <Chip color="primary" label={post.imageUrls.length} variant="filled" />
+            <Chip color="primary" label={post._assets.length} variant="filled" />
           </Box>
           {/* purchase button */}
           {post.isPurchased ? null : (

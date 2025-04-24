@@ -1,6 +1,5 @@
 'use client';
 
-import PostInfoModal from '@/app/posts/components/PostInfoModal';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { CreatorContext } from '@/hooks/context/creator-context';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
@@ -15,8 +14,6 @@ import { useContext, useEffect, useState } from 'react';
 export function AccountPostPage() {
   const { getCreatorPosts } = usePostAPI();
   const [posts, setPosts] = useState<PostsEntity[]>([]);
-  const [editPostModal, setEditPostModal] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<PostsEntity | null>(null);
   const [creator] = useContext(CreatorContext);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageDialogOpen, setImageDialogOpen] = useState<boolean>(false);
@@ -41,7 +38,6 @@ export function AccountPostPage() {
   const handleClose = () => {
     setImageDialogOpen(false);
     setSelectedImage(null);
-    setSelectedPost(null);
   };
 
   useEffect(() => {
@@ -81,10 +77,10 @@ export function AccountPostPage() {
             >
               {imageGroups.map((group, groupIdx) =>
                 group.map((posts, idx) =>
-                  posts.imageUrls.map((img, imgIdx) => (
+                  posts._assets.map((url, imgIdx) => (
                     <Box
                       key={`${groupIdx}-${idx}-${imgIdx}`}
-                      onClick={() => handleSelect(img)}
+                      onClick={() => handleSelect(url.originalURL)}
                       sx={{
                         position: 'relative',
                         width: {
@@ -105,7 +101,7 @@ export function AccountPostPage() {
                       }}
                     >
                       <Image
-                        src={img}
+                        src={url.originalURL}
                         alt="posts image"
                         fill
                         style={{ objectFit: 'cover' }}
@@ -164,9 +160,6 @@ export function AccountPostPage() {
           </>
         )}
       </Box>
-      {selectedPost && (
-        <PostInfoModal post={selectedPost} isOpen={editPostModal} onClose={() => setEditPostModal(false)} />
-      )}
     </>
   );
 }

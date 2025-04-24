@@ -59,10 +59,10 @@ export default function LikePage() {
             rowHeight={125}
           >
             {posts.map((post) =>
-              post.imageUrls.map((img, idx) => (
+              post._assets.map((url, idx) => (
                 <ImageListItem key={idx}>
                   <Image
-                    src={img}
+                    src={url.originalURL}
                     style={{
                       objectFit: 'cover',
                       width: '100%',

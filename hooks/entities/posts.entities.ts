@@ -4,8 +4,6 @@ export interface PostsEntity {
   _id: string;
   userId: string;
   caption: string;
-  imageUrls: string[];
-  blurredImageUrls: string[];
   likeCount: number;
   commentCount: number;
   isLiked: boolean;
@@ -16,6 +14,7 @@ export interface PostsEntity {
   saveCount: number;
   createdAt: Date;
   user: UserProfilesEntity;
+  _assets: _AssetsEntity[];
   comments?: CommentsEntity[];
   saves?: SavesEntity;
   price: number;
@@ -57,4 +56,9 @@ export interface SavesEntity {
   userId: string;
   postId: string;
   reelsId: string;
+}
+
+export interface _AssetsEntity {
+  _id: string;
+  originalURL: string;
 }
