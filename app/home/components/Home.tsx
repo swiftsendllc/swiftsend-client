@@ -73,7 +73,6 @@ export default function HomePage() {
             post._id === selectedPost?._id
               ? {
                   ...post,
-                  imageUrls: purchasedPost.imageUrls,
                   isPurchased: purchasedPost.isPurchased,
                   purchasedBy: [...post.purchasedBy, user.userId]
                 }

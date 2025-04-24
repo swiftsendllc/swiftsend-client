@@ -40,10 +40,10 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
       >
         {imageGroups.map((group, groupIdx) =>
           group.map((posts, idx) =>
-            posts.imageUrls.map((img, imgIdx) => (
+            posts._assets.map((url, imgIdx) => (
               <Box
                 key={`${groupIdx}-${idx}-${imgIdx}`}
-                onClick={() => handleSelect(img)}
+                onClick={() => handleSelect(url.originalURL)}
                 sx={{
                   position: 'relative',
                   width: {
@@ -64,7 +64,7 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
                 }}
               >
                 <Image
-                  src={img}
+                  src={url.originalURL}
                   alt="posts image"
                   fill
                   style={{ objectFit: 'cover' }}

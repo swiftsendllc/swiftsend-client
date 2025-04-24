@@ -31,11 +31,11 @@ export default function AssetsPage() {
   const handleSelectTenAssets = (hasSelected: boolean) => {
     const selectedAssets = assets.slice(0, 10);
     if (hasSelected) {
-      setSelectedAssetIds(selectedAssets.map((asst) => asst.assetId));
+      setSelectedAssetIds(selectedAssets.map((asset) => asset.assetId));
+      console.log('assets id', selectedAssetIds);
     } else {
       setSelectedAssetIds([]);
     }
-    return selectedAssets;
   };
 
   return (
