@@ -30,7 +30,7 @@
     "next": "^14.2.24",
     "next-i18next": "^15.4.1",
     "radash": "^12.1.0",
-    "react": "^18",
+    "react": "^19",
     "react-dom": "^18",
     "react-drag-drop-files": "^3.0.1",
     "react-hot-toast": "^2.4.1",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^19",
     "@types/react-dom": "^18",
     "@types/react-infinite-scroller": "^1.2.5",
     "eslint": "^8",
