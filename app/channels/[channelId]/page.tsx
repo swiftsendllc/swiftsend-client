@@ -91,7 +91,9 @@ export default function MessagePage() {
       <Container
         style={{
           padding: 0,
-          marginBottom: 60
+          marginBottom: 60,
+          marginLeft:10,
+          marginRight:10
         }}
       >
         <ChatHeader

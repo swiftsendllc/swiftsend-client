@@ -1,18 +1,22 @@
 import { InputElement } from '@/components/InputElement';
 import useAssetAPI from '@/hooks/api/useAssetAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from '@mui/lab';
 import {
   Box,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   FormControl,
+  IconButton,
   LinearProgress,
+  Paper,
   Stack,
+  Typography,
   useMediaQuery,
   useTheme
 } from '@mui/material';
@@ -73,6 +77,23 @@ export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
     handleClose();
   };
 
+  const handleFiles = (_files: FileList | File[]) => {
+    if (!_files) return;
+    const multipleFiles = Array.from(_files).slice(0, 10);
+    const selectedFiles = [...files, ...multipleFiles];
+    setFiles(selectedFiles);
+    setObjectUrls((prev) => [...prev, ...selectedFiles.map((file) => URL.createObjectURL(file))]);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    handleFiles(e.dataTransfer.files);
+  };
+
   const handleClose = () => {
     setOpen(false);
     onClose?.();
@@ -102,12 +123,29 @@ export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
               Add new asset in your personal and confidential folder (Max 10)
             </DialogContentText>
             <Box textAlign="center" mb={2}>
-              {files.length < 10 ? (
-                <Button variant="contained" onClick={() => inputRef.current?.click()}>
-                  Upload Files
-                </Button>
-              ) : null}
-
+              <Box onDrop={handleDrop} onDragOver={handleDragOver}>
+                {files.length < 10 ? (
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      border: '2px dashed #ccc',
+                      borderRadius: 2,
+                      p: 4,
+                      cursor: 'pointer',
+                      backgroundColor: '#cfebf1'
+                    }}
+                    onClick={() => inputRef.current?.click()}
+                  >
+                    <CloudUploadIcon sx={{ fontSize: 50, color: '#888' }} />
+                    <Typography variant="body1" mt={1} color="primary">
+                      Drag & drop files here or click to upload
+                    </Typography>
+                    <Typography variant="caption" color="primary">
+                      (Up to 10 files)
+                    </Typography>
+                  </Paper>
+                ) : null}
+              </Box>
               <Stack
                 direction="row"
                 flexWrap="wrap"
@@ -149,6 +187,19 @@ export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
                           sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                           priority
                         />
+                        <IconButton
+                          sx={{
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            color: 'inherit',
+                            position:"relative"
+                          }}
+                        >
+                          <DeleteIcon sx={{ width: 40, height: 40 }}
+
+                          />
+                        </IconButton>
                         <Box padding={0}>
                           <LinearProgress
                             color={uploadStatus[index] ? 'success' : 'warning'}

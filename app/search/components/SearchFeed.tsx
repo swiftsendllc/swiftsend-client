@@ -1,6 +1,7 @@
 'use client';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
 import CloseIcon from '@mui/icons-material/Close';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { Box, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -71,6 +72,14 @@ export const SearchFeed = ({ posts }: SearchFeedProps) => {
                   sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                   priority
                 />
+                <a href={url.originalURL} download>
+                  <IconButton
+                    sx={{ position: 'absolute', top: 1, right: 1, color: 'inherit' }}
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <CloudDownloadIcon />
+                  </IconButton>
+                </a>
               </Box>
             ))
           )

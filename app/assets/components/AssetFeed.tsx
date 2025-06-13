@@ -49,6 +49,7 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
         justifyContent="center"
         gap={2}
         paddingTop={2}
+        width={"auto"}
         marginBottom={isSmallScreen ? 45 : 25}
       >
         {assetGroups.map((groups, groupIdx) =>
@@ -99,9 +100,7 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
                 )}
                 <IconButton
                   sx={{ top: 1, right: 1, position: 'absolute', color: 'inherit' }}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}
+                  onClick={(event) => event.stopPropagation()}
                 >
                   <MemoryIcon />
                 </IconButton>

@@ -40,7 +40,7 @@ export default function AssetsPage() {
 
   return (
     <>
-      <Container sx={{ p: 0, mt: 2, pl: { xs: 0, md: 24 }, position: 'fixed' }}>
+      <Container sx={{ p: 0, mt: 2, pl: { xs: 0, md: 24 }, position: 'fixed', width: 'auto' }}>
         <Header
           setAssets={setAssets}
           setCheckBox={setCheckBox}
