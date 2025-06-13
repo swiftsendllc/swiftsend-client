@@ -1,6 +1,6 @@
 export const authCookieKey = '_accessToken';
 
-export const authenticatedPaths = ['/home', '/search', '/channels', '/reels', '/groups', '/assets', '/posts'];
+export const authenticatedPaths = ['/home', '/search', '/channels', '/reels', '/groups', '/assets', '/posts', '/v2/channels/channelId'];
 
 export const env = {
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',

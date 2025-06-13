@@ -23,7 +23,7 @@ export default function ChannelsPage() {
 
   return (
     <>
-      <Container sx={{ mb: 5, mt: 2, pl: { md: 26, xs:"none"} }}>
+      <Container sx={{ mb: 5, mt: 2, pl: { md: 26, xs: 'none' } }}>
         <ChannelHeader user={user} />
         <Divider sx={{ mt: 1 }} />
         <TabContext value={value}>

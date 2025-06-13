@@ -3,7 +3,7 @@
 import BottomNav from '@/components/BottomNav';
 import { LeftSideBar } from '@/components/LeftSideBar';
 import { authenticatedPaths } from '@/library/constants';
-import { Container } from '@mui/material';
+import { Box } from '@mui/material';
 import { usePathname } from 'next/navigation';
 
 export default function RootTemplate({ children }: { children: React.ReactNode }) {
@@ -14,10 +14,10 @@ export default function RootTemplate({ children }: { children: React.ReactNode }
   }
 
   return (
-    <Container style={{ padding: 5 }}>
-      {children}
+    <Box display="flex" height="100vh" fontFamily="Arial, sans-serif">
       <LeftSideBar />
+      {children}
       <BottomNav />
-    </Container>
+    </Box>
   );
 }

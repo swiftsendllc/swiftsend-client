@@ -1,3 +1,5 @@
+'use client';
+import { loginAction } from '@/app/actions/server';
 import { authCookieKey, ENV } from '@/library/constants';
 import { getCookie, setCookie } from 'cookies-next';
 import Error from 'next/error';
@@ -5,20 +7,9 @@ import { UpdateUserInput } from '../entities/users.entities';
 
 const useAPI = () => {
   const login = async (email: string, password: string) => {
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/auth/login`, {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
+    const { data, error } = await loginAction(email, password);
+    if (error) throw new Error(error);
     setCookie(authCookieKey, data.accessToken);
-
     return data;
   };
 
@@ -213,8 +204,6 @@ const useAPI = () => {
       throw new Error(data.message);
     }
   };
-
-
 
   return {
     login,

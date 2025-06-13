@@ -51,7 +51,7 @@ export function Header({
 
   return (
     <>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: 'auto' }}>
         <Paper elevation={0} sx={{ padding: { xs: '8px 16px', sm: '8px 32px' } }}>
           <Stack direction={'row'} justifyContent={'space-between'}>
             <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 }}>
