@@ -1,5 +1,7 @@
 'use client';
 
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { ChannelsEntity } from '@/hooks/entities/messages.entities';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -16,24 +18,30 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-
-const mockUsers = [
-  { id: 1, name: 'Jane Chastity', lastMessage: 'are you here?🥵🥵🥵', avatar: 'https://i.pravatar.cc/150?img=1' },
-  {
-    id: 2,
-    name: 'Amber May',
-    lastMessage: 'Who wants to be my alpha daddy? 😘',
-    avatar: 'https://i.pravatar.cc/150?img=2'
-  },
-  {
-    id: 3,
-    name: 'Lola Wolfe',
-    lastMessage: 'This college cutie joined and is ready! 🔥',
-    avatar: 'https://i.pravatar.cc/150?img=3'
-  }
-];
+import moment from 'moment';
+import { useRouter } from 'next/navigation';
+import { Fragment, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function ChannelsPage() {
+  const router = useRouter();
+  const { getChannels } = useMessageAPI();
+  const [channels, setChannels] = useState<ChannelsEntity[]>([]);
+
+  const loadChannels = async () => {
+    try {
+      const fetchedChannels = await getChannels();
+      setChannels(fetchedChannels);
+    } catch (error) {
+      console.error(error);
+      toast.error('Oops! Something went wrong!');
+    }
+  };
+
+  useEffect(() => {
+    loadChannels();
+  }, []); //eslint-disable-line
+
   return (
     <Box width="340px" borderRight="1px solid ">
       <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1}>
@@ -64,10 +72,9 @@ export default function ChannelsPage() {
       />
       <Divider sx={{ borderColor: 'black' }} />
       <List>
-        {mockUsers.map((user) => (
-          <>
+        {channels.map((channel, idx) => (
+          <Fragment key={idx}>
             <ListItem
-              key={user.id}
               sx={{
                 transform: 'all 0.3s ease',
                 cursor: 'pointer',
@@ -77,14 +84,20 @@ export default function ChannelsPage() {
                   transform: 'scale(1.01)'
                 }
               }}
+              onClick={() => {
+                router.push(`/v2/channels/${channel._id}`);
+              }}
             >
               <ListItemAvatar>
-                <Avatar src={user.avatar} />
+                <Avatar src={channel.receiver.avatarURL} />
               </ListItemAvatar>
-              <ListItemText primary={user.name} secondary={user.lastMessage} />
+              <ListItemText
+                primary={`${channel.receiver.fullName}  ${moment(channel.lastMessage?.createdAt).format('hh:mm')}`}
+                secondary={channel.lastMessage?.message}
+              />
             </ListItem>
             <Divider sx={{ borderColor: 'black' }} />
-          </>
+          </Fragment>
         ))}
       </List>
     </Box>

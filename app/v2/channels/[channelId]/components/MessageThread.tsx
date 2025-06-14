@@ -1,26 +1,20 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { UserContext } from '@/hooks/context/user-context';
+import { MessagesEntity } from '@/hooks/entities/messages.entities';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Avatar, Box, Chip, IconButton, TextField, Typography } from '@mui/material';
+import moment from 'moment';
 import { useContext } from 'react';
 
-const chatMessages = [
-  {
-    time: '11:18 am',
-    content: 'I want to flood everything with my juices and get your cum inside 🥵 ...',
-    paid: false,
-    senderId: '6738484'
-  },
-  { time: '4:20 pm', content: 'open = cum with me in snapchat video chat 😅💦' },
-  { time: '5:33 pm', content: 'Can I scream your name when I come? 💦💦💦' },
-  { time: '5:54 pm', content: 'are you here?🥵🥵🥵' }
-];
-export function MessageThread() {
-  const [user] = useContext(UserContext);
+interface MessageProps {
+  messages: MessagesEntity[];
+}
 
+export function MessageThread({ messages }: MessageProps) {
+  const [user] = useContext(UserContext)
   return (
     <Box
       flex={1}
@@ -59,7 +53,7 @@ export function MessageThread() {
       </Box>
 
       <Box flex={1} p={2} overflow="auto" display="flex" flexDirection="column" gap={2}>
-        {chatMessages.map((msg, idx) => {
+        {messages.map((msg, idx) => {
           const isSender = msg.senderId === user.userId;
           return (
             <Box key={idx} display="flex" justifyContent={isSender ? 'flex-end' : 'flex-start'}>
@@ -73,14 +67,14 @@ export function MessageThread() {
                 sx={{ borderRadius: 2 }}
               >
                 <Typography variant="body2" color="var(--dark)">
-                  {msg.content}
+                  {msg.message}
                 </Typography>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5}>
                   <Typography variant="caption" color="var(--dark)">
-                    {msg.time}
+                    {moment(msg.createdAt).format('hh:mm')}
                   </Typography>
-                  {!msg.paid && (
-                    <Chip size="small" label="$5 not paid" color="warning" variant="outlined" sx={{ ml: 1 }} />
+                  {!msg.isExclusive && (
+                    <Chip size="small" label="$5" color="warning" variant="outlined" sx={{ ml: 1 }} />
                   )}
                 </Box>
               </Box>
@@ -88,7 +82,6 @@ export function MessageThread() {
           );
         })}
       </Box>
-
       <Box p={2} borderTop="1px solid ">
         <TextField
           placeholder="Type a message..."

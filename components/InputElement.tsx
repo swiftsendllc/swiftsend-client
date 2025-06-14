@@ -18,7 +18,14 @@ export const InputElement = ({ inputRef, setFiles, setObjectUrls }: InputElement
           if (!input.files?.length) return;
           const multipleFiles = Array.from(input!.files).slice(0, 10);
           setFiles((prev) => [...prev, ...multipleFiles]);
-          setObjectUrls((prev) => [...prev, ...multipleFiles.map((file) => URL.createObjectURL(file))]);
+          setObjectUrls((prev) => [
+            ...prev,
+            ...multipleFiles.map((file) => {
+              const urls = URL.createObjectURL(file);
+              console.log(urls);
+              return urls;
+            })
+          ]);
         }}
         ref={inputRef}
         hidden

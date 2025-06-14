@@ -4,9 +4,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { Avatar, Box, Button, Typography } from '@mui/material';
 import { useContext } from 'react';
 import { leftSideBarOptions } from './SearchComponents';
+import { useRouter } from 'next/navigation';
 
 export function LeftSideBar() {
   const [user] = useContext(UserContext);
+  const router = useRouter()
 
   return (
     <>
@@ -30,6 +32,7 @@ export function LeftSideBar() {
                   transform: 'scale(1.01)'
                 }
               }}
+              onClick={() => router.push(option.path)}
             >
               {option.label}
             </Button>

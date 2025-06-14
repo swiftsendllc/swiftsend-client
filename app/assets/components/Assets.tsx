@@ -2,18 +2,17 @@
 
 import useAssetAPI from '@/hooks/api/useAssetAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
-import { Container, List, Typography } from '@mui/material';
+import { Box, List, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AssetFeed } from './AssetFeed';
-import { Header } from './Header';
+import { AssetOptions } from './AssetOptions';
 
 export default function AssetsPage() {
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const { getCreatorAssets } = useAssetAPI();
   const [checkbox, setCheckBox] = useState<boolean>(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
-  const [width, setWidth] = useState<number>(30);
 
   const loadAssets = async () => {
     try {
@@ -30,31 +29,32 @@ export default function AssetsPage() {
 
   const handleSelectTenAssets = (hasSelected: boolean) => {
     const selectedAssets = assets.slice(0, 10);
-    if (hasSelected) {
-      setSelectedAssetIds(selectedAssets.map((asset) => asset.assetId));
-      console.log('assets id', selectedAssetIds);
-    } else {
-      setSelectedAssetIds([]);
-    }
+    if (hasSelected) setSelectedAssetIds(selectedAssets.map((asset) => asset.assetId));
+    else setSelectedAssetIds([]);
   };
 
   return (
-    <>
-      <Container sx={{ p: 0, mt: 2, pl: { xs: 0, md: 24 }, position: 'fixed', width: 'auto' }}>
-        <Header
-          setAssets={setAssets}
-          setCheckBox={setCheckBox}
-          checkBox={checkbox}
-          selectedAssetIds={selectedAssetIds}
-          setSelectedAssetIds={setSelectedAssetIds}
-          setWidth={setWidth}
-          onSelectTenAssets={handleSelectTenAssets}
-        />
-        {!assets.length ? (
-          <Typography variant="h5" textAlign={'center'} justifyContent={'center'}>
-            You assets will appear here
-          </Typography>
-        ) : (
+    <Box
+      display={'flex'}
+      flexDirection={'column'}
+      height={'100vh'}
+      fontFamily={'Arial, sans-serif'}
+      sx={{ minWidth: 0, overflow: 'hidden' }}
+    >
+      <AssetOptions
+        setAssets={setAssets}
+        setCheckBox={setCheckBox}
+        checkBox={checkbox}
+        selectedAssetIds={selectedAssetIds}
+        setSelectedAssetIds={setSelectedAssetIds}
+        onSelectTenAssets={handleSelectTenAssets}
+      />
+      {!assets.length ? (
+        <Typography variant="h5" textAlign={'center'} justifyContent={'center'}>
+          No assets to display
+        </Typography>
+      ) : (
+        <Box borderRight={'1px solid'}>
           <List
             sx={{
               display: 'flex',
@@ -70,11 +70,10 @@ export default function AssetsPage() {
               checkbox={checkbox}
               selectedAssetIds={selectedAssetIds}
               setSelectedAssetIds={setSelectedAssetIds}
-              width={width}
             />
           </List>
-        )}
-      </Container>
-    </>
+        </Box>
+      )}
+    </Box>
   );
 }

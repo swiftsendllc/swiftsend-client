@@ -1,6 +1,5 @@
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import CloseIcon from '@mui/icons-material/Close';
-import MemoryIcon from '@mui/icons-material/Memory';
 import { Box, Checkbox, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -11,12 +10,11 @@ import { ForwardDrawer } from './ForwardDrawer';
 interface AssetFeedProps {
   assets: CreatorAssetsEntity[];
   checkbox: boolean;
-  width: number;
   selectedAssetIds: string[];
   setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAssetIds, width }: AssetFeedProps) {
+export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAssetIds }: AssetFeedProps) {
   const theme = useTheme();
   const assetGroups = cluster(assets, 3);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -42,15 +40,15 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
   };
 
   return (
-    <>
+    <Box display={'flex'} flexDirection={'column'} minHeight={'100%'}>
       <Stack
         direction="row"
         flexWrap="wrap"
         justifyContent="center"
-        gap={2}
+        gap={1}
         paddingTop={2}
-        width={"auto"}
         marginBottom={isSmallScreen ? 45 : 25}
+        paddingBottom={40}
       >
         {assetGroups.map((groups, groupIdx) =>
           groups.map((asset, astIdx) =>
@@ -61,9 +59,9 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
                 sx={{
                   position: 'relative',
                   width: {
-                    xs: `${width}%`,
-                    sm: `${width}%`,
-                    md: `${width}%`
+                    xs: `${25}%`,
+                    sm: `${30}%`,
+                    md: `${20}%`
                   },
                   aspectRatio: '4 / 3',
                   borderRadius: 2,
@@ -96,14 +94,9 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
                     onChange={() => {
                       handleToggleCheckBox(asset.assetId);
                     }}
+                    sx={{p:0, m:0, top:1, right:1, position:"absolute", color:"white"}}
                   />
                 )}
-                <IconButton
-                  sx={{ top: 1, right: 1, position: 'absolute', color: 'inherit' }}
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  <MemoryIcon />
-                </IconButton>
               </Box>
             ))
           )
@@ -147,6 +140,6 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
         </Box>
       </Dialog>
       <ForwardDrawer isOpen={forwardDrawer} onClose={() => setForwardDrawer(false)} />
-    </>
+    </Box>
   );
 }

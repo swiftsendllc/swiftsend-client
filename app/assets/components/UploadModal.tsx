@@ -7,14 +7,12 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   FormControl,
   IconButton,
   LinearProgress,
-  Paper,
   Stack,
   Typography,
   useMediaQuery,
@@ -32,15 +30,15 @@ interface UploadModalProps {
 }
 
 export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
+  const theme = useTheme();
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
-  const theme = useTheme();
   const [objectUrls, setObjectUrls] = useState<string[]>([]);
   const objectGroups = cluster(objectUrls, 3);
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { uploadAndCreateAsset } = useAssetAPI();
   const [loading, setLoading] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [files, setFiles] = useState<File[]>([]);
   const [uploadStatus, setUploadStatus] = useState<boolean[]>([]);
 
@@ -106,46 +104,69 @@ export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="xs"
-        PaperProps={{
-          style: {
-            margin: 0,
-            width: '100%'
-          }
-        }}
+        maxWidth="sm"
         fullWidth
         aria-describedby="asset-upload-modal"
+        PaperProps={{
+          sx: {
+            m: 0,
+            borderRadius: 3,
+            backdropFilter: 'blur(6px)',
+            boxShadow: 10,
+            overflow: 'hidden'
+          }
+        }}
       >
-        <FormControl variant="standard" fullWidth component="form" sx={{ margin: 0, padding: 0 }} id="form-upload">
-          <DialogTitle sx={{ pb: 0 }}>Insert asset</DialogTitle>
-          <DialogContent>
-            <DialogContentText sx={{ mb: 2 }}>
-              Add new asset in your personal and confidential folder (Max 10)
+        <FormControl variant="standard" fullWidth component="form" id="form-upload" sx={{ padding: 0, m: 0 }}>
+          <DialogTitle
+            sx={{
+              fontWeight: 700,
+              fontSize: '1.4rem',
+              px: 3,
+              py: 2
+            }}
+          >
+            Upload Assets
+          </DialogTitle>
+
+          <DialogContent
+            dividers
+            sx={{
+              px: 3,
+              py: 2,
+              maxHeight: '60vh',
+              overflowY: 'auto'
+            }}
+          >
+            <DialogContentText sx={{ mb: 2, fontSize: '0.95rem' }}>
+              Upload your confidential assets (up to <b>10 files</b>). Images will be shown below with progress
+              indicators.
             </DialogContentText>
-            <Box textAlign="center" mb={2}>
-              <Box onDrop={handleDrop} onDragOver={handleDragOver}>
-                {files.length < 10 ? (
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      border: '2px dashed #ccc',
-                      borderRadius: 2,
-                      p: 4,
-                      cursor: 'pointer',
-                      backgroundColor: '#cfebf1'
-                    }}
-                    onClick={() => inputRef.current?.click()}
-                  >
-                    <CloudUploadIcon sx={{ fontSize: 50, color: '#888' }} />
-                    <Typography variant="body1" mt={1} color="primary">
-                      Drag & drop files here or click to upload
-                    </Typography>
-                    <Typography variant="caption" color="primary">
-                      (Up to 10 files)
-                    </Typography>
-                  </Paper>
-                ) : null}
-              </Box>
+            <Box
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => inputRef.current?.click()}
+              sx={{
+                p: 4,
+                border: '2px dashed #90caf9',
+                borderRadius: 3,
+                textAlign: 'center',
+                cursor: 'pointer',
+                transition: '0.3s',
+                '&:hover': {
+                  backgroundColor: '#bbdefb'
+                }
+              }}
+            >
+              <CloudUploadIcon sx={{ fontSize: 50, color: '#42a5f5' }} />
+              <Typography variant="h6" mt={1}>
+                Drag & drop or click to upload
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {files.length}/10 files selected
+              </Typography>
+            </Box>
+            <Box>
               <Stack
                 direction="row"
                 flexWrap="wrap"
@@ -158,75 +179,88 @@ export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
                   groups.map((asset, astIdx) => {
                     const index = groupIdx * 3 + astIdx;
                     return (
-                      <Box
-                        key={`${groupIdx}-${astIdx}`}
-                        sx={{
-                          position: 'relative',
-                          width: {
-                            xs: '25%',
-                            sm: '48%',
-                            md: '30%'
-                          },
-                          aspectRatio: '4 / 3',
-                          borderRadius: 2,
-                          overflow: 'hidden',
-                          cursor: 'pointer',
-                          boxShadow: 1,
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            boxShadow: 4,
-                            transform: 'scale(1.01)'
-                          }
-                        }}
-                      >
-                        <Image
-                          src={asset}
-                          alt="assets"
-                          fill
-                          style={{ objectFit: 'cover' }}
-                          sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
-                          priority
-                        />
-                        <IconButton
+                      <Box key={`${groupIdx}-${astIdx}`}>
+                        <Box
+                          key={`${groupIdx}-${astIdx}`}
                           sx={{
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            color: 'inherit',
-                            position:"relative"
+                            position: 'relative',
+                            width: '100px',
+                            aspectRatio: '4 / 3',
+                            borderRadius: 2,
+                            height: '100px',
+                            overflow: 'hidden',
+                            cursor: 'pointer',
+                            boxShadow: 1,
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                              boxShadow: 4,
+                              transform: 'scale(1.01)'
+                            }
                           }}
                         >
-                          <DeleteIcon sx={{ width: 40, height: 40 }}
+                          <Image src={asset} alt="assets" fill style={{ objectFit: 'cover' }} priority />
 
-                          />
-                        </IconButton>
-                        <Box padding={0}>
-                          <LinearProgress
-                            color={uploadStatus[index] ? 'success' : 'warning'}
-                            variant="buffer"
-                            value={uploadStatus[index] ? 100 : 10}
-                            valueBuffer={uploadStatus[index] ? 100 : 20}
-                          />
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 5,
+                              right: 5,
+                              borderRadius: '50%',
+                              p: 0.5,
+                              zIndex: 5
+                            }}
+                          >
+                            <IconButton size="small">
+                              <DeleteIcon fontSize="small" color="error" />
+                            </IconButton>
+                          </Box>
+                          <Box sx={{ position: 'absolute', bottom: 0, width: '100%' }}>
+                            <LinearProgress
+                              variant="buffer"
+                              value={uploadStatus[index] ? 100 : 15}
+                              valueBuffer={uploadStatus[index] ? 100 : 40}
+                              color={uploadStatus[index] ? 'success' : 'warning'}
+                            />
+                          </Box>
                         </Box>
                       </Box>
                     );
                   })
                 )}
               </Stack>
+              <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={setObjectUrls} />
             </Box>
-            <InputElement inputRef={inputRef} setFiles={setFiles} setObjectUrls={setObjectUrls} />
           </DialogContent>
-          <DialogActions>
+          <Box
+            sx={{
+              px: 3,
+              py: 2,
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 1
+            }}
+          >
+            <Typography variant="caption" color="text.secondary" mb={1} display="block">
+              {files.length > 0
+                ? `${files.length} file${files.length > 1 ? 's' : ''} ready to upload.`
+                : `No files selected.`}
+            </Typography>
             <LoadingButton
               onClick={() => handleMultipleUploads(files)}
               loading={loading}
               variant="contained"
               fullWidth
               disabled={!files.length}
+              sx={{
+                fontWeight: 600,
+                py: 1.5,
+                bgcolor: '#1976d2',
+                '&:hover': { bgcolor: '#1565c0' }
+              }}
             >
-              Confirm
+              Upload Now
             </LoadingButton>
-          </DialogActions>
+          </Box>
         </FormControl>
       </Dialog>
     </>

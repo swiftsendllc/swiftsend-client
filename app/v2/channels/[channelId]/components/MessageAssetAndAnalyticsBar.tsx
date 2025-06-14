@@ -18,9 +18,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export function MessageAssetAndAnalyticsBar() {
-  const WIDTH = 25;
   const { getCreatorAssets } = useAssetAPI();
-  const [width, setWidth] = useState<number>(40);
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const [checkBox, setCheckBox] = useState<boolean>(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
@@ -32,7 +30,6 @@ export function MessageAssetAndAnalyticsBar() {
     try {
       const fetchedAssets = await getCreatorAssets();
       setAssets(fetchedAssets);
-      setWidth(WIDTH);
     } catch (error) {
       console.error(error);
       toast.error('FAILED TO LOAD CREATOR ASSETS!');
@@ -66,7 +63,7 @@ export function MessageAssetAndAnalyticsBar() {
   }, [showGallery]); //eslint-disable-line
 
   return (
-    <Box width="320px" display="flex" flexDirection="column" paddingTop={3}  px={2}>
+    <Box width="320px" display="flex" flexDirection="column" paddingTop={3} px={2}>
       <Button
         variant="contained"
         fullWidth
@@ -120,7 +117,6 @@ export function MessageAssetAndAnalyticsBar() {
               checkbox={checkBox}
               selectedAssetIds={selectedAssetIds}
               setSelectedAssetIds={setSelectedAssetIds}
-              width={width}
             />
           </Box>
         </>

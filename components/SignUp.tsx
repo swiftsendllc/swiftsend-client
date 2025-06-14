@@ -60,7 +60,7 @@ export default function SignUpPage() {
 
       window.location.href = '/channels';
     } catch (error) {
-      console.error('SigUp failed', error);
+      console.error('Signup failed', error);
     } finally {
       setLoading(false);
     }

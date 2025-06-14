@@ -477,35 +477,43 @@ export const sideBarOptions = [
 export const leftSideBarOptions = [
   {
     icon: <HomeIcon />,
-    label: 'Home'
+    label: 'Home',
+    path: '/home'
   },
   {
     icon: <NotificationsIcon />,
-    label: 'Notifications'
+    label: 'Notifications',
+    path: '/notifications'
   },
   {
     icon: <ChatBubbleOutlineIcon />,
-    label: 'Messages'
+    label: 'Channels',
+    path: '/v2/channels'
   },
   {
     icon: <CollectionsIcon />,
-    label: 'Collections'
+    label: 'Assets',
+    path: '/assets'
   },
   {
     icon: <PersonIcon />,
-    label: 'Subscriptions'
+    label: 'Subscriptions',
+    path: '/subscriptions'
   },
   {
     icon: <CreditCardIcon />,
-    label: ' Add card'
+    label: ' Add card',
+    path: '/billing'
   },
   {
     icon: <PersonIcon />,
-    label: 'My profile'
+    label: 'My profile',
+    path: '/profile'
   },
   {
     icon: <MoreHorizIcon />,
-    label: 'More'
+    label: 'More',
+    path: '/more'
   }
 ];
 
