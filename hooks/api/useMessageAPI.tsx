@@ -110,6 +110,7 @@ const useMessageAPI = () => {
     receiverId: string;
     isExclusive: boolean;
     price: number;
+    assetIds:string[]
   }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/messages`, {

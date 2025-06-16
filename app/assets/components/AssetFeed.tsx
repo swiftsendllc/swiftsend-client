@@ -21,6 +21,8 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
   const [assetDialogOpen, setAssetDialogOpen] = useState<boolean>(false);
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
   const [forwardDrawer, setForwardDrawer] = useState<boolean>(false);
+  
+
 
   const handleSelectAsset = (assetUrl: string) => {
     setSelectedAsset(assetUrl);
@@ -48,7 +50,6 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
         gap={1}
         paddingTop={2}
         marginBottom={isSmallScreen ? 45 : 25}
-        paddingBottom={40}
       >
         {assetGroups.map((groups, groupIdx) =>
           groups.map((asset, astIdx) =>

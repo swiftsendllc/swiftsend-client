@@ -3,6 +3,7 @@
 import { AssetFeed } from '@/app/assets/components/AssetFeed';
 import useAssetAPI from '@/hooks/api/useAssetAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
+import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -16,13 +17,20 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Box, Button, Chip, Divider, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { CreateExclusivePostDialog } from './CreateExclusivePostDialog';
 
-export function MessageAssetAndAnalyticsBar() {
+interface MessageInputProps {
+  onMessage: (msg: MessagesEntity) => unknown;
+}
+
+export function MessageAssetAndAnalyticsBar({ onMessage }: MessageInputProps) {
   const { getCreatorAssets } = useAssetAPI();
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const [checkBox, setCheckBox] = useState<boolean>(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
+  const [selectedAssetUrls, setSelectedAssetUrls] = useState<string[]>([]);
   const [showGallery, setShowGallery] = useState<boolean>(false);
+  const [openExcDialog, setOpenExcDialog] = useState<boolean>(false);
   const [, setSearchTerm] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
 
@@ -38,8 +46,14 @@ export function MessageAssetAndAnalyticsBar() {
 
   const handleSelectTenAssets = (hasSelected: boolean) => {
     const selectedAssets = assets.slice(0, 10);
-    if (hasSelected) setSelectedAssetIds(selectedAssets.map((_asset) => _asset.assetId));
-    else setSelectedAssetIds([]);
+    const urls = selectedAssets.flatMap((asst) => asst._assets.map((_asset) => _asset.originalURL));
+    if (hasSelected) {
+      setSelectedAssetUrls(urls);
+      setSelectedAssetIds(selectedAssets.map((_asset) => _asset.assetId));
+    } else {
+      setSelectedAssetUrls([]);
+      setSelectedAssetIds([]);
+    }
   };
 
   const handleToggleSelect = () => {
@@ -47,23 +61,12 @@ export function MessageAssetAndAnalyticsBar() {
     setCheckBox((prev) => !prev);
   };
 
-  const handleSendAssets = () => {
-    if (!selectedAssetIds.length) return toast.error('No assets selected!');
-    toast.success(`Sent ${selectedAssetIds.length} asset(s)!`);
-  };
-
-  // const filteredAssets = assets.filter(
-  //   (asset) =>
-  //     asset.title?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  //     (tags.length === 0 || tags.some((tag) => asset.tags?.includes(tag)))
-  // );
-
   useEffect(() => {
     if (showGallery) loadCreatorAssets();
   }, [showGallery]); //eslint-disable-line
 
   return (
-    <Box width="320px" display="flex" flexDirection="column" paddingTop={3} px={2}>
+    <Box width="320px" display="flex" flexDirection="column" paddingTop={3} px={2} minWidth={0}>
       <Button
         variant="contained"
         fullWidth
@@ -77,6 +80,8 @@ export function MessageAssetAndAnalyticsBar() {
       {showGallery ? (
         <>
           <TextField
+            id="asset"
+            name="asset"
             fullWidth
             placeholder="Search assets..."
             size="small"
@@ -107,8 +112,13 @@ export function MessageAssetAndAnalyticsBar() {
               {checkBox ? <CancelPresentationOutlinedIcon sx={{ mr: 1 }} /> : <GradingOutlinedIcon sx={{ mr: 1 }} />}
               {checkBox ? 'Cancel' : 'Select'}
             </Button>
-            <Button variant="outlined" color="success" disabled={!selectedAssetIds.length} onClick={handleSendAssets}>
-              <SendIcon sx={{ mr: 1 }} /> Send
+            <Button
+              variant="outlined"
+              color="success"
+              disabled={!selectedAssetIds.length}
+              onClick={() => setOpenExcDialog(true)}
+            >
+              <SendIcon sx={{ mr: 1 }} /> Create
             </Button>
           </Stack>
           <Box sx={{ flex: 1, maxHeight: 'calc(100vh - 320px)', overflowY: 'auto', pr: 1 }}>
@@ -183,6 +193,13 @@ export function MessageAssetAndAnalyticsBar() {
           <Divider sx={{ my: 3, borderColor: 'black' }} />
         </>
       )}
+      <CreateExclusivePostDialog
+        isOpen={openExcDialog}
+        onClose={() => setOpenExcDialog(false)}
+        selectedAssetIds={selectedAssetIds}
+        onSend={(msg) => onMessage(msg)}
+        selectedAssetUrls={selectedAssetUrls}
+      />
     </Box>
   );
 }
