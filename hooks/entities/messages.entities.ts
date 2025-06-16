@@ -1,3 +1,4 @@
+import { AssetsEntity } from './assets.entity';
 import { UserProfilesEntity } from './users.entities';
 
 export interface ChannelsEntity {
@@ -10,12 +11,12 @@ export interface ChannelsEntity {
     receiverId: string;
     channelId: string;
     message: string;
-    imageUrls: string[] | null;
     createdAt: Date;
     deletedAt: Date;
     editedAt: Date;
     deleted: boolean;
     edited: boolean;
+    _assets: AssetsEntity[];
   } | null;
 }
 
@@ -25,9 +26,8 @@ export interface MessagesEntity {
   receiverId: string;
   channelId: string;
   message: string;
-  imageUrls: string[];
-  blurredImageUrls: string[];
   isExclusive: boolean;
+  _assets: AssetsEntity[];
   price: number;
   createdAt: Date;
   deletedAt: Date;
@@ -36,7 +36,7 @@ export interface MessagesEntity {
   deleted: boolean;
   edited: boolean;
   seen: boolean;
-  isUser:boolean;
+  isUser: boolean;
   repliedTo: string;
   repliedToMessage: MessagesEntity;
   replies: RepliesEntity[];
@@ -107,9 +107,8 @@ export interface GroupsEntity {
   participants: string[];
   members: UserProfilesEntity[];
   _admin: UserProfilesEntity;
-  isAdmin:boolean;
-  isModerator:boolean
-
+  isAdmin: boolean;
+  isModerator: boolean;
 }
 export interface SendGroupMessageInput {
   message: string | null;

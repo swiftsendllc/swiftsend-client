@@ -22,7 +22,7 @@ const theme = createTheme({
     MuiButton: {
       defaultProps: {
         sx: {
-          height: 45
+          height: 45,
         },
         size: 'large'
       }

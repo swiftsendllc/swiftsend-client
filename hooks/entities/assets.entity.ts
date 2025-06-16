@@ -17,3 +17,11 @@ export interface AssetsEntity {
   deletedAt: Date | null;
   updatedAt: Date;
 }
+
+export interface MessageAssetsEntity {
+  messageId: string;
+  assetId: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
+}
