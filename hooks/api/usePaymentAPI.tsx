@@ -28,7 +28,10 @@ const usePaymentAPI = () => {
     if (!res.ok) {
       throw new Error(data.message);
     }
-    return data;
+    return {
+      requiresAction: data.requiresAction,
+      clientSecret: data.clientSecret
+    };
   };
 
   const getCard = async () => {

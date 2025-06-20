@@ -17,25 +17,28 @@ interface HeaderProps {
   checkBox: boolean;
   setAssets: React.Dispatch<React.SetStateAction<CreatorAssetsEntity[]>>;
   setCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedAssetIds: string[];
-  setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedAssetsMap: React.Dispatch<React.SetStateAction<Map<string, string[]>>>;
+  selectedAssetsMap: Map<string, string[]>;
 }
 
 export function AssetOptions({
   checkBox,
   setAssets,
   setCheckBox,
-  selectedAssetIds,
-  setSelectedAssetIds,
-  onSelectTenAssets
+  onSelectTenAssets,
+  setSelectedAssetsMap,
+  selectedAssetsMap
 }: HeaderProps) {
   const [uploadModal, setUploadModal] = useState<boolean>(false);
   const { deleteCreatorAssets } = useAssetAPI();
+  const selectedAssetIds = Array.from(selectedAssetsMap.keys());
+
   const handleDeleteCreatorAssets = async () => {
     try {
       await deleteCreatorAssets({ assetIds: selectedAssetIds });
       setAssets((prev) => prev.filter((asset) => !selectedAssetIds.includes(asset.assetId)));
       toast.success(`DELETED ${selectedAssetIds.length} ASSETS`);
+      setSelectedAssetsMap(new Map());
       setCheckBox(false);
     } catch (error) {
       console.error(error);
@@ -44,7 +47,7 @@ export function AssetOptions({
   };
 
   const handleToggleSelect = () => {
-    setSelectedAssetIds([]);
+    setSelectedAssetsMap(new Map());
     setCheckBox((prev) => !prev);
   };
 

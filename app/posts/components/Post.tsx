@@ -213,7 +213,7 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
             <Chip color="primary" label={post._assets.length} variant="filled" />
           </Box>
           {/* purchase button */}
-          {post.isPurchased ? null : (
+          {!post.isPurchased && (
             <Box
               sx={{
                 position: 'absolute',

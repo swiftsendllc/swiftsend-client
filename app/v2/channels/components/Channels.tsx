@@ -1,5 +1,6 @@
 'use client';
 
+import MotionPresets from '@/components/MotionPresets';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { ChannelsEntity } from '@/hooks/entities/messages.entities';
 import { Box, Divider, useMediaQuery, useTheme } from '@mui/material';
@@ -36,9 +37,11 @@ export default function ChannelsPage() {
   return (
     <>
       <Box width={isSmallScreen ? '100%' : '340px'} borderRight="1px solid ">
-        <ChannelHeader />
-        <Divider sx={{ borderColor: 'black' }} />
-        <ChannelList channels={channels} />
+        <MotionPresets motionType="SlideTopDown">
+          <ChannelHeader />
+          <Divider sx={{ borderColor: 'black' }} />
+          <ChannelList channels={channels} />
+        </MotionPresets>
       </Box>
       {(isLargeScreen || isMidScreen) && !channelId && <NoChatSelected />}
     </>

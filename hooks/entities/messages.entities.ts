@@ -41,6 +41,8 @@ export interface MessagesEntity {
   repliedToMessage: MessagesEntity;
   replies: RepliesEntity[];
   delivered: boolean;
+  isPurchased: boolean;
+  purchasedBy: string[];
   reactions: MessageReactionsEntity[];
 }
 export interface RepliesEntity {
