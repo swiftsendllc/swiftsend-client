@@ -18,26 +18,25 @@ import {
   InputAdornment,
   Stack,
   Switch,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface ExclusivePostProps {
-  selectedAssetIds: string[];
-  selectedAssetUrls: string[];
   isOpen: boolean;
   onClose?: () => unknown;
   onSend: (msg: MessagesEntity) => unknown;
+  setSelectedAssetsMap: React.Dispatch<React.SetStateAction<Map<string, string[]>>>;
+  selectedAssetsMap: Map<string, string[]>;
 }
 
 export function CreateExclusivePostDialog({
   isOpen,
   onClose,
-  selectedAssetIds,
   onSend,
-  selectedAssetUrls
+  selectedAssetsMap,
+  setSelectedAssetsMap
 }: ExclusivePostProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(isOpen);
@@ -46,7 +45,11 @@ export function CreateExclusivePostDialog({
   const [channel] = useContext(ChannelContext);
   const [isExclusive, setIsExclusive] = useState<boolean>(true);
   const [price, setPrice] = useState<number>(500);
-  const [msg, setMsg] = useState<string>('Do you like it?🍑');
+  const [msg, setMsg] = useState<string>('');
+  const selectedAssetIds = Array.from(selectedAssetsMap.keys());
+  const selectedAssetUrls = Array.from(selectedAssetsMap.entries()).flatMap(([assetId, urls]) =>
+    urls.map((url) => ({ assetId, url }))
+  );
 
   const handleSendExclusiveMessage = async () => {
     setLoading(true);
@@ -59,6 +62,7 @@ export function CreateExclusivePostDialog({
         assetIds: selectedAssetIds
       });
       onSend(exclusivePost);
+      toast.success('Asset sent successfully');
     } catch (error) {
       console.error(error);
       toast.error('Oops! Something wrong happened!');
@@ -68,11 +72,19 @@ export function CreateExclusivePostDialog({
     }
   };
 
+  const handleRemoveFromSelectedAssets = (assetId: string, url: string) => {
+    setSelectedAssetsMap((prev) => {
+      const newMap = new Map(prev);
+      const currentUrls = newMap.get(assetId)?.filter((u) => u != url);
+      if (!currentUrls?.length) newMap.delete(assetId);
+      else newMap.set(assetId, currentUrls);
+      return newMap;
+    });
+  };
+
   const handleClose = () => {
     onClose?.();
-    setPrice(0);
     setMsg('');
-    setIsExclusive(false);
   };
 
   return (
@@ -85,9 +97,7 @@ export function CreateExclusivePostDialog({
         sx: { borderRadius: 3, p: 2 }
       }}
     >
-      <DialogTitle>
-        <Typography variant="h6">Create Exclusive Post</Typography>
-      </DialogTitle>
+      <DialogTitle>Create Exclusive Post</DialogTitle>
       <Divider />
       <DialogContent>
         <Stack spacing={3} mt={1}>
@@ -101,9 +111,9 @@ export function CreateExclusivePostDialog({
               id="price"
               name="price"
               label="Price"
-              type="number"
+              type="text"
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, '')))}
               fullWidth
               slotProps={{
                 input: {
@@ -141,7 +151,7 @@ export function CreateExclusivePostDialog({
 
           <Box>
             <Stack direction="row" spacing={1} mt={1} overflow="auto">
-              {selectedAssetUrls.map((url, idx) => (
+              {selectedAssetUrls.map(({ assetId, url }, idx) => (
                 <Box
                   key={idx}
                   sx={{
@@ -175,6 +185,7 @@ export function CreateExclusivePostDialog({
                       p: '2px'
                     }}
                     size="small"
+                    onClick={() => handleRemoveFromSelectedAssets(assetId, url)}
                   >
                     <CloseIcon fontSize="small" />
                   </IconButton>
@@ -189,7 +200,13 @@ export function CreateExclusivePostDialog({
         <Button onClick={handleClose} color="secondary" variant="outlined">
           Cancel
         </Button>
-        <LoadingButton loading={loading} variant="contained" color="primary" onClick={handleSendExclusiveMessage}>
+        <LoadingButton
+          loading={loading}
+          variant="contained"
+          color="primary"
+          onClick={handleSendExclusiveMessage}
+          disabled={isExclusive && price === 0}
+        >
           Send Post
         </LoadingButton>
       </DialogActions>

@@ -4,41 +4,42 @@ import { Box, Checkbox, Dialog, IconButton, Stack, useMediaQuery, useTheme } fro
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cluster } from 'radash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ForwardDrawer } from './ForwardDrawer';
 
 interface AssetFeedProps {
+  checkBox: boolean;
   assets: CreatorAssetsEntity[];
-  checkbox: boolean;
-  selectedAssetIds: string[];
-  setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedAssetsMap: Map<string, string[]>;
+  setSelectedAssetsMap: React.Dispatch<React.SetStateAction<Map<string, string[]>>>;
 }
 
-export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAssetIds }: AssetFeedProps) {
+export function AssetFeed({ assets, setSelectedAssetsMap, selectedAssetsMap, checkBox }: AssetFeedProps) {
   const theme = useTheme();
   const assetGroups = cluster(assets, 3);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [assetDialogOpen, setAssetDialogOpen] = useState<boolean>(false);
-  const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
+  const [assetUrl, setAssetUrl] = useState<string | null>(null);
   const [forwardDrawer, setForwardDrawer] = useState<boolean>(false);
-  
 
-
-  const handleSelectAsset = (assetUrl: string) => {
-    setSelectedAsset(assetUrl);
+  const handleSelectAsset = (asset_url: string) => {
+    setAssetUrl(asset_url);
     setAssetDialogOpen(true);
   };
 
-  const handleToggleCheckBox = async (assetId: string) => {
-    setSelectedAssetIds((prev) => {
-      const newAssetIds = prev.includes(assetId) ? prev.filter((id) => id !== assetId) : [...prev, assetId];
-      return newAssetIds;
+  const handleToggleAssetSelection = async (asset: CreatorAssetsEntity) => {
+    const urls = asset._assets.map((asst) => asst.originalURL);
+    setSelectedAssetsMap((prev) => {
+      const newAssetMap = new Map(prev);
+      if (newAssetMap.has(asset.assetId)) newAssetMap.delete(asset.assetId);
+      else newAssetMap.set(asset.assetId, urls);
+      return newAssetMap;
     });
   };
 
   const handleClose = () => {
     setAssetDialogOpen(false);
-    setSelectedAsset(null);
+    setAssetUrl(null);
   };
 
   return (
@@ -86,16 +87,18 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
                   sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                   priority
                 />
-                {checkbox && (
+                {checkBox && (
                   <Checkbox
+                    id={`asset-checkbox-${asset.assetId}`}
+                    name={`asset-checkbox-${asset.assetId}`}
                     onClick={(event) => {
                       event.stopPropagation();
                     }}
-                    checked={selectedAssetIds.includes(asset.assetId)}
+                    checked={selectedAssetsMap.has(asset.assetId)}
                     onChange={() => {
-                      handleToggleCheckBox(asset.assetId);
+                      handleToggleAssetSelection(asset);
                     }}
-                    sx={{p:0, m:0, top:1, right:1, position:"absolute", color:"white"}}
+                    sx={{ p: 0, m: 0, top: 1, right: 1, position: 'absolute', color: 'white' }}
                   />
                 )}
               </Box>
@@ -103,7 +106,7 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
           )
         )}
       </Stack>
-      {/* big screen */}
+
       <Dialog open={assetDialogOpen} onClose={handleClose} maxWidth="md" fullWidth>
         <Box
           component={motion.div}
@@ -133,9 +136,9 @@ export function AssetFeed({ assets, checkbox, selectedAssetIds, setSelectedAsset
           >
             <CloseIcon />
           </IconButton>
-          {selectedAsset && (
+          {assetUrl && (
             <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
-              <Image src={selectedAsset} alt="assets" fill style={{ objectFit: 'contain' }} sizes="100vw" priority />
+              <Image src={assetUrl} alt="assets" fill style={{ objectFit: 'contain' }} sizes="100vw" priority />
             </Box>
           )}
         </Box>

@@ -12,7 +12,7 @@ export default function AssetsPage() {
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const { getCreatorAssets } = useAssetAPI();
   const [checkbox, setCheckBox] = useState<boolean>(false);
-  const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
+  const [selectedAssetsMap, setSelectedAssetsMap] = useState<Map<string, string[]>>(new Map());
 
   const loadAssets = async () => {
     try {
@@ -29,32 +29,37 @@ export default function AssetsPage() {
 
   const handleSelectTenAssets = (hasSelected: boolean) => {
     const selectedAssets = assets.slice(0, 10);
-    if (hasSelected) setSelectedAssetIds(selectedAssets.map((asset) => asset.assetId));
-    else setSelectedAssetIds([]);
+    const newAssetMap = new Map<string, string[]>();
+    if (hasSelected)
+      for (const asset of selectedAssets) {
+        const urls = asset._assets.map((asst) => asst.originalURL);
+        newAssetMap.set(asset.assetId, urls);
+      }
+    setSelectedAssetsMap(newAssetMap);
   };
 
   return (
     <Box
-      display={'flex'}
-      flexDirection={'column'}
-      height={'100vh'}
-      fontFamily={'Arial, sans-serif'}
+      display="flex"
+      flexDirection="column"
+      height="100vh"
+      fontFamily="Arial, sans-serif"
       sx={{ minWidth: 0, overflow: 'hidden' }}
     >
       <AssetOptions
         setAssets={setAssets}
         setCheckBox={setCheckBox}
         checkBox={checkbox}
-        selectedAssetIds={selectedAssetIds}
-        setSelectedAssetIds={setSelectedAssetIds}
+        selectedAssetsMap={selectedAssetsMap}
+        setSelectedAssetsMap={setSelectedAssetsMap}
         onSelectTenAssets={handleSelectTenAssets}
       />
       {!assets.length ? (
-        <Typography variant="h5" textAlign={'center'} justifyContent={'center'}>
+        <Typography variant="h5" textAlign="center" justifyContent="center">
           No assets to display
         </Typography>
       ) : (
-        <Box borderRight={'1px solid'}>
+        <Box borderRight="1px solid">
           <List
             sx={{
               display: 'flex',
@@ -67,9 +72,9 @@ export default function AssetsPage() {
           >
             <AssetFeed
               assets={assets}
-              checkbox={checkbox}
-              selectedAssetIds={selectedAssetIds}
-              setSelectedAssetIds={setSelectedAssetIds}
+              checkBox={checkbox}
+              setSelectedAssetsMap={setSelectedAssetsMap}
+              selectedAssetsMap={selectedAssetsMap}
             />
           </List>
         </Box>
