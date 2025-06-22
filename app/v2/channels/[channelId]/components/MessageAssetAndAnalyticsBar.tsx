@@ -3,7 +3,8 @@
 import useAssetAPI from '@/hooks/api/useAssetAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import BurstModeIcon from '@mui/icons-material/BurstMode';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { Box, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -48,7 +49,7 @@ export function MessageAssetAndAnalyticsBar({ onMessage }: MessageInputProps) {
   };
 
   const handleToggleSelect = () => {
-    setOpenExcDialog(false)
+    setOpenExcDialog(false);
     setSelectedAssetsMap(new Map());
     setCheckBox((prev) => !prev);
   };
@@ -63,7 +64,7 @@ export function MessageAssetAndAnalyticsBar({ onMessage }: MessageInputProps) {
         variant="contained"
         fullWidth
         sx={{ borderRadius: 999, textTransform: 'none', px: 2, mb: 2 }}
-        startIcon={<AddPhotoAlternateIcon />}
+        startIcon={showGallery ? <BurstModeIcon /> : <InsertPhotoIcon />}
         onClick={() => setShowGallery((prev) => !prev)}
       >
         {showGallery ? 'Hide Gallery' : 'Send exclusive'}

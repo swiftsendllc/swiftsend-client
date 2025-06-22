@@ -21,22 +21,12 @@ export default function MessagePage() {
   const { socket } = useSocket();
   const { getChannelMessages } = useMessageAPI();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMidScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(null);
   const { createPayment } = usePaymentAPI();
   const [user] = useContext(UserContext);
-
-  useEffect(() => {
-    socket.on('newMessage', (msg: MessagesEntity) => {
-      console.log(msg);
-      setMessages((prev) => [msg, ...prev]);
-    });
-    return () => {
-      socket.off('newMessage');
-    };
-  }, [setMessages, socket]);
 
   const handleLoadMessages = async () => {
     try {
@@ -67,6 +57,35 @@ export default function MessagePage() {
     };
   };
 
+  const handleReload = async () => {
+    await new Promise(() => setTimeout(handleLoadMessages, 1000));
+  };
+
+  useEffect(() => {
+    socket.on('newMessage', (msg: MessagesEntity) => {
+      console.log(msg);
+      setMessages((prev) => [msg, ...prev]);
+    });
+
+    socket.on('hasPurchased', (message: { messageId: string; purchasedBy: string[] }) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === message.messageId
+            ? {
+                ...msg,
+                purchasedBy: [...msg.purchasedBy, ...message.purchasedBy],
+                isPurchased: true
+              }
+            : msg
+        )
+      );
+    });
+    return () => {
+      socket.off('hasPurchased');
+      socket.off('newMessage');
+    };
+  }, [setMessages, socket]); //eslint-disable-line
+
   useEffect(() => {
     if (channelId) handleLoadMessages();
   }, [channelId]); //eslint-disable-line
@@ -77,7 +96,7 @@ export default function MessagePage() {
         <PaymentModalWrapper
           isOpen={paymentModal}
           onClose={() => setPaymentModal(false)}
-          onSuccess={handleLoadMessages}
+          onSuccess={handleReload}
           metadata={{
             userId: user.userId,
             creatorId: selectedMessage.senderId,
@@ -94,7 +113,7 @@ export default function MessagePage() {
           setPaymentModal={setPaymentModal}
           setSelectedMessage={setSelectedMessage}
         />
-        {!isSmallScreen && !isMidScreen && (
+        {isLargeScreen && (
           <MotionPresets motionType="SlideTopDown">
             <MessageAssetAndAnalyticsBar onMessage={(msg) => setMessages((prev) => [msg, ...prev])} />
           </MotionPresets>
