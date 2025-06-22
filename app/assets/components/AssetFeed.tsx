@@ -1,5 +1,6 @@
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import CloseIcon from '@mui/icons-material/Close';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { Box, Checkbox, Dialog, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -68,7 +69,6 @@ export function AssetFeed({ assets, setSelectedAssetsMap, selectedAssetsMap, che
                   aspectRatio: '4 / 3',
                   borderRadius: 2,
                   overflow: 'hidden',
-                  cursor: 'pointer',
                   display: 'flex',
                   flexDirection: 'column-reverse',
                   boxShadow: 1,
@@ -79,6 +79,7 @@ export function AssetFeed({ assets, setSelectedAssetsMap, selectedAssetsMap, che
                   }
                 }}
               >
+                <FullscreenIcon sx={{ position: 'absolute', p: 0, m: 0, top: 1, left: 1, color:"white" }} />
                 <Image
                   src={asst.originalURL}
                   alt="assets"
