@@ -110,7 +110,7 @@ export function MessageThreadBox({ groupedMessages, setPaymentModal, setSelected
                           })}
                         </Box>
                       )}
-                      <Stack direction={'column'}>
+                      <Stack direction={'column'} maxWidth={200}>
                         {msg.isExclusive && !purchased && (
                           <Button
                             sx={{
@@ -126,7 +126,7 @@ export function MessageThreadBox({ groupedMessages, setPaymentModal, setSelected
                             {`$${msg.price}`}
                           </Button>
                         )}
-                        <Typography variant="body2" color="var(--dark)">
+                        <Typography variant="body2" color="var(--dark)" textAlign={"left"}>
                           {msg.message}
                         </Typography>
                       </Stack>
