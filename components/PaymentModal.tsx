@@ -1,6 +1,7 @@
 'use client';
 
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
+import { UserContext } from '@/hooks/context/user-context';
 import { CardsEntity } from '@/hooks/entities/payments.entity';
 import { ENV } from '@/library/constants';
 import { LoadingButton } from '@mui/lab';
@@ -21,7 +22,7 @@ import {
 } from '@mui/material';
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { loadStripe, MetadataParam } from '@stripe/stripe-js';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface PaymentModalProps {
@@ -42,6 +43,7 @@ interface PaymentModalWrapperProps {
 }
 
 function PaymentModal({ onClose, metadata, cardData, onSuccess, makePayment }: PaymentModalProps) {
+  const [user] = useContext(UserContext);
   const stripe = useStripe();
   const elements = useElements();
   const { attachPaymentMethod, confirmCard } = usePaymentAPI();
@@ -84,7 +86,7 @@ function PaymentModal({ onClose, metadata, cardData, onSuccess, makePayment }: P
           card: newCard!,
           metadata,
           billing_details: {
-            name: 'Chris Evans'
+            name: user.fullName
           }
         });
         paymentMethodId = paymentMethod!.id;

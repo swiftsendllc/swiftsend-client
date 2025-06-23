@@ -63,7 +63,7 @@ export function MessageAssetAndAnalyticsBar({ onMessage }: MessageInputProps) {
       <Button
         variant="contained"
         fullWidth
-        sx={{ borderRadius: 999, textTransform: 'none', px: 2, mb: 2 }}
+        sx={{ textTransform: 'none', px: 2, mb: 2 }}
         startIcon={showGallery ? <BurstModeIcon /> : <InsertPhotoIcon />}
         onClick={() => setShowGallery((prev) => !prev)}
       >
