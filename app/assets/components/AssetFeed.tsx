@@ -80,7 +80,7 @@ export function AssetFeed({ assets, setSelectedAssetsMap, selectedAssetsMap, che
                 }}
               >
                 <FullscreenIcon sx={{ position: 'absolute', p: 0, m: 0, top: 1, left: 1, color:"white" }} />
-                <Image
+j                <Image
                   src={asst.originalURL}
                   alt="assets"
                   fill

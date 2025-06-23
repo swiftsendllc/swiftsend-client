@@ -16,9 +16,12 @@ import { MessageAssetAndAnalyticsBar } from './components/MessageAssetAndAnalyti
 import { MessageThread } from './components/MessageThread';
 
 export default function MessagePage() {
+  const limit = 25;
   const theme = useTheme();
   const { channelId } = useParams();
   const { socket } = useSocket();
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { getChannelMessages } = useMessageAPI();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -28,14 +31,27 @@ export default function MessagePage() {
   const { createPayment } = usePaymentAPI();
   const [user] = useContext(UserContext);
 
-  const handleLoadMessages = async () => {
+  const handleLoadMessages = async (initialLoad = false) => {
+    const offset = initialLoad ? 0 : messages.length;
+    setLoading(true);
+
     try {
-      const fetchedMessages = await getChannelMessages(channelId as string, { offset: 0, limit: 30 });
-      setMessages(fetchedMessages);
+      const fetchedMessages = await getChannelMessages(channelId as string, { offset, limit });
+      if (initialLoad) setMessages(fetchedMessages);
+      else {
+        setHasMore(fetchedMessages.length === limit);
+        setMessages((prev) => [...prev, ...fetchedMessages]);
+      }
     } catch (error) {
       console.error(error);
       toast.error('Oops! Something wrong happened!');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleLoadMoreMessages = () => {
+    if (hasMore && !loading) handleLoadMessages();
   };
 
   const handleMakePayment = async (paymentMethodId: string) => {
@@ -63,21 +79,22 @@ export default function MessagePage() {
 
   useEffect(() => {
     socket.on('newMessage', (msg: MessagesEntity) => {
-      console.log(msg);
       setMessages((prev) => [msg, ...prev]);
     });
 
     socket.on('hasPurchased', (message: { messageId: string; purchasedBy: string[] }) => {
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === message.messageId
-            ? {
-                ...msg,
-                purchasedBy: [...msg.purchasedBy, ...message.purchasedBy],
-                isPurchased: true
-              }
-            : msg
-        )
+        prev.map((msg) => {
+          const updated =
+            msg._id === message.messageId
+              ? {
+                  ...msg,
+                  purchasedBy: [...msg.purchasedBy, ...message.purchasedBy],
+                  isPurchased: true
+                }
+              : msg;
+          return updated;
+        })
       );
     });
     return () => {
@@ -108,10 +125,13 @@ export default function MessagePage() {
       <Box display="flex" height="100vh" fontFamily="Arial, sans-serif" sx={{ minWidth: 0, overflow: 'hidden' }}>
         {!isSmallScreen && <ChannelsPage />}
         <MessageThread
+          loading={loading}
+          hasMore={hasMore}
           messages={messages}
-          onSend={(msg) => setMessages((prev) => [msg, ...prev])}
           setPaymentModal={setPaymentModal}
           setSelectedMessage={setSelectedMessage}
+          handleLoadMore={handleLoadMoreMessages}
+          onSend={(msg) => setMessages((prev) => [msg, ...prev])}
         />
         {isLargeScreen && (
           <MotionPresets motionType="SlideTopDown">
