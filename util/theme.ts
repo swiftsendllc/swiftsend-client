@@ -23,6 +23,7 @@ const theme = createTheme({
       defaultProps: {
         sx: {
           height: 45,
+          borderRadius:4
         },
         size: 'large'
       }

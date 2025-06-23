@@ -4,7 +4,6 @@ import MotionPresets from '@/components/MotionPresets';
 import PaymentModalWrapper from '@/components/PaymentModal';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
-import { useSocket } from '@/hooks/context/socket-context';
 import { UserContext } from '@/hooks/context/user-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
@@ -12,6 +11,7 @@ import { useParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import ChannelsPage from '../components/Channels';
+import { FetchSocketMessages } from './components/FetchSocketMessages';
 import { MessageAssetAndAnalyticsBar } from './components/MessageAssetAndAnalyticsBar';
 import { MessageThread } from './components/MessageThread';
 
@@ -19,17 +19,17 @@ export default function MessagePage() {
   const limit = 25;
   const theme = useTheme();
   const { channelId } = useParams();
-  const { socket } = useSocket();
+  const [user] = useContext(UserContext);
+  const { createPayment } = usePaymentAPI();
+  const { getChannelMessages } = useMessageAPI();
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { getChannelMessages } = useMessageAPI();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(null);
-  const { createPayment } = usePaymentAPI();
-  const [user] = useContext(UserContext);
+  FetchSocketMessages({ setMessages });
 
   const handleLoadMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
@@ -78,32 +78,6 @@ export default function MessagePage() {
   };
 
   useEffect(() => {
-    socket.on('newMessage', (msg: MessagesEntity) => {
-      setMessages((prev) => [msg, ...prev]);
-    });
-
-    socket.on('hasPurchased', (message: { messageId: string; purchasedBy: string[] }) => {
-      setMessages((prev) =>
-        prev.map((msg) => {
-          const updated =
-            msg._id === message.messageId
-              ? {
-                  ...msg,
-                  purchasedBy: [...msg.purchasedBy, ...message.purchasedBy],
-                  isPurchased: true
-                }
-              : msg;
-          return updated;
-        })
-      );
-    });
-    return () => {
-      socket.off('hasPurchased');
-      socket.off('newMessage');
-    };
-  }, [setMessages, socket]); //eslint-disable-line
-
-  useEffect(() => {
     if (channelId) handleLoadMessages();
   }, [channelId]); //eslint-disable-line
 
@@ -112,14 +86,14 @@ export default function MessagePage() {
       {selectedMessage && (
         <PaymentModalWrapper
           isOpen={paymentModal}
-          onClose={() => setPaymentModal(false)}
           onSuccess={handleReload}
+          makePayment={handleMakePayment}
+          onClose={() => setPaymentModal(false)}
           metadata={{
             userId: user.userId,
             creatorId: selectedMessage.senderId,
             contentId: selectedMessage._id
           }}
-          makePayment={handleMakePayment}
         />
       )}
       <Box display="flex" height="100vh" fontFamily="Arial, sans-serif" sx={{ minWidth: 0, overflow: 'hidden' }}>

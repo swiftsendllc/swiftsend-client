@@ -38,7 +38,7 @@ export function ChannelList({ channels }: ChannelProps) {
               </ListItemAvatar>
               <ListItemText
                 primary={`${channel.receiver.fullName}  ${moment(channel.lastMessage?.createdAt).format('hh:mm')}`}
-                secondary={channel.lastMessage?.message}
+                secondary={`${channel.lastMessage?.message.slice(0, 31)}...`}
               />
             </ListItem>
             <Divider sx={{ borderColor: 'black' }} />
