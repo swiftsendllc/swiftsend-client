@@ -103,7 +103,7 @@ export function CreateExclusivePostDialog({
         <Stack spacing={3} mt={1}>
           <FormControlLabel
             control={<Switch checked={isExclusive} onChange={(e) => setIsExclusive(e.target.checked)} />}
-            label="Exclusive Post"
+            label={isExclusive ? 'Exclusive Post' : "Non-exclusive post can\'t be send"}
           />
 
           {isExclusive && (
@@ -205,7 +205,7 @@ export function CreateExclusivePostDialog({
           variant="contained"
           color="primary"
           onClick={handleSendExclusiveMessage}
-          disabled={isExclusive && price === 0}
+          disabled={!isExclusive || price === 0}
         >
           Send Post
         </LoadingButton>

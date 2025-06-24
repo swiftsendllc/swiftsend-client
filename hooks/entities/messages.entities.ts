@@ -56,6 +56,9 @@ export interface RepliesEntity {
 
 export interface EditMessageInput {
   message: string;
+  messageId:string
+  editedAt:Date
+  edited:boolean
 }
 export interface MessageUserInput {
   receiverId: string;

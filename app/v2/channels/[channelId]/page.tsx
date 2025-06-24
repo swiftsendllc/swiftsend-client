@@ -77,6 +77,23 @@ export default function MessagePage() {
     await new Promise(() => setTimeout(handleLoadMessages, 1000));
   };
 
+  const handleUpdated = (msg: MessagesEntity) => {
+    setMessages((prev) =>
+      prev.map((m) => {
+        const updated =
+          m._id === msg._id
+            ? {
+                ...m,
+                message: msg.message,
+                editedAt: msg.editedAt,
+                edited: msg.edited
+              }
+            : m;
+        return updated;
+      })
+    );
+  };
+
   useEffect(() => {
     if (channelId) handleLoadMessages();
   }, [channelId]); //eslint-disable-line
@@ -106,6 +123,7 @@ export default function MessagePage() {
           setSelectedMessage={setSelectedMessage}
           handleLoadMore={handleLoadMoreMessages}
           onSend={(msg) => setMessages((prev) => [msg, ...prev])}
+          onUpdateMessage={(msg) => handleUpdated(msg)}
         />
         {isLargeScreen && (
           <MotionPresets motionType="SlideTopDown">

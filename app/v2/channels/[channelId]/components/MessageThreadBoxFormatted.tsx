@@ -10,15 +10,25 @@ import PriceCheckIcon from '@mui/icons-material/PriceCheck';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import { Box, Button, Chip, IconButton, Stack, Typography } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 interface MessageThreadFormattedProps {
-  msg: MessagesEntity;
+  message: MessagesEntity;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  setReply: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  messageRefs: React.MutableRefObject<Record<string, HTMLDivElement | null>>;
   setSelectedMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
 }
 
-export function MessageThreadBoxFormatted({ msg, setSelectedMessage, setPaymentModal }: MessageThreadFormattedProps) {
+export function MessageThreadBoxFormatted({
+  message,
+  setReply,
+  messageRefs,
+  setPaymentModal,
+  setSelectedMessage,
+  setEditMessage
+}: MessageThreadFormattedProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const formatMessage = (textMessage: string, isExp: boolean) => {
@@ -27,19 +37,63 @@ export function MessageThreadBoxFormatted({ msg, setSelectedMessage, setPaymentM
     else return textMessage;
   };
 
-  const handleChipLabel = () => {
-    if (msg.isPurchased) return 'Unlocked';
-    else return `$${msg.price}`;
+  const formatDate = (msg: MessagesEntity) => {
+    if (msg.deleted) return msg.deletedAt;
+    else if (msg.edited) return msg.editedAt;
+    else return msg.createdAt;
   };
 
-  const msgLen = msg.message.length;
+  const showMessageState = (msg: MessagesEntity) => {
+    if (msg.deleted) return 'deleted: ';
+    else if (msg.edited) return 'edited: ';
+    else return null;
+  };
+
+  const handleChipLabel = () => {
+    if (message.isPurchased) return 'Unlocked';
+    else return `$${message.price}`;
+  };
+
+  const msgLen = message.message.length;
   const [user] = useContext(UserContext);
-  const isSender = msg.senderId === user.userId;
-  const purchased = msg.purchasedBy.includes(user.userId);
-  const formattedMessage = formatMessage(msg.message, isExpanded);
+  const isSender = message.senderId === user.userId;
+  const purchased = message.purchasedBy.includes(user.userId);
+  const [isHighLighted, setIsHighLighted] = useState<boolean>(false);
+  const formattedMessage = formatMessage(message.message, isExpanded);
+
+  const handleScrollToRepliedToMessage = (messageId: string) => {
+    const element = messageRefs.current[messageId];
+    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const highLightEvent = new CustomEvent('highlight-message', { detail: { id: messageId } });
+    window.dispatchEvent(highLightEvent);
+  };
+
+  useEffect(() => {
+    const handleHighLight = (event: CustomEvent) => {
+      if (event.detail.id === message._id) {
+        setIsHighLighted(true);
+        setTimeout(() => setIsHighLighted(false), 1500);
+      }
+    };
+    window.addEventListener('highlight-message', handleHighLight as EventListener);
+    return () => {
+      window.removeEventListener('highlight-message', handleHighLight as EventListener);
+    };
+  }, [message._id]);
+
+  useEffect(() => {
+    const ref = messageRefs.current;
+    return () => {
+      delete ref[message._id];
+    };
+  }, [messageRefs, message._id]);
 
   return (
     <Box
+      ref={(el: HTMLDivElement | null) => {
+        messageRefs.current[message._id] = el;
+      }}
       maxWidth="70%"
       px={2}
       py={1}
@@ -49,10 +103,11 @@ export function MessageThreadBoxFormatted({ msg, setSelectedMessage, setPaymentM
       sx={{
         borderRadius: 2,
         transition: 'all 0.3s ease-in-out',
+        boxShadow: isHighLighted ? '0 0 10px 4px rgb(245, 248, 247)' : 'none',
         '&:hover': { transform: 'scale(1.05)' }
       }}
     >
-      {Array.isArray(msg._assets) && (
+      {Array.isArray(message._assets) && (
         <Box
           sx={{
             display: 'flex',
@@ -64,7 +119,7 @@ export function MessageThreadBoxFormatted({ msg, setSelectedMessage, setPaymentM
             mb: 1
           }}
         >
-          {msg._assets.map((asset, i) => {
+          {message._assets.map((asset, i) => {
             return (
               <Box
                 key={i}
@@ -89,63 +144,86 @@ export function MessageThreadBoxFormatted({ msg, setSelectedMessage, setPaymentM
                     transition: 'filter 0.3s ease'
                   }}
                 />
+                <Box position={'absolute'} bottom={1} right={1}>
+                  <Typography variant="caption" color="var(--dark)">
+                    {`${i + 1}/${message._assets.length}`}
+                  </Typography>
+                </Box>
               </Box>
             );
           })}
         </Box>
       )}
       <Stack direction={'column'} maxWidth={200}>
-        {msg.isExclusive && !purchased && (
+        {message.isExclusive && !purchased && (
           <Button
             sx={{
               bgcolor: 'rgba(0,0,0,0.7)',
               color: 'white'
             }}
             onClick={() => {
-              setSelectedMessage(msg);
+              setSelectedMessage(message);
               setPaymentModal(true);
             }}
           >
             <LockIcon sx={{ fontSize: 28, color: 'black' }} />
-            {`$${msg.price}`}
+            {`$${message.price}`}
           </Button>
         )}
-        <Typography variant="body2" color="var(--dark)" textAlign={'left'}>
-          {formattedMessage}
-          {msgLen > 90 && (
-            <IconButton sx={{ p: 0, m: 0 }} onClick={() => setIsExpanded((prev) => !prev)}>
-              {isExpanded ? (
-                <ExpandLessIcon sx={{ cursor: 'pointer' }} />
-              ) : (
-                <ExpandMoreIcon sx={{ cursor: 'pointer' }} />
-              )}
-            </IconButton>
+        <Stack direction={'row'} justifyContent={'space-between'}>
+          <Typography variant="body2" color="var(--dark)" textAlign={'left'}>
+            {formattedMessage}
+            {msgLen > 90 && (
+              <IconButton sx={{ p: 0, m: 0 }} onClick={() => setIsExpanded((prev) => !prev)}>
+                {isExpanded ? (
+                  <ExpandLessIcon sx={{ cursor: 'pointer' }} />
+                ) : (
+                  <ExpandMoreIcon sx={{ cursor: 'pointer' }} />
+                )}
+              </IconButton>
+            )}
+          </Typography>
+          {message.repliedToMessage && (
+            <Box
+              sx={{
+                cursor: 'pointer',
+                border: '1px solid',
+                width: 100,
+                borderRadius: 2
+              }}
+              onClick={() => handleScrollToRepliedToMessage(message.repliedToMessage._id)}
+            >
+              <Typography variant="caption" color="var(--dark)" fontStyle={'italic'} sx={{ p: 0, m: 0 }}>
+                Replied: {message.repliedToMessage.message.slice(0, 10)}...
+              </Typography>
+            </Box>
           )}
-        </Typography>
+        </Stack>
       </Stack>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5} mx={1}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5} mx={0}>
         <Typography variant="caption" color="var(--dark)" sx={{ mr: 1 }}>
-          {moment(msg.createdAt).format('hh:mm')}
+          {showMessageState(message)}
+          {moment(formatDate(message)).format('hh:mm')}
         </Typography>
 
-        {msg.isExclusive && (
+        {message.isExclusive && (
           <Chip
             size="small"
             label={handleChipLabel()}
             color={'default'}
             variant="filled"
             sx={{ ml: 1 }}
-            icon={msg.isPurchased ? <PriceCheckIcon /> : <MoneyOffIcon />}
+            icon={message.isPurchased ? <PriceCheckIcon /> : <MoneyOffIcon />}
           />
         )}
 
         {isSender && (
-          <IconButton sx={{ p: 0, m: 0 }}>
+          <IconButton sx={{ p: 0, m: 0 }} onClick={() => setEditMessage(message)}>
             <EditOutlinedIcon sx={{ width: 20, height: 20 }} color="info" />
           </IconButton>
         )}
-        <IconButton sx={{ p: 0, m: 0, ml: 1 }}>
+        <IconButton sx={{ p: 0, m: 0, ml: 1 }} onClick={() => setReply(message)}>
           <ReplyOutlinedIcon sx={{ width: 20, height: 20 }} color="info" />
         </IconButton>
         {!isSender && (
