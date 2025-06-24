@@ -113,8 +113,6 @@ const useMessageAPI = () => {
   const sendMessageReply = async (input: {
     message: string | null;
     messageId: string;
-    isExclusive: boolean;
-    price: number;
     receiverId: string;
   }) => {
     const accessToken = getCookie(authCookieKey);

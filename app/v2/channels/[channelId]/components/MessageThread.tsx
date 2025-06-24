@@ -2,8 +2,9 @@ import MotionPresets from '@/components/MotionPresets';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import { Box } from '@mui/material';
 import { format } from 'date-fns';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { EditMessageModal } from './EditMessageModal';
 import { MessageInput } from './MessageInput';
 import { MessageThreadBox } from './MessageThreadBox';
 import { MessageThreadHeader } from './MessageThreadHeader';
@@ -15,6 +16,7 @@ interface MessageThreadProps {
   setSelectedMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   loading: boolean;
   hasMore: boolean;
+  onUpdateMessage: (msg: MessagesEntity) => unknown;
   handleLoadMore: () => unknown;
 }
 
@@ -25,13 +27,17 @@ export function MessageThread({
   setSelectedMessage,
   loading,
   hasMore,
+  onUpdateMessage,
   handleLoadMore
 }: MessageThreadProps) {
+  const [reply, setReply] = useState<MessagesEntity | null>(null);
+  const [editMessage, setEditMessage] = useState<MessagesEntity | null>(null);
+
   const groupedMessages = useMemo(() => {
     return Object.entries(
       messages.reduce<Record<string, MessagesEntity[]>>((acc, msg) => {
         const dateKey = format(msg.createdAt, 'yyyy-MM-dd');
-        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey] ??= [];
         acc[dateKey].push(msg);
         return acc;
       }, {})
@@ -70,15 +76,25 @@ export function MessageThread({
           scrollableTarget={'scroll-id'}
         >
           <MessageThreadBox
+            setReply={setReply}
             groupedMessages={groupedMessages}
             setPaymentModal={setPaymentModal}
             setSelectedMessage={setSelectedMessage}
+            setEditMessage={setEditMessage}
           />
         </InfiniteScroll>
       </Box>
       <MotionPresets motionType="SlideBottomUp">
-        <MessageInput onSend={(msg) => onSend(msg)} />
+        <MessageInput onSend={(msg) => onSend(msg)} reply={reply} setReply={setReply} />
       </MotionPresets>
+      {editMessage && (
+        <EditMessageModal
+          isOpen={!!editMessage}
+          message={editMessage}
+          onClose={() => setEditMessage(null)}
+          onUpdateMessage={onUpdateMessage}
+        />
+      )}
     </Box>
   );
 }
