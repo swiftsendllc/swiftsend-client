@@ -17,7 +17,7 @@ export default function ChannelsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const isMidScreen = useMediaQuery(theme.breakpoints.up('sm'));
   const [channels, setChannels] = useState<ChannelsEntity[]>([]);
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const loadChannels = async () => {
     try {
@@ -37,12 +37,18 @@ export default function ChannelsPage() {
 
   return (
     <>
-      <Box width={'340px'} borderRight="1px solid" sx={{ minHeight: '100vh', overflowY: 'auto' }}>
+      <Box
+        borderRight="1px solid"
+        maxWidth={'430px'}
+        minWidth={'340px'}
+        width={isMidScreen ? 'auto' : '100%'}
+        sx={{ minHeight: '100vh', overflowY: 'auto' }}
+      >
         <ChannelHeader />
         <Divider sx={{ borderColor: 'black' }} />
         <ChannelList channels={channels} loading={loading} />
       </Box>
-      {(isLargeScreen || isMidScreen) && !channelId && <NoChatSelected />}
+      {!isSmallScreen && !channelId && <NoChatSelected />}
     </>
   );
 }

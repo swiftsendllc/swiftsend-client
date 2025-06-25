@@ -28,7 +28,7 @@ export function ChannelHeader() {
         placeholder="Search..."
         fullWidth
         size="small"
-        sx={{ px: 2, mb: 1 }}
+        sx={{ px: 2, mb: 1, width:"90%" }}
         slotProps={{
           input: {
             startAdornment: (

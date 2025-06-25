@@ -11,7 +11,8 @@ export function NoChatSelected() {
       justifyContent="center"
       flexDirection="column"
       minHeight="100%"
-      padding={4}
+      width={"100%"}
+      minWidth={"340px"}
       borderRight="1px solid"
     >
       <ChatBubbleOutlineIcon sx={{ fontSize: 64, color: '#ccc', mb: 2 }} />

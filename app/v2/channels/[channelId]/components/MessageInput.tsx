@@ -55,6 +55,13 @@ export function MessageInput({ onSend, reply, setReply, loading }: MessageInputP
     }
   };
 
+  const handleSend = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      if (message.trim() !== '') handleSendMessage();
+    }
+  };
+
   const formatReplyMessage = (text: MessagesEntity) => {
     if (!text.message && text.isExclusive) return '$$ Exclusive post $';
     else return text.message;
@@ -100,6 +107,7 @@ export function MessageInput({ onSend, reply, setReply, loading }: MessageInputP
             multiline
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => handleSend(e)}
             maxRows={3}
             variant="outlined"
             sx={{ borderRadius: 2 }}

@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { DeleteMessageModal } from './DeleteMessageModal';
 import { EditMessageModal } from './EditMessageModal';
 import { MessageInput } from './MessageInput';
 import MessageSkeletonLoader from './MessageSkeletonLoader';
@@ -18,21 +19,24 @@ interface MessageThreadProps {
   loading: boolean;
   hasMore: boolean;
   onUpdateMessage: (msg: MessagesEntity) => unknown;
+  onDeleteMessage: (msg: MessagesEntity) => unknown;
   handleLoadMore: () => unknown;
 }
 
 export function MessageThread({
   messages,
   onSend,
-  setPaymentModal,
-  setSelectedMessage,
   loading,
   hasMore,
+  setPaymentModal,
   onUpdateMessage,
-  handleLoadMore
+  handleLoadMore,
+  onDeleteMessage,
+  setSelectedMessage
 }: MessageThreadProps) {
   const [reply, setReply] = useState<MessagesEntity | null>(null);
   const [editMessage, setEditMessage] = useState<MessagesEntity | null>(null);
+  const [deleteMessage, setDeleteMessage] = useState<MessagesEntity | null>(null);
 
   const groupedMessages = useMemo(() => {
     return Object.entries(
@@ -51,6 +55,7 @@ export function MessageThread({
       display="flex"
       flexDirection="column"
       minWidth="340px"
+      maxWidth={'746px'}
       width="auto"
       borderRight="1px solid "
       height="100vh"
@@ -79,10 +84,11 @@ export function MessageThread({
           >
             <MessageThreadBox
               setReply={setReply}
+              setDeleteMessage={setDeleteMessage}
+              setEditMessage={setEditMessage}
               groupedMessages={groupedMessages}
               setPaymentModal={setPaymentModal}
               setSelectedMessage={setSelectedMessage}
-              setEditMessage={setEditMessage}
             />
           </InfiniteScroll>
         )}
@@ -96,6 +102,14 @@ export function MessageThread({
           message={editMessage}
           onClose={() => setEditMessage(null)}
           onUpdateMessage={onUpdateMessage}
+        />
+      )}
+      {deleteMessage && (
+        <DeleteMessageModal
+          isOpen={!!deleteMessage}
+          onClose={() => setDeleteMessage(null)}
+          message={deleteMessage}
+          onDeleteMessage={onDeleteMessage}
         />
       )}
     </Box>

@@ -49,7 +49,7 @@ export default function MessagePage() {
 
   const handleLoadMoreMessages = () => {
     if (hasMore && !loading) handleLoadMessages();
-    console.log("end")
+    console.log('end');
   };
 
   const handleMakePayment = async (paymentMethodId: string) => {
@@ -92,6 +92,23 @@ export default function MessagePage() {
     );
   };
 
+  const handleDeleted = (msg: MessagesEntity) => {
+    setMessages((prev) =>
+      prev.map((m) => {
+        const _deleted =
+          m._id === msg._id
+            ? {
+                ...m,
+                message: msg.message,
+                deletedAt: msg.deletedAt,
+                deleted: msg.deleted
+              }
+            : m;
+        return _deleted;
+      })
+    );
+  };
+
   useEffect(() => {
     if (channelId) handleLoadMessages();
   }, [channelId]); //eslint-disable-line
@@ -120,6 +137,7 @@ export default function MessagePage() {
           setPaymentModal={setPaymentModal}
           setSelectedMessage={setSelectedMessage}
           handleLoadMore={handleLoadMoreMessages}
+          onDeleteMessage={(msg) => handleDeleted(msg)}
           onUpdateMessage={(msg) => handleUpdated(msg)}
           onSend={(msg) => setMessages((prev) => [msg, ...prev])}
         />
