@@ -11,10 +11,12 @@ import { Box, Container, FormControl, IconButton, Stack, TextField, Typography }
 import InputAdornment from '@mui/material/InputAdornment';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Animation from './Animation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const { login } = useAPI();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -30,7 +32,7 @@ export default function LoginPage() {
     setPasswordError('');
     try {
       await login(email, password);
-      window.location.href = '/channels';
+      window.location.href = '/v2/channels';
     } catch (err) {
       console.log(err);
       setPasswordError('Invalid credentials');
@@ -48,19 +50,19 @@ export default function LoginPage() {
       }}
     >
       <Box mt={{ md: 2, sm: 2 }} mb={2}>
-        <IconButton aria-label="back-button" color="inherit" sx={{ padding: 0, py: 1 }} href="/" LinkComponent={Link}>
+        <IconButton aria-label="back-button" color="inherit" sx={{ padding: 0, py: 1 }} onClick={() => router.back()}>
           <ArrowBackIcon sx={{ width: 30, height: 30 }} />
         </IconButton>
       </Box>
       <Box width="100%" textAlign="right" alignContent="center" mb={10}>
         <Animation>
-        <Image
-          src="/icons/app_icon.png"
-          width={100}
-          height={100}
-          alt="/icons/app_icon.png"
-          style={{ objectFit: 'contain' }}
-        />
+          <Image
+            src="/icons/app_icon.png"
+            width={100}
+            height={100}
+            alt="/icons/app_icon.png"
+            style={{ objectFit: 'contain' }}
+          />
         </Animation>
         <Typography variant="h5" fontWeight={300}>
           {t('appName')}

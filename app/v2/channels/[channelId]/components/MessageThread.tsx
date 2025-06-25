@@ -6,6 +6,7 @@ import React, { useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { EditMessageModal } from './EditMessageModal';
 import { MessageInput } from './MessageInput';
+import MessageSkeletonLoader from './MessageSkeletonLoader';
 import { MessageThreadBox } from './MessageThreadBox';
 import { MessageThreadHeader } from './MessageThreadHeader';
 
@@ -54,9 +55,7 @@ export function MessageThread({
       borderRight="1px solid "
       height="100vh"
     >
-      <MotionPresets motionType="SlideTopDown">
-        <MessageThreadHeader />
-      </MotionPresets>
+      <MessageThreadHeader loading={loading} />
       <Box
         sx={{
           flex: 1,
@@ -66,26 +65,30 @@ export function MessageThread({
         }}
         id="scroll-id"
       >
-        <InfiniteScroll
-          inverse={true}
-          loader={loading}
-          hasMore={hasMore}
-          scrollThreshold={0.8}
-          next={handleLoadMore}
-          dataLength={messages.length}
-          scrollableTarget={'scroll-id'}
-        >
-          <MessageThreadBox
-            setReply={setReply}
-            groupedMessages={groupedMessages}
-            setPaymentModal={setPaymentModal}
-            setSelectedMessage={setSelectedMessage}
-            setEditMessage={setEditMessage}
-          />
-        </InfiniteScroll>
+        {loading ? (
+          <MessageSkeletonLoader />
+        ) : (
+          <InfiniteScroll
+            inverse={true}
+            loader={loading}
+            hasMore={hasMore}
+            scrollThreshold={0.8}
+            next={handleLoadMore}
+            dataLength={messages.length}
+            scrollableTarget={'scroll-id'}
+          >
+            <MessageThreadBox
+              setReply={setReply}
+              groupedMessages={groupedMessages}
+              setPaymentModal={setPaymentModal}
+              setSelectedMessage={setSelectedMessage}
+              setEditMessage={setEditMessage}
+            />
+          </InfiniteScroll>
+        )}
       </Box>
       <MotionPresets motionType="SlideBottomUp">
-        <MessageInput onSend={(msg) => onSend(msg)} reply={reply} setReply={setReply} />
+        <MessageInput onSend={(msg) => onSend(msg)} reply={reply} setReply={setReply} loading={loading} />
       </MotionPresets>
       {editMessage && (
         <EditMessageModal

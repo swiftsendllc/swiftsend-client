@@ -4,17 +4,18 @@ import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import CloseIcon from '@mui/icons-material/Close';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import { Box, IconButton, Stack, TextField, Typography } from '@mui/material';
+import { Box, IconButton, Skeleton, Stack, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface MessageInputProps {
+  loading: boolean;
   reply: MessagesEntity | null;
   onSend: (msg: MessagesEntity) => unknown;
   setReply: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
 }
 
-export function MessageInput({ onSend, reply, setReply }: MessageInputProps) {
+export function MessageInput({ onSend, reply, setReply, loading }: MessageInputProps) {
   const price = 0;
   const isExclusive = false;
   const assetIds: string[] = [];
@@ -86,32 +87,38 @@ export function MessageInput({ onSend, reply, setReply }: MessageInputProps) {
         </Stack>
       )}
       <Box>
-        <TextField
-          id="message_input"
-          name="message_input"
-          placeholder={reply ? `Replying` : 'Type a message...'}
-          fullWidth
-          multiline
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          maxRows={3}
-          variant="outlined"
-          sx={{ borderRadius: 2 }}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <IconButton sx={{ p: 0, m: 0, mr: 2 }}>
-                  <EmojiEmotionsOutlinedIcon />
-                </IconButton>
-              ),
-              endAdornment: (
-                <IconButton sx={{ p: 0, m: 0, mr: 2 }} onClick={handleSendMessage} disabled={!didChange}>
-                  <SendOutlinedIcon />
-                </IconButton>
-              )
-            }
-          }}
-        />
+        {loading ? (
+          <Stack spacing={1}>
+            <Skeleton variant="text" sx={{ fontSize: '2rem', mb: 2 }} />
+          </Stack>
+        ) : (
+          <TextField
+            id="message_input"
+            name="message_input"
+            placeholder={reply ? `Replying` : 'Type a message...'}
+            fullWidth
+            multiline
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            maxRows={3}
+            variant="outlined"
+            sx={{ borderRadius: 2 }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <IconButton sx={{ p: 0, m: 0, mr: 2 }}>
+                    <EmojiEmotionsOutlinedIcon />
+                  </IconButton>
+                ),
+                endAdornment: (
+                  <IconButton sx={{ p: 0, m: 0, mr: 2 }} onClick={handleSendMessage} disabled={!didChange}>
+                    <SendOutlinedIcon />
+                  </IconButton>
+                )
+              }
+            }}
+          />
+        )}
       </Box>
     </Box>
   );

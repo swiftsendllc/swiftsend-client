@@ -15,10 +15,12 @@ import {
   Typography
 } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { GoogleIconCustom } from './CustomIcons';
 
 export default function LandingPage() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const { t, locale, setLocale } = useTranslation();
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -82,21 +84,29 @@ export default function LandingPage() {
         </Drawer>
       </Box>
       <Box width="100%" textAlign="center" alignContent="center" mb={20}>
-        <Image src={'/icons/app_icon.png'} alt="/icons/app_icon.png" width={150} height={150} style={{padding:0, margin:0}} priority />
-        <Typography variant="h3" fontWeight={300}>
+        <Box width={150} height={150} mx={'auto'}>
+          <Image
+            src={'/icons/app_icon.png'}
+            alt="/icons/app_icon.png"
+            width={150}
+            height={150}
+            style={{ padding: 0, margin: 0 }}
+            priority
+          />
+        </Box>
+        <Typography variant="h5" fontWeight={300}>
           {t('appName')}
         </Typography>
       </Box>
 
       <Stack spacing={3} mb={2}>
-        <Button fullWidth variant="contained" color="success" href="/signup">
+        <Button fullWidth variant="contained" color="success" onClick={() => router.push('/signup')}>
           {t('signUp')}
         </Button>
-
-        <Button fullWidth variant="outlined" href="/login">
+        <Button fullWidth variant="outlined" onClick={() => router.push('/login')}>
           {t('login')}
         </Button>
-        <Button fullWidth variant="contained" startIcon={<GoogleIconCustom />} href="/account">
+        <Button fullWidth variant="contained" startIcon={<GoogleIconCustom />}>
           {t('googleSign')}
         </Button>
       </Stack>
