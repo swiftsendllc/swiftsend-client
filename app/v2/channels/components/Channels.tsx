@@ -1,6 +1,5 @@
 'use client';
 
-import MotionPresets from '@/components/MotionPresets';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { ChannelsEntity } from '@/hooks/entities/messages.entities';
 import { Box, Divider, useMediaQuery, useTheme } from '@mui/material';
@@ -15,10 +14,10 @@ export default function ChannelsPage() {
   const theme = useTheme();
   const { channelId } = useParams();
   const { getChannels } = useMessageAPI();
-  const [channels, setChannels] = useState<ChannelsEntity[]>([]);
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const [loading, setLoading] = useState<boolean>(true);
   const isMidScreen = useMediaQuery(theme.breakpoints.up('sm'));
+  const [channels, setChannels] = useState<ChannelsEntity[]>([]);
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const loadChannels = async () => {
     try {
@@ -27,6 +26,8 @@ export default function ChannelsPage() {
     } catch (error) {
       console.error(error);
       toast.error('Oops! Something went wrong!');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,12 +37,10 @@ export default function ChannelsPage() {
 
   return (
     <>
-      <Box width={isSmallScreen ? '100%' : '340px'} borderRight="1px solid ">
-        <MotionPresets motionType="SlideTopDown">
-          <ChannelHeader />
-          <Divider sx={{ borderColor: 'black' }} />
-          <ChannelList channels={channels} />
-        </MotionPresets>
+      <Box width={'340px'} borderRight="1px solid" sx={{ minHeight: '100vh', overflowY: 'auto' }}>
+        <ChannelHeader />
+        <Divider sx={{ borderColor: 'black' }} />
+        <ChannelList channels={channels} loading={loading} />
       </Box>
       {(isLargeScreen || isMidScreen) && !channelId && <NoChatSelected />}
     </>

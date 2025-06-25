@@ -1,6 +1,5 @@
 'use client';
 
-import MotionPresets from '@/components/MotionPresets';
 import PaymentModalWrapper from '@/components/PaymentModal';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
@@ -23,7 +22,7 @@ export default function MessagePage() {
   const { createPayment } = usePaymentAPI();
   const { getChannelMessages } = useMessageAPI();
   const [hasMore, setHasMore] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
@@ -33,8 +32,6 @@ export default function MessagePage() {
 
   const handleLoadMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
-    setLoading(true);
-
     try {
       const fetchedMessages = await getChannelMessages(channelId as string, { offset, limit });
       if (initialLoad) setMessages(fetchedMessages);
@@ -52,6 +49,7 @@ export default function MessagePage() {
 
   const handleLoadMoreMessages = () => {
     if (hasMore && !loading) handleLoadMessages();
+    console.log("end")
   };
 
   const handleMakePayment = async (paymentMethodId: string) => {
@@ -122,13 +120,11 @@ export default function MessagePage() {
           setPaymentModal={setPaymentModal}
           setSelectedMessage={setSelectedMessage}
           handleLoadMore={handleLoadMoreMessages}
-          onSend={(msg) => setMessages((prev) => [msg, ...prev])}
           onUpdateMessage={(msg) => handleUpdated(msg)}
+          onSend={(msg) => setMessages((prev) => [msg, ...prev])}
         />
         {isLargeScreen && (
-          <MotionPresets motionType="SlideTopDown">
-            <MessageAssetAndAnalyticsBar onMessage={(msg) => setMessages((prev) => [msg, ...prev])} />
-          </MotionPresets>
+          <MessageAssetAndAnalyticsBar onMessage={(msg) => setMessages((prev) => [msg, ...prev])} loading={loading} />
         )}
       </Box>
     </>

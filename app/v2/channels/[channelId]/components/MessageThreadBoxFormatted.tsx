@@ -171,7 +171,7 @@ export function MessageThreadBoxFormatted({
           </Button>
         )}
         <Stack direction={'row'} justifyContent={'space-between'}>
-          <Typography variant="body2" color="var(--dark)" textAlign={'left'}>
+          <Typography variant="body2" color="var(--dark)" textAlign={'left'} sx={{ minHeight: 50 }}>
             {formattedMessage}
             {msgLen > 90 && (
               <IconButton sx={{ p: 0, m: 0 }} onClick={() => setIsExpanded((prev) => !prev)}>

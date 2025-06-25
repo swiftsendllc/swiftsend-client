@@ -5,7 +5,7 @@ import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import BurstModeIcon from '@mui/icons-material/BurstMode';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Skeleton, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { CreateExclusivePostDialog } from './CreateExclusivePostDialog';
@@ -13,10 +13,11 @@ import { MessageAnalyticsBar } from './MessageAnalyticsBar';
 import { MessageAssetBar } from './MessageAssetBar';
 
 interface MessageInputProps {
+  loading: boolean;
   onMessage: (msg: MessagesEntity) => unknown;
 }
 
-export function MessageAssetAndAnalyticsBar({ onMessage }: MessageInputProps) {
+export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInputProps) {
   const { getCreatorAssets } = useAssetAPI();
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const [checkBox, setCheckBox] = useState<boolean>(false);
@@ -60,32 +61,50 @@ export function MessageAssetAndAnalyticsBar({ onMessage }: MessageInputProps) {
 
   return (
     <Box width="320px" display="flex" flexDirection="column" paddingTop={3} px={2} minWidth={0}>
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ textTransform: 'none', px: 2, mb: 2 }}
-        startIcon={showGallery ? <BurstModeIcon /> : <InsertPhotoIcon />}
-        onClick={() => setShowGallery((prev) => !prev)}
-      >
-        {showGallery ? 'Hide Gallery' : 'Send exclusive'}
-      </Button>
-
-      {showGallery ? (
-        <MessageAssetBar
-          tags={tags}
-          assets={assets}
-          setTags={setTags}
-          checkBox={checkBox}
-          setSearchTerm={setSearchTerm}
-          setOpenExcDialog={setOpenExcDialog}
-          onHandleToggleSelect={handleToggleSelect}
-          selectedAssetsMap={selectedAssetsMap}
-          setSelectedAssetsMap={setSelectedAssetsMap}
-          onHandleSelectTenAssets={(hasSelected) => handleSelectTenAssets(hasSelected)}
-        />
+      {loading ? (
+        <Stack spacing={1} my={6}>
+          <Stack spacing={1}>
+            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+            <Skeleton variant="circular" width={40} height={40} />
+            <Skeleton variant="rectangular" width={210} height={60} />
+            <Skeleton variant="rounded" width={210} height={60} />
+          </Stack>
+          <Skeleton variant="text" sx={{ fontSize: '2rem', mb: 2 }} />
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <Skeleton variant="rounded" height={60} key={idx} />
+          ))}
+        </Stack>
       ) : (
-        <MessageAnalyticsBar />
+        <>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ textTransform: 'none', px: 2, mb: 2 }}
+            startIcon={showGallery ? <BurstModeIcon /> : <InsertPhotoIcon />}
+            onClick={() => setShowGallery((prev) => !prev)}
+          >
+            {showGallery ? 'Hide Gallery' : 'Send exclusive'}
+          </Button>
+
+          {showGallery ? (
+            <MessageAssetBar
+              tags={tags}
+              assets={assets}
+              setTags={setTags}
+              checkBox={checkBox}
+              setSearchTerm={setSearchTerm}
+              setOpenExcDialog={setOpenExcDialog}
+              onHandleToggleSelect={handleToggleSelect}
+              selectedAssetsMap={selectedAssetsMap}
+              setSelectedAssetsMap={setSelectedAssetsMap}
+              onHandleSelectTenAssets={(hasSelected) => handleSelectTenAssets(hasSelected)}
+            />
+          ) : (
+            <MessageAnalyticsBar />
+          )}
+        </>
       )}
+
       <CreateExclusivePostDialog
         isOpen={openExcDialog}
         onClose={handleToggleSelect}
