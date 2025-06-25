@@ -7,14 +7,16 @@ import { MessageThreadBoxFormatted } from './MessageThreadBoxFormatted';
 
 interface MessageThreadProps {
   groupedMessages: [string, MessagesEntity[]][];
-  setReply: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  setDeleteMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setReply: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setEditMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setSelectedMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
 }
 
 export function MessageThreadBox({
   setReply,
+  setDeleteMessage,
   groupedMessages,
   setPaymentModal,
   setSelectedMessage,
@@ -64,6 +66,7 @@ export function MessageThreadBox({
                       setPaymentModal={setPaymentModal}
                       setSelectedMessage={setSelectedMessage}
                       setEditMessage={setEditMessage}
+                      setDeleteMessage={setDeleteMessage}
                     />
                   </Box>
                 );

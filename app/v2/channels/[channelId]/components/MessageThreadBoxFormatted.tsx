@@ -1,6 +1,7 @@
 import { UserContext } from '@/hooks/context/user-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -14,6 +15,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 interface MessageThreadFormattedProps {
   message: MessagesEntity;
+  setDeleteMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setReply: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
@@ -25,17 +27,24 @@ export function MessageThreadBoxFormatted({
   message,
   setReply,
   messageRefs,
+  setDeleteMessage,
   setPaymentModal,
   setSelectedMessage,
   setEditMessage
 }: MessageThreadFormattedProps) {
+  const msgLen = message.message.length;
+  const [user] = useContext(UserContext);
+  const isSender = message.senderId === user.userId;
+  const purchased = message.purchasedBy.includes(user.userId);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isHighLighted, setIsHighLighted] = useState<boolean>(false);
 
   const formatMessage = (textMessage: string, isExp: boolean) => {
     if (isExp) return textMessage;
     else if (textMessage.length > 90) return textMessage.slice(0, 90) + '...';
     else return textMessage;
   };
+  const formattedMessage = formatMessage(message.message, isExpanded);
 
   const formatDate = (msg: MessagesEntity) => {
     if (msg.deleted) return msg.deletedAt;
@@ -53,13 +62,6 @@ export function MessageThreadBoxFormatted({
     if (message.isPurchased) return 'Unlocked';
     else return `$${message.price}`;
   };
-
-  const msgLen = message.message.length;
-  const [user] = useContext(UserContext);
-  const isSender = message.senderId === user.userId;
-  const purchased = message.purchasedBy.includes(user.userId);
-  const [isHighLighted, setIsHighLighted] = useState<boolean>(false);
-  const formattedMessage = formatMessage(message.message, isExpanded);
 
   const handleScrollToRepliedToMessage = (messageId: string) => {
     const element = messageRefs.current[messageId];
@@ -97,14 +99,13 @@ export function MessageThreadBoxFormatted({
       maxWidth="70%"
       px={2}
       py={1}
-      bgcolor={isSender ? '#6c756e' : '#9facac'}
+      bgcolor={'#6c756e'}
       border={'1px solid #80996d'}
       position="relative"
       sx={{
         borderRadius: 2,
         transition: 'all 0.3s ease-in-out',
-        boxShadow: isHighLighted ? '0 0 10px 4px rgb(245, 248, 247)' : 'none',
-        '&:hover': { transform: 'scale(1.05)' }
+        boxShadow: isHighLighted ? '0 0 10px 4px rgb(245, 248, 247)' : 'none'
       }}
     >
       {Array.isArray(message._assets) && (
@@ -171,7 +172,13 @@ export function MessageThreadBoxFormatted({
           </Button>
         )}
         <Stack direction={'row'} justifyContent={'space-between'}>
-          <Typography variant="body2" color="var(--dark)" textAlign={'left'} sx={{ minHeight: 50 }}>
+          <Typography
+            variant="body2"
+            color="var(--dark)"
+            textAlign={'left'}
+            sx={{ minHeight: 50 }}
+            fontStyle={message.deleted ? 'italic' : 'normal'}
+          >
             {formattedMessage}
             {msgLen > 90 && (
               <IconButton sx={{ p: 0, m: 0 }} onClick={() => setIsExpanded((prev) => !prev)}>
@@ -183,7 +190,7 @@ export function MessageThreadBoxFormatted({
               </IconButton>
             )}
           </Typography>
-          {message.repliedToMessage && (
+          {message.repliedToMessage && !message.deleted && (
             <Box
               sx={{
                 cursor: 'pointer',
@@ -202,34 +209,46 @@ export function MessageThreadBoxFormatted({
       </Stack>
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5} mx={0}>
-        <Typography variant="caption" color="var(--dark)" sx={{ mr: 1 }}>
+        <Typography
+          variant="caption"
+          color="var(--dark)"
+          sx={{ mr: 1 }}
+          fontStyle={message.deleted ? 'italic' : 'normal'}
+        >
           {showMessageState(message)}
           {moment(formatDate(message)).format('hh:mm')}
         </Typography>
-
-        {message.isExclusive && (
-          <Chip
-            size="small"
-            label={handleChipLabel()}
-            color={'default'}
-            variant="filled"
-            sx={{ ml: 1 }}
-            icon={message.isPurchased ? <PriceCheckIcon /> : <MoneyOffIcon />}
-          />
-        )}
-
-        {isSender && (
-          <IconButton sx={{ p: 0, m: 0 }} onClick={() => setEditMessage(message)}>
-            <EditOutlinedIcon sx={{ width: 20, height: 20 }} color="info" />
-          </IconButton>
-        )}
-        <IconButton sx={{ p: 0, m: 0, ml: 1 }} onClick={() => setReply(message)}>
-          <ReplyOutlinedIcon sx={{ width: 20, height: 20 }} color="info" />
-        </IconButton>
-        {!isSender && (
-          <IconButton sx={{ p: 0, m: 0, ml: 1 }}>
-            <AddReactionOutlinedIcon sx={{ width: 20, height: 20 }} color="action" />
-          </IconButton>
+        {!message.deleted && (
+          <Box>
+            {message.isExclusive && (
+              <Chip
+                size="small"
+                label={handleChipLabel()}
+                color={'default'}
+                variant="filled"
+                sx={{ ml: 1 }}
+                icon={message.isPurchased ? <PriceCheckIcon /> : <MoneyOffIcon />}
+              />
+            )}
+            {isSender && (
+              <IconButton sx={{ p: 0, m: 0 }} onClick={() => setEditMessage(message)}>
+                <EditOutlinedIcon sx={{ width: 20, height: 20 }} color="info" />
+              </IconButton>
+            )}
+            {isSender && (
+              <IconButton sx={{ p: 0, mx: 1 }} onClick={() => setDeleteMessage(message)}>
+                <DeleteIcon sx={{ width: 20, height: 20 }} color="info" />
+              </IconButton>
+            )}
+            <IconButton sx={{ p: 0, mx: 1 }} onClick={() => setReply(message)}>
+              <ReplyOutlinedIcon sx={{ width: 20, height: 20 }} color="info" />
+            </IconButton>
+            {!isSender && (
+              <IconButton sx={{ p: 0, mx: 1 }}>
+                <AddReactionOutlinedIcon sx={{ width: 20, height: 20 }} color="action" />
+              </IconButton>
+            )}
+          </Box>
         )}
       </Box>
     </Box>
