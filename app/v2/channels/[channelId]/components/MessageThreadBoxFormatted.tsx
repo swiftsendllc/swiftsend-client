@@ -38,6 +38,7 @@ export function MessageThreadBoxFormatted({
   const purchased = message.purchasedBy.includes(user.userId);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isHighLighted, setIsHighLighted] = useState<boolean>(false);
+  const [options, setOptions] = useState<boolean>(false);
 
   const formatMessage = (textMessage: string, isExp: boolean) => {
     if (isExp) return textMessage;
@@ -96,6 +97,8 @@ export function MessageThreadBoxFormatted({
       ref={(el: HTMLDivElement | null) => {
         messageRefs.current[message._id] = el;
       }}
+      onMouseEnter={() => setOptions(true)}
+      onMouseLeave={() => setOptions(false)}
       maxWidth="70%"
       px={2}
       py={1}
@@ -108,6 +111,7 @@ export function MessageThreadBoxFormatted({
         boxShadow: isHighLighted ? '0 0 10px 4px rgb(245, 248, 247)' : 'none'
       }}
     >
+      {/* For Exclusive message post */}
       {Array.isArray(message._assets) && (
         <Box
           sx={{
@@ -171,12 +175,13 @@ export function MessageThreadBoxFormatted({
             {`$${message.price}`}
           </Button>
         )}
+
+        {/* message typography */}
         <Stack direction={'row'} justifyContent={'space-between'}>
           <Typography
             variant="body2"
             color="var(--dark)"
             textAlign={'left'}
-            sx={{ minHeight: 50 }}
             fontStyle={message.deleted ? 'italic' : 'normal'}
           >
             {formattedMessage}
@@ -208,6 +213,7 @@ export function MessageThreadBoxFormatted({
         </Stack>
       </Stack>
 
+      {/* message crud options */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5} mx={0}>
         <Typography
           variant="caption"
@@ -218,7 +224,7 @@ export function MessageThreadBoxFormatted({
           {showMessageState(message)}
           {moment(formatDate(message)).format('hh:mm')}
         </Typography>
-        {!message.deleted && (
+        {!message.deleted && options && (
           <Box>
             {message.isExclusive && (
               <Chip

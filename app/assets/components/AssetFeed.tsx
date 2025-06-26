@@ -58,7 +58,6 @@ export function AssetFeed({ assets, setSelectedAssetsMap, selectedAssetsMap, che
             asset._assets.map((asst, idx) => (
               <Box
                 key={`${groupIdx}-${idx}-${astIdx}`}
-                onClick={() => handleSelectAsset(asst.originalURL)}
                 sx={{
                   position: 'relative',
                   width: {
@@ -79,8 +78,7 @@ export function AssetFeed({ assets, setSelectedAssetsMap, selectedAssetsMap, che
                   }
                 }}
               >
-                <FullscreenIcon sx={{ position: 'absolute', p: 0, m: 0, top: 1, left: 1, color:"white" }} />
-j                <Image
+                <Image
                   src={asst.originalURL}
                   alt="assets"
                   fill
@@ -88,6 +86,12 @@ j                <Image
                   sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                   priority
                 />
+                <IconButton
+                  sx={{ position: 'absolute', p: 0, m: 0, top: 1, left: 1 }}
+                  onClick={() => handleSelectAsset(asst.originalURL)}
+                >
+                  <FullscreenIcon />
+                </IconButton>
                 {checkBox && (
                   <Checkbox
                     id={`asset-checkbox-${asset.assetId}`}

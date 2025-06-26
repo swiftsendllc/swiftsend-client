@@ -110,7 +110,7 @@ export function AssetOptions({
                   onClick={() => onSelectTenAssets(!selectedAssetIds.length)}
                 >
                   <DoneAllIcon />
-                  Select 10
+                  {!selectedAssetIds.length ? "Select 10" : "Deselect"}
                 </Fab>
               </>
             )}
