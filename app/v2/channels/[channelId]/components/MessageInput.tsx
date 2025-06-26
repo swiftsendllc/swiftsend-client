@@ -62,9 +62,9 @@ export function MessageInput({ onSend, reply, setReply, loading }: MessageInputP
     }
   };
 
-  const formatReplyMessage = (text: MessagesEntity) => {
-    if (!text.message && text.isExclusive) return '$$ Exclusive post $';
-    else return text.message;
+  const formatReplyMessage = (m: MessagesEntity) => {
+    if (!m.message && m.isExclusive) return '$$ Exclusive post $';
+    else return m.message;
   };
 
   return (

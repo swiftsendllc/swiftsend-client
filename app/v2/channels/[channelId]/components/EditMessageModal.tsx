@@ -23,7 +23,6 @@ export function EditMessageModal({ message, isOpen, onClose, onUpdateMessage }: 
     try {
       const updatedResponse = await editMessage(message._id, { message: updatedMessage });
       onUpdateMessage(updatedResponse);
-      
       handleClose();
     } catch (error) {
       console.error(error);
@@ -40,8 +39,8 @@ export function EditMessageModal({ message, isOpen, onClose, onUpdateMessage }: 
       <Dialog
         open={open}
         onClose={handleClose}
-        fullWidth
         maxWidth="sm"
+        fullWidth
         PaperProps={{
           sx: { borderRadius: 2 }
         }}
@@ -66,11 +65,12 @@ export function EditMessageModal({ message, isOpen, onClose, onUpdateMessage }: 
           />
         </DialogContent>
         <DialogActions sx={{ borderTop: '1px solid', justifyContent: 'space-between' }}>
-          <Button onClick={handleClose} color="secondary" variant="outlined">
+          <Button onClick={handleClose} color="secondary" variant="outlined" fullWidth>
             Cancel
           </Button>
           <Divider orientation="vertical" flexItem sx={{ mx: 1, borderColor: 'ActiveBorder' }} />
           <Button
+            fullWidth
             variant="contained"
             color="primary"
             disabled={message.message === updatedMessage.trim()}

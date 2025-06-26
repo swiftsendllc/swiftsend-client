@@ -7,36 +7,51 @@ import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Avatar, Box, Divider, IconButton, Skeleton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { Fragment, useContext } from 'react';
+import { Fragment, useContext, useState } from 'react';
+import { MessageThreadHeaderMenuOptions } from './MessageThreadHeaderMenuOptions';
 
-const messageThreadOptions = [
-  {
-    label: 'starred',
-    icon: <StarBorderIcon />
-  },
-  {
-    label: 'starred',
-    icon: <NotificationsNoneIcon />
-  },
-  {
-    label: 'starred',
-    icon: <PushPinOutlinedIcon />
-  },
-  {
-    label: 'starred',
-    icon: <PhotoLibraryOutlinedIcon />
-  },
-  {
-    label: 'starred',
-    icon: <MoreVertIcon />
-  }
-];
+interface MessageThreadHeaderProps {
+  loading: boolean;
+}
 
-export function MessageThreadHeader({ loading }: { loading: boolean }) {
+export function MessageThreadHeader({ loading,  }: MessageThreadHeaderProps) {
   const theme = useTheme();
   const router = useRouter();
   const [channel] = useContext(ChannelContext);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const messageThreadOptions = [
+    {
+      label: 'starred',
+      icon: <StarBorderIcon />
+    },
+    {
+      label: 'starred',
+      icon: <NotificationsNoneIcon />
+    },
+    {
+      label: 'starred',
+      icon: <PushPinOutlinedIcon />
+    },
+    {
+      label: 'starred',
+      icon: <PhotoLibraryOutlinedIcon />
+    },
+    {
+      label: 'settings',
+      icon: <MoreVertIcon />,
+      action: handleMenuOpen
+    }
+  ];
 
   return (
     <Box
@@ -92,6 +107,7 @@ export function MessageThreadHeader({ loading }: { loading: boolean }) {
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
+                onClick={option.action}
                 aria-label={option.label || `option-${idx}`}
               >
                 {option.icon}
@@ -103,6 +119,10 @@ export function MessageThreadHeader({ loading }: { loading: boolean }) {
           ))}
         </Box>
       )}
+      <MessageThreadHeaderMenuOptions
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+      />
     </Box>
   );
 }

@@ -20,7 +20,7 @@ export function MessageThreadBox({
   groupedMessages,
   setPaymentModal,
   setSelectedMessage,
-  setEditMessage
+  setEditMessage,
 }: MessageThreadProps) {
   const [user] = useContext(UserContext);
   const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});

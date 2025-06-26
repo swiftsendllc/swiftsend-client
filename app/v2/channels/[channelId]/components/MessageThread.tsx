@@ -55,7 +55,7 @@ export function MessageThread({
       display="flex"
       flexDirection="column"
       minWidth="340px"
-      maxWidth={'746px'}
+      maxWidth="746px"
       width="auto"
       borderRight="1px solid "
       height="100vh"

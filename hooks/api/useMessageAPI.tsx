@@ -116,7 +116,7 @@ const useMessageAPI = () => {
     receiverId: string;
   }) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/channels/messages/reply`, {
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/messages/reply`, {
       method: 'POST',
       body: JSON.stringify(input),
       headers: {

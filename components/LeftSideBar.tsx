@@ -12,7 +12,7 @@ export function LeftSideBar() {
 
   return (
     <>
-      <Box width="240px" display="flex" flexDirection="column" py={3} px={2} borderRight="1px solid " minWidth={0}>
+      <Box width={"240px"} display={{xs:"none", sm:"flex"}} flexDirection="column" py={3} px={2} borderRight="1px solid " minWidth={"240px"}>
         <Box display="flex" alignItems="center" mb={4}>
           <Avatar src={user.avatarURL} sx={{ mr: 1 }} />
           <Typography fontWeight="bold">{user.fullName}</Typography>
