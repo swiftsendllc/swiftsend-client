@@ -66,7 +66,7 @@ export function MessageThread({
           flex: 1,
           display: 'flex',
           overflowY: 'scroll',
-          flexDirection: 'column-reverse'
+          flexDirection: 'column-reverse',
         }}
         id="scroll-id"
       >

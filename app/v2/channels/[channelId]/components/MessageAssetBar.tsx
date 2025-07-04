@@ -9,9 +9,10 @@ import { Box, Button, Chip, Stack, TextField } from '@mui/material';
 interface MessageAssetProps {
   tags: string[];
   checkBox: boolean;
+  searchTerm: string;
   assets: CreatorAssetsEntity[];
-  selectedAssetsMap: Map<string, string[]>;
   onHandleToggleSelect: () => unknown;
+  selectedAssetsMap: Map<string, string[]>;
   setSelectedAssetsMap: React.Dispatch<React.SetStateAction<Map<string, string[]>>>;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   onHandleSelectTenAssets: (hasSelected: boolean) => unknown;
@@ -24,6 +25,7 @@ export function MessageAssetBar({
   assets,
   setTags,
   checkBox,
+  searchTerm,
   setSearchTerm,
   selectedAssetsMap,
   setOpenExcDialog,
@@ -31,7 +33,7 @@ export function MessageAssetBar({
   onHandleToggleSelect,
   onHandleSelectTenAssets
 }: MessageAssetProps) {
-  const selectedAssetIds = Array.from(selectedAssetsMap.keys())
+  const selectedAssetIds = Array.from(selectedAssetsMap.keys());
   return (
     <>
       <TextField
@@ -41,6 +43,7 @@ export function MessageAssetBar({
         placeholder="Search assets..."
         size="small"
         sx={{ mb: 1 }}
+        value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <Stack direction="row" spacing={1} mb={2}>

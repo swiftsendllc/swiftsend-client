@@ -111,7 +111,7 @@ export default function MessagePage() {
 
   useEffect(() => {
     if (channelId) handleLoadMessages();
-  }, [channelId]); //eslint-disable-line
+  }, [channelId, setLoading, setHasMore, setMessages, limit]); //eslint-disable-line
 
   return (
     <>
@@ -128,7 +128,19 @@ export default function MessagePage() {
           }}
         />
       )}
-      <Box display="flex" height="100vh" fontFamily="Arial, sans-serif" sx={{ minWidth: 0, overflow: 'hidden' }}>
+      <Box
+        display="flex"
+        height="100vh"
+        fontFamily="Arial, sans-serif"
+        sx={{
+          minWidth: 0,
+          overflow: 'hidden'
+          // backgroundImage: 'url(/photos/pexels-pixabay-460672.jpg)',
+          // backgroundPosition: 'center',
+          // backgroundSize: 'cover',
+          // backgroundRepeat: 'no-repeat'
+        }}
+      >
         {!isSmallScreen && <ChannelsPage />}
         <MessageThread
           loading={loading}
