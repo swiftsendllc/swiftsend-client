@@ -1,5 +1,8 @@
+import { CreateExclusivePostDialog } from '@/app/v2/channels/[channelId]/components/CreateExclusivePostDialog';
 import useAssetAPI from '@/hooks/api/useAssetAPI';
+import usePostAPI from '@/hooks/api/usePostAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
+import { PostAddOutlined } from '@mui/icons-material';
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
@@ -29,9 +32,14 @@ export function AssetOptions({
   setSelectedAssetsMap,
   selectedAssetsMap
 }: HeaderProps) {
-  const [uploadModal, setUploadModal] = useState<boolean>(false);
+  const { createPost } = usePostAPI();
+  const [text, setText] = useState<string>('');
   const { deleteCreatorAssets } = useAssetAPI();
+  const [price, setPrice] = useState<number>(500);
+  const [isExclusive, setIsExclusive] = useState<boolean>(true);
   const selectedAssetIds = Array.from(selectedAssetsMap.keys());
+  const [uploadModal, setUploadModal] = useState<boolean>(false);
+  const [openExcDialog, setOpenExcDialog] = useState<boolean>(false);
 
   const handleDeleteCreatorAssets = async () => {
     try {
@@ -44,6 +52,22 @@ export function AssetOptions({
       console.error(error);
       toast.error('FAILED TO DELETE ASSETS!');
     }
+  };
+
+  const handleCreatePost = async () => {
+    try {
+      await createPost({ assetIds: selectedAssetIds, caption: text, isExclusive: isExclusive, price: price });
+    } catch (error) {
+      console.error(error);
+      toast.error('Oops! Something wrong happened!');
+    }
+  };
+
+  const handleClose = () => {
+    setText('');
+    setSelectedAssetsMap(new Map());
+    setCheckBox((prev) => !prev);
+    setOpenExcDialog(false);
   };
 
   const handleToggleSelect = () => {
@@ -105,12 +129,22 @@ export function AssetOptions({
                 </Fab>
                 <Fab
                   variant="extended"
+                  color="secondary"
+                  aria-label="filter"
+                  onClick={() => setOpenExcDialog(true)}
+                  disabled={!selectedAssetIds.length}
+                >
+                  <PostAddOutlined />
+                  Post
+                </Fab>
+                <Fab
+                  variant="extended"
                   color={!selectedAssetIds.length ? 'default' : 'primary'}
                   aria-label="filter-select"
                   onClick={() => onSelectTenAssets(!selectedAssetIds.length)}
                 >
                   <DoneAllIcon />
-                  {!selectedAssetIds.length ? "Select 10" : "Deselect"}
+                  {!selectedAssetIds.length ? 'Select 10' : 'Deselect'}
                 </Fab>
               </>
             )}
@@ -133,6 +167,19 @@ export function AssetOptions({
         isOpen={uploadModal}
         onClose={() => setUploadModal(false)}
         onUpload={(asset) => setAssets((prev) => [asset, ...prev])}
+      />
+      <CreateExclusivePostDialog
+        text={text}
+        price={price}
+        setText={setText}
+        setPrice={setPrice}
+        onClose={handleClose}
+        isOpen={openExcDialog}
+        isExclusive={isExclusive}
+        handleAction={handleCreatePost}
+        setIsExclusive={setIsExclusive}
+        selectedAssetsMap={selectedAssetsMap}
+        setSelectedAssetsMap={setSelectedAssetsMap}
       />
     </Box>
   );

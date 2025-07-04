@@ -102,7 +102,6 @@ export function MessageThreadBoxFormatted({
       maxWidth="70%"
       px={2}
       py={1}
-      bgcolor={'#6c756e'}
       border={'1px solid #80996d'}
       position="relative"
       sx={{
@@ -180,7 +179,6 @@ export function MessageThreadBoxFormatted({
         <Stack direction={'row'} justifyContent={'space-between'}>
           <Typography
             variant="body2"
-            color="var(--dark)"
             textAlign={'left'}
             fontStyle={message.deleted ? 'italic' : 'normal'}
           >
@@ -205,7 +203,7 @@ export function MessageThreadBoxFormatted({
               }}
               onClick={() => handleScrollToRepliedToMessage(message.repliedToMessage._id)}
             >
-              <Typography variant="caption" color="var(--dark)" fontStyle={'italic'} sx={{ p: 0, m: 0 }}>
+              <Typography variant="caption"  fontStyle={'italic'} sx={{ p: 0, m: 0 }}>
                 Replied: {message.repliedToMessage.message.slice(0, 10)}...
               </Typography>
             </Box>
@@ -217,7 +215,6 @@ export function MessageThreadBoxFormatted({
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5} mx={0}>
         <Typography
           variant="caption"
-          color="var(--dark)"
           sx={{ mr: 1 }}
           fontStyle={message.deleted ? 'italic' : 'normal'}
         >

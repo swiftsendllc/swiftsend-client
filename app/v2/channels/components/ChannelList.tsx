@@ -24,7 +24,7 @@ export function ChannelList({ channels, loading }: ChannelProps) {
       channels.map((channel) => ({
         ...channel,
         lastMessagedTime: moment(channel.lastMessage?.createdAt).format('hh:mm'),
-        last_message: channel.lastMessage?.message ?? '',
+        last_message: channel.lastMessage?.message.slice(0, 30) ?? '',
         receiver_name: channel.receiver.fullName
       })),
     [channels]
@@ -73,7 +73,7 @@ export function ChannelList({ channels, loading }: ChannelProps) {
                   </ListItemAvatar>
                   <ListItemText
                     primary={`${channel.receiver_name} • ${channel.lastMessagedTime}`}
-                    secondary={channel.last_message}
+                    secondary={`${channel.last_message}...`}
                   />
                 </ListItem>
                 <Divider sx={{ borderColor: 'black' }} />

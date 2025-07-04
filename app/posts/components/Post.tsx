@@ -24,10 +24,11 @@ import {
   CardContent,
   CardHeader,
   Chip,
-  debounce,
+  Collapse,
   Divider,
   IconButton,
   Stack,
+  Tooltip,
   Typography
 } from '@mui/material';
 import moment from 'moment';
@@ -73,48 +74,38 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
   const [, setComments] = useState(post.comments);
 
-  const handleSee = () => {
-    setIsExpanded((prev) => !prev);
-  };
+  const handleSee = () => setIsExpanded((prev) => !prev);
 
-  useEffect(() => {
-    setCommentCount(post.commentCount);
-  }, [post.commentCount]);
+  useEffect(() => setCommentCount(post.commentCount), [post.commentCount]);
+  useEffect(() => setComments(post.comments), [post.comments]);
 
-  useEffect(() => {
-    setComments(post.comments);
-  }, [post.comments]);
-
-  const handleLike = debounce(async (postId: string) => {
+  const handleLike = async (postId: string) => {
     try {
       const post = await likePost(postId);
       setIsLiked(post.isLiked);
       setLikeCount(post.likeCount);
       if (!isLiked) toast.success('LIKED');
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error('FAILED TO LIKE!');
     }
-  }, 250);
+  };
 
-  const handleSave = debounce(async (postId: string) => {
+  const handleSave = async (postId: string) => {
     try {
       const post = await savePost(postId);
       setIsSaved(post.isSaved);
       if (!isSaved) toast.success('SAVED');
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error('FAILED TO SAVE POST!');
     }
-  }, 250);
+  };
 
   const handleFollow = async (userId: string) => {
     try {
       const followedUser = await followProfile(userId);
       setIsFollowing(followedUser.isFollowing);
       toast.success('CONNECTED');
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error('FAILED TO FOLLOW!');
     }
   };
@@ -128,211 +119,168 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
   return (
     <>
       {allowComments && <TopBackNav />}
-      {/* card header */}
-      <Card key={post._id} sx={{ mb: 0.5, width: '100%', padding: 0, m: 0 }}>
+      <Card sx={{ mb: 2, width: '100%', transition: '0.3s', '&:hover': { transform: 'scale(1.005)', boxShadow: 4 } }}>
         <CardHeader
           avatar={
-            <>
-              <StyledBadge
-                isOnline={post.user.isOnline}
-                overlap="circular"
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right'
-                }}
-                variant="dot"
-              >
-                <Avatar aria-label="recipe" src={post.user.avatarURL} alt={post.user.fullName} />
-              </StyledBadge>
-            </>
+            <StyledBadge isOnline={post.user.isOnline} overlap="circular" variant="dot">
+              <Avatar src={post.user.avatarURL} alt={post.user.fullName} />
+            </StyledBadge>
           }
           action={<FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />}
           title={
-            <>
+            <Tooltip title={`@${post.user.username}`}>
               <IconButton onClick={() => router.push(`/${post.user.username}`)}>
-                <Typography>{post.user.fullName}</Typography>
+                <Typography fontWeight="bold">{post.user.fullName}</Typography>
               </IconButton>
-            </>
+            </Tooltip>
           }
           subheader={moment(post.createdAt).format('LLL')}
         />
-        {/* post caption expands */}
-        <Typography variant="body2">
-          {isExpanded && post.caption.length > 50
-            ? post.caption
-            : `${post.caption.slice(0, 50)}${post.caption.length > 0 ? '...' : ''}`}
+        <Typography px={2} variant="body2">
+          {isExpanded || post.caption.length <= 50 ? post.caption : `${post.caption.slice(0, 50)}...`}
           {post.caption.length > 50 && (
-            <Button
-              onClick={handleSee}
-              variant="text"
-              size="small"
-              sx={{
-                textTransform: 'none',
-                fontSize: '0.8rem',
-                fontWeight: 500
-              }}
-            >
-              {isExpanded ? `See less` : `See more`}
+            <Button onClick={handleSee} size="small" sx={{ textTransform: 'none' }}>
+              {isExpanded ? 'See less' : 'See more'}
             </Button>
           )}
         </Typography>
-        {/* timeline posts */}
-        <Box sx={{ position: 'relative' }}>
-          <Stack
-            direction={'row'}
-            spacing={1}
-            flexWrap={'nowrap'}
-            sx={{
-              whiteSpace: 'nowrap',
-              overflowX: 'auto',
-              overflowY: 'hidden',
-              minHeight: 300,
-              minWidth: 375
-            }}
-          >
-            {post._assets &&
-              post._assets.map((url, idx) => (
-                <Box key={idx} position={'relative'}>
-                  <Image
-                    style={{
-                      minWidth: 375,
-                      minHeight: 300,
-                      display: 'flex',
-                      justifyContent: 'space-between'
-                    }}
-                    priority
-                    src={url.originalURL}
-                    alt={'image'}
-                    width={375}
-                    height={300}
-                  />
-                </Box>
-              ))}
+        <Box position="relative">
+          <Stack direction="row" spacing={1} sx={{ overflowX: 'auto', scrollSnapType: 'x mandatory' }}>
+            {post._assets?.map((url, idx) => (
+              <Box
+                key={idx}
+                sx={{ minWidth: 375, height: 300, scrollSnapAlign: 'center', borderRadius: 2, overflow: 'hidden' }}
+              >
+                <Image src={url.originalURL} alt="image" width={375} height={300} style={{ objectFit: 'cover' }} />
+              </Box>
+            ))}
           </Stack>
-          <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
-            <Chip color="primary" label={post._assets.length} variant="filled" />
+          <Box position="absolute" top={8} right={8}>
+            <Chip color="primary" label={post._assets?.length} />
           </Box>
-          {/* purchase button */}
           {!post.isPurchased && (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 120,
-                left: 90
-              }}
-            >
-              <IconButton
+            <Box position="absolute" top={120} left={90}>
+              <Chip
+                label={`Purchase exclusive post at $${post.price}`}
+                icon={<MonetizationOnRoundedIcon />}
                 onClick={() => {
                   setSelectedPost(post);
                   setPaymentModal(true);
                 }}
-                sx={{ p: 0, m: 0 }}
-              >
-                <Chip
-                  color="primary"
-                  label={`Purchase exclusive post at $${post.price}`}
-                  variant="filled"
-                  icon={<MonetizationOnRoundedIcon />}
-                />
-              </IconButton>
+                sx={{ backdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.6)', color: '#fff' }}
+              />
             </Box>
           )}
-          <Box sx={{ color: 'white', position: 'absolute', bottom: 8, right: 8 }} aria-label="save">
+          <Box position="absolute" bottom={8} right={8}>
             {!post.isMyPost && <SaveButton isSaved={isSaved} onClick={() => handleSave(post._id)} />}
           </Box>
         </Box>
-        {/* like, comment, share... options */}
-        <CardContent sx={{ fontWeight: '200' }}>
+        <CardContent>
           <Stack direction="row" justifyContent="space-between">
-            <Box alignItems="left">{`${likeCount} ❤`}</Box>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Box>{` ${commentCount} 💬`}</Box>
+            <Box>{`${likeCount} ❤`}</Box>
+            <Stack direction="row" spacing={1}>
+              <Box>{`${commentCount} 💬`}</Box>
               <Box>{`${post.shareCount} ➦`}</Box>
             </Stack>
           </Stack>
         </CardContent>
-        <Divider sx={{ mb: 1 }} />
-        {post.isPurchased ? (
-          <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
+        <Divider />
+        {post.isPurchased && (
+          <Stack direction={"row"} justifyContent="space-between" px={2}>
             <LikeButton isLiked={isLiked} onClick={() => handleLike(post._id)} />
-            <IconButton href={`/posts/${post._id}`} aria-label="show more" LinkComponent={Link}>
-              <ModeCommentOutlinedIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <SendOutlinedIcon />
-            </IconButton>
-            <IconButton aria-label="settings">
+            <Tooltip title="Comments">
+              <IconButton href={`/posts/${post._id}`} LinkComponent={Link}>
+                <ModeCommentOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Share">
+              <IconButton>
+                <SendOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <IconButton>
               <MoreVertIcon />
             </IconButton>
           </Stack>
-        ) : null}
-        {/* comment stack */}
-        {post.comments && post.comments.length > 0 && (
-          <>
-            <Divider sx={{ mt: 1 }} />
-            <Box overflow="auto" display="flex" flexDirection="column" sx={{ pb: 20, px: 1 }}>
-              {post.comments.map((comment, idx) => (
-                <CommentStack onDelete={() => onMutation?.()} key={idx} comment={comment} postId={post._id} />
+        )}
+        {post.comments && post.comments?.length > 0 && (
+          <Collapse in={true}>
+            <Box display="flex" flexDirection="column" px={1} py={2}>
+              {(isExpanded ? post.comments : post.comments.slice(-2)).map((comment, idx) => (
+                <CommentStack key={idx} comment={comment} postId={post._id} onDelete={() => onMutation?.()} />
               ))}
+              {post.comments.length > 2 && !isExpanded && (
+                <Button onClick={handleSee} size="small" sx={{ alignSelf: 'start' }}>
+                  View all comments
+                </Button>
+              )}
             </Box>
-          </>
+          </Collapse>
         )}
       </Card>
-      {allowComments && <CommentInput postId={post._id} onComment={() => onMutation?.()} />}
+      {allowComments && (
+        <Collapse in={allowComments}>
+          <Box px={1}>
+            <CommentInput postId={post._id} onComment={() => onMutation?.()} />
+          </Box>
+        </Collapse>
+      )}
     </>
   );
 };
 
-const LikeButton = (props: LikeButtonProps) => {
-  const [isLiked, setIsLiked] = useState(props.isLiked);
-  useEffect(() => setIsLiked(props.isLiked), [props.isLiked]);
+const LikeButton = ({ onClick, isLiked }: LikeButtonProps) => {
+  const [liked, setLiked] = useState(isLiked);
+  useEffect(() => setLiked(isLiked), [isLiked]);
 
   return (
-    <IconButton
-      onClick={() => {
-        props.onClick();
-        setIsLiked((isLiked) => !isLiked);
-      }}
-      aria-label="favorites"
-    >
-      {isLiked ? <ThumbUpIcon color="error" /> : <ThumbUpOutlinedIcon color="primary" />}
-    </IconButton>
+    <Tooltip title="Like">
+      <IconButton
+        onClick={() => {
+          onClick();
+          setLiked(!liked);
+        }}
+        sx={liked ? { animation: 'bounce 0.3s ease' } : {}}
+      >
+        {liked ? <ThumbUpIcon color="error" /> : <ThumbUpOutlinedIcon color="primary" />}
+      </IconButton>
+    </Tooltip>
   );
 };
 
-const SaveButton = (props: SaveButtonProps) => {
-  const [isSaved, setIsSaved] = useState(props.isSaved);
-  useEffect(() => setIsSaved(props.isSaved), [props.isSaved]);
+const SaveButton = ({ onClick, isSaved }: SaveButtonProps) => {
+  const [saved, setSaved] = useState(isSaved);
+  useEffect(() => setSaved(isSaved), [isSaved]);
 
   return (
-    <IconButton
-      sx={{ padding: 0 }}
-      aria-label="bookmark"
-      onClick={() => {
-        props.onClick();
-        setIsSaved((isSaved) => !isSaved);
-      }}
-    >
-      {isSaved ? <BookmarkIcon color="primary" /> : <BookmarkBorderIcon color="error" />}
-    </IconButton>
+    <Tooltip title="Save">
+      <IconButton
+        onClick={() => {
+          onClick();
+          setSaved(!saved);
+        }}
+      >
+        {saved ? <BookmarkIcon color="primary" /> : <BookmarkBorderIcon color="error" />}
+      </IconButton>
+    </Tooltip>
   );
 };
 
-const FollowButton = (props: FollowButtonProps) => {
-  const [isFollowing, setIsFollowing] = useState(props.isFollowing);
-  useEffect(() => setIsFollowing(props.isFollowing), [props.isFollowing]);
+const FollowButton = ({ onClick, isFollowing }: FollowButtonProps) => {
+  const [following, setFollowing] = useState(isFollowing);
+  useEffect(() => setFollowing(isFollowing), [isFollowing]);
 
   return (
     <Button
-      sx={{ height: 20, fontWeight: 200 }}
-      aria-label="settings"
       variant="text"
+      size="small"
       onClick={() => {
-        props.onClick();
-        setIsFollowing((isFollowing) => isFollowing);
+        onClick();
+        setFollowing(following);
       }}
+      sx={{ minWidth: 0 }}
     >
-      {isFollowing ? null : <PersonAddIcon />}
+      {following ? null : <PersonAddIcon />}
     </Button>
   );
 };

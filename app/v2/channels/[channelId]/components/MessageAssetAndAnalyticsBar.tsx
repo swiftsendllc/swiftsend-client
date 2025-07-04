@@ -1,19 +1,22 @@
 'use client';
 
 import useAssetAPI from '@/hooks/api/useAssetAPI';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { ChannelContext } from '@/hooks/context/channel-context';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import BurstModeIcon from '@mui/icons-material/BurstMode';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { Box, Button, Skeleton, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { CreateExclusivePostDialog } from './CreateExclusivePostDialog';
 import { MessageAnalyticsBar } from './MessageAnalyticsBar';
 import { MessageAssetBar } from './MessageAssetBar';
+import { ReceiverProfileInfo } from './ReceiverProfileInfo';
 
 interface MessageInputProps {
-  loading: boolean;
+  loading:boolean
   onMessage: (msg: MessagesEntity) => unknown;
 }
 
@@ -24,8 +27,14 @@ export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInput
   const [showGallery, setShowGallery] = useState<boolean>(false);
   const [openExcDialog, setOpenExcDialog] = useState<boolean>(false);
   const [selectedAssetsMap, setSelectedAssetsMap] = useState<Map<string, string[]>>(new Map());
-  const [, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
+  const { sendMessage } = useMessageAPI();
+  const [channel] = useContext(ChannelContext);
+  const [isExclusive, setIsExclusive] = useState<boolean>(true);
+  const [price, setPrice] = useState<number>(500);
+  const [text, setText] = useState<string>('');
+  const selectedAssetIds = Array.from(selectedAssetsMap.keys());
 
   const loadCreatorAssets = async () => {
     try {
@@ -34,6 +43,23 @@ export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInput
     } catch (error) {
       console.error(error);
       toast.error('FAILED TO LOAD CREATOR ASSETS!');
+    }
+  };
+
+  const handleSendExclusiveMessage = async () => {
+    try {
+      const exclusivePost = await sendMessage({
+        message: text,
+        receiverId: channel.receiver.userId,
+        isExclusive: isExclusive,
+        price: price,
+        assetIds: selectedAssetIds
+      });
+      onMessage(exclusivePost);
+      toast.success('Asset sent successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Oops! Something wrong happened!');
     }
   };
 
@@ -49,10 +75,17 @@ export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInput
     } else setSelectedAssetsMap(new Map());
   };
 
-  const handleToggleSelect = () => {
-    setOpenExcDialog(false);
+  const handleClose = () => {
+    setText('');
     setSelectedAssetsMap(new Map());
     setCheckBox((prev) => !prev);
+    setOpenExcDialog(false);
+  };
+
+  const handleToggleSelect = () => {
+    setCheckBox((prev) => !prev);
+    setOpenExcDialog(false);
+    setSelectedAssetsMap(new Map());
   };
 
   useEffect(() => {
@@ -92,24 +125,34 @@ export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInput
               assets={assets}
               setTags={setTags}
               checkBox={checkBox}
+              searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               setOpenExcDialog={setOpenExcDialog}
-              onHandleToggleSelect={handleToggleSelect}
               selectedAssetsMap={selectedAssetsMap}
+              onHandleToggleSelect={handleToggleSelect}
               setSelectedAssetsMap={setSelectedAssetsMap}
               onHandleSelectTenAssets={(hasSelected) => handleSelectTenAssets(hasSelected)}
             />
           ) : (
-            <MessageAnalyticsBar />
+            <>
+              <MessageAnalyticsBar />
+              <ReceiverProfileInfo />
+            </>
           )}
         </>
       )}
 
       <CreateExclusivePostDialog
+        text={text}
+        price={price}
+        setText={setText}
+        setPrice={setPrice}
+        onClose={handleClose}
         isOpen={openExcDialog}
-        onClose={handleToggleSelect}
-        onSend={(msg) => onMessage(msg)}
+        isExclusive={isExclusive}
+        setIsExclusive={setIsExclusive}
         selectedAssetsMap={selectedAssetsMap}
+        handleAction={handleSendExclusiveMessage}
         setSelectedAssetsMap={setSelectedAssetsMap}
       />
     </Box>
