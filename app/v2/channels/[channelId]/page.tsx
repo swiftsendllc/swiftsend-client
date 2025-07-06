@@ -13,6 +13,7 @@ import ChannelsPage from '../components/Channels';
 import { FetchSocketMessages } from './components/FetchSocketMessages';
 import { MessageAssetAndAnalyticsBar } from './components/MessageAssetAndAnalyticsBar';
 import { MessageThread } from './components/MessageThread';
+import { ChannelContext } from '@/hooks/context/channel-context';
 
 export default function MessagePage() {
   const limit = 25;
@@ -20,6 +21,7 @@ export default function MessagePage() {
   const { channelId } = useParams();
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
+  const [channel] = useContext(ChannelContext)
   const { getChannelMessages } = useMessageAPI();
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -134,11 +136,11 @@ export default function MessagePage() {
         fontFamily="Arial, sans-serif"
         sx={{
           minWidth: 0,
-          overflow: 'hidden'
-          // backgroundImage: 'url(/photos/pexels-pixabay-460672.jpg)',
-          // backgroundPosition: 'center',
-          // backgroundSize: 'cover',
-          // backgroundRepeat: 'no-repeat'
+          overflow: 'hidden',
+          backgroundImage: `url(${channel.backgroundImage})`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
         }}
       >
         {!isSmallScreen && <ChannelsPage />}

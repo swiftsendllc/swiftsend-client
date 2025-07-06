@@ -1,5 +1,6 @@
 import { authCookieKey, ENV } from '@/library/constants';
 import { getCookie } from 'cookies-next';
+import { UpdateChannelInput } from '../dto/messages/update-channel.dto';
 import { GroupCreateInput, MessageUserInput, SendGroupMessageInput } from '../entities/messages.entities';
 
 const useMessageAPI = () => {
@@ -46,8 +47,23 @@ const useMessageAPI = () => {
     });
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error);
+      throw new Error(data.message);
     }
+    return data;
+  };
+
+  const updateChannel = async (input: Partial<UpdateChannelInput>, channelId: string) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/channels/update/${channelId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(input),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
     return data;
   };
 
@@ -110,11 +126,7 @@ const useMessageAPI = () => {
     return data;
   };
 
-  const sendMessageReply = async (input: {
-    message: string | null;
-    messageId: string;
-    receiverId: string;
-  }) => {
+  const sendMessageReply = async (input: { message: string | null; messageId: string; receiverId: string }) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/messages/reply`, {
       method: 'POST',
@@ -566,7 +578,8 @@ const useMessageAPI = () => {
     sendGroupReaction,
     deleteGroupReaction,
     sendMessageReply,
-    groupMessageReply
+    groupMessageReply,
+    updateChannel
   };
 };
 export default useMessageAPI;
