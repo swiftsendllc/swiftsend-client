@@ -6,6 +6,9 @@ import { ChannelsEntity } from '../entities/messages.entities';
 const emptyChannel = {
   _id: '',
   users: ['', ''],
+  backgroundImage:'',
+  isMuted: false,
+  isPinned:false,
   receiver: {
     _id: '',
     userId: '',

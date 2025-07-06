@@ -4,6 +4,9 @@ import { UserProfilesEntity } from './users.entities';
 export interface ChannelsEntity {
   _id: string;
   users: string[];
+  backgroundImage: string;
+  isPinned: boolean;
+  isMuted: boolean;
   receiver: UserProfilesEntity;
   lastMessage: {
     _id: string;
@@ -56,9 +59,9 @@ export interface RepliesEntity {
 
 export interface EditMessageInput {
   message: string;
-  messageId:string
-  editedAt:Date
-  edited:boolean
+  messageId: string;
+  editedAt: Date;
+  edited: boolean;
 }
 export interface MessageUserInput {
   receiverId: string;

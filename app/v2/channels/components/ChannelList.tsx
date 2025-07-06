@@ -1,10 +1,12 @@
 import { ChannelsEntity } from '@/hooks/entities/messages.entities';
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Skeleton } from '@mui/material';
+import { Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Skeleton, Stack } from '@mui/material';
 import moment from 'moment';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Fragment, useMemo } from 'react';
+import { Fragment, useMemo, useState } from 'react';
+import { ChannelListExpanded } from './ChannelListExpanded';
 
 interface ChannelProps {
   loading: boolean;
@@ -19,6 +21,7 @@ interface FormattedChannels extends ChannelsEntity {
 
 export function ChannelList({ channels, loading }: ChannelProps) {
   const router = useRouter();
+  const [expanded, setExpanded] = useState<boolean | null>(null);
   const formattedChannels = useMemo<FormattedChannels[]>(
     () =>
       channels.map((channel) => ({
@@ -47,35 +50,43 @@ export function ChannelList({ channels, loading }: ChannelProps) {
             ))
           : formattedChannels.map((channel, idx) => (
               <Fragment key={idx}>
-                <ListItem
-                  sx={{
-                    maxHeight: 72,
-                    transform: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    boxShadow: 1
-                  }}
-                  onClick={() => router.push(`/v2/channels/${channel._id}`)}
-                  secondaryAction={
-                    <IconButton>
-                      <SettingsOutlinedIcon />
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Image
-                      src={channel.receiver.avatarURL}
-                      alt="avatar"
-                      width={40}
-                      height={40}
-                      priority
-                      style={{ borderRadius: '50%' } as React.CSSProperties}
+                <Stack direction={'column'}>
+                  <ListItem
+                    sx={{
+                      maxHeight: 72,
+                      transform: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      boxShadow: 1
+                    }}
+                    onClick={() => router.push(`/v2/channels/${channel._id}`)}
+                    secondaryAction={
+                      <IconButton
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setExpanded((prev) => !prev);
+                        }}
+                      >
+                        {expanded ? <SettingsBackupRestoreIcon /> : <SettingsOutlinedIcon />}
+                      </IconButton>
+                    }
+                  >
+                    <ListItemAvatar>
+                      <Image
+                        src={channel.receiver.avatarURL}
+                        alt="avatar"
+                        width={40}
+                        height={40}
+                        priority
+                        style={{ borderRadius: '50%' } as React.CSSProperties}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${channel.receiver_name} • ${channel.lastMessagedTime}`}
+                      secondary={`${channel.last_message}...`}
                     />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${channel.receiver_name} • ${channel.lastMessagedTime}`}
-                    secondary={`${channel.last_message}...`}
-                  />
-                </ListItem>
+                  </ListItem>
+                  <ChannelListExpanded expanded={expanded} />
+                </Stack>
                 <Divider sx={{ borderColor: 'black' }} />
               </Fragment>
             ))}
