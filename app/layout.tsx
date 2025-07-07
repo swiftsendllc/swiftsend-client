@@ -1,3 +1,4 @@
+import { BackdropContextWrapper } from '@/hooks/context/backdrop-context';
 import { SocketContextWrapper } from '@/hooks/context/socket-context';
 import { UserContextWrapper } from '@/hooks/context/user-context';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
@@ -96,9 +97,11 @@ export default async function RootLayout({
         />
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <UserContextWrapper user={user}>
-              <SocketContextWrapper serverURL={ENV('NEXT_PUBLIC_API_URL')!}>{children}</SocketContextWrapper>
-            </UserContextWrapper>
+            <BackdropContextWrapper>
+              <UserContextWrapper user={user}>
+                <SocketContextWrapper>{children}</SocketContextWrapper>
+              </UserContextWrapper>
+            </BackdropContextWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

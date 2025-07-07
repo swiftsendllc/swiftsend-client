@@ -18,6 +18,7 @@ interface MessageThreadProps {
   setSelectedMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   loading: boolean;
   hasMore: boolean;
+  backdrop: number;
   onUpdateMessage: (msg: MessagesEntity) => unknown;
   onDeleteMessage: (msg: MessagesEntity) => unknown;
   handleLoadMore: () => unknown;
@@ -28,6 +29,7 @@ export function MessageThread({
   onSend,
   loading,
   hasMore,
+  backdrop,
   setPaymentModal,
   onUpdateMessage,
   handleLoadMore,
@@ -59,6 +61,7 @@ export function MessageThread({
       width="auto"
       borderRight="1px solid "
       height="100vh"
+      sx={{ backdropFilter: `blur(${backdrop}px)` }}
     >
       <MessageThreadHeader loading={loading} />
       <Box
@@ -66,7 +69,7 @@ export function MessageThread({
           flex: 1,
           display: 'flex',
           overflowY: 'scroll',
-          flexDirection: 'column-reverse',
+          flexDirection: 'column-reverse'
         }}
         id="scroll-id"
       >

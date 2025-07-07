@@ -29,7 +29,7 @@ interface UploadModalProps {
   onUpload: (assets: CreatorAssetsEntity) => unknown;
 }
 
-export function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
+export function UploadAssetModal({ isOpen, onClose, onUpload }: UploadModalProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);

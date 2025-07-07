@@ -33,3 +33,34 @@ body {
   align-items: center;
   justify-content: space-around;
 }
+
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.05) translate(-5px, -5px);
+  }
+}
+
+.stars::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  background-image: radial-gradient(white 1px, transparent 0);
+  background-size: 4px 4px;
+  opacity: 0.05;
+  z-index: 0;
+  animation: moveStars 40s linear infinite;
+}
+
+@keyframes moveStars {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1000px 1000px;
+  }
+}

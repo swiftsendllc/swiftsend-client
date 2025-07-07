@@ -3,7 +3,6 @@
 import { CommentInput } from '@/app/comment/components/CommentInput';
 import { CommentStack } from '@/app/comment/components/CommentStack';
 import { StyledBadge } from '@/components/SearchComponents';
-import TopBackNav from '@/components/TopBackNav';
 import useAPI from '@/hooks/api/useAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
@@ -16,21 +15,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Chip,
-  Collapse,
-  Divider,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Avatar, Box, Button, Chip, Collapse, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -117,115 +102,170 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
   }, [post.comments]);
 
   return (
-    <>
-      {allowComments && <TopBackNav />}
-      <Card sx={{ mb: 2, width: '100%', transition: '0.3s', '&:hover': { transform: 'scale(1.005)', boxShadow: 4 } }}>
-        <CardHeader
-          avatar={
-            <StyledBadge isOnline={post.user.isOnline} overlap="circular" variant="dot">
-              <Avatar src={post.user.avatarURL} alt={post.user.fullName} />
-            </StyledBadge>
-          }
-          action={<FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />}
-          title={
-            <Tooltip title={`@${post.user.username}`}>
-              <IconButton onClick={() => router.push(`/${post.user.username}`)}>
-                <Typography fontWeight="bold">{post.user.fullName}</Typography>
-              </IconButton>
-            </Tooltip>
-          }
-          subheader={moment(post.createdAt).format('LLL')}
-        />
-        <Typography px={2} variant="body2">
-          {isExpanded || post.caption.length <= 50 ? post.caption : `${post.caption.slice(0, 50)}...`}
-          {post.caption.length > 50 && (
-            <Button onClick={handleSee} size="small" sx={{ textTransform: 'none' }}>
+    <Box
+      sx={{
+        width: '100%',
+        minWidth:"400px",
+        maxWidth:"640px",
+        boxShadow: 3,
+        borderRadius: 3,
+        overflow: 'hidden',
+        transition: '0.3s',
+        '&:hover': { boxShadow: 6 },
+        p: 2,
+        mb: 3
+      }}
+    >
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <StyledBadge isOnline={post.user.isOnline} overlap="circular" variant="dot">
+            <Avatar src={post.user.avatarURL} alt={post.user.fullName} />
+          </StyledBadge>
+          <Box>
+            <Typography
+              fontWeight="bold"
+              onClick={() => router.push(`/${post.user.username}`)}
+              sx={{ cursor: 'pointer' }}
+            >
+              {post.user.fullName}
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              {moment(post.createdAt).fromNow()}
+            </Typography>
+          </Box>
+        </Stack>
+        <FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />
+      </Stack>
+
+      <Box>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          {isExpanded || post.caption.length <= 100 ? post.caption : `${post.caption.slice(0, 100)}...`}
+          {post.caption.length > 100 && (
+            <Button onClick={handleSee} size="small" sx={{ textTransform: 'none', ml: 1 }}>
               {isExpanded ? 'See less' : 'See more'}
             </Button>
           )}
         </Typography>
-        <Box position="relative">
-          <Stack direction="row" spacing={1} sx={{ overflowX: 'auto', scrollSnapType: 'x mandatory' }}>
-            {post._assets?.map((url, idx) => (
+      </Box>
+
+      {post._assets?.length > 0 && (
+        <Box sx={{ position: 'relative', borderRadius: 2, overflow: 'hidden', mb: 1, px: 5 }}>
+          <Stack direction="row" spacing={0.5} sx={{ overflowX: 'auto', scrollSnapType: 'x mandatory' }}>
+            {post._assets.map((url, idx) => (
               <Box
                 key={idx}
-                sx={{ minWidth: 375, height: 300, scrollSnapAlign: 'center', borderRadius: 2, overflow: 'hidden' }}
+                sx={{
+                  minWidth: 430,
+                  height: 400,
+                  scrollSnapAlign: 'start',
+                  position: 'relative',
+                  borderRadius: 2
+                }}
               >
-                <Image src={url.originalURL} alt="image" width={375} height={300} style={{ objectFit: 'cover' }} />
+                <Image
+                  src={url.originalURL}
+                  alt="post"
+                  width={375}
+                  height={300}
+                  priority
+                  style={{
+                    objectFit: 'cover',
+                    width: '100%',
+                    height: '100%'
+                  }}
+                />
               </Box>
             ))}
           </Stack>
-          <Box position="absolute" top={8} right={8}>
-            <Chip color="primary" label={post._assets?.length} />
-          </Box>
+
+          <Chip
+            size="small"
+            color="primary"
+            label={`${post._assets.length} photo${post._assets.length > 1 ? 's' : ''}`}
+            sx={{ position: 'absolute', top: 10, right: 10, backdropFilter: 'blur(10px)' }}
+          />
+
           {!post.isPurchased && (
-            <Box position="absolute" top={120} left={90}>
-              <Chip
-                label={`Purchase exclusive post at $${post.price}`}
-                icon={<MonetizationOnRoundedIcon />}
-                onClick={() => {
-                  setSelectedPost(post);
-                  setPaymentModal(true);
-                }}
-                sx={{ backdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.6)', color: '#fff' }}
-              />
-            </Box>
+            <Chip
+              icon={<MonetizationOnRoundedIcon />}
+              label={`Unlock for $${post.price}`}
+              onClick={() => {
+                setSelectedPost(post);
+                setPaymentModal(true);
+              }}
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                background: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                backdropFilter: 'blur(5px)',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            />
           )}
-          <Box position="absolute" bottom={8} right={8}>
-            {!post.isMyPost && <SaveButton isSaved={isSaved} onClick={() => handleSave(post._id)} />}
-          </Box>
         </Box>
-        <CardContent>
-          <Stack direction="row" justifyContent="space-between">
-            <Box>{`${likeCount} ❤`}</Box>
-            <Stack direction="row" spacing={1}>
-              <Box>{`${commentCount} 💬`}</Box>
-              <Box>{`${post.shareCount} ➦`}</Box>
-            </Stack>
-          </Stack>
-        </CardContent>
-        <Divider />
-        {post.isPurchased && (
-          <Stack direction={"row"} justifyContent="space-between" px={2}>
-            <LikeButton isLiked={isLiked} onClick={() => handleLike(post._id)} />
-            <Tooltip title="Comments">
-              <IconButton href={`/posts/${post._id}`} LinkComponent={Link}>
-                <ModeCommentOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Share">
-              <IconButton>
-                <SendOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+      )}
+
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ my: 1 }}>
+        <Typography variant="caption" color="textSecondary">
+          {likeCount} likes • {commentCount} comments • {post.shareCount} shares
+        </Typography>
+
+        {!post.isMyPost && <SaveButton isSaved={isSaved} onClick={() => handleSave(post._id)} />}
+      </Stack>
+
+      <Box sx={{ borderTop: '1px solid', borderColor: 'divider', my: 1 }} />
+
+      {post.isPurchased && (
+        <Stack direction="row" justifyContent="space-around" py={1}>
+          <LikeButton isLiked={isLiked} onClick={() => handleLike(post._id)} />
+
+          <Tooltip title="Comments">
+            <IconButton href={`/posts/${post._id}`} LinkComponent={Link}>
+              <ModeCommentOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Share">
+            <IconButton>
+              <SendOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Info">
             <IconButton>
               <MoreVertIcon />
             </IconButton>
-          </Stack>
-        )}
-        {post.comments && post.comments?.length > 0 && (
-          <Collapse in={true}>
-            <Box display="flex" flexDirection="column" px={1} py={2}>
-              {(isExpanded ? post.comments : post.comments.slice(-2)).map((comment, idx) => (
-                <CommentStack key={idx} comment={comment} postId={post._id} onDelete={() => onMutation?.()} />
-              ))}
-              {post.comments.length > 2 && !isExpanded && (
-                <Button onClick={handleSee} size="small" sx={{ alignSelf: 'start' }}>
-                  View all comments
-                </Button>
-              )}
-            </Box>
-          </Collapse>
-        )}
-      </Card>
+          </Tooltip>
+        </Stack>
+      )}
+
+      {post.comments && post.comments.length > 0 && (
+        <Collapse in={true}>
+          <Box px={1} pb={2}>
+            {(isExpanded ? post.comments : post.comments.slice(-2)).map((comment, idx) => (
+              <CommentStack key={idx} comment={comment} postId={post._id} onDelete={() => onMutation?.()} />
+            ))}
+            {post.comments.length > 2 && !isExpanded && (
+              <Button onClick={handleSee} size="small" sx={{ textTransform: 'none', mt: 1 }}>
+                View all comments
+              </Button>
+            )}
+          </Box>
+        </Collapse>
+      )}
+
       {allowComments && (
         <Collapse in={allowComments}>
-          <Box px={1}>
+          <Box px={1} pb={2}>
             <CommentInput postId={post._id} onComment={() => onMutation?.()} />
           </Box>
         </Collapse>
       )}
-    </>
+    </Box>
   );
 };
 
