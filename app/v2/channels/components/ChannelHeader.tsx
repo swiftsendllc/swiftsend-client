@@ -3,8 +3,11 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Chip, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
+interface ChannelHeaderProps {
+  onBackDropChange: () => unknown;
+}
 
-export function ChannelHeader() {
+export function ChannelHeader({onBackDropChange}:ChannelHeaderProps) {
   const router = useRouter();
   return (
     <>
@@ -15,7 +18,7 @@ export function ChannelHeader() {
           </IconButton>
           <Typography fontWeight="bold">CHANNELS</Typography>
         </Box>
-        <IconButton>
+        <IconButton onClick={onBackDropChange}>
           <FilterListIcon />
         </IconButton>
       </Box>
@@ -28,7 +31,7 @@ export function ChannelHeader() {
         placeholder="Search..."
         fullWidth
         size="small"
-        sx={{ px: 2, mb: 1, width:"90%" }}
+        sx={{ px: 2, mb: 1, width: '90%' }}
         slotProps={{
           input: {
             startAdornment: (

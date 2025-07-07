@@ -16,11 +16,12 @@ import { MessageAssetBar } from './MessageAssetBar';
 import { ReceiverProfileInfo } from './ReceiverProfileInfo';
 
 interface MessageInputProps {
-  loading:boolean
+  loading: boolean;
+  backdrop:number
   onMessage: (msg: MessagesEntity) => unknown;
 }
 
-export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInputProps) {
+export function MessageAssetAndAnalyticsBar({ backdrop,onMessage, loading }: MessageInputProps) {
   const { getCreatorAssets } = useAssetAPI();
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const [checkBox, setCheckBox] = useState<boolean>(false);
@@ -93,7 +94,15 @@ export function MessageAssetAndAnalyticsBar({ onMessage, loading }: MessageInput
   }, [showGallery]); //eslint-disable-line
 
   return (
-    <Box width="320px" display="flex" flexDirection="column" paddingTop={3} px={2} minWidth={0}>
+    <Box
+      width="321px"
+      display="flex"
+      flexDirection="column"
+      paddingTop={3}
+      px={2}
+      minWidth={0}
+      sx={{ transition: 'backdrop-filter 0.3s ease', backdropFilter: `blur(${backdrop}px)`  }}
+    >
       {loading ? (
         <Stack spacing={1} my={6}>
           <Stack spacing={1}>

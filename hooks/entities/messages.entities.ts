@@ -7,7 +7,16 @@ export interface ChannelsEntity {
   backgroundImage: string;
   isPinned: boolean;
   isMuted: boolean;
-  receiver: UserProfilesEntity;
+  receiver: {
+    username: string;
+    avatarURL: string;
+    userId: string;
+    lastSeen: string;
+    fullName: string;
+    region: string;
+    bannerURL: string;
+    createdAt: Date;
+  };
   lastMessage: {
     _id: string;
     senderId: string;

@@ -531,3 +531,19 @@ export const widths = [
     value: 100
   }
 ];
+
+export const customBoxStyle = {
+  zIndex: 2,
+  position: 'relative',
+  margin: 'auto',
+  maxWidth: 420,
+  px: 4,
+  py: 6,
+  color: '#fff',
+  textAlign: 'center',
+  borderRadius: 5,
+  backdropFilter: 'blur(20px)',
+  background: 'rgba(255,255,255, 0.1)',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 px 30px rgba(0, 0, 0, 0.4)'
+};

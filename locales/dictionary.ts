@@ -40,3 +40,9 @@ export const useTranslation = () => {
 
   return { t: translate, locale, setLocale };
 };
+
+export const languageOptions = [
+  { language: 'English', languageCode: 'en' },
+  { language: 'French', languageCode: 'fr' },
+  { language: 'German', languageCode: 'de' }
+] as { language: string; languageCode: LangCode }[];

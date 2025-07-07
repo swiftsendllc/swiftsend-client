@@ -3,6 +3,8 @@
 import PaymentModalWrapper from '@/components/PaymentModal';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
+import { useBackDrop } from '@/hooks/context/backdrop-context';
+import { ChannelContext } from '@/hooks/context/channel-context';
 import { UserContext } from '@/hooks/context/user-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
@@ -13,7 +15,6 @@ import ChannelsPage from '../components/Channels';
 import { FetchSocketMessages } from './components/FetchSocketMessages';
 import { MessageAssetAndAnalyticsBar } from './components/MessageAssetAndAnalyticsBar';
 import { MessageThread } from './components/MessageThread';
-import { ChannelContext } from '@/hooks/context/channel-context';
 
 export default function MessagePage() {
   const limit = 25;
@@ -21,8 +22,10 @@ export default function MessagePage() {
   const { channelId } = useParams();
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
-  const [channel] = useContext(ChannelContext)
+  const [channel] = useContext(ChannelContext);
+  const { backdrop } = useBackDrop();
   const { getChannelMessages } = useMessageAPI();
+  const isMobile = useMediaQuery('(max-width:740px)');
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [messages, setMessages] = useState<MessagesEntity[]>([]);
@@ -73,9 +76,7 @@ export default function MessagePage() {
     };
   };
 
-  const handleReload = async () => {
-    await new Promise(() => setTimeout(handleLoadMessages, 1000));
-  };
+  const handleReload = async () => await new Promise(() => setTimeout(handleLoadMessages, 1000));
 
   const handleUpdated = (msg: MessagesEntity) => {
     setMessages((prev) =>
@@ -116,7 +117,19 @@ export default function MessagePage() {
   }, [channelId, setLoading, setHasMore, setMessages, limit]); //eslint-disable-line
 
   return (
-    <>
+    <Box
+      display="flex"
+      flexDirection={isSmallScreen ? 'column' : 'row'}
+      height="100vh"
+      width="100%"
+      overflow="hidden"
+      sx={{
+        backgroundImage: `url(${channel.backgroundImage})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       {selectedMessage && (
         <PaymentModalWrapper
           isOpen={paymentModal}
@@ -131,34 +144,43 @@ export default function MessagePage() {
         />
       )}
       <Box
+        flexShrink={0}
+        flex={isMobile ? 'none' : '0 0 340px'}
+        minWidth={isMobile ? '100%' : '340px'}
+        display={isMobile && channelId ? 'none' : 'block'}
+      >
+        <ChannelsPage />
+      </Box>
+      <Box
+        flex="1"
         display="flex"
-        height="100vh"
-        fontFamily="Arial, sans-serif"
+        flexDirection="column"
         sx={{
-          minWidth: 0,
+          height: '100%',
           overflow: 'hidden',
-          backgroundImage: `url(${channel.backgroundImage})`,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat'
+          zIndex: 2
         }}
       >
-        {!isSmallScreen && <ChannelsPage />}
         <MessageThread
+          backdrop={backdrop}
           loading={loading}
           hasMore={hasMore}
           messages={messages}
           setPaymentModal={setPaymentModal}
           setSelectedMessage={setSelectedMessage}
           handleLoadMore={handleLoadMoreMessages}
-          onDeleteMessage={(msg) => handleDeleted(msg)}
-          onUpdateMessage={(msg) => handleUpdated(msg)}
+          onDeleteMessage={handleDeleted}
+          onUpdateMessage={handleUpdated}
           onSend={(msg) => setMessages((prev) => [msg, ...prev])}
         />
-        {isLargeScreen && (
-          <MessageAssetAndAnalyticsBar onMessage={(msg) => setMessages((prev) => [msg, ...prev])} loading={loading} />
-        )}
       </Box>
-    </>
+      {isLargeScreen && (
+        <MessageAssetAndAnalyticsBar
+          onMessage={(msg) => setMessages((prev) => [msg, ...prev])}
+          loading={loading}
+          backdrop={backdrop}
+        />
+      )}
+    </Box>
   );
 }

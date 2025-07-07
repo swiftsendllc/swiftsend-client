@@ -1,16 +1,18 @@
 'use client';
 
+import { PostAnalyticsBar } from '@/app/posts/components/PostAnalyticsbar';
 import PaymentModalWrapper from '@/components/PaymentModal';
+import { GenerateWallpaper } from '@/components/Wallpaper';
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { UserContext } from '@/hooks/context/user-context';
 import { PostsEntity } from '@/hooks/entities/posts.entities';
-import { Container, Divider, LinearProgress, List } from '@mui/material';
+import { Box, LinearProgress, List, useMediaQuery } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { PostCard } from '../../posts/components/Post';
-import { HomeHeaderPage } from './HomeHeader';
+import { HomeHeader } from './HomeHeader';
 
 export default function HomePage() {
   const limit = 10;
@@ -22,6 +24,10 @@ export default function HomePage() {
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
+  const isMobile = useMediaQuery('max-width(954px)');
+  const defaultUrl = `/photos/pexels-nout-gons-80280-378570.jpg`;
+  const [wallpaper, setWallpaper] = useState<string>(defaultUrl);
+  GenerateWallpaper({ setWallpaper });
 
   const loadPosts = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : posts.length;
@@ -93,9 +99,7 @@ export default function HomePage() {
   };
 
   const loadMorePosts = () => {
-    if (hasMore && !loading) {
-      loadPosts();
-    }
+    if (hasMore && !loading) loadPosts();
   };
 
   useEffect(() => {
@@ -103,58 +107,72 @@ export default function HomePage() {
   }, []); //eslint-disable-line
 
   return (
-    <>
-      {selectedPost && (
-        <PaymentModalWrapper
-          isOpen={paymentModal}
-          onClose={handleClose}
-          metadata={{
-            userId: user.userId,
-            creatorId: selectedPost.user.userId,
-            contentId: selectedPost._id
-          }}
-          makePayment={makePayment}
-          onSuccess={() => handleSuccess(selectedPost._id)}
-        />
-      )}
-      <Container maxWidth="xs" style={{ padding: 0 }} sx={{ mt: 2, mb: 8 }}>
-        <HomeHeaderPage />
-        <Divider sx={{ mt: 1 }} />
-        <List
-          sx={{
-            height: '800px',
-            overflowY: 'scroll',
-            display: 'flex',
-            flexDirection: 'column',
-            objectFit: 'cover'
-          }}
-          id="scroll-id"
-        >
-          <InfiniteScroll
-            style={{
-              flexDirection: 'column',
-              display: 'flex',
-              overflow: 'hidden'
+    <Box
+      display="flex"
+      flexDirection={'row'}
+      width="100%"
+      height="100vh"
+      borderRight={'1px solid'}
+      sx={{
+        transition: 'backdrop-filter 0.3s ease',
+        overflow: 'hidden',
+        backgroundImage: `url(${wallpaper})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <Box display="flex" flexDirection={'column'}>
+        {selectedPost && (
+          <PaymentModalWrapper
+            isOpen={paymentModal}
+            onClose={handleClose}
+            metadata={{
+              userId: user.userId,
+              creatorId: selectedPost.user.userId,
+              contentId: selectedPost._id
             }}
-            dataLength={posts.length}
-            next={loadMorePosts}
-            hasMore={hasMore}
-            loader={loading && <LinearProgress />}
-            initialScrollY={500}
-            scrollThreshold={0.9}
-            scrollableTarget="scroll-id"
+            makePayment={makePayment}
+            onSuccess={() => handleSuccess(selectedPost._id)}
+          />
+        )}
+        <HomeHeader />
+        <Box sx={{ borderRight: '1px solid' }}>
+          <List
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '800px',
+              objectFit: 'contain',
+              overflowY: 'scroll'
+            }}
+            id="scroll-d"
           >
-            {posts.map((post) => (
-              <PostCard
-                key={post._id}
-                post={post}
-                setPaymentModal={setPaymentModal}
-                setSelectedPost={setSelectedPost}
-              />
-            ))}
-          </InfiniteScroll>
-        </List>
-      </Container>
-    </>
+            <InfiniteScroll
+              dataLength={posts.length}
+              next={loadMorePosts}
+              hasMore={hasMore}
+              loader={<LinearProgress />}
+              scrollableTarget="scroll-id"
+              style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+            >
+              {posts.map((post) => (
+                <PostCard
+                  key={post._id}
+                  post={post}
+                  setPaymentModal={setPaymentModal}
+                  setSelectedPost={setSelectedPost}
+                />
+              ))}
+            </InfiniteScroll>
+          </List>
+        </Box>
+      </Box>
+      {!isMobile && (
+        <Box flex={1} display="flex" justifyContent="center" alignItems="center" width={'100%'}>
+          <PostAnalyticsBar />
+        </Box>
+      )}
+    </Box>
   );
 }

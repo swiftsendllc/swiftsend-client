@@ -1,12 +1,11 @@
+import { ReturnToPreviousPage } from '@/components/ReturnToPrevious';
 import { ChannelContext } from '@/hooks/context/channel-context';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { Avatar, Box, Divider, IconButton, Skeleton, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { Avatar, Box, Divider, IconButton, Skeleton, Typography, useMediaQuery } from '@mui/material';
 import { Fragment, useContext, useState } from 'react';
 import { MessageThreadHeaderMenuOptions } from './MessageThreadHeaderMenuOptions';
 
@@ -14,20 +13,13 @@ interface MessageThreadHeaderProps {
   loading: boolean;
 }
 
-export function MessageThreadHeader({ loading,  }: MessageThreadHeaderProps) {
-  const theme = useTheme();
-  const router = useRouter();
+export function MessageThreadHeader({ loading }: MessageThreadHeaderProps) {
   const [channel] = useContext(ChannelContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width:740px)');
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClose = () => setAnchorEl(null);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
 
   const messageThreadOptions = [
     {
@@ -35,15 +27,15 @@ export function MessageThreadHeader({ loading,  }: MessageThreadHeaderProps) {
       icon: <StarBorderIcon />
     },
     {
-      label: 'starred',
-      icon: <NotificationsNoneIcon />
+      label: 'Blur',
+      icon: <FilterListIcon />
     },
     {
-      label: 'starred',
+      label: 'Pin message',
       icon: <PushPinOutlinedIcon />
     },
     {
-      label: 'starred',
+      label: 'Gallery',
       icon: <PhotoLibraryOutlinedIcon />
     },
     {
@@ -63,12 +55,7 @@ export function MessageThreadHeader({ loading,  }: MessageThreadHeaderProps) {
       sx={{ minHeight: 64 }}
       borderBottom={'1px solid'}
     >
-      <Box display={'flex'} alignItems="center" gap={1}>
-        {isSmallScreen && (
-          <IconButton sx={{ p: 0 }} onClick={() => router.back()}>
-            <KeyboardReturnIcon />
-          </IconButton>
-        )}
+      <Box display={'flex'} alignItems="center" gap={2}>
         {loading ? (
           <>
             <Skeleton variant="circular" width={40} height={40} />
@@ -79,13 +66,14 @@ export function MessageThreadHeader({ loading,  }: MessageThreadHeaderProps) {
           </>
         ) : (
           <Box justifyContent={'space-between'} display={'flex'} flexDirection={'row'}>
-            <Box display={'flex'} flexDirection={'row'}>
+            {isMobile && <ReturnToPreviousPage px={0} />}
+            <Box display={'flex'} flexDirection={'row'} ml={6}>
               <Avatar
                 src={channel.receiver.avatarURL}
                 sx={{ width: 40, height: 40 }}
                 alt={channel.receiver.fullName || 'Swifter'}
               />
-              <Box>
+              <Box ml={2}>
                 <Typography fontWeight="bold">{channel.receiver.fullName || 'SwiftSend User'}</Typography>
                 <Typography variant="caption">Available now</Typography>
               </Box>
@@ -119,10 +107,7 @@ export function MessageThreadHeader({ loading,  }: MessageThreadHeaderProps) {
           ))}
         </Box>
       )}
-      <MessageThreadHeaderMenuOptions
-        anchorEl={anchorEl}
-        handleClose={handleClose}
-      />
+      <MessageThreadHeaderMenuOptions anchorEl={anchorEl} handleClose={handleClose} />
     </Box>
   );
 }

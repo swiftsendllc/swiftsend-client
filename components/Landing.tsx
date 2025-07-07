@@ -1,118 +1,100 @@
 'use client';
-import { LangCode, useTranslation } from '@/locales/dictionary';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import {
-  Box,
-  Button,
-  Container,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography
-} from '@mui/material';
+import { useTranslation } from '@/locales/dictionary';
+import { Box, Button, Container, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { GoogleIconCustom } from './CustomIcons';
+import { LocaleMenu } from './LocaleMenu';
+import { customBoxStyle } from './SearchComponents';
+import { GenerateWallpaper } from './Wallpaper';
 
 export default function LandingPage() {
+  const defaultUrl = `/photos/pexels-nout-gons-80280-378570.jpg`;
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { t, locale, setLocale } = useTranslation();
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
+  const [wallpaper, setWallpaper] = useState<string>(defaultUrl);
+  GenerateWallpaper({ setWallpaper });
 
-  const languageOptions = [
-    {
-      language: 'English',
-      languageCode: 'en'
-    },
-    {
-      language: 'French',
-      languageCode: 'fr'
-    },
-    {
-      language: 'German',
-      languageCode: 'de'
-    }
-  ] as { language: string; languageCode: LangCode }[];
-
-  const changeLanguage = (lang: LangCode) => {
-    setLocale(lang);
-    setOpen(false);
-  };
   return (
     <Container
-      maxWidth="xs"
+      maxWidth={false}
+      disableGutters
       sx={{
         minHeight: '100vh',
-        alignContent: 'center',
-        alignItems: 'center'
+        backgroundImage: `url(${wallpaper})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        animation: 'kenburns 30s ease-in-out infinite alternate'
       }}
     >
-      <Box
-        sx={{
-          display: { xs: 'flex', md: 'none' },
-          justifyContent: 'flex-end',
-          width: 'auto'
-        }}
-        role="presentation"
-      >
-        <IconButton
-          sx={{ borderRadius: '30px', fontSize: '.85rem' }}
-          onClick={toggleDrawer(true)}
-          aria-label="Select-Language"
-        >
-          {locale}
-          <KeyboardArrowDownIcon />
-        </IconButton>
-        <Drawer anchor="top" open={open} onClose={toggleDrawer(false)}>
-          <List>
-            {languageOptions.map((option, idx) => (
-              <ListItem key={idx} disablePadding>
-                <ListItemButton onClick={() => changeLanguage(option.languageCode)}>
-                  <ListItemText primary={option.language} sx={{ textAlign: 'center' }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-      </Box>
-      <Box width="100%" textAlign="center" alignContent="center" mb={20}>
-        <Box width={150} height={150} mx={'auto'}>
-          <Image
-            src={'/icons/app_icon.png'}
-            alt="/icons/app_icon.png"
-            width={150}
-            height={150}
-            style={{ padding: 0, margin: 0 }}
-            priority
-          />
-        </Box>
-        <Typography variant="h5" fontWeight={300}>
+      <LocaleMenu locale={locale} setLocale={setLocale} />
+      <Box sx={{ ...customBoxStyle, mt: isMobile ? 10 : 16 }}>
+        <Image
+          src="/icons/app_icon.png"
+          alt="App Icon"
+          width={100}
+          height={100}
+          priority
+          style={{ marginBottom: '10px' }}
+        />
+        <Typography variant="h4" fontWeight={600}>
           {t('appName')}
         </Typography>
-      </Box>
 
-      <Stack spacing={3} mb={2}>
-        <Button fullWidth variant="contained" color="success" onClick={() => router.push('/signup')}>
-          {t('signUp')}
-        </Button>
-        <Button fullWidth variant="outlined" onClick={() => router.push('/login')}>
-          {t('login')}
-        </Button>
-        <Button fullWidth variant="contained" startIcon={<GoogleIconCustom />}>
-          {t('googleSign')}
-        </Button>
-      </Stack>
-      <Typography variant="body2" align="center" color="text.secondary">
-        {t('privacyPolicy')}
-      </Typography>
+        <Stack spacing={2} mt={4}>
+          <Button
+            fullWidth
+            sx={{
+              py: 1.5,
+              background: 'linear-gradient(to right, #4ade80, #22c55e)',
+              '&:hover': {
+                boxShadow: '0 0 12px #4ade80'
+              }
+            }}
+            onClick={() => router.push('/signup')}
+          >
+            {t('signUp')}
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              color: 'white',
+              py: 1.5,
+              borderColor: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(255,255,255,0.1)'
+              }
+            }}
+            onClick={() => router.push('/login')}
+          >
+            {t('login')}
+          </Button>
+          <Button
+            startIcon={<GoogleIconCustom />}
+            fullWidth
+            sx={{
+              py: 1.5,
+              backgroundColor: '#4285F4',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#3367D6',
+                boxShadow: '0 0 10px #4285F4'
+              }
+            }}
+          >
+            {t('googleSign')}
+          </Button>
+        </Stack>
+        <Typography mt={3} variant="caption">
+          {t('privacyPolicy')}
+        </Typography>
+      </Box>
     </Container>
   );
 }
