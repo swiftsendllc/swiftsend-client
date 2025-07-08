@@ -1,8 +1,8 @@
 'use client';
 
 import { PostAnalyticsBar } from '@/app/posts/components/PostAnalyticsbar';
+import { GenerateWallpaper } from '@/components/GenerateWallpaper';
 import PaymentModalWrapper from '@/components/PaymentModal';
-import { GenerateWallpaper } from '@/components/Wallpaper';
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import { UserContext } from '@/hooks/context/user-context';

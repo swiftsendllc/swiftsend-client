@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { GoogleIconCustom } from './CustomIcons';
+import { GenerateWallpaper } from './GenerateWallpaper';
 import { LocaleMenu } from './LocaleMenu';
 import { customBoxStyle } from './SearchComponents';
-import { GenerateWallpaper } from './Wallpaper';
 
 export default function LandingPage() {
   const defaultUrl = `/photos/pexels-nout-gons-80280-378570.jpg`;
