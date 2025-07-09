@@ -1,6 +1,9 @@
+import { CancelButton } from '@/components/CancelButton';
 import { ReturnToPreviousPage } from '@/components/ReturnToPrevious';
 import { ChannelContext } from '@/hooks/context/channel-context';
+import { MessagesEntity } from '@/hooks/entities/messages.entities';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import LayersClearIcon from '@mui/icons-material/LayersClear';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
@@ -11,13 +14,24 @@ import { MessageThreadHeaderMenuOptions } from './MessageThreadHeaderMenuOptions
 
 interface MessageThreadHeaderProps {
   loading: boolean;
+  multipleSelectCheckBox: boolean;
+  onDeleteMultiple: () => unknown;
+  selectedMultiple: MessagesEntity[];
+  setSelectedMultiple: React.Dispatch<React.SetStateAction<MessagesEntity[]>>;
+  setMultipleSelectCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function MessageThreadHeader({ loading }: MessageThreadHeaderProps) {
+export function MessageThreadHeader({
+  loading,
+  selectedMultiple,
+  multipleSelectCheckBox,
+  setMultipleSelectCheckBox,
+  onDeleteMultiple,
+  setSelectedMultiple
+}: MessageThreadHeaderProps) {
   const [channel] = useContext(ChannelContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMobile = useMediaQuery('(max-width:740px)');
-
   const handleClose = () => setAnchorEl(null);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
 
@@ -44,6 +58,11 @@ export function MessageThreadHeader({ loading }: MessageThreadHeaderProps) {
       action: handleMenuOpen
     }
   ];
+
+  const handleCancel = () => {
+    setMultipleSelectCheckBox(false);
+    setSelectedMultiple([]);
+  };
 
   return (
     <Box
@@ -82,32 +101,61 @@ export function MessageThreadHeader({ loading }: MessageThreadHeaderProps) {
         )}
       </Box>
       {!loading && (
-        <Box display="flex" alignItems="center" minHeight={40} ml={2}>
-          {messageThreadOptions.map((option, idx) => (
-            <Fragment key={idx}>
-              <IconButton
-                sx={{
-                  width: 26,
-                  height: 26,
-                  p: 0,
-                  mx: 0.5,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                onClick={option.action}
-                aria-label={option.label || `option-${idx}`}
-              >
-                {option.icon}
-              </IconButton>
-              {idx !== messageThreadOptions.length - 1 && (
+        <Box display="flex" alignItems="center" minHeight={40} ml={2} flexGrow={multipleSelectCheckBox ? 0.3 : 0}>
+          {multipleSelectCheckBox && (
+            <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'} width={'100%'}>
+              <Box sx={{ zIndex: 10 }} display={'flex'} alignContent={'center'}>
+                <IconButton
+                  sx={{
+                    backdropFilter: 'blur(6px)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: 3
+                  }}
+                  disabled={!selectedMultiple.length}
+                  color="error"
+                  onClick={onDeleteMultiple}
+                >
+                  <Typography>Delete</Typography>
+                  <LayersClearIcon sx={{ width: 30, height: 30 }} />
+                </IconButton>
                 <Divider orientation="vertical" flexItem sx={{ mx: 0.5, bgcolor: 'black' }} />
-              )}
-            </Fragment>
-          ))}
+              </Box>
+              <Box>
+                <CancelButton onCancel={handleCancel} px={5} />
+              </Box>
+            </Box>
+          )}
+          {multipleSelectCheckBox
+            ? null
+            : messageThreadOptions.map((option, idx) => (
+                <Fragment key={idx}>
+                  <IconButton
+                    sx={{
+                      width: 26,
+                      height: 26,
+                      p: 0,
+                      mx: 0.5,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    onClick={option.action}
+                    aria-label={option.label || `option-${idx}`}
+                  >
+                    {option.icon}
+                  </IconButton>
+                  {idx !== messageThreadOptions.length - 1 && (
+                    <Divider orientation="vertical" flexItem sx={{ mx: 0.5, bgcolor: 'black' }} />
+                  )}
+                </Fragment>
+              ))}
         </Box>
       )}
-      <MessageThreadHeaderMenuOptions anchorEl={anchorEl} handleClose={handleClose} />
+      <MessageThreadHeaderMenuOptions
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+        setMultipleSelectCheckBox={setMultipleSelectCheckBox}
+      />
     </Box>
   );
 }

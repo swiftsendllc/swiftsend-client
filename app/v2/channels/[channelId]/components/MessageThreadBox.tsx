@@ -1,11 +1,16 @@
 import { UserContext } from '@/hooks/context/user-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
-import { Box, Typography } from '@mui/material';
+import CircleIcon from '@mui/icons-material/Circle';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import { Box, IconButton, Typography } from '@mui/material';
 import moment from 'moment';
-import { useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { MessageThreadBoxFormatted } from './MessageThreadBoxFormatted';
 
 interface MessageThreadProps {
+  multipleSelectCheckBox: boolean;
+  selectedMultiple: MessagesEntity[];
+  onToggleSelect: (msg: MessagesEntity) => unknown;
   groupedMessages: [string, MessagesEntity[]][];
   setDeleteMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
   setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,7 +20,10 @@ interface MessageThreadProps {
 }
 
 export function MessageThreadBox({
+  selectedMultiple,
   setReply,
+  onToggleSelect,
+  multipleSelectCheckBox,
   setDeleteMessage,
   groupedMessages,
   setPaymentModal,
@@ -57,6 +65,7 @@ export function MessageThreadBox({
             <Box display="flex" key={date} gap={1} flexDirection="column-reverse">
               {messages.map((message, idx) => {
                 const isSender = message.senderId === user.userId;
+                const isSelectedToDelete = selectedMultiple.includes(message);
                 return (
                   <Box key={idx} display="flex" justifyContent={isSender ? 'flex-end' : 'flex-start'}>
                     <MessageThreadBoxFormatted
@@ -68,6 +77,13 @@ export function MessageThreadBox({
                       setEditMessage={setEditMessage}
                       setDeleteMessage={setDeleteMessage}
                     />
+                    <Box>
+                      {isSender && multipleSelectCheckBox && !message.deleted && (
+                        <IconButton onClick={() => onToggleSelect(message)}>
+                          {isSelectedToDelete ? <CircleIcon color="error" /> : <CircleOutlinedIcon />}
+                        </IconButton>
+                      )}
+                    </Box>
                   </Box>
                 );
               })}

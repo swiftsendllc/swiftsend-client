@@ -112,6 +112,21 @@ export default function MessagePage() {
     );
   };
 
+  const handleDeleteMultiple = (msgs: MessagesEntity[]) => {
+    const idsToDelete = msgs.map((u) => u._id);
+    setMessages((prev) =>
+      prev.map((m) =>
+        idsToDelete.includes(m._id)
+          ? {
+              ...m,
+              deleted: true,
+              deletedAt: new Date()
+            }
+          : m
+      )
+    );
+  };
+
   useEffect(() => {
     if (channelId) handleLoadMessages();
   }, [channelId, setLoading, setHasMore, setMessages, limit]); //eslint-disable-line
@@ -171,6 +186,7 @@ export default function MessagePage() {
           handleLoadMore={handleLoadMoreMessages}
           onDeleteMessage={handleDeleted}
           onUpdateMessage={handleUpdated}
+          onDeleteMultiple={(msgs) => handleDeleteMultiple(msgs)}
           onSend={(msg) => setMessages((prev) => [msg, ...prev])}
         />
       </Box>

@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { DeleteMessageModal } from './DeleteMessageModal';
+import { DeleteMultipleMessageDialog } from './DeleteMultipleMessageDialog';
 import { EditMessageModal } from './EditMessageModal';
 import { MessageInput } from './MessageInput';
 import MessageSkeletonLoader from './MessageSkeletonLoader';
@@ -12,16 +13,17 @@ import { MessageThreadBox } from './MessageThreadBox';
 import { MessageThreadHeader } from './MessageThreadHeader';
 
 interface MessageThreadProps {
-  messages: MessagesEntity[];
-  setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onSend: (msg: MessagesEntity) => unknown;
   setSelectedMessage: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
+  setPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
+  onDeleteMultiple: (msgs: MessagesEntity[]) => unknown;
+  onUpdateMessage: (msg: MessagesEntity) => unknown;
+  onDeleteMessage: (msg: MessagesEntity) => unknown;
+  onSend: (msg: MessagesEntity) => unknown;
+  handleLoadMore: () => unknown;
+  messages: MessagesEntity[];
   loading: boolean;
   hasMore: boolean;
   backdrop: number;
-  onUpdateMessage: (msg: MessagesEntity) => unknown;
-  onDeleteMessage: (msg: MessagesEntity) => unknown;
-  handleLoadMore: () => unknown;
 }
 
 export function MessageThread({
@@ -30,6 +32,7 @@ export function MessageThread({
   loading,
   hasMore,
   backdrop,
+  onDeleteMultiple,
   setPaymentModal,
   onUpdateMessage,
   handleLoadMore,
@@ -39,6 +42,16 @@ export function MessageThread({
   const [reply, setReply] = useState<MessagesEntity | null>(null);
   const [editMessage, setEditMessage] = useState<MessagesEntity | null>(null);
   const [deleteMessage, setDeleteMessage] = useState<MessagesEntity | null>(null);
+  const [multipleSelectCheckBox, setMultipleSelectCheckBox] = useState<boolean>(false);
+  const [deleteMultipleOpen, setDeleteMultipleOpen] = useState<boolean>(false);
+  const [selectedMultiple, setSelectedMultiple] = useState<MessagesEntity[]>([]);
+
+  const handleToggleSelect = (message: MessagesEntity) => {
+    setSelectedMultiple((prev) => {
+      const newSelectedMessages = prev.includes(message) ? prev.filter((m) => m !== message) : [...prev, message];
+      return newSelectedMessages;
+    });
+  };
 
   const groupedMessages = useMemo(() => {
     return Object.entries(
@@ -63,7 +76,14 @@ export function MessageThread({
       height="100vh"
       sx={{ backdropFilter: `blur(${backdrop}px)` }}
     >
-      <MessageThreadHeader loading={loading} />
+      <MessageThreadHeader
+        loading={loading}
+        selectedMultiple={selectedMultiple}
+        setSelectedMultiple={setSelectedMultiple}
+        multipleSelectCheckBox={multipleSelectCheckBox}
+        onDeleteMultiple={() => setDeleteMultipleOpen(true)}
+        setMultipleSelectCheckBox={setMultipleSelectCheckBox}
+      />
       <Box
         sx={{
           flex: 1,
@@ -87,11 +107,14 @@ export function MessageThread({
           >
             <MessageThreadBox
               setReply={setReply}
-              setDeleteMessage={setDeleteMessage}
               setEditMessage={setEditMessage}
               groupedMessages={groupedMessages}
               setPaymentModal={setPaymentModal}
+              selectedMultiple={selectedMultiple}
+              setDeleteMessage={setDeleteMessage}
               setSelectedMessage={setSelectedMessage}
+              multipleSelectCheckBox={multipleSelectCheckBox}
+              onToggleSelect={(msg) => handleToggleSelect(msg)}
             />
           </InfiniteScroll>
         )}
@@ -103,18 +126,27 @@ export function MessageThread({
         <EditMessageModal
           isOpen={!!editMessage}
           message={editMessage}
-          onClose={() => setEditMessage(null)}
           onUpdateMessage={onUpdateMessage}
+          onClose={() => setEditMessage(null)}
         />
       )}
       {deleteMessage && (
         <DeleteMessageModal
-          isOpen={!!deleteMessage}
-          onClose={() => setDeleteMessage(null)}
           message={deleteMessage}
+          isOpen={!!deleteMessage}
           onDeleteMessage={onDeleteMessage}
+          onClose={() => setDeleteMessage(null)}
         />
       )}
+      <DeleteMultipleMessageDialog
+        isOpen={deleteMultipleOpen}
+        selectedMultiple={selectedMultiple}
+        setSelectedMultiple={setSelectedMultiple}
+        onClose={() => setDeleteMultipleOpen(false)}
+        onToggleSelect={(msg) => handleToggleSelect(msg)}
+        onDeleteMultiple={(msgs) => onDeleteMultiple(msgs)}
+        setMultipleSelectCheckBox={setMultipleSelectCheckBox}
+      />
     </Box>
   );
 }
