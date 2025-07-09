@@ -1,12 +1,15 @@
 import { Menu, MenuItem } from '@mui/material';
+import React from 'react';
 interface MessageThreadHeaderMenuProps {
   anchorEl: HTMLElement | null;
   handleClose: () => unknown;
+  setMultipleSelectCheckBox:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function MessageThreadHeaderMenuOptions({
   anchorEl,
   handleClose,
+  setMultipleSelectCheckBox
 }: MessageThreadHeaderMenuProps) {
   return (
     <Menu
@@ -26,6 +29,7 @@ export function MessageThreadHeaderMenuOptions({
     >
       <MenuItem
         onClick={() => {
+          setMultipleSelectCheckBox(true)
           handleClose();
         }}
       >
