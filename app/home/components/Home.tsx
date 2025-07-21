@@ -1,7 +1,6 @@
 'use client';
 
 import { PostAnalyticsBar } from '@/app/posts/components/PostAnalyticsbar';
-import { GenerateWallpaper } from '@/components/GenerateWallpaper';
 import PaymentModalWrapper from '@/components/PaymentModal';
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import usePostAPI from '@/hooks/api/usePostAPI';
@@ -24,10 +23,7 @@ export default function HomePage() {
   const [paymentModal, setPaymentModal] = useState<boolean>(false);
   const [user] = useContext(UserContext);
   const { createPayment } = usePaymentAPI();
-  const isMobile = useMediaQuery('max-width(954px)');
-  const defaultUrl = `/photos/pexels-nout-gons-80280-378570.jpg`;
-  const [wallpaper, setWallpaper] = useState<string>(defaultUrl);
-  GenerateWallpaper({ setWallpaper });
+  const isMobile = useMediaQuery('(max-width:740px)');
 
   const loadPosts = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : posts.length;
@@ -50,12 +46,7 @@ export default function HomePage() {
   };
 
   const makePayment = async (paymentMethodId: string) => {
-    if (!selectedPost) {
-      return {
-        requiresAction: false,
-        clientSecret: ''
-      };
-    }
+    if (!selectedPost) return { requiresAction: false, clientSecret: '' };
 
     const paymentResponse = await createPayment(selectedPost.user.userId, 'post', {
       amount: selectedPost.price,
@@ -63,6 +54,7 @@ export default function HomePage() {
       payment_method: paymentMethodId,
       payment_method_types: ['card']
     });
+
     return {
       requiresAction: paymentResponse.requiresAction,
       clientSecret: paymentResponse.clientSecret
@@ -74,17 +66,15 @@ export default function HomePage() {
       await new Promise((res) => setTimeout(res, 1500));
       const purchasedPost = (await getPost(postId)) as PostsEntity;
       setPosts((prev) =>
-        prev.map((post) => {
-          const updated =
-            post._id === selectedPost?._id
-              ? {
-                  ...post,
-                  isPurchased: purchasedPost.isPurchased,
-                  purchasedBy: [...post.purchasedBy, user.userId]
-                }
-              : post;
-          return updated;
-        })
+        prev.map((post) =>
+          post._id === selectedPost?._id
+            ? {
+                ...post,
+                isPurchased: purchasedPost.isPurchased,
+                purchasedBy: [...post.purchasedBy, user.userId]
+              }
+            : post
+        )
       );
       toast.success('Purchased');
     } catch (error) {
@@ -103,26 +93,24 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    loadPosts();
-  }, []); //eslint-disable-line
+    loadPosts(true);
+  }, []); // eslint-disable-line
 
   return (
     <Box
       display="flex"
-      flexDirection={'row'}
+      flexDirection={{ xs: 'column', md: 'row' }}
       width="100%"
       height="100vh"
-      borderRight={'1px solid'}
-      sx={{
-        transition: 'backdrop-filter 0.3s ease',
-        overflow: 'hidden',
-        backgroundImage: `url(${wallpaper})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat'
-      }}
+      sx={{ overflow: 'hidden' }}
     >
-      <Box display="flex" flexDirection={'column'}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        width="100%"
+        maxWidth={{ xs: '100%', md: 500 }}
+        sx={{ borderRight: { md: '1px solid' }, minHeight: '100vh' }}
+      >
         {selectedPost && (
           <PaymentModalWrapper
             isOpen={paymentModal}
@@ -136,18 +124,21 @@ export default function HomePage() {
             onSuccess={() => handleSuccess(selectedPost._id)}
           />
         )}
+
         <HomeHeader />
-        <Box sx={{ borderRight: '1px solid' }}>
-          <List
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '800px',
-              objectFit: 'contain',
-              overflowY: 'scroll'
-            }}
-            id="scroll-d"
-          >
+
+        <List
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: { xs: 'auto', md: '800px' },
+            objectFit: 'contain',
+            overflowY: 'auto',
+            width: '100%'
+          }}
+          id="scroll-id"
+        >
+          <Box sx={{ mb: 2, px: 1 }}>
             <InfiniteScroll
               dataLength={posts.length}
               next={loadMorePosts}
@@ -165,11 +156,12 @@ export default function HomePage() {
                 />
               ))}
             </InfiniteScroll>
-          </List>
-        </Box>
+          </Box>
+        </List>
       </Box>
+
       {!isMobile && (
-        <Box flex={1} display="flex" justifyContent="center" alignItems="center" width={'100%'}>
+        <Box flex={1} display="flex" justifyContent="center" alignItems="center" width="100%" sx={{ px: 2 }}>
           <PostAnalyticsBar />
         </Box>
       )}

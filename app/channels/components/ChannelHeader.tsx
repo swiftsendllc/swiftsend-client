@@ -1,34 +1,47 @@
-import { UserProfilesEntity } from '@/hooks/entities/users.entities';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { Avatar, Fab, Stack, TextField } from '@mui/material';
-
+import FilterListIcon from '@mui/icons-material/FilterList';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Chip, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
 interface ChannelHeaderProps {
-  user: UserProfilesEntity;
+  onBackDropChange: () => unknown;
 }
-export function ChannelHeader({ user }: ChannelHeaderProps) {
+
+export function ChannelHeader({onBackDropChange}:ChannelHeaderProps) {
+  const router = useRouter();
   return (
     <>
-      <Stack direction="row" justifyContent="space-between" alignContent="center" alignItems="center">
-        <Avatar src={user.avatarURL} alt="Profile picture" sx={{ width: 40, height: 40 }} />
-
-        <TextField
-          sx={{ width: '60%' }}
-          label="Search"
-          slotProps={{
-            input: {
-              sx: { borderRadius: '10px' }
-            }
-          }}
-        />
-
-        <Fab sx={{ width: 40, height: 40 }} color="primary" aria-label="edit" variant="circular">
-          <NotificationsNoneOutlinedIcon />
-        </Fab>
-        <Fab sx={{ width: 40, height: 40 }} color="secondary" aria-label="edit" variant="circular">
-          <SettingsIcon />
-        </Fab>
-      </Stack>
+      <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1}>
+        <Box display={'flex'} alignItems={'center'} gap={1}>
+          <IconButton sx={{ p: 0, m: 0 }} onClick={() => router.back()}>
+            <KeyboardReturnIcon />
+          </IconButton>
+          <Typography fontWeight="bold">CHANNELS</Typography>
+        </Box>
+        <IconButton onClick={onBackDropChange}>
+          <FilterListIcon />
+        </IconButton>
+      </Box>
+      <Box px={2} pb={1} display="flex" gap={1}>
+        <Chip label="All" size="small" variant="outlined" />
+        <Chip label="Priority" size="small" variant="outlined" />
+        <Chip label="Unread" size="small" variant="outlined" />
+      </Box>
+      <TextField
+        placeholder="Search..."
+        fullWidth
+        size="small"
+        sx={{ px: 2, mb: 1, width: '90%' }}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            )
+          }
+        }}
+      />
     </>
   );
 }

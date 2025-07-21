@@ -1,17 +1,18 @@
-import { authCookieKey, ENV } from "@/library/constants";
-import { getCookie } from "cookies-next";
-import { CreateReelInput } from "../entities/reels.entities";
+import { authCookieKey } from '@/library/constants';
+import { configService } from '@/util/config';
+import { getCookie } from 'cookies-next';
+import { CreateReelInput } from '../entities/reels.entities';
 
 const userReelAPI = () => {
   const createReel = async (body: Partial<CreateReelInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/reels/create`, {
-      method: "POST",
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/reels/create`, {
+      method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -22,12 +23,12 @@ const userReelAPI = () => {
 
   const getReels = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/reels`, {
-      method: "GET",
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/reels`, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
     });
     const data = await res.json();
     if (!res.ok) {
@@ -38,16 +39,13 @@ const userReelAPI = () => {
 
   const getCreatorReels = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(
-      `${ENV("NEXT_PUBLIC_API_URL")}/reels/creators/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/reels/creators/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
       }
-    );
+    });
 
     const data = await res.json();
     if (!res.ok) {
@@ -59,7 +57,7 @@ const userReelAPI = () => {
   return {
     createReel,
     getReels,
-    getCreatorReels,
+    getCreatorReels
   };
 };
 export default userReelAPI;

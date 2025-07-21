@@ -1,6 +1,5 @@
 'use client';
 
-import { ENV } from '@/library/constants';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { UserContext } from './user-context';
@@ -19,7 +18,7 @@ export const SocketContext = createContext<SocketContextProps>({
 export const SocketContextWrapper = ({ children }: { children: React.ReactNode }) => {
   const [user] = useContext(UserContext);
   const userId = user?.userId || null;
-  const serverUrl = ENV('NEXT_PUBLIC_API_URL')!;
+  const serverUrl = process.env.NEXT_PUBLIC_LOCAL_API_URL;
 
   const socket = io(serverUrl, { query: { userId } });
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);

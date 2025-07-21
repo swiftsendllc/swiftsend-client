@@ -1,4 +1,4 @@
-import ChannelsPage from "./components/Channels";
+import ChannelsPage from './components/Channels';
 
 export default function Channels() {
   return <ChannelsPage />;

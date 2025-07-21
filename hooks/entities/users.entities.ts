@@ -26,18 +26,10 @@ export interface UserProfilesEntity {
   isFollowing: boolean;
   isFollowedByMe: boolean;
   hasSubscribed: boolean;
-  
+
 }
 
-export interface UpdateUserInput {
-  username: string;
-  website: string;
-  bannerURL: string;
-  pronouns: string;
-  bio: string;
-  avatarURL: string;
-  websiteURL: string;
-}
+
 
 export interface FollowersEntity {
   followingUserId: string;

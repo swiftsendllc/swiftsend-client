@@ -105,15 +105,12 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
     <Box
       sx={{
         width: '100%',
-        minWidth:"400px",
-        maxWidth:"640px",
+        minWidth: { xs: '100%', sm: '360px' },
         boxShadow: 3,
         borderRadius: 3,
         overflow: 'hidden',
         transition: '0.3s',
-        '&:hover': { boxShadow: 6 },
-        p: 2,
-        mb: 3
+        '&:hover': { boxShadow: 6 }
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
@@ -137,53 +134,61 @@ export const PostCard = ({ post, allowComments = false, onMutation, setPaymentMo
         <FollowButton isFollowing={isFollowing} onClick={() => handleFollow(post.userId)} />
       </Stack>
 
-      <Box>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          {isExpanded || post.caption.length <= 100 ? post.caption : `${post.caption.slice(0, 100)}...`}
-          {post.caption.length > 100 && (
-            <Button onClick={handleSee} size="small" sx={{ textTransform: 'none', ml: 1 }}>
-              {isExpanded ? 'See less' : 'See more'}
-            </Button>
-          )}
-        </Typography>
-      </Box>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        {isExpanded || post.caption.length <= 100 ? post.caption : `${post.caption.slice(0, 100)}...`}
+        {post.caption.length > 100 && (
+          <Button onClick={handleSee} size="small" sx={{ textTransform: 'none', ml: 1 }}>
+            {isExpanded ? 'See less' : 'See more'}
+          </Button>
+        )}
+      </Typography>
 
       {post._assets?.length > 0 && (
-        <Box sx={{ position: 'relative', borderRadius: 2, overflow: 'hidden', mb: 1, px: 5 }}>
-          <Stack direction="row" spacing={0.5} sx={{ overflowX: 'auto', scrollSnapType: 'x mandatory' }}>
+        <Box sx={{ position: 'relative', overflow: 'hidden', mb: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              scrollBehavior: 'smooth'
+            }}
+          >
             {post._assets.map((url, idx) => (
               <Box
                 key={idx}
                 sx={{
-                  minWidth: 430,
-                  height: 400,
-                  scrollSnapAlign: 'start',
+                  flex: '0 0 100%',
+                  width: '100%',
+                  height: { xs: 250, sm: 300, md: 400 },
                   position: 'relative',
-                  borderRadius: 2
+                  scrollSnapAlign: 'start'
                 }}
               >
-                <Image
-                  src={url.originalURL}
-                  alt="post"
-                  width={375}
-                  height={300}
-                  priority
-                  style={{
-                    objectFit: 'cover',
+                <Box
+                  sx={{
                     width: '100%',
-                    height: '100%'
+                    maxWidth: 440,
+                    height: 300,
+                    position: 'relative',
                   }}
-                />
+                >
+                  <Image
+                    src={url.originalURL}
+                    alt="post"
+                    fill
+                    sizes="(max-width: 600px) 100vw, 446px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <Chip
+                    size="small"
+                    color="primary"
+                    label={`${idx + 1}/${post._assets.length}`}
+                    sx={{ position: 'absolute', top: 10, right: 10, backdropFilter: 'blur(10px)' }}
+                  />
+                </Box>
               </Box>
             ))}
-          </Stack>
-
-          <Chip
-            size="small"
-            color="primary"
-            label={`${post._assets.length} photo${post._assets.length > 1 ? 's' : ''}`}
-            sx={{ position: 'absolute', top: 10, right: 10, backdropFilter: 'blur(10px)' }}
-          />
+          </Box>
 
           {!post.isPurchased && (
             <Chip

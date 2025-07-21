@@ -1,6 +1,6 @@
 'use client';
 
-import { CreateExclusivePostDialog } from '@/app/v2/channels/[channelId]/components/CreateExclusivePostDialog';
+import { CreateExclusivePostDialog } from '@/app/channels/[channelId]/components/CreateExclusivePostDialog';
 import usePostAPI from '@/hooks/api/usePostAPI';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';

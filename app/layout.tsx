@@ -2,7 +2,9 @@ import { BackdropContextWrapper } from '@/hooks/context/backdrop-context';
 import { SocketContextWrapper } from '@/hooks/context/socket-context';
 import { UserContextWrapper } from '@/hooks/context/user-context';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
-import { authCookieKey, ENV } from '@/library/constants';
+import { authCookieKey } from '@/library/constants';
+import { AppConfig } from '@/util/app.config';
+import { configService } from '@/util/config';
 import theme from '@/util/theme';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
@@ -19,11 +21,12 @@ const kanitFont = Kanit({
 });
 
 export const metadata = {
-  title: 'SwiftSend',
-  description: 'web messaging',
+  title: AppConfig.title,
+  applicationName: AppConfig.applicationName,
+  description: AppConfig.description,
   generator: 'Next.js',
   manifest: '/manifest.json',
-  keywords: ['nextjs', 'nextjs14', 'next14', 'pwa', 'next-pwa'],
+  keywords: [AppConfig.keywords],
   icons: [
     { rel: 'apple-touch-icon', url: '/svg/app.svg' },
     { rel: 'icon', url: '/svg/app.svg' }
@@ -39,7 +42,7 @@ const validateAuth = async () => {
   const pathname = headersList.get('x-pathname') ?? '/';
   const accessToken = cookies().get(authCookieKey)?.value;
 
-  const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/auth/status`, {
+  const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/auth/status`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
