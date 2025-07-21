@@ -6,43 +6,22 @@ import { ChannelsEntity } from '../entities/messages.entities';
 const emptyChannel = {
   _id: '',
   users: ['', ''],
-  backgroundImage:'',
+  backgroundImage: '',
   isMuted: false,
-  isPinned:false,
+  isPinned: false,
   receiver: {
-    _id: '',
-    userId: '',
-    fullName: '',
-    avatarURL: '',
-    user: { email: '' },
     username: '',
-    pronouns: '',
-    gender: '',
-    bio: '',
-    websiteURL: '',
-    bannerURL: '',
-    postCount: 0,
-    followerCount: 0,
-    followingCount: 0,
+    avatarURL: '',
+    userId: '',
+    lastSeen: '',
+    fullName: '',
     region: '',
-    isOnline: false,
-    lastSeen: new Date(),
-    isFollowing: false,
-    isFollowedByMe: false,
-    hasSubscribed: false
+    bannerURL: '',
+    createdAt: new Date()
   },
   lastMessage: {
-    _id: '',
-    senderId: '',
-    receiverId: '',
-    channelId: '',
     message: '',
-    _assets: [],
-    createdAt: new Date(),
-    deletedAt: new Date(),
-    editedAt: new Date(),
-    deleted: false,
-    edited: false
+    createdAt: new Date()
   }
 } satisfies ChannelsEntity;
 

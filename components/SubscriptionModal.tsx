@@ -2,7 +2,7 @@
 
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { CardsEntity } from '@/hooks/entities/payments.entity';
-import { ENV } from '@/library/constants';
+import { configService } from '@/util/config';
 import { LoadingButton } from '@mui/lab';
 import {
   Box,
@@ -200,7 +200,7 @@ function SubscriptionModal({ onClose, metadata, cardData, onSuccess, makePayment
     </>
   );
 }
-const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
+const stripePromise = loadStripe(configService.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const SubscriptionModalWrapper = ({
   isOpen,
