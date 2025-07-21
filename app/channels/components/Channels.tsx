@@ -1,6 +1,7 @@
 'use client';
 
 import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { useBackDrop } from '@/hooks/context/backdrop-context';
 import { ChannelsEntity } from '@/hooks/entities/messages.entities';
 import { Box, Divider, useMediaQuery } from '@mui/material';
 import { useParams } from 'next/navigation';
@@ -9,8 +10,6 @@ import toast from 'react-hot-toast';
 import { NoChatSelected } from '../[channelId]/components/NoChatSelected';
 import { ChannelHeader } from './ChannelHeader';
 import { ChannelList } from './ChannelList';
-import { useBackDrop } from '@/hooks/context/backdrop-context';
-import { configService } from '@/util/config';
 
 export default function ChannelsPage() {
   const { channelId } = useParams();
@@ -31,8 +30,6 @@ export default function ChannelsPage() {
       setLoading(false);
     }
   };
-  console.log(configService.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-
   useEffect(() => {
     loadChannels();
   }, []); //eslint-disable-line

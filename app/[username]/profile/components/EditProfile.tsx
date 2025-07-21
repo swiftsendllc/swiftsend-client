@@ -3,6 +3,7 @@
 import useAPI from "@/hooks/api/useAPI";
 import { UserContext } from "@/hooks/context/user-context";
 import {
+  Box,
   InputAdornment,
   List,
   ListItemButton,
@@ -85,14 +86,14 @@ export default function EditProfilePage() {
 
   const handleUpload = async (file: File) => {
     setLoading(true);
-
     try {
       const formData = new FormData();
       formData.append("file", file);
+      console.log(formData)
       const { url } = await uploadFile(formData);
 
       const user = await updateUser({ avatarURL: url });
-      setUserInfo(user);
+      setUserInfo({...user, avatarURL: user.avatarURL});
       toast.success("Updated profile picture");
     } catch (error) {
       console.log(error);
@@ -103,7 +104,7 @@ export default function EditProfilePage() {
   };
 
   return (
-    <>
+    <Box sx={{ mb: 5, mt: 2, p: 2, width:"100%", overflowY:"scroll" }}>
       <Stack
         spacing={2}
         direction="row"
@@ -223,6 +224,6 @@ export default function EditProfilePage() {
         onClose={() => setEditProfileModal(false)}
         currentField={currentField}
       />
-    </>
+    </Box>
   );
 }

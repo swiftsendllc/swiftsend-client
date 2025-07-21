@@ -2,7 +2,7 @@ import { BackdropContextWrapper } from '@/hooks/context/backdrop-context';
 import { SocketContextWrapper } from '@/hooks/context/socket-context';
 import { UserContextWrapper } from '@/hooks/context/user-context';
 import { UserProfilesEntity } from '@/hooks/entities/users.entities';
-import { authCookieKey } from '@/library/constants';
+import { authCookieKey, authenticationPaths } from '@/library/constants';
 import { AppConfig } from '@/util/app.config';
 import { configService } from '@/util/config';
 import theme from '@/util/theme';
@@ -50,7 +50,7 @@ const validateAuth = async () => {
     }
   });
 
-  if ((res.status === 401 || res.status === 403) && !['/', '/login', '/signup'].includes(pathname)) {
+  if ((res.status === 401 || res.status === 403) && ![...authenticationPaths].includes(pathname)) {
     return redirect('/');
   }
 

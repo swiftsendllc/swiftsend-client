@@ -3,11 +3,8 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import CloudQueueSharpIcon from '@mui/icons-material/CloudQueueSharp';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -18,7 +15,6 @@ import HandshakeIcon from '@mui/icons-material/Handshake';
 import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined';
 import HideSourceOutlinedIcon from '@mui/icons-material/HideSourceOutlined';
 import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
-import HomeIcon from '@mui/icons-material/Home';
 import HomeMaxIcon from '@mui/icons-material/HomeMax';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
@@ -26,11 +22,8 @@ import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import MovieSharpIcon from '@mui/icons-material/MovieSharp';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
-import PersonIcon from '@mui/icons-material/Person';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import PersonPinRoundedIcon from '@mui/icons-material/PersonPinRounded';
 import PhoneAndroidOutlinedIcon from '@mui/icons-material/PhoneAndroidOutlined';
@@ -472,48 +465,6 @@ export const sideBarOptions = [
     label: 'Logout',
     leftIcon: <LogoutIcon />,
     path: '/logout'
-  }
-];
-export const leftSideBarOptions = [
-  {
-    icon: <HomeIcon />,
-    label: 'Home',
-    path: '/home'
-  },
-  {
-    icon: <NotificationsIcon />,
-    label: 'Notifications',
-    path: '/notifications'
-  },
-  {
-    icon: <ChatBubbleOutlineIcon />,
-    label: 'Channels',
-    path: '/channels'
-  },
-  {
-    icon: <CollectionsIcon />,
-    label: 'Assets',
-    path: '/assets'
-  },
-  {
-    icon: <PersonIcon />,
-    label: 'Subscriptions',
-    path: '/subscriptions'
-  },
-  {
-    icon: <CreditCardIcon />,
-    label: ' Add card',
-    path: '/billing'
-  },
-  {
-    icon: <PersonIcon />,
-    label: 'My profile',
-    path: '/profile'
-  },
-  {
-    icon: <MoreHorizIcon />,
-    label: 'More',
-    path: '/more'
   }
 ];
 
