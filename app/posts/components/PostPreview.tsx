@@ -35,9 +35,10 @@ export default function PostPreview() {
   const { createPost } = usePostAPI();
   const [, setUser] = useContext(UserContext);
   const [isExclusive, setIsExclusive] = useState<boolean>(true);
-  const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
   const [price, setPrice] = useState<number>(200);
   const router = useRouter();
+  const [selectedAssetsMap, setSelectedAssetsMap] = useState<Map<string, string[]>>(new Map());
+  const selectedAssetIds = Array.from(selectedAssetsMap.keys());
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -183,7 +184,7 @@ export default function PostPreview() {
           </Stack>
         </Box>
         <Box>
-          <SendAssetsBox selectedAssetIds={selectedAssetIds} setSelectedAssetIds={setSelectedAssetIds} />
+          <SendAssetsBox selectedAssetsMap={selectedAssetsMap} setSelectedAssetsMap={setSelectedAssetsMap} />
         </Box>
       </Container>
     </>

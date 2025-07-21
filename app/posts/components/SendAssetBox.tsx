@@ -1,25 +1,25 @@
 'use client';
 import { AssetFeed } from '@/app/assets/components/AssetFeed';
-import { widths } from '@/components/SearchComponents';
 import useAssetAPI from '@/hooks/api/useAssetAPI';
 import { CreatorAssetsEntity } from '@/hooks/entities/assets.entity';
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import GradingOutlinedIcon from '@mui/icons-material/GradingOutlined';
-import { Box, Drawer, Fab, Paper, Slider, Stack, Typography } from '@mui/material';
+import { Box, Drawer, Fab, Paper, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface SendAssetsBoxProps {
-  selectedAssetIds: string[];
-  setSelectedAssetIds: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedAssetsMap: Map<string, string[]>;
+  setSelectedAssetsMap: React.Dispatch<React.SetStateAction<Map<string, string[]>>>;
 }
 
-export function SendAssetsBox({ selectedAssetIds, setSelectedAssetIds }: SendAssetsBoxProps) {
+export function SendAssetsBox({ selectedAssetsMap, setSelectedAssetsMap }: SendAssetsBoxProps) {
   const { getCreatorAssets } = useAssetAPI();
   const [assets, setAssets] = useState<CreatorAssetsEntity[]>([]);
   const [checkBox, setCheckBox] = useState<boolean>(false);
-  const [width, setWidth] = useState<number>(20);
+
+  const selectedAssetIds = Array.from(selectedAssetsMap.keys());
 
   const loadAssets = async () => {
     try {
@@ -37,13 +37,19 @@ export function SendAssetsBox({ selectedAssetIds, setSelectedAssetIds }: SendAss
 
   const handleToggleSelect = () => {
     setCheckBox((prev) => !prev);
-    setSelectedAssetIds([]);
+    setSelectedAssetsMap(new Map());
   };
 
   const handleSelectTenAssets = (hasSelected: boolean) => {
     const selectedAssets = assets.slice(0, 10);
-    if (hasSelected) setSelectedAssetIds(selectedAssets.map((asset) => asset.assetId));
-    else setSelectedAssetIds([]);
+    const newAssetMap = new Map<string, string[]>();
+    if (hasSelected) {
+      for (const asset of selectedAssets) {
+        const urls = asset._assets.map((asst) => asst.originalURL);
+        newAssetMap.set(asset.assetId, urls);
+      }
+      setSelectedAssetsMap(newAssetMap);
+    } else setSelectedAssetsMap(new Map());
   };
 
   return (
@@ -62,22 +68,6 @@ export function SendAssetsBox({ selectedAssetIds, setSelectedAssetIds }: SendAss
       >
         <Box sx={{ position: 'fixed', zIndex: 100, width: 500, p: 0, mr: 5 }}>
           <Paper sx={{ width: '100%' }}>
-            <Stack direction={'row'} justifyContent={'space-evenly'}>
-              <Box sx={{ width: 150 }}>
-                <Slider
-                  defaultValue={25}
-                  min={20}
-                  marks={widths}
-                  step={5}
-                  onChange={(_, value) => {
-                    if (typeof value === 'number') {
-                      setWidth(value);
-                    }
-                  }}
-                />
-              </Box>
-            </Stack>
-
             <Stack direction={'column'}>
               <Stack direction={'row'} justifyContent={'space-between'} alignContent={'center'} alignItems={'center'}>
                 <Typography variant="h6" fontWeight="bold">
@@ -119,10 +109,9 @@ export function SendAssetsBox({ selectedAssetIds, setSelectedAssetIds }: SendAss
         <Box paddingTop={20}>
           <AssetFeed
             assets={assets}
-            checkbox={checkBox}
-            selectedAssetIds={selectedAssetIds}
-            setSelectedAssetIds={setSelectedAssetIds}
-            width={width}
+            checkBox={checkBox}
+            selectedAssetsMap={selectedAssetsMap}
+            setSelectedAssetsMap={setSelectedAssetsMap}
           />
         </Box>
       </Drawer>

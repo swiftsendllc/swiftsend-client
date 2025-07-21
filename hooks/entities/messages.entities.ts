@@ -18,17 +18,8 @@ export interface ChannelsEntity {
     createdAt: Date;
   };
   lastMessage: {
-    _id: string;
-    senderId: string;
-    receiverId: string;
-    channelId: string;
     message: string;
     createdAt: Date;
-    deletedAt: Date;
-    editedAt: Date;
-    deleted: boolean;
-    edited: boolean;
-    _assets: AssetsEntity[];
   } | null;
 }
 
