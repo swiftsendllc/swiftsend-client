@@ -1,27 +1,21 @@
-import BottomNav from "@/components/BottomNav";
-import { CreatorContextWrapper } from "@/hooks/context/creator-context";
-import { UserProfilesEntity } from "@/hooks/entities/users.entities";
-import { authCookieKey, ENV } from "@/library/constants";
-import {
-  Alert,
-  AlertTitle,
-  Button,
-  Container,
-  LinearProgress,
-  Stack,
-} from "@mui/material";
-import { cookies } from "next/headers";
-import React from "react";
+import BottomNav from '@/components/BottomNav';
+import { CreatorContextWrapper } from '@/hooks/context/creator-context';
+import { UserProfilesEntity } from '@/hooks/entities/users.entities';
+import { authCookieKey } from '@/library/constants';
+import { configService } from '@/util/config';
+import { Alert, AlertTitle, Button, Container, LinearProgress, Stack } from '@mui/material';
+import { cookies } from 'next/headers';
+import React from 'react';
 
 const getUser = async (username: string) => {
   const accessToken = cookies().get(authCookieKey)?.value;
 
-  const res = await fetch(`${ENV("NEXT_PUBLIC_API_URL")}/users/${username}`, {
-    method: "GET",
+  const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/${username}`, {
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`
+    }
   });
   if (!res.ok) {
     return null;
@@ -32,7 +26,7 @@ const getUser = async (username: string) => {
 
 export default async function Layout({
   children,
-  params,
+  params
 }: Readonly<{
   children: React.ReactNode;
   params: Record<string, string>;
@@ -43,19 +37,12 @@ export default async function Layout({
     return (
       <>
         <Container maxWidth="xs">
-          <Stack
-            alignContent="center"
-            alignItems="center"
-            justifyContent="center"
-            mb={15}
-            mt={5}
-            overflow="hidden"
-          >
+          <Stack alignContent="center" alignItems="center" justifyContent="center" mb={15} mt={5} overflow="hidden">
             <Alert severity="warning" variant="filled">
               <AlertTitle>Error</AlertTitle>
               SORRY TO SAY, LOOKS LIKE THERE IS AN ERROR!
             </Alert>
-            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2} p={5}>
+            <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2} p={5}>
               <LinearProgress color="warning" />
             </Stack>
             <Button variant="contained" color="success" href="/home">

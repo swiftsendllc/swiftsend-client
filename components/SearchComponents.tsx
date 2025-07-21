@@ -488,7 +488,7 @@ export const leftSideBarOptions = [
   {
     icon: <ChatBubbleOutlineIcon />,
     label: 'Channels',
-    path: '/v2/channels'
+    path: '/channels'
   },
   {
     icon: <CollectionsIcon />,

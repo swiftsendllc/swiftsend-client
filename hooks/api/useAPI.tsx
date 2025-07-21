@@ -1,46 +1,27 @@
 'use client';
-import { loginAction } from '@/app/actions/server';
-import { authCookieKey, ENV } from '@/library/constants';
+import { loginRequest, signupRequest, uploadFileRequest } from '@/app/server-actions/auth.server';
+import { authCookieKey } from '@/library/constants';
+import { configService } from '@/util/config';
 import { getCookie, setCookie } from 'cookies-next';
 import Error from 'next/error';
-import { UpdateUserInput } from '../entities/users.entities';
+import { LoginInput, SignupInput, UpdateUserInput } from '../dto/auth/auth.dto';
 
 const useAPI = () => {
-  const login = async (email: string, password: string) => {
-    const { data, error } = await loginAction(email, password);
-    if (error) throw new Error(error);
+  const login = async (input:LoginInput) => {
+    const data = await loginRequest(input);
     setCookie(authCookieKey, data.accessToken);
     return data;
   };
 
-  const signup = async (input: {
-    email: string;
-    password: string;
-    fullName: string;
-    dateOfBirth: Date;
-    region: string;
-    gender: string;
-  }) => {
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/auth/signup`, {
-      method: 'POST',
-      body: JSON.stringify(input),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-
+  const signup = async (input: SignupInput) => {
+    const data = await signupRequest(input)
     setCookie(authCookieKey, data.accessToken);
     return data;
   };
 
   const testToken = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/auth/signup`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/auth/signup`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -55,19 +36,7 @@ const useAPI = () => {
   };
 
   const uploadFile = async (formData: FormData) => {
-    const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/upload`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: formData
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
+    const data = await uploadFileRequest(formData)
     return {
       path: data.path,
       url: data.url
@@ -76,7 +45,7 @@ const useAPI = () => {
 
   const updateUser = async (body: Partial<UpdateUserInput>) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/me/edit`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/me/edit`, {
       method: 'PATCH',
       body: JSON.stringify(body),
       headers: {
@@ -93,7 +62,7 @@ const useAPI = () => {
 
   const getUserProfile = async (usernameOrId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/${usernameOrId}`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/${usernameOrId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +79,7 @@ const useAPI = () => {
   const getUserProfiles = async (query: string) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(
-      `${ENV('NEXT_PUBLIC_API_URL')}/users/search?q=${encodeURIComponent(query)}&t=${Date.now()}`,
+      `${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/search?q=${encodeURIComponent(query)}&t=${Date.now()}`,
       {
         method: 'GET',
         headers: {
@@ -129,7 +98,7 @@ const useAPI = () => {
 
   const getFollowers = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/${userId}/followers`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/${userId}/followers`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -145,7 +114,7 @@ const useAPI = () => {
 
   const getFollowing = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/${userId}/following`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/${userId}/following`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -161,7 +130,7 @@ const useAPI = () => {
 
   const followProfile = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/${userId}/follow-user`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/${userId}/follow-user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +146,7 @@ const useAPI = () => {
 
   const unFollowProfile = async (userId: string) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/users/${userId}/remove-follower`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/${userId}/remove-follower`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -193,7 +162,7 @@ const useAPI = () => {
 
   const createSubscriptionPlan = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}//users/create/subscription/plan`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}//users/create/subscription/plan`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`

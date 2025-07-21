@@ -1,6 +1,7 @@
 'use client';
 
 import useAPI from '@/hooks/api/useAPI';
+import { LoginInput } from '@/hooks/dto/auth/auth.dto';
 import { useTranslation } from '@/locales/dictionary';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
@@ -30,15 +31,17 @@ export default function LoginPage() {
   const defaultUrl = `/photos/pexels-nout-gons-80280-378570.jpg`;
   const { login } = useAPI();
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const { t, locale, setLocale } = useTranslation();
   const [wallpaper, setWallpaper] = useState<string>(defaultUrl);
   GenerateWallpaper({ setWallpaper });
+  const [input, setInput] = useState<LoginInput>({
+    email: '',
+    password: ''
+  });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -46,7 +49,7 @@ export default function LoginPage() {
     setLoading(true);
     setPasswordError('');
     try {
-      await login(email, password);
+      await login(input);
       window.location.href = '/v2/channels';
     } catch (err) {
       console.log(err);
@@ -106,10 +109,10 @@ export default function LoginPage() {
               label={t('email')}
               type="email"
               autoComplete="username"
-              value={email}
+              value={input.email}
               focused
               autoFocus
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setInput({ ...input, email: e.target.value.trim() })}
             />
 
             <TextField
@@ -117,8 +120,8 @@ export default function LoginPage() {
               id="password-required"
               label={t('password')}
               type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={input.password}
+              onChange={(e) => setInput({ ...input, password: e.target.value.trim() })}
               error={!!passwordError}
               helperText={passwordError}
               autoComplete="current-password"
@@ -165,7 +168,7 @@ export default function LoginPage() {
               startIcon={null}
               variant="contained"
               type="submit"
-              disabled={!(email && password)}
+              disabled={!(input.email && input.password)}
             >
               {t('login')}
             </LoadingButton>

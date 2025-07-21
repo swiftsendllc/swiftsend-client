@@ -58,7 +58,7 @@ export function ChannelList({ channels, loading }: ChannelProps) {
                       cursor: 'pointer',
                       boxShadow: 1
                     }}
-                    onClick={() => router.push(`/v2/channels/${channel._id}`)}
+                    onClick={() => router.push(`/channels/${channel._id}`)}
                     secondaryAction={
                       <IconButton
                         onClick={(event) => {

@@ -3,7 +3,7 @@
 import usePaymentAPI from '@/hooks/api/usePaymentAPI';
 import { UserContext } from '@/hooks/context/user-context';
 import { CardsEntity } from '@/hooks/entities/payments.entity';
-import { ENV } from '@/library/constants';
+import { configService } from '@/util/config';
 import { LoadingButton } from '@mui/lab';
 import {
   Box,
@@ -224,7 +224,7 @@ function PaymentModal({ onClose, metadata, cardData, onSuccess, makePayment }: P
     </>
   );
 }
-const stripePromise = loadStripe(ENV('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'));
+const stripePromise = loadStripe(configService.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentModalWrapper = ({ isOpen, onClose, metadata, onSuccess, makePayment }: PaymentModalWrapperProps) => {
   const [open, setOpen] = useState<boolean>(isOpen);

@@ -1,168 +1,202 @@
 'use client';
 
-import { MessageInput } from '@/app/channels/[channelId]/components/MessageInput';
+import PaymentModalWrapper from '@/components/PaymentModal';
 import useMessageAPI from '@/hooks/api/useMessageAPI';
+import usePaymentAPI from '@/hooks/api/usePaymentAPI';
+import { useBackDrop } from '@/hooks/context/backdrop-context';
 import { ChannelContext } from '@/hooks/context/channel-context';
 import { UserContext } from '@/hooks/context/user-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
-import { Container, List } from '@mui/material';
-import { getCookie } from 'cookies-next';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { ChatHeader } from './components/ChatHeader';
-import { EncryptionNotice } from './components/EncryptionNotice';
-import { GetSocketMessages } from './components/GetSocketMessages';
+import ChannelsPage from '../components/Channels';
+import { FetchSocketMessages } from './components/FetchSocketMessages';
+import { MessageAssetAndAnalyticsBar } from './components/MessageAssetAndAnalyticsBar';
 import { MessageThread } from './components/MessageThread';
 
 export default function MessagePage() {
-  const limit = 20;
+  const limit = 25;
+  const theme = useTheme();
   const { channelId } = useParams();
   const [user] = useContext(UserContext);
-  const [hasMore, setHasMore] = useState(true);
+  const { createPayment } = usePaymentAPI();
   const [channel] = useContext(ChannelContext);
-  const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState<MessagesEntity[]>([]);
+  const { backdrop } = useBackDrop();
   const { getChannelMessages } = useMessageAPI();
-  const [checkBox, setCheckBox] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState<string | null>('');
-  const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
-  GetSocketMessages({ setMessages });
-  const [isReplying, setIsReplying] = useState<boolean>(false);
-  const [repliedToMessage, setRepliedToMessage] = useState<MessagesEntity | null>(null);
+  const isMobile = useMediaQuery('(max-width:740px)');
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [messages, setMessages] = useState<MessagesEntity[]>([]);
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const [paymentModal, setPaymentModal] = useState<boolean>(false);
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedMessage, setSelectedMessage] = useState<MessagesEntity | null>(null);
+  FetchSocketMessages({ setMessages });
 
-  useEffect(() => {
-    const backgroundImageCookie = getCookie('imageURL');
-    if (backgroundImageCookie && messages.length !== 0) setBackgroundImage(backgroundImageCookie);
-  }, [backgroundImage, messages.length]);
-
-  const loadChannelMessages = async (initialLoad = false) => {
+  const handleLoadMessages = async (initialLoad = false) => {
     const offset = initialLoad ? 0 : messages.length;
-
-    setLoading(true);
     try {
-      const messages = await getChannelMessages(channelId as string, {
-        offset,
-        limit
-      });
-
-      if (initialLoad) {
-        setMessages(messages);
-      } else {
-        setHasMore(messages.length === limit);
-        setMessages((prev) => [...prev, ...messages]);
+      const fetchedMessages = await getChannelMessages(channelId as string, { offset, limit });
+      if (initialLoad) setMessages(fetchedMessages);
+      else {
+        setHasMore(fetchedMessages.length === limit);
+        setMessages((prev) => [...prev, ...fetchedMessages]);
       }
     } catch (error) {
-      console.log(error);
-      toast.error('Failed to load messages!');
+      console.error(error);
+      toast.error('Oops! Something wrong happened!');
     } finally {
       setLoading(false);
     }
   };
 
-  const loadMoreMessages = () => {
-    if (hasMore && !loading) {
-      loadChannelMessages();
-    }
+  const handleLoadMoreMessages = () => {
+    if (hasMore && !loading) handleLoadMessages();
+    console.log('end');
   };
 
-  const handleDeleteMessages = () => {
+  const handleMakePayment = async (paymentMethodId: string) => {
+    if (!selectedMessage) {
+      return {
+        requiresAction: false,
+        clientSecret: ''
+      };
+    }
+    const paymentResponse = await createPayment(selectedMessage.senderId, 'message', {
+      amount: selectedMessage.price,
+      contentId: selectedMessage._id,
+      payment_method: paymentMethodId,
+      payment_method_types: ['card']
+    });
+    return {
+      requiresAction: paymentResponse.requiresAction,
+      clientSecret: paymentResponse.clientSecret
+    };
+  };
+
+  const handleReload = async () => await new Promise(() => setTimeout(handleLoadMessages, 1000));
+
+  const handleUpdated = (msg: MessagesEntity) => {
     setMessages((prev) =>
-      prev.map((msg) =>
-        selectedMessageIds.includes(msg._id)
+      prev.map((m) => {
+        const updated =
+          m._id === msg._id
+            ? {
+                ...m,
+                message: msg.message,
+                editedAt: msg.editedAt,
+                edited: msg.edited
+              }
+            : m;
+        return updated;
+      })
+    );
+  };
+
+  const handleDeleted = (msg: MessagesEntity) => {
+    setMessages((prev) =>
+      prev.map((m) => {
+        const _deleted =
+          m._id === msg._id
+            ? {
+                ...m,
+                message: msg.message,
+                deletedAt: msg.deletedAt,
+                deleted: msg.deleted
+              }
+            : m;
+        return _deleted;
+      })
+    );
+  };
+
+  const handleDeleteMultiple = (msgs: MessagesEntity[]) => {
+    const idsToDelete = msgs.map((u) => u._id);
+    setMessages((prev) =>
+      prev.map((m) =>
+        idsToDelete.includes(m._id)
           ? {
-              ...msg,
-              messageIds: selectedMessageIds,
+              ...m,
               deleted: true,
               deletedAt: new Date()
             }
-          : msg
+          : m
       )
     );
   };
 
   useEffect(() => {
-    if (channelId) loadChannelMessages();
-  }, [channelId]); // eslint-disable-line
+    if (channelId) handleLoadMessages();
+  }, [channelId, setLoading, setHasMore, setMessages, limit]); //eslint-disable-line
 
   return (
-    <>
-      <Container
-        style={{
-          padding: 0,
-          marginBottom: 60,
-          marginLeft:10,
-          marginRight:10
+    <Box
+      display="flex"
+      flexDirection={isSmallScreen ? 'column' : 'row'}
+      height="100vh"
+      width="100%"
+      overflow="hidden"
+      sx={{
+        backgroundImage: `url(${channel.backgroundImage})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {selectedMessage && (
+        <PaymentModalWrapper
+          isOpen={paymentModal}
+          onSuccess={handleReload}
+          makePayment={handleMakePayment}
+          onClose={() => setPaymentModal(false)}
+          metadata={{
+            userId: user.userId,
+            creatorId: selectedMessage.senderId,
+            contentId: selectedMessage._id
+          }}
+        />
+      )}
+      <Box
+        flexShrink={0}
+        flex={isMobile ? 'none' : '0 0 340px'}
+        minWidth={isMobile ? '100%' : '340px'}
+        display={isMobile && channelId ? 'none' : 'block'}
+      >
+        <ChannelsPage />
+      </Box>
+      <Box
+        flex="1"
+        display="flex"
+        flexDirection="column"
+        sx={{
+          height: '100%',
+          overflow: 'hidden',
+          zIndex: 2
         }}
       >
-        <ChatHeader
-          channel={channel}
+        <MessageThread
+          backdrop={backdrop}
           loading={loading}
-          checkBox={checkBox}
+          hasMore={hasMore}
           messages={messages}
-          setCheckBox={setCheckBox}
-          selectedMessageIds={selectedMessageIds}
-          setSelectedMessageIds={setSelectedMessageIds}
-          setBackgroundImage={setBackgroundImage}
-          onDelete={handleDeleteMessages}
+          setPaymentModal={setPaymentModal}
+          setSelectedMessage={setSelectedMessage}
+          handleLoadMore={handleLoadMoreMessages}
+          onDeleteMessage={handleDeleted}
+          onUpdateMessage={handleUpdated}
+          onDeleteMultiple={(msgs) => handleDeleteMultiple(msgs)}
+          onSend={(msg) => setMessages((prev) => [msg, ...prev])}
         />
-        {messages.length === 0 ? (
-          <EncryptionNotice />
-        ) : (
-          <>
-            <List
-              sx={{
-                height: '1000px',
-                overflowY: 'scroll',
-                display: 'flex',
-                flexDirection: 'column-reverse',
-                background: `url('${backgroundImage}')`,
-                objectFit: 'cover',
-                marginTop: 8
-              }}
-              id="scroll-id"
-            >
-              <InfiniteScroll
-                style={{
-                  overflow: 'scroll',
-                  display: 'flex',
-                  flexDirection: 'column-reverse'
-                }}
-                dataLength={messages.length}
-                hasMore={hasMore}
-                inverse={true}
-                scrollThreshold={0.8}
-                next={loadMoreMessages}
-                loader={loading}
-                initialScrollY={500}
-                scrollableTarget="scroll-id"
-              >
-                <MessageThread
-                  user={user}
-                  messages={messages}
-                  checkBox={checkBox}
-                  channel={channel}
-                  setMessages={setMessages}
-                  selectedMessageIds={selectedMessageIds}
-                  setSelectedMessageIds={setSelectedMessageIds}
-                  setIsReplying={setIsReplying}
-                  setRepliedToMessage={setRepliedToMessage}
-                />
-              </InfiniteScroll>
-            </List>
-          </>
-        )}
-
-        {messages && (
-          <MessageInput
-            onMessage={(msg) => setMessages((prev) => [msg, ...prev])}
-            repliedToMessage={repliedToMessage}
-            isReplying={isReplying}
-            setIsReplying={setIsReplying}
-          />
-        )}
-      </Container>
-    </>
+      </Box>
+      {isLargeScreen && (
+        <MessageAssetAndAnalyticsBar
+          onMessage={(msg) => setMessages((prev) => [msg, ...prev])}
+          loading={loading}
+          backdrop={backdrop}
+        />
+      )}
+    </Box>
   );
 }

@@ -1,196 +1,133 @@
-'use client';
-
 import useMessageAPI from '@/hooks/api/useMessageAPI';
 import { ChannelContext } from '@/hooks/context/channel-context';
 import { MessagesEntity } from '@/hooks/entities/messages.entities';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import LandscapeIcon from '@mui/icons-material/Landscape';
-import SendIcon from '@mui/icons-material/Send';
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Container, IconButton, Paper, Stack, TextField } from '@mui/material';
-import Image from 'next/image';
-import React, { useContext, useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+import { Box, IconButton, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ReplyThread } from './ReplyThread';
 
-interface UserMessageInputProps {
-  onMessage: (msg: MessagesEntity) => unknown;
-  repliedToMessage: MessagesEntity | null;
-  isReplying: boolean;
-  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
+interface MessageInputProps {
+  loading: boolean;
+  reply: MessagesEntity | null;
+  onSend: (msg: MessagesEntity) => unknown;
+  setReply: React.Dispatch<React.SetStateAction<MessagesEntity | null>>;
 }
 
-export function MessageInput({ onMessage, repliedToMessage, isReplying, setIsReplying }: UserMessageInputProps) {
+export function MessageInput({ onSend, reply, setReply, loading }: MessageInputProps) {
+  const price = 0;
+  const isExclusive = false;
+  const assetIds: string[] = [];
   const { sendMessage, sendMessageReply } = useMessageAPI();
-  const [loading, setLoading] = useState(false);
-  const [messageInput, setMessageInput] = useState<string>('');
   const [channel] = useContext(ChannelContext);
-  const [files, setFiles] = useState<File[]>([]);
-  const [isExclusive, setIsExclusive] = useState<boolean>(false);
-  const [price, setPrice] = useState<number>(0);
-  const [objectUrls, setObjectUrls] = useState<string[]>([]);
+  const [message, setMessage] = useState<string>('');
+  const [didChange, setDidChange] = useState<boolean>(false);
 
-  const handleCancel = () => {
-    setMessageInput('');
-    setObjectUrls([]);
-    setPrice(0);
-    setFiles([]);
-    setIsExclusive(false);
-  };
+  useEffect(() => {
+    setDidChange(message.trim() !== '');
+  }, [message]);
 
-  const handleMessage = async () => {
-    setLoading(true);
+  const handleSendMessage = async () => {
     try {
-      const msg = await sendMessage({
-        message: messageInput,
-        receiverId: channel.receiver.userId,
-        isExclusive: isExclusive,
-        price: price
-      });
-      onMessage(msg);
-      handleCancel();
+      let messageResponse: MessagesEntity;
+      if (reply) {
+        messageResponse = await sendMessageReply({
+          message: message,
+          messageId: reply._id,
+          receiverId: channel.receiver.userId
+        });
+        setReply(null);
+      } else {
+        messageResponse = await sendMessage({
+          assetIds,
+          isExclusive,
+          message,
+          price,
+          receiverId: channel.receiver.userId
+        });
+      }
+      onSend(messageResponse);
+      setMessage('');
     } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+      console.error(error);
+      toast.error('Oops! Something wrong happened!');
     }
   };
 
-  const handleReply = async () => {
-    if (repliedToMessage)
-      try {
-        const reply = await sendMessageReply({
-          message: messageInput,
-          messageId: repliedToMessage._id,
-          receiverId: channel.receiver.userId,
-          isExclusive: repliedToMessage.isExclusive,
-          price: repliedToMessage.price ?? null
-        });
-        onMessage(reply);
-        setIsReplying(false);
-        handleCancel();
-      } catch (error) {
-        console.error(error);
-        toast.error('FAILED TO REPLY!');
-      }
+  const handleSend = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      if (message.trim() !== '') handleSendMessage();
+    }
+  };
+
+  const formatReplyMessage = (m: MessagesEntity) => {
+    if (!m.message && m.isExclusive) return '$$ Exclusive post $';
+    else return m.message;
   };
 
   return (
-    <>
-      <ReplyThread repliedToMessage={repliedToMessage} isReplying={isReplying} onClose={() => setIsReplying(false)} />
-      <Box
-        sx={{
-          position: 'fixed',
-          left: 0,
-          bottom: 0,
-          right: 0,
-          zIndex: 8,
-          px: { xs: 'none', md: 40 }
-        }}
-      >
-        <Container sx={{ padding: 0 }}>
-          {isExclusive && (
-            <>
-              <Paper>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  flexWrap="nowrap"
-                  sx={{
-                    maxWidth: '100%',
-                    maxHeight: 150,
-                    overflowX: 'auto',
-                    overflowY: 'hidden',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {objectUrls.map((url, idx) => (
-                    <Box key={idx} sx={{ position: 'relative' }}>
-                      <Image
-                        alt={url}
-                        src={url}
-                        width={200}
-                        height={200}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}
-                        onClick={() => {
-                          setObjectUrls(objectUrls.filter((_, id) => id !== idx));
-                          setFiles(files.filter((_, id) => id !== idx));
-                        }}
-                      />
-                    </Box>
-                  ))}
-                </Stack>
-                <IconButton sx={{ py: 2 }}>
-                  <AddPhotoAlternateIcon />
-                </IconButton>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <TextField
-                    type="text"
-                    label="Set Price ($)"
-                    variant="outlined"
-                    size="small"
-                    value={price}
-                    onChange={(e) => setPrice(+e.target.value.replace(/[^0-9]/g, ''))}
-                    sx={{ flex: 1 }}
-                  />
-                  <Button variant="contained" color="warning" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                </Box>
-              </Paper>
-            </>
-          )}
-          <Paper>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder={`Message ${channel.receiver.fullName}`}
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  if (messageInput.trim() !== '') (isReplying ? handleReply : handleMessage)();
-                }
-              }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <IconButton onClick={() => setIsExclusive(true)}>
-                      <AttachMoneyIcon color={isExclusive ? 'info' : 'action'} />
-                    </IconButton>
-                  ),
-                  endAdornment: (
-                    <>
-                      {' '}
-                      <LoadingButton
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={null}
-                        disabled={!messageInput || (isExclusive && !price)}
-                        onClick={() => {
-                          (isReplying ? handleReply : handleMessage)();
-                        }}
-                      >
-                        <SendIcon />
-                      </LoadingButton>
-                      <Button>
-                        <LandscapeIcon />
-                      </Button>
-                    </>
-                  )
-                }
-              }}
-            />
-          </Paper>
-        </Container>
+    <Box p={2} borderTop="1px solid " display={'flex'} flexDirection={'column'}>
+      {reply && (
+        <Stack
+          minWidth={'100%'}
+          height={50}
+          p={0}
+          m={0}
+          direction={'row'}
+          justifyContent={'space-between'}
+          border={'1px solid  #80996d'}
+        >
+          <Stack direction={'column'}>
+            <Typography variant="body2" fontStyle={'italic'}>
+              Replying to:
+            </Typography>
+            <Typography variant="body2" fontStyle={'italic'} ml={5}>
+              {formatReplyMessage(reply)}
+            </Typography>
+          </Stack>
+
+          <IconButton onClick={() => setReply(null)}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+      )}
+      <Box>
+        {loading ? (
+          <Stack spacing={1}>
+            <Skeleton variant="text" sx={{ fontSize: '2rem', mb: 2 }} />
+          </Stack>
+        ) : (
+          <TextField
+            id="message_input"
+            name="message_input"
+            placeholder={reply ? `Replying` : 'Type a message...'}
+            fullWidth
+            multiline
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => handleSend(e)}
+            maxRows={3}
+            variant="outlined"
+            sx={{ borderRadius: 2 }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <IconButton sx={{ p: 0, m: 0, mr: 2 }}>
+                    <EmojiEmotionsOutlinedIcon />
+                  </IconButton>
+                ),
+                endAdornment: (
+                  <IconButton sx={{ p: 0, m: 0, mr: 2 }} onClick={handleSendMessage} disabled={!didChange}>
+                    <SendOutlinedIcon />
+                  </IconButton>
+                )
+              }
+            }}
+          />
+        )}
       </Box>
-    </>
+    </Box>
   );
 }

@@ -29,13 +29,6 @@ export interface UploadEntity {
   blurredUrl: string;
 }
 
-export interface CreatePostInput {
-  caption: string;
-  imageURL: string;
-  blurredImageURL: string;
-  isExclusive: boolean;
-  price: number;
-}
 export interface UpdatePostInput {
   caption: string;
 }

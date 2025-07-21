@@ -1,10 +1,11 @@
-import { authCookieKey, ENV } from '@/library/constants';
+import { authCookieKey } from '@/library/constants';
+import { configService } from '@/util/config';
 import { getCookie } from 'cookies-next';
 
 const useAssetAPI = () => {
   const uploadAndCreateAsset = async (formData: FormData) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/upload`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/assets/upload`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -21,7 +22,7 @@ const useAssetAPI = () => {
 
   const getCreatorAssets = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/creator`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/assets/creator`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -37,7 +38,7 @@ const useAssetAPI = () => {
 
   const getFanAssets = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/fan`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/assets/fan`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ const useAssetAPI = () => {
 
   const deleteCreatorAssets = async (input: { assetIds: string[] }) => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${ENV('NEXT_PUBLIC_API_URL')}/assets/delete`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/assets/delete`, {
       body: JSON.stringify(input),
       method: 'DELETE',
       headers: {

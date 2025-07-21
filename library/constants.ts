@@ -8,15 +8,8 @@ export const authenticatedPaths = [
   '/groups',
   '/assets',
   '/posts',
-  '/v2/channels'
+  '/channels'
 ];
-
-export const env = {
-  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
-};
-type EnvKeys = keyof typeof env;
-export const ENV = (key: EnvKeys) => env[key];
 
 export const authenticatedPathsRegex = [/^\/home/, /^\/search/, /^\/posts/, /^\/reels/, /^\/account/];
 export const authenticatedPathRegex = new RegExp(authenticatedPathsRegex.map((r) => r.source).join('|'));

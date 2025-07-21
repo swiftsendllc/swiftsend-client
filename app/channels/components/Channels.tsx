@@ -1,59 +1,70 @@
 'use client';
 
-import { ChannelsContext } from '@/hooks/context/channels-context';
-import { UserContext } from '@/hooks/context/user-context';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Container, Divider, Stack, Tab, Typography } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
+import useMessageAPI from '@/hooks/api/useMessageAPI';
+import { ChannelsEntity } from '@/hooks/entities/messages.entities';
+import { Box, Divider, useMediaQuery } from '@mui/material';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { NoChatSelected } from '../[channelId]/components/NoChatSelected';
 import { ChannelHeader } from './ChannelHeader';
-import { ChannelsList } from './ChannelsList';
-import { GetSocketChannels } from './GetSocketChannels';
+import { ChannelList } from './ChannelList';
+import { useBackDrop } from '@/hooks/context/backdrop-context';
+import { configService } from '@/util/config';
 
 export default function ChannelsPage() {
-  const [user] = useContext(UserContext);
-  const [channels, setChannels] = useContext(ChannelsContext);
-  const [value, setValue] = useState<string>('2');
-  const router = useRouter();
-  GetSocketChannels({ setChannels });
+  const { channelId } = useParams();
+  const { getChannels } = useMessageAPI();
+  const [loading, setLoading] = useState<boolean>(true);
+  const isMobile = useMediaQuery('(max-width:954px)');
+  const [channels, setChannels] = useState<ChannelsEntity[]>([]);
+  const { backdrop, handleBackdrop } = useBackDrop();
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+  const loadChannels = async () => {
+    try {
+      const fetchedChannels = await getChannels();
+      setChannels(fetchedChannels);
+    } catch (error) {
+      console.error(error);
+      toast.error('Oops! Something went wrong!');
+    } finally {
+      setLoading(false);
+    }
   };
+  console.log(configService.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
+  useEffect(() => {
+    loadChannels();
+  }, []); //eslint-disable-line
 
   return (
-    <>
-      <Container sx={{ mb: 5, mt: 2, pl: { md: 26, xs: 'none' } }}>
-        <ChannelHeader user={user} />
-        <Divider sx={{ mt: 1 }} />
-        <TabContext value={value}>
-          <Stack direction="row" spacing={1}>
-            <TabList onChange={handleTabChange}>
-              <Tab label="Chats " value="2" />
-              <Tab label="Groups " value="3" onClick={() => router.push('/groups')} />
-            </TabList>
-          </Stack>
-          <TabPanel value="2" sx={{ padding: 0 }}>
-            {channels.length > 0 ? (
-              <ChannelsList channels={channels} />
-            ) : (
-              <Stack my="10" sx={{ width: '100%' }} spacing={2}>
-                <Box textAlign="center">
-                  <Typography variant="h4" fontWeight={500}>
-                    Welcome to swiftsend!
-                  </Typography>
-                  <Typography variant="body1" sx={{ mt: 2 }}>
-                    It looks like you have no channels yet.
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Find a swift member and start messaging
-                  </Typography>
-                </Box>
-              </Stack>
-            )}
-          </TabPanel>
-        </TabContext>
-      </Container>
-    </>
+    <Box
+      display="flex"
+      flexDirection={isMobile ? 'column' : 'row'}
+      width="100%"
+      height="100vh"
+      overflow="hidden"
+      borderRight={'1px solid'}
+      sx={{ transition: 'backdrop-filter 0.3s ease', backdropFilter: `blur(${backdrop}px)` }}
+    >
+      <Box
+        flexShrink={0}
+        minWidth={isMobile ? '100%' : '340px'}
+        maxWidth={isMobile ? '100%' : '400px'}
+        width={isMobile ? '100%' : '25%'}
+        borderRight={isMobile ? 'none' : '1px solid'}
+        sx={{ overflowY: 'auto' }}
+      >
+        <ChannelHeader onBackDropChange={handleBackdrop} />
+        <Divider sx={{ borderColor: 'black' }} />
+        <ChannelList channels={channels} loading={loading} />
+      </Box>
+
+      {!isMobile && !channelId && (
+        <Box flex={1} display="flex" justifyContent="center" alignItems="center">
+          <NoChatSelected />
+        </Box>
+      )}
+    </Box>
   );
 }
