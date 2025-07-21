@@ -2,14 +2,14 @@
 
 import BottomNav from '@/components/BottomNav';
 import { LeftSideBar } from '@/components/LeftSideBar';
-import { authenticatedPaths } from '@/library/constants';
+import { authenticationPaths } from '@/library/constants';
 import { Box } from '@mui/material';
 import { usePathname } from 'next/navigation';
 
 export default function RootTemplate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  if (![...authenticatedPaths].includes(pathname)) {
+  if ([...authenticationPaths].includes(pathname)) {
     return <>{children}</>;
   }
 

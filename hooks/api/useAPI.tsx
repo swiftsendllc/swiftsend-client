@@ -1,5 +1,5 @@
 'use client';
-import { loginRequest, signupRequest, uploadFileRequest } from '@/app/server-actions/auth.server';
+import { loginRequest, signupRequest } from '@/app/server-actions/auth.server';
 import { authCookieKey } from '@/library/constants';
 import { configService } from '@/util/config';
 import { getCookie, setCookie } from 'cookies-next';
@@ -7,14 +7,14 @@ import Error from 'next/error';
 import { LoginInput, SignupInput, UpdateUserInput } from '../dto/auth/auth.dto';
 
 const useAPI = () => {
-  const login = async (input:LoginInput) => {
+  const login = async (input: LoginInput) => {
     const data = await loginRequest(input);
     setCookie(authCookieKey, data.accessToken);
     return data;
   };
 
   const signup = async (input: SignupInput) => {
-    const data = await signupRequest(input)
+    const data = await signupRequest(input);
     setCookie(authCookieKey, data.accessToken);
     return data;
   };
@@ -36,7 +36,16 @@ const useAPI = () => {
   };
 
   const uploadFile = async (formData: FormData) => {
-    const data = await uploadFileRequest(formData)
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/upload`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
     return {
       path: data.path,
       url: data.url

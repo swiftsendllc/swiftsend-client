@@ -20,7 +20,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import {
   Autocomplete,
-  Container,
+  Box,
   Divider,
   IconButton,
   List,
@@ -73,7 +73,7 @@ export default function SettingsPage() {
   };
   return (
     <>
-      <Container sx={{ mb: 5, mt: 2, pl: { md: 26, xs:"none"} }}>
+      <Box sx={{ mb: 5, mt: 2, p: 2, width:"100%", overflowY:"scroll" }}>
         <Stack mt={1} mb={3}>
           <Stack spacing={1} direction="row" alignContent="center" alignItems="center" mb={2}>
             <IconButton href={`/${user.username}`} LinkComponent={Link}>
@@ -367,7 +367,7 @@ export default function SettingsPage() {
             v1.0.0
           </Typography>
         </Stack>
-      </Container>
+      </Box>
     </>
   );
 }

@@ -17,9 +17,7 @@ const getUser = async (username: string) => {
       Authorization: `Bearer ${accessToken}`
     }
   });
-  if (!res.ok) {
-    return null;
-  }
+  if (!res.ok) return null;
 
   return (await res.json()) as UserProfilesEntity;
 };
@@ -40,7 +38,7 @@ export default async function Layout({
           <Stack alignContent="center" alignItems="center" justifyContent="center" mb={15} mt={5} overflow="hidden">
             <Alert severity="warning" variant="filled">
               <AlertTitle>Error</AlertTitle>
-              SORRY TO SAY, LOOKS LIKE THERE IS AN ERROR!
+              SORRY TO SAY, LOOKS LIKE THERE IS AN llllllERROR!
             </Alert>
             <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2} p={5}>
               <LinearProgress color="warning" />

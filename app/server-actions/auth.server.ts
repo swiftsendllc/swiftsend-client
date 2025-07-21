@@ -58,7 +58,7 @@ export const uploadFileRequest = async (formData: FormData) => {
   });
   return await makeRequest(url, {
     method: 'POST',
-    body: JSON.stringify(formData),
+    body: formData,
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
