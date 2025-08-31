@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { Box, Typography } from '@mui/material';
 
@@ -11,8 +12,8 @@ export function NoChatSelected() {
       justifyContent="center"
       flexDirection="column"
       minHeight="100%"
-      width={"100%"}
-      minWidth={"340px"}
+      width={'100%'}
+      minWidth={'340px'}
       borderRight="1px solid"
     >
       <ChatBubbleOutlineIcon sx={{ fontSize: 64, color: '#ccc', mb: 2 }} />
