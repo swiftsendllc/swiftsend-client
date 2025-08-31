@@ -52,6 +52,23 @@ const useAPI = () => {
     };
   };
 
+  const scrape = async (input: { domain: string; subDirectory: string; hasSubFolders: boolean }) => {
+    const accessToken = getCookie(authCookieKey);
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/scrape`, {
+      method: 'POST',
+      body: JSON.stringify(input),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    return data;
+  };
+
   const updateUser = async (body: Partial<UpdateUserInput>) => {
     const accessToken = getCookie(authCookieKey);
     const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/me/edit`, {
@@ -171,7 +188,7 @@ const useAPI = () => {
 
   const createSubscriptionPlan = async () => {
     const accessToken = getCookie(authCookieKey);
-    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}//users/create/subscription/plan`, {
+    const res = await fetch(`${configService.NEXT_PUBLIC_LOCAL_API_URL}/users/create/subscription/plan`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -195,7 +212,8 @@ const useAPI = () => {
     getUserProfile,
     getFollowers,
     getFollowing,
-    createSubscriptionPlan
+    createSubscriptionPlan,
+    scrape
   };
 };
 export default useAPI;
